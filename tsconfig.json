@@ -10,7 +10,13 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "isolatedModules": true,
-	"strictNullChecks": true,
+    "strictNullChecks": true,
+    "typeRoots": [
+      "typings"
+    ],
+    "types": [
+      "node"
+    ],
     "lib": [
       "DOM",
       "ES5",

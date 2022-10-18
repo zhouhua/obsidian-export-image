@@ -1,0 +1,3 @@
+interface ExportImageSettings {
+    width: string;
+}

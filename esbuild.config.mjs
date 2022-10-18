@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import process from "process";
-import builtins from 'builtin-modules'
+import builtins from 'builtin-modules';
+import {execSync} from "child_process";
 
 const banner =
 `/*
@@ -10,6 +11,17 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const prod = (process.argv[2] === 'production');
+
+const copyFilePlugin = {
+    name: 'copy-file',
+    setup(build) {
+        build.onEnd(result => {
+            if(!result.errors.length) {
+                execSync("cp ./main.js ./manifest.json ./styles.css ../../../BaiduSyncdisk/知识库/我的空间/.obsidian/plugins/export-image-test/");
+            }
+        });
+    }
+};
 
 esbuild.build({
 	banner: {
@@ -39,4 +51,5 @@ esbuild.build({
 	sourcemap: prod ? false : 'inline',
 	treeShaking: true,
 	outfile: 'main.js',
+    plugins:[copyFilePlugin]
 }).catch(() => process.exit(1));
