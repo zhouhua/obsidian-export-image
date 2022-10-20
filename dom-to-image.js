@@ -293,20 +293,22 @@
         });
 
       function cloneStyle() {
-        copyStyle(window.getComputedStyle(original), clone.style);
+        copyStyle(window.getComputedStyle(original), clone.style || {});
 
         function copyStyle(source, target) {
           if (source.cssText) target.cssText = source.cssText;
           else copyProperties(source, target);
 
           function copyProperties(source, target) {
-            util.asArray(source).forEach(function (name) {
-              target.setProperty(
-                name,
-                source.getPropertyValue(name),
-                source.getPropertyPriority(name)
-              );
-            });
+            if (target.setProperty) {
+              util.asArray(source).forEach(function (name) {
+                target.setProperty(
+                  name,
+                  source.getPropertyValue(name),
+                  source.getPropertyPriority(name)
+                );
+              });
+            }
           }
         }
       }
@@ -813,7 +815,11 @@
         });
 
       function inlineBackground(node) {
-        var background = node.style.getPropertyValue('background');
+        try {
+          var background = node.style.getPropertyValue('background');
+        } catch (e) {
+          return Promise.resolve(node);
+        }
 
         if (!background) return Promise.resolve(node);
 

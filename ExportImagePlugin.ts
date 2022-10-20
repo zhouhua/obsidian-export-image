@@ -32,23 +32,32 @@ export default class ExportImagePlugin extends Plugin {
             (async () => {
               const el = markdownView.contentEl.find('.markdown-preview-section');
               const container = el.parentElement!;
-
               const scrollCache = container.scrollTop;
               container.scrollTo(0, 0);
               await delay(40);
-              const totalHeight = el.scrollHeight;
+              const totalHeight = el.clientHeight;
               console.log('scollHeight:', totalHeight);
               const screenHeight = markdownView.contentEl.clientHeight;
               let scrollIndex = 0;
-              let height = el.clientHeight - parseFloat(el.style.paddingBottom);
-              for (let i = 0; i < el.children.length; i++) {
-                // height += el.children[i].clientHeight;
-              }
+              let height = el.clientHeight - parseFloat(el.style.paddingBottom) + 40;
+              el.addClass('epxort-image-force-no-margin');
               const clone = await cloneNode(el);
-              const observer = new MutationObserver(records => records.forEach(r => r.addedNodes.forEach(async node => {
-                clone.append(await cloneNode(node as HTMLElement));
-                // height += (node as HTMLElement).clientHeight;
-              })));
+              const observer = new MutationObserver(async records => {
+                for (let r of records) {
+                  for (let node of Array.from(r.addedNodes)) {
+                    clone.append(await cloneNode(node as HTMLElement));
+                    const img = (node as HTMLElement).find('img');
+                    if (img) {
+                      height += img.clientHeight / 2;
+                    } else {
+                      const math = (node as HTMLElement).find('.math-block');
+                      if (math) {
+                        height += (node as HTMLElement).clientHeight;
+                      }
+                    }
+                  }
+                }
+              });
               observer.observe(el, {
                 childList: true
               });
@@ -57,21 +66,22 @@ export default class ExportImagePlugin extends Plugin {
                 container.scrollTo(0, scrollIndex);
                 await delay(40);
               }
+              observer.disconnect();
               container.scrollTo(0, scrollCache);
+
+              el.removeClass('epxort-image-force-no-margin');
               console.log(el.clientWidth, height);
               const blob = await toBlobWithClonedDom(el, clone, {
-                width: (el.clientWidth + 200) * 2,
-                height: (height + 100) * 2,
+                width: el.clientWidth * 2,
+                height: height * 2,
                 bgcolor: window.getComputedStyle(el.closest('.view-content')!).backgroundColor,
                 quality: 0.9,
                 style: {
                   transform: 'scale(2)',
-                  transformOrigin: 'top left',
-                  paddingTop: '50px',
+                  transformOrigin: 'top left'
                 }
               });
               saveAs(blob, `${markdownView.getDisplayText().replace(/\s+/g, '_')}.jpg`);
-              observer.disconnect();
             })();
           }
 
