@@ -210,7 +210,6 @@
         ctx.fillStyle = options.bgcolor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
-
       return canvas;
     }
   }
@@ -219,15 +218,15 @@
       .then(util.makeImage)
       .then(util.delay(100))
       .then(function (image) {
-        var canvas = newCanvas(domNode);
-        canvas.getContext('2d').drawImage(image, 0, 0, options.width, options.height);
+        var canvas = newCanvas();
+        canvas.getContext('2d').drawImage(image, 0, 0, options.width * 2, options.height * 2);
         return canvas;
       });
 
-    function newCanvas(domNode) {
+    function newCanvas() {
       var canvas = document.createElement('canvas');
-      canvas.width = options.width / 2;
-      canvas.height = options.height / 2;
+      canvas.width = options.width;
+      canvas.height = options.height;
 
       if (options.bgcolor) {
         var ctx = canvas.getContext('2d');

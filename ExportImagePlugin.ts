@@ -34,27 +34,18 @@ export default class ExportImagePlugin extends Plugin {
               const container = el.parentElement!;
               const scrollCache = container.scrollTop;
               container.scrollTo(0, 0);
+              el.addClass('epxort-image-force-no-margin');
               await delay(40);
               const totalHeight = el.clientHeight;
-              console.log('scollHeight:', totalHeight);
               const screenHeight = markdownView.contentEl.clientHeight;
               let scrollIndex = 0;
               let height = el.clientHeight - parseFloat(el.style.paddingBottom) + 40;
-              el.addClass('epxort-image-force-no-margin');
+              console.log('scollHeight:', height);
               const clone = await cloneNode(el);
               const observer = new MutationObserver(async records => {
                 for (let r of records) {
                   for (let node of Array.from(r.addedNodes)) {
                     clone.append(await cloneNode(node as HTMLElement));
-                    const img = (node as HTMLElement).find('img');
-                    if (img) {
-                      height += img.clientHeight / 2;
-                    } else {
-                      const math = (node as HTMLElement).find('.math-block');
-                      if (math) {
-                        height += (node as HTMLElement).clientHeight;
-                      }
-                    }
                   }
                 }
               });
@@ -69,11 +60,15 @@ export default class ExportImagePlugin extends Plugin {
               observer.disconnect();
               container.scrollTo(0, scrollCache);
 
+              clone.addClass('export-image-clone');
+              document.body.appendChild(clone);
+              console.log(clone.clientWidth, clone.clientHeight);
               el.removeClass('epxort-image-force-no-margin');
-              console.log(el.clientWidth, height);
               const blob = await toBlobWithClonedDom(el, clone, {
-                width: el.clientWidth * 2,
-                height: height * 2,
+                // width: width * 2,
+                // height: height * 2,
+                width: clone.clientWidth * 2,
+                height: clone.clientHeight * 2,
                 bgcolor: window.getComputedStyle(el.closest('.view-content')!).backgroundColor,
                 quality: 0.9,
                 style: {
@@ -81,6 +76,7 @@ export default class ExportImagePlugin extends Plugin {
                   transformOrigin: 'top left'
                 }
               });
+              document.body.removeChild(clone);
               saveAs(blob, `${markdownView.getDisplayText().replace(/\s+/g, '_')}.jpg`);
             })();
           }
@@ -90,7 +86,8 @@ export default class ExportImagePlugin extends Plugin {
         }
       }
     });
-
+    // This adds a settings tab so the user can configure various aspects of the plugin
+    // this.addSettingTab(new ExportImageSettingTab(this.app, this));
 
   }
 
