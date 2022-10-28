@@ -19,6 +19,9 @@ If your plugin does not need CSS, delete this file.
 }
 
 .export-image-clone {
-  position: fixed;
-  left: -400%;
+  position: fixed !important;
+  left: -400% !important;
+  top: 200% !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
 }

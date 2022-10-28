@@ -1,5 +1,4 @@
-(function (global) {
-  'use strict';
+import { requestUrl } from 'obsidian';
 
   var util = newUtil();
   var inliner = newInliner();
@@ -18,6 +17,7 @@
     toSvg: toSvg,
     toPng: toPng,
     toJpeg: toJpeg,
+    toJpegWithClonedDom: toJpegWithClonedDom,
     toBlob: toBlob,
     toPixelData: toPixelData,
     toBlobWithClonedDom: toBlobWithClonedDom,
@@ -30,12 +30,6 @@
       options: {}
     }
   };
-
-  if (typeof module !== 'undefined')
-    module.exports = domtoimage;
-  else
-    global.domtoimage = domtoimage;
-
 
   /**
    * @param {Node} node - The DOM Node object to render
@@ -155,6 +149,14 @@
       });
   }
 
+  function toJpegWithClonedDom(node, clone , options) {
+    options = options || {};
+    return drawWithClonedDom(node, clone, options)
+      .then(function (canvas) {
+        return canvas.toDataURL('image/jpeg', options.quality || 1.0);
+      });
+  }
+
   /**
    * @param {Node} node - The DOM Node object to render
    * @param {Object} options - Rendering options, @see {@link toSvg}
@@ -249,7 +251,6 @@
       .then(function (clone) {
         return processClone(node, clone);
       });
-
     function makeNodeCopy(node) {
       if (node instanceof HTMLCanvasElement) return util.makeImage(node.toDataURL());
       return node.cloneNode(false);
@@ -485,7 +486,7 @@
     function canvasToBlob(canvas, options) {
       if (canvas.toBlob)
         return new Promise(function (resolve) {
-          canvas.toBlob(resolve, 'image/jpeg', options.quality || 1.0);
+          canvas.toBlob(resolve, 'image/jpg', options.quality || 1.0);
         });
 
       return toBlob(canvas, options);
@@ -521,7 +522,7 @@
         image.onload = function () {
           resolve(image);
         };
-        image.onerror = reject;
+        image.onerror = resolve;
         image.src = uri;
       });
     }
@@ -532,6 +533,32 @@
         // Cache bypass so we dont have CORS issues with cached images
         // Source: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
         url += ((/\?/).test(url) ? "&" : "?") + (new Date()).getTime();
+      }
+      if (/^http/.test(url)) {
+        return requestUrl({
+          url,
+          method: 'GET'
+        }).then(data => {
+          let binary = '';
+          const bytes = new Uint8Array(data.arrayBuffer);
+          const len = bytes.byteLength;
+          for (let i = 0; i < len; i++) {
+              binary += String.fromCharCode(bytes[i]);
+          }
+          return window.btoa( binary );
+          // return new Promise(resolve => {
+          // const encoder = new FileReader();
+          // encoder.onloadend = function () {
+          //   const content = encoder.result.split(/,/)[1];
+          //   resolve(content);
+          // };
+          //   debugger;
+          // encoder.readAsDataURL(data);
+          // });
+        }).catch(err => {
+          console.error('cannot fetch resource: ' + url + ', error: ' + err);
+          return '';
+        });
       }
 
       return new Promise(function (resolve) {
@@ -791,7 +818,7 @@
           .then(function (dataUrl) {
             return new Promise(function (resolve, reject) {
               element.onload = resolve;
-              element.onerror = reject;
+              element.onerror = resolve;
               element.src = dataUrl;
             });
           });
@@ -836,4 +863,5 @@
       }
     }
   }
-})(this);
+
+module.exports = domtoimage;
