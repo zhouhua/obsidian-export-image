@@ -56,3 +56,7 @@ Not ready yet.
   3. Specify this repository: zhouhua/obsidian-export-image
 
 * Enable the Bartender plugin (Settings -> Community Plugins)
+
+## Special Thanks
+
+* [dom-to-image](https://github.com/tsayen/dom-to-image). This repo borrows lots of code from [dom-to-image](https://github.com/tsayen/dom-to-image). The amazing lib helps me generate images from dom.

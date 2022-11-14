@@ -13,17 +13,15 @@ function delay(ms: number): Promise<undefined> {
 }
 
 
-async function cloneDom(el:HTMLElement, markdownView:MarkdownView): Promise<HTMLElement> {
+async function cloneDom(el: HTMLElement, markdownView: MarkdownView): Promise<HTMLElement> {
   const container = el.parentElement!;
   const scrollCache = container.scrollTop;
   container.scrollTo(0, 0);
-  el.addClass('epxort-image-force-no-margin');
+  el.addClass('export-image-force-no-margin');
   await delay(40);
   const totalHeight = el.clientHeight;
   const screenHeight = markdownView.contentEl.clientHeight;
   let scrollIndex = 0;
-  let height = el.clientHeight - parseFloat(el.style.paddingBottom) + 40;
-  console.log('scollHeight:', height);
   const clone = await cloneNode(el);
   const observer = new MutationObserver(async records => {
     for (let r of records) {
@@ -44,8 +42,7 @@ async function cloneDom(el:HTMLElement, markdownView:MarkdownView): Promise<HTML
   container.scrollTo(0, scrollCache);
   clone.addClass('export-image-clone');
   document.body.appendChild(clone);
-  console.log(clone.clientWidth, clone.clientHeight);
-  el.removeClass('epxort-image-force-no-margin');
+  el.removeClass('export-image-force-no-margin');
   return clone;
 }
 export default class ExportImagePlugin extends Plugin {
