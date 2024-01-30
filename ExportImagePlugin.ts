@@ -3,13 +3,15 @@ import {
   MarkdownView,
   MarkdownPreviewView,
   MarkdownRenderer,
+  requestUrl,
   Notice,
   Plugin,
 } from "obsidian";
 import { saveAs } from "file-saver";
 import { ExportImageSettingTab } from "./ExportImageSettingTab";
 import { DEFAULT_SETTINGS } from "./constents";
-import { cloneNode, toBlobWithClonedDom } from "./dom-to-image";
+// import { cloneNode, toBlobWithClonedDom } from "./dom-to-image";
+import domtoimage from "./dom-to-image-more";
 
 function delay(ms: number): Promise<undefined> {
   return new Promise(function (resolve) {
@@ -19,10 +21,30 @@ function delay(ms: number): Promise<undefined> {
   });
 }
 
+const copyStyle = (origin: HTMLElement, clone: HTMLElement) => {
+  if (origin.nodeType === 1) {
+    const styles = getComputedStyle(origin);
+    Array.from(styles).forEach((property) =>
+      clone.style.setProperty(property, styles.getPropertyValue(property))
+    );
+  }
+};
+
+function cloneNode(el: HTMLElement): HTMLElement {
+  const clone = el.cloneNode(false) as HTMLElement;
+  copyStyle(el, clone);
+  if (el.hasChildNodes()) {
+    for (let node of Array.from(el.childNodes)) {
+      clone.appendChild(cloneNode(node as HTMLElement));
+    }
+  }
+  return clone;
+}
+
 async function cloneDom(
   el: HTMLElement,
   markdownView: MarkdownView
-): Promise<HTMLElement> {
+): Promise<Element> {
   const container = el.parentElement!;
   const scrollCache = container.scrollTop;
   container.scrollTo(0, 0);
@@ -31,11 +53,12 @@ async function cloneDom(
   const totalHeight = el.clientHeight;
   const screenHeight = markdownView.contentEl.clientHeight;
   let scrollIndex = 0;
-  const clone = await cloneNode(el);
+  const clone = cloneNode(el);
   const observer = new MutationObserver(async (records) => {
     for (let r of records) {
       for (let node of Array.from(r.addedNodes)) {
-        clone.append(await cloneNode(node as HTMLElement));
+        const child = cloneNode(node as HTMLElement);
+        clone.appendChild(child);
       }
     }
   });
@@ -76,18 +99,16 @@ export default class ExportImagePlugin extends Plugin {
                 ".markdown-preview-section"
               );
               const clone = await cloneDom(el, markdownView);
-              const blob = await toBlobWithClonedDom(el, clone, {
+              const blob = await domtoimage.toBlob(clone, {
                 // width: width * 2,
                 // height: height * 2,
-                width: clone.clientWidth * 2,
-                height: clone.clientHeight * 2,
+                width: clone.clientWidth,
+                height: clone.clientHeight,
                 bgcolor: window.getComputedStyle(el.closest(".view-content")!)
                   .backgroundColor,
-                quality: 0.9,
-                style: {
-                  transform: "scale(2)",
-                  transformOrigin: "top left",
-                },
+                quality: 0.85,
+                scale: 2,
+                requestUrl,
               });
               document.body.removeChild(clone);
               saveAs(
@@ -119,18 +140,16 @@ export default class ExportImagePlugin extends Plugin {
                 ".markdown-preview-section"
               );
               const clone = await cloneDom(el, markdownView);
-              const blob = await toBlobWithClonedDom(el, clone, {
+              const blob = await domtoimage.toBlob(clone, {
                 // width: width * 2,
                 // height: height * 2,
-                width: clone.clientWidth * 2,
-                height: clone.clientHeight * 2,
+                width: clone.clientWidth,
+                height: clone.clientHeight,
                 bgcolor: window.getComputedStyle(el.closest(".view-content")!)
                   .backgroundColor,
-                quality: 0.9,
-                style: {
-                  transform: "scale(2)",
-                  transformOrigin: "top left",
-                },
+                quality: 0.85,
+                scale: 2,
+                requestUrl,
               });
               document.body.removeChild(clone);
               const data = [

@@ -11,20 +11,10 @@
     "importHelpers": true,
     "isolatedModules": true,
     "strictNullChecks": true,
-    "typeRoots": [
-      "typings"
-    ],
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "DOM",
-      "ES5",
-      "ES6",
-      "ES7"
-    ]
+    "allowSyntheticDefaultImports": true,
+    "typeRoots": ["typings"],
+    "types": ["node"],
+    "lib": ["DOM", "ES5", "ES6", "ES7"]
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts"]
 }
