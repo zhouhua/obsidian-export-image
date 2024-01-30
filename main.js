@@ -27,9 +27,9 @@ var __copyProps = (to, from, except, desc) => {
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// node_modules/file-saver/dist/FileSaver.min.js
+// node_modules/.pnpm/file-saver@2.0.5/node_modules/file-saver/dist/FileSaver.min.js
 var require_FileSaver_min = __commonJS({
-  "node_modules/file-saver/dist/FileSaver.min.js"(exports, module2) {
+  "node_modules/.pnpm/file-saver@2.0.5/node_modules/file-saver/dist/FileSaver.min.js"(exports, module2) {
     (function(a, b) {
       if (typeof define == "function" && define.amd)
         define([], b);
@@ -1234,7 +1234,7 @@ var ExportImagePlugin = class extends import_obsidian.Plugin {
         if ((markdownView == null ? void 0 : markdownView.getMode()) === "preview") {
           if (!checking) {
             (async () => {
-              const el = markdownView.contentEl.find(".markdown-preview-section");
+              const el = markdownView.contentEl.find(".markdown-reading-view>.markdown-preview-view>.markdown-preview-section");
               const clone = await cloneDom(el, markdownView);
               const blob = await import_dom_to_image_more.default.toBlob(clone, {
                 width: clone.clientWidth,

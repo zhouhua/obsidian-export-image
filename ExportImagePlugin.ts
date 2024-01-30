@@ -8,7 +8,6 @@ import {
   Plugin,
 } from "obsidian";
 import { saveAs } from "file-saver";
-import { ExportImageSettingTab } from "./ExportImageSettingTab";
 import { DEFAULT_SETTINGS } from "./constents";
 // import { cloneNode, toBlobWithClonedDom } from "./dom-to-image";
 import domtoimage from "./dom-to-image-more";
@@ -96,7 +95,7 @@ export default class ExportImagePlugin extends Plugin {
           if (!checking) {
             (async () => {
               const el = markdownView.contentEl.find(
-                ".markdown-preview-section"
+                ".markdown-reading-view>.markdown-preview-view>.markdown-preview-section"
               );
               const clone = await cloneDom(el, markdownView);
               const blob = await domtoimage.toBlob(clone, {
@@ -137,7 +136,7 @@ export default class ExportImagePlugin extends Plugin {
           if (!checking) {
             (async () => {
               const el = markdownView.contentEl.find(
-                ".markdown-preview-section"
+                ".markdown-reading-view>.markdown-preview-view>.markdown-preview-section"
               );
               const clone = await cloneDom(el, markdownView);
               const blob = await domtoimage.toBlob(clone, {
