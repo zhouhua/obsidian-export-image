@@ -1,5 +1,7 @@
 # Obsidian Export Image Plugin
 
+![GitHub Release](https://img.shields.io/github/v/release/zhouhua/obsidian-export-image?include_prereleases&style=flat) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/zhouhua/obsidian-export-image/total?style=flat)
+
 This plugin helps you to export any articles to images easily.
 
 ## Usage
