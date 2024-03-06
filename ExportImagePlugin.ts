@@ -1,15 +1,6 @@
-import {
-  Editor,
-  MarkdownView,
-  MarkdownPreviewView,
-  MarkdownRenderer,
-  requestUrl,
-  Notice,
-  Plugin,
-} from "obsidian";
+import { MarkdownView, requestUrl, Notice, Plugin } from "obsidian";
 import { saveAs } from "file-saver";
 import { DEFAULT_SETTINGS } from "./constents";
-// import { cloneNode, toBlobWithClonedDom } from "./dom-to-image";
 import domtoimage from "./dom-to-image-more";
 
 function delay(ms: number): Promise<undefined> {
@@ -49,7 +40,6 @@ async function cloneDom(
   container.scrollTo(0, 0);
   el.addClass("export-image-force-no-margin");
   await delay(40);
-  const totalHeight = el.clientHeight;
   const screenHeight = markdownView.contentEl.clientHeight;
   let scrollIndex = 0;
   const clone = cloneNode(el);
@@ -64,10 +54,10 @@ async function cloneDom(
   observer.observe(el, {
     childList: true,
   });
-  while (scrollIndex <= totalHeight - screenHeight) {
+  while (scrollIndex <= el.clientHeight - screenHeight) {
     scrollIndex += screenHeight;
     container.scrollTo(0, scrollIndex);
-    await delay(40);
+    await delay(60);
   }
   observer.disconnect();
   container.scrollTo(0, scrollCache);
