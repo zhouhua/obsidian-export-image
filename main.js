@@ -24017,7 +24017,7 @@ var require_dom_to_image_more = __commonJS({
             }
             resolve(
               new Blob([binaryArray], {
-                type: "image/png"
+                type: "image/jpeg"
               })
             );
           });
@@ -24871,7 +24871,7 @@ var import_obsidian2 = require("obsidian");
 var import_dom_to_image_more = __toESM(require_dom_to_image_more());
 var import_file_saver = __toESM(require_FileSaver_min());
 async function getBlob(el) {
-  return await import_dom_to_image_more.default.toJpeg(el, {
+  return await import_dom_to_image_more.default.toBlob(el, {
     width: el.clientWidth,
     height: el.clientHeight,
     quality: 0.85,

@@ -3,7 +3,7 @@ import domtoimage from "./dom-to-image-more";
 import saveAs from "file-saver";
 
 async function getBlob(el: HTMLElement) {
-  return await domtoimage.toJpeg(el, {
+  return await domtoimage.toBlob(el, {
     width: el.clientWidth,
     height: el.clientHeight,
     quality: 0.85,

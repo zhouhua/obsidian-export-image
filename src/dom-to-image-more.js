@@ -710,7 +710,7 @@
 
         resolve(
           new Blob([binaryArray], {
-            type: "image/png",
+            type: "image/jpeg",
           })
         );
       });
