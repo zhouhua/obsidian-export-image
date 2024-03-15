@@ -25,3 +25,11 @@ If your plugin does not need CSS, delete this file.
   border-radius: 10px !important;
   overflow: hidden !important;
 }
+
+.export-image-preview-container {
+  pointer-events: none;
+}
+
+.hide-filename .export-image-preview-filename {
+  display: none;
+}
