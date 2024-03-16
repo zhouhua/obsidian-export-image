@@ -26428,14 +26428,14 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
   (0, import_react2.useEffect)(() => {
     if (actionsRef.current) {
       const copyButton = new import_obsidian.ButtonComponent(actionsRef.current);
-      copyButton.setIcon("copy").buttonEl.createSpan({
+      copyButton.setIcon("clipboard-copy").buttonEl.createSpan({
         text: i18n("copy"),
         attr: { style: "padding-left: 10px" }
       });
       copyButton.buttonEl.style.marginRight = "40px";
       copyButton.onClick(copy2);
       const saveButton = new import_obsidian.ButtonComponent(actionsRef.current);
-      saveButton.setIcon("download").buttonEl.createSpan({
+      saveButton.setIcon("image-down").buttonEl.createSpan({
         text: i18n("save"),
         attr: { style: "padding-left: 10px" }
       });

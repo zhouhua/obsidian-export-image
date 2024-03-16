@@ -18,6 +18,10 @@ Use the command `export as a image` in command palette (Press cmd/ctrl+P to ente
 
 ![](./assets/config.png)
 
+Also, you can access this function from the editor menu:
+
+![](./assets/menu.png)
+
 ## Installation
 
 ### Obsidian
