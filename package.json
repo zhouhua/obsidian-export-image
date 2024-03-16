@@ -36,6 +36,7 @@
     "dom-to-image-more": "^3.2.0",
     "file-saver": "^2.0.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-zoom-pan-pinch": "^3.4.3"
   }
 }

@@ -6,4 +6,5 @@ export default {
   save: "Save Image",
   includingFilename: "Including File Name As Title: ",
   imageWidth: "Image Width: ",
+  exportImage: "Export to image",
 };

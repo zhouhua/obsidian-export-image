@@ -6,4 +6,5 @@ export default {
   save: "保存图片",
   includingFilename: "包含文件名作为标题：",
   imageWidth: "图片宽度：",
+  exportImage: "导出为图片",
 };

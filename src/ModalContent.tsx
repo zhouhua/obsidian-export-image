@@ -1,5 +1,6 @@
 import { ButtonComponent } from "obsidian";
 import { useState, useRef, FC, useEffect } from "react";
+import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import React from "react";
 import i18n from "./i18n";
 
@@ -10,6 +11,7 @@ const ModalContent: FC<{
 }> = ({ markdownEl, copy, save }) => {
   const [showTitle, setShowTitle] = useState(true);
   const [width, setWidth] = useState(640);
+  const [isGrabbing, setIsGrabbing] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -18,14 +20,14 @@ const ModalContent: FC<{
   useEffect(() => {
     if (actionsRef.current) {
       const copyButton = new ButtonComponent(actionsRef.current);
-      copyButton.setIcon("copy").buttonEl.createSpan({
+      copyButton.setIcon("clipboard-copy").buttonEl.createSpan({
         text: i18n("copy"),
         attr: { style: "padding-left: 10px" },
       });
       copyButton.buttonEl.style.marginRight = "40px";
       copyButton.onClick(copy);
       const saveButton = new ButtonComponent(actionsRef.current);
-      saveButton.setIcon("download").buttonEl.createSpan({
+      saveButton.setIcon("image-down").buttonEl.createSpan({
         text: i18n("save"),
         attr: { style: "padding-left: 10px" },
       });
@@ -98,22 +100,44 @@ const ModalContent: FC<{
           overflow: "auto",
           border: "1px var(--divider-color) solid",
           borderRadius: "4px",
-          margin: "40px auto",
-          maxHeight: "60vh",
+          margin: "40px auto 10px",
+          maxHeight: "calc(80vh - 300px)",
           height: "auto",
           width: width + "px",
           maxWidth: "100%",
           transition: "width 0.25s",
+          cursor: isGrabbing ? "grabbing" : "grab",
         }}
       >
-        <div
-          className={showTitle ? "" : "hide-filename"}
-          ref={contentRef}
-          style={{
-            width: `${width}px`,
-            transition: "width 0.25s",
-          }}
-        ></div>
+        <TransformWrapper
+          minScale={Math.min(
+            1,
+            (window.innerHeight * 0.8 - 300) /
+              (markdownEl as HTMLElement).clientHeight
+          )}
+          maxScale={4}
+          pinch={{ step: 20 }}
+          doubleClick={{ mode: "reset" }}
+          centerZoomedOut={false}
+          onPanning={() => setIsGrabbing(true)}
+          onPanningStop={() => setIsGrabbing(false)}
+        >
+          <TransformComponent
+            wrapperStyle={{ maxWidth: "100%", maxHeight: "calc(80vh - 300px)" }}
+          >
+            <div
+              className={showTitle ? "" : "hide-filename"}
+              ref={contentRef}
+              style={{
+                width: `${width}px`,
+                transition: "width 0.25s",
+              }}
+            ></div>
+          </TransformComponent>
+        </TransformWrapper>
+      </div>
+      <div style={{ marginBottom: 20, opacity: 0.6, fontSize: "12px" }}>
+        Drag to Move, scroll or pinch to zoom in/out, double click to reset.
       </div>
       <div
         ref={actionsRef}
