@@ -1,8 +1,15 @@
-import { Plugin, MarkdownRenderer, MarkdownRenderChild, Modal } from "obsidian";
+import {
+  Plugin,
+  MarkdownRenderer,
+  MarkdownRenderChild,
+  Modal,
+  Notice,
+} from "obsidian";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import ModalContent from "./src/ModalContent";
-import { copy, save } from "./src/capture";
+import ModalContent from "./ModalContent";
+import { copy, save } from "./capture";
+import i18n from "./i18n";
 
 export default class ExportImagePlugin extends Plugin {
   async onload() {
@@ -16,7 +23,7 @@ export default class ExportImagePlugin extends Plugin {
           (async () => {
             const activeFile = this.app.workspace.getActiveFile();
             if (!activeFile) {
-              console.log("no active file");
+              new Notice(i18n("noActiveFile"));
               return;
             }
             const markdown = await this.app.vault.cachedRead(activeFile);
@@ -39,7 +46,7 @@ export default class ExportImagePlugin extends Plugin {
               new MarkdownRenderChild(el)
             );
             const modal = new Modal(this.app);
-            modal.setTitle("Image Export Preview");
+            modal.setTitle(i18n("imageExportPreview"));
             modal.open();
             const root = createRoot(modal.contentEl);
             root.render(

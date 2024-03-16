@@ -1,6 +1,7 @@
 import { Notice, requestUrl } from "obsidian";
 import domtoimage from "./dom-to-image-more";
 import saveAs from "file-saver";
+import i18n from "./i18n";
 
 async function getBlob(el: HTMLElement) {
   return await domtoimage.toBlob(el, {
@@ -25,5 +26,5 @@ export async function copy(el: HTMLElement) {
     }),
   ];
   await navigator.clipboard.write(data);
-  new Notice("Copied to clipboard");
+  new Notice(i18n("copiedSuccess"));
 }

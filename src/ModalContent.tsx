@@ -1,6 +1,7 @@
 import { ButtonComponent } from "obsidian";
 import { useState, useRef, FC, useEffect } from "react";
 import React from "react";
+import i18n from "./i18n";
 
 const ModalContent: FC<{
   markdownEl: Node;
@@ -18,14 +19,14 @@ const ModalContent: FC<{
     if (actionsRef.current) {
       const copyButton = new ButtonComponent(actionsRef.current);
       copyButton.setIcon("copy").buttonEl.createSpan({
-        text: "Copy to clipboard",
+        text: i18n("copy"),
         attr: { style: "padding-left: 10px" },
       });
       copyButton.buttonEl.style.marginRight = "40px";
       copyButton.onClick(copy);
       const saveButton = new ButtonComponent(actionsRef.current);
       saveButton.setIcon("download").buttonEl.createSpan({
-        text: "Save Image",
+        text: i18n("save"),
         attr: { style: "padding-left: 10px" },
       });
       saveButton.onClick(save);
@@ -52,7 +53,7 @@ const ModalContent: FC<{
             width: "100%",
           }}
         >
-          <span>Including File Name As Title: </span>
+          <span>{i18n("includingFilename")}</span>
           <div>
             <input
               checked={showTitle}
@@ -71,7 +72,7 @@ const ModalContent: FC<{
             width: "100%",
           }}
         >
-          <span>Image Width: </span>
+          <span>{i18n("imageWidth")}</span>
           <div>
             <input
               type="range"

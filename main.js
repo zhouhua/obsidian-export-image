@@ -980,26 +980,26 @@ var require_react_development = __commonJS({
           }
           return lazyType;
         }
-        function forwardRef(render) {
+        function forwardRef(render2) {
           {
-            if (render != null && render.$$typeof === REACT_MEMO_TYPE) {
+            if (render2 != null && render2.$$typeof === REACT_MEMO_TYPE) {
               error("forwardRef requires a render function but received a `memo` component. Instead of forwardRef(memo(...)), use memo(forwardRef(...)).");
-            } else if (typeof render !== "function") {
-              error("forwardRef requires a render function but was given %s.", render === null ? "null" : typeof render);
+            } else if (typeof render2 !== "function") {
+              error("forwardRef requires a render function but was given %s.", render2 === null ? "null" : typeof render2);
             } else {
-              if (render.length !== 0 && render.length !== 2) {
-                error("forwardRef render functions accept exactly two parameters: props and ref. %s", render.length === 1 ? "Did you forget to use the ref parameter?" : "Any additional parameter will be undefined.");
+              if (render2.length !== 0 && render2.length !== 2) {
+                error("forwardRef render functions accept exactly two parameters: props and ref. %s", render2.length === 1 ? "Did you forget to use the ref parameter?" : "Any additional parameter will be undefined.");
               }
             }
-            if (render != null) {
-              if (render.defaultProps != null || render.propTypes != null) {
+            if (render2 != null) {
+              if (render2.defaultProps != null || render2.propTypes != null) {
                 error("forwardRef render functions do not support propTypes or defaultProps. Did you accidentally pass a React component?");
               }
             }
           }
           var elementType = {
             $$typeof: REACT_FORWARD_REF_TYPE,
-            render
+            render: render2
           };
           {
             var ownName;
@@ -1011,8 +1011,8 @@ var require_react_development = __commonJS({
               },
               set: function(name) {
                 ownName = name;
-                if (!render.name && !render.displayName) {
-                  render.displayName = name;
+                if (!render2.name && !render2.displayName) {
+                  render2.displayName = name;
                 }
               }
             });
@@ -16227,7 +16227,7 @@ var require_react_dom_development = __commonJS({
               }
             }
           }
-          var render2 = Component.render;
+          var render3 = Component.render;
           var ref = workInProgress2.ref;
           var nextChildren;
           var hasId;
@@ -16238,12 +16238,12 @@ var require_react_dom_development = __commonJS({
           {
             ReactCurrentOwner$1.current = workInProgress2;
             setIsRendering(true);
-            nextChildren = renderWithHooks(current2, workInProgress2, render2, nextProps, ref, renderLanes2);
+            nextChildren = renderWithHooks(current2, workInProgress2, render3, nextProps, ref, renderLanes2);
             hasId = checkDidRenderIdHook();
             if (workInProgress2.mode & StrictLegacyMode) {
               setIsStrictModeForDevtools(true);
               try {
-                nextChildren = renderWithHooks(current2, workInProgress2, render2, nextProps, ref, renderLanes2);
+                nextChildren = renderWithHooks(current2, workInProgress2, render3, nextProps, ref, renderLanes2);
                 hasId = checkDidRenderIdHook();
               } finally {
                 setIsStrictModeForDevtools(false);
@@ -17583,9 +17583,9 @@ var require_react_dom_development = __commonJS({
             }
           }
           var newProps = workInProgress2.pendingProps;
-          var render2 = newProps.children;
+          var render3 = newProps.children;
           {
-            if (typeof render2 !== "function") {
+            if (typeof render3 !== "function") {
               error("A context consumer was rendered with multiple children, or a child that isn't a function. A context consumer expects a single child that is a function. If you did pass a function, make sure there is no trailing or leading whitespace around it.");
             }
           }
@@ -17598,7 +17598,7 @@ var require_react_dom_development = __commonJS({
           {
             ReactCurrentOwner$1.current = workInProgress2;
             setIsRendering(true);
-            newChildren = render2(newValue);
+            newChildren = render3(newValue);
             setIsRendering(false);
           }
           {
@@ -23318,7 +23318,7 @@ var require_react_dom_development = __commonJS({
           }
           return legacyRenderSubtreeIntoContainer(null, element, container, true, callback);
         }
-        function render(element, container, callback) {
+        function render2(element, container, callback) {
           {
             error("ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it's running React 17. Learn more: https://reactjs.org/link/switch-to-createroot");
           }
@@ -23459,7 +23459,7 @@ var require_react_dom_development = __commonJS({
         exports.flushSync = flushSync$1;
         exports.hydrate = hydrate;
         exports.hydrateRoot = hydrateRoot$1;
-        exports.render = render;
+        exports.render = render2;
         exports.unmountComponentAtNode = unmountComponentAtNode;
         exports.unstable_batchedUpdates = batchedUpdates$1;
         exports.unstable_renderSubtreeIntoContainer = renderSubtreeIntoContainer;
@@ -24721,7 +24721,7 @@ __export(main_exports, {
 });
 module.exports = __toCommonJS(main_exports);
 
-// ExportImagePlugin.tsx
+// src/ExportImagePlugin.tsx
 var import_obsidian3 = require("obsidian");
 var import_react3 = __toESM(require_react());
 var import_client = __toESM(require_client());
@@ -24730,34 +24730,81 @@ var import_client = __toESM(require_client());
 var import_obsidian = require("obsidian");
 var import_react = __toESM(require_react());
 var import_react2 = __toESM(require_react());
+
+// src/locales/en.ts
+var en_default = {
+  noActiveFile: "Please open an article first!",
+  imageExportPreview: "Image Export Preview",
+  copiedSuccess: "Copied to clipboard",
+  copy: "Copy to Clipboard",
+  save: "Save Image",
+  includingFilename: "Including File Name As Title: ",
+  imageWidth: "Image Width: "
+};
+
+// src/locales/zh.ts
+var zh_default = {
+  noActiveFile: "\u8BF7\u5148\u6253\u5F00\u4E00\u7BC7\u6587\u6863\uFF01",
+  imageExportPreview: "\u56FE\u7247\u5BFC\u51FA\u9884\u89C8",
+  copiedSuccess: "\u5DF2\u590D\u5236\u5230\u526A\u8D34\u677F",
+  copy: "\u590D\u5236\u5230\u526A\u8D34\u677F",
+  save: "\u4FDD\u5B58\u56FE\u7247",
+  includingFilename: "\u5305\u542B\u6587\u4EF6\u540D\u4F5C\u4E3A\u6807\u9898\uFF1A",
+  imageWidth: "\u56FE\u7247\u5BBD\u5EA6\uFF1A"
+};
+
+// src/i18n.ts
+var locale = en_default;
+var _a;
+try {
+  locale = /^zh/.test(((_a = global == null ? void 0 : global.i18next) == null ? void 0 : _a.language) || "") ? zh_default : en_default;
+} catch (e) {
+}
+function render(text, value) {
+  if (value) {
+    return text.replace(/\{\{(.*?)\}\}/g, (_, match) => {
+      var _a2;
+      const key = match.trim();
+      return key in value ? (_a2 = value[key]) == null ? void 0 : _a2.toString() : match;
+    });
+  } else {
+    return text;
+  }
+}
+function i18n(key, value) {
+  const text = locale[key] || key;
+  return render(text, value);
+}
+
+// src/ModalContent.tsx
 var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
   const [showTitle, setShowTitle] = (0, import_react.useState)(true);
   const [width, setWidth] = (0, import_react.useState)(640);
   const contentRef = (0, import_react.useRef)(null);
   const actionsRef = (0, import_react.useRef)(null);
   (0, import_react.useEffect)(() => {
-    var _a, _b;
-    (_b = (_a = contentRef.current) == null ? void 0 : _a.appendChild) == null ? void 0 : _b.call(_a, markdownEl);
+    var _a2, _b;
+    (_b = (_a2 = contentRef.current) == null ? void 0 : _a2.appendChild) == null ? void 0 : _b.call(_a2, markdownEl);
   }, []);
   (0, import_react.useEffect)(() => {
     if (actionsRef.current) {
       const copyButton = new import_obsidian.ButtonComponent(actionsRef.current);
       copyButton.setIcon("copy").buttonEl.createSpan({
-        text: "Copy to clipboard",
+        text: i18n("copy"),
         attr: { style: "padding-left: 10px" }
       });
       copyButton.buttonEl.style.marginRight = "40px";
       copyButton.onClick(copy2);
       const saveButton = new import_obsidian.ButtonComponent(actionsRef.current);
       saveButton.setIcon("download").buttonEl.createSpan({
-        text: "Save Image",
+        text: i18n("save"),
         attr: { style: "padding-left: 10px" }
       });
       saveButton.onClick(save2);
     }
     return () => {
-      var _a;
-      (_a = actionsRef.current) == null ? void 0 : _a.childNodes.forEach((c) => c.remove());
+      var _a2;
+      (_a2 = actionsRef.current) == null ? void 0 : _a2.childNodes.forEach((c) => c.remove());
     };
   }, [copy2, save2]);
   return /* @__PURE__ */ import_react2.default.createElement(import_react2.default.Fragment, null, /* @__PURE__ */ import_react2.default.createElement(
@@ -24780,7 +24827,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
           width: "100%"
         }
       },
-      /* @__PURE__ */ import_react2.default.createElement("span", null, "Including File Name As Title: "),
+      /* @__PURE__ */ import_react2.default.createElement("span", null, i18n("includingFilename")),
       /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement(
         "input",
         {
@@ -24802,7 +24849,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
           width: "100%"
         }
       },
-      /* @__PURE__ */ import_react2.default.createElement("span", null, "Image Width: "),
+      /* @__PURE__ */ import_react2.default.createElement("span", null, i18n("imageWidth")),
       /* @__PURE__ */ import_react2.default.createElement("div", null, /* @__PURE__ */ import_react2.default.createElement(
         "input",
         {
@@ -24891,10 +24938,10 @@ async function copy(el) {
     })
   ];
   await navigator.clipboard.write(data);
-  new import_obsidian2.Notice("Copied to clipboard");
+  new import_obsidian2.Notice(i18n("copiedSuccess"));
 }
 
-// ExportImagePlugin.tsx
+// src/ExportImagePlugin.tsx
 var ExportImagePlugin = class extends import_obsidian3.Plugin {
   async onload() {
     this.addCommand({
@@ -24905,7 +24952,7 @@ var ExportImagePlugin = class extends import_obsidian3.Plugin {
           (async () => {
             const activeFile = this.app.workspace.getActiveFile();
             if (!activeFile) {
-              console.log("no active file");
+              new import_obsidian3.Notice(i18n("noActiveFile"));
               return;
             }
             const markdown = await this.app.vault.cachedRead(activeFile);
@@ -24928,7 +24975,7 @@ var ExportImagePlugin = class extends import_obsidian3.Plugin {
               new import_obsidian3.MarkdownRenderChild(el)
             );
             const modal = new import_obsidian3.Modal(this.app);
-            modal.setTitle("Image Export Preview");
+            modal.setTitle(i18n("imageExportPreview"));
             modal.open();
             const root = (0, import_client.createRoot)(modal.contentEl);
             root.render(
