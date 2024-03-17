@@ -7,4 +7,5 @@ export default {
   includingFilename: "Including File Name As Title: ",
   imageWidth: "Image Width: ",
   exportImage: "Export to image",
+  invalidWidth: "Please set width with a reasonable number.",
 };

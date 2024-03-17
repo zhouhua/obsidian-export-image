@@ -1,5 +1,12 @@
-import { ButtonComponent } from "obsidian";
-import { useState, useRef, FC, useEffect } from "react";
+import { ButtonComponent, Notice } from "obsidian";
+import {
+  useState,
+  useRef,
+  FC,
+  useEffect,
+  useCallback,
+  MouseEventHandler,
+} from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import React from "react";
 import i18n from "./i18n";
@@ -11,12 +18,30 @@ const ModalContent: FC<{
 }> = ({ markdownEl, copy, save }) => {
   const [showTitle, setShowTitle] = useState(true);
   const [width, setWidth] = useState(640);
+  const [inputWidth, setInputWidth] = useState("640");
   const [isGrabbing, setIsGrabbing] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const actionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setWidth(Number(inputWidth));
+  }, [inputWidth]);
+
   useEffect(() => {
     contentRef.current?.appendChild?.(markdownEl);
   }, []);
+
+  const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
+    (e) => {
+      if ((e.target as HTMLElement).closest("button") && width <= 20) {
+        new Notice(i18n("invalidWidth"));
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    [width]
+  );
+
   useEffect(() => {
     if (actionsRef.current) {
       const copyButton = new ButtonComponent(actionsRef.current);
@@ -56,7 +81,7 @@ const ModalContent: FC<{
           }}
         >
           <span>{i18n("includingFilename")}</span>
-          <div>
+          <div className="checkbox-container is-enabled">
             <input
               checked={showTitle}
               style={{ verticalAlign: "middle" }}
@@ -77,27 +102,19 @@ const ModalContent: FC<{
           <span>{i18n("imageWidth")}</span>
           <div>
             <input
-              type="range"
-              min="360"
-              max="1080"
               step="10"
-              value={width}
-              style={{ verticalAlign: "middle" }}
-              onChange={(e) => setWidth(Number(e.target.value))}
-            />
-            <input
+              value={inputWidth}
               type="number"
-              step="10"
-              value={width}
-              style={{ width: 100, marginLeft: "10px" }}
-              onChange={(e) => setWidth(Number(e.target.value))}
+              style={{ width: 100, margin: "0 10px" }}
+              onChange={(e) => setInputWidth(e.target.value)}
             />
+            px
           </div>
         </div>
       </div>
       <div
         style={{
-          overflow: "auto",
+          overflow: "hidden",
           border: "1px var(--divider-color) solid",
           borderRadius: "4px",
           margin: "40px auto 10px",
@@ -113,7 +130,8 @@ const ModalContent: FC<{
           minScale={Math.min(
             1,
             (window.innerHeight * 0.8 - 300) /
-              (markdownEl as HTMLElement).clientHeight
+              (markdownEl as HTMLElement).clientHeight,
+            524 / (markdownEl as HTMLElement).clientWidth
           )}
           maxScale={4}
           pinch={{ step: 20 }}
@@ -123,7 +141,10 @@ const ModalContent: FC<{
           onPanningStop={() => setIsGrabbing(false)}
         >
           <TransformComponent
-            wrapperStyle={{ maxWidth: "100%", maxHeight: "calc(80vh - 300px)" }}
+            wrapperStyle={{
+              maxWidth: "100%",
+              maxHeight: "calc(80vh - 300px)",
+            }}
           >
             <div
               className={showTitle ? "" : "hide-filename"}
@@ -141,6 +162,7 @@ const ModalContent: FC<{
       </div>
       <div
         ref={actionsRef}
+        onClickCapture={handleClick}
         style={{
           display: "flex",
           alignItems: "center",

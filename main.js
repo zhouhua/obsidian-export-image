@@ -1117,7 +1117,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create, deps);
         }
-        function useCallback2(callback, deps) {
+        function useCallback3(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -1883,7 +1883,7 @@ var require_react_development = __commonJS({
         exports.memo = memo;
         exports.startTransition = startTransition;
         exports.unstable_act = act;
-        exports.useCallback = useCallback2;
+        exports.useCallback = useCallback3;
         exports.useContext = useContext2;
         exports.useDebugValue = useDebugValue;
         exports.useDeferredValue = useDeferredValue;
@@ -24737,7 +24737,8 @@ var en_default = {
   save: "Save Image",
   includingFilename: "Including File Name As Title: ",
   imageWidth: "Image Width: ",
-  exportImage: "Export to image"
+  exportImage: "Export to image",
+  invalidWidth: "Please set width with a reasonable number."
 };
 
 // src/locales/zh.ts
@@ -24749,7 +24750,8 @@ var zh_default = {
   save: "\u4FDD\u5B58\u56FE\u7247",
   includingFilename: "\u5305\u542B\u6587\u4EF6\u540D\u4F5C\u4E3A\u6807\u9898\uFF1A",
   imageWidth: "\u56FE\u7247\u5BBD\u5EA6\uFF1A",
-  exportImage: "\u5BFC\u51FA\u4E3A\u56FE\u7247"
+  exportImage: "\u5BFC\u51FA\u4E3A\u56FE\u7247",
+  invalidWidth: "\u8BF7\u8BBE\u7F6E\u5408\u7406\u7684\u5BBD\u5EA6\u3002"
 };
 
 // src/i18n.ts
@@ -26418,13 +26420,27 @@ var import_react3 = __toESM(require_react());
 var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
   const [showTitle, setShowTitle] = (0, import_react2.useState)(true);
   const [width, setWidth] = (0, import_react2.useState)(640);
+  const [inputWidth, setInputWidth] = (0, import_react2.useState)("640");
   const [isGrabbing, setIsGrabbing] = (0, import_react2.useState)(false);
   const contentRef = (0, import_react2.useRef)(null);
   const actionsRef = (0, import_react2.useRef)(null);
   (0, import_react2.useEffect)(() => {
+    setWidth(Number(inputWidth));
+  }, [inputWidth]);
+  (0, import_react2.useEffect)(() => {
     var _a2, _b;
     (_b = (_a2 = contentRef.current) == null ? void 0 : _a2.appendChild) == null ? void 0 : _b.call(_a2, markdownEl);
   }, []);
+  const handleClick = (0, import_react2.useCallback)(
+    (e) => {
+      if (e.target.closest("button") && width <= 20) {
+        new import_obsidian.Notice(i18n("invalidWidth"));
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    },
+    [width]
+  );
   (0, import_react2.useEffect)(() => {
     if (actionsRef.current) {
       const copyButton = new import_obsidian.ButtonComponent(actionsRef.current);
@@ -26467,7 +26483,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
         }
       },
       /* @__PURE__ */ import_react3.default.createElement("span", null, i18n("includingFilename")),
-      /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement(
+      /* @__PURE__ */ import_react3.default.createElement("div", { className: "checkbox-container is-enabled" }, /* @__PURE__ */ import_react3.default.createElement(
         "input",
         {
           checked: showTitle,
@@ -26492,24 +26508,13 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
       /* @__PURE__ */ import_react3.default.createElement("div", null, /* @__PURE__ */ import_react3.default.createElement(
         "input",
         {
-          type: "range",
-          min: "360",
-          max: "1080",
           step: "10",
-          value: width,
-          style: { verticalAlign: "middle" },
-          onChange: (e) => setWidth(Number(e.target.value))
-        }
-      ), /* @__PURE__ */ import_react3.default.createElement(
-        "input",
-        {
+          value: inputWidth,
           type: "number",
-          step: "10",
-          value: width,
-          style: { width: 100, marginLeft: "10px" },
-          onChange: (e) => setWidth(Number(e.target.value))
+          style: { width: 100, margin: "0 10px" },
+          onChange: (e) => setInputWidth(e.target.value)
         }
-      ))
+      ), "px")
     )
   ), /* @__PURE__ */ import_react3.default.createElement(
     "div",
@@ -26532,7 +26537,8 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
       {
         minScale: Math.min(
           1,
-          (window.innerHeight * 0.8 - 300) / markdownEl.clientHeight
+          (window.innerHeight * 0.8 - 300) / markdownEl.clientHeight,
+          524 / markdownEl.clientWidth
         ),
         maxScale: 4,
         pinch: { step: 20 },
@@ -26544,7 +26550,10 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
       /* @__PURE__ */ import_react3.default.createElement(
         TransformComponent,
         {
-          wrapperStyle: { maxWidth: "100%", maxHeight: "calc(80vh - 300px)" }
+          wrapperStyle: {
+            maxWidth: "100%",
+            maxHeight: "calc(80vh - 300px)"
+          }
         },
         /* @__PURE__ */ import_react3.default.createElement(
           "div",
@@ -26563,6 +26572,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2 }) => {
     "div",
     {
       ref: actionsRef,
+      onClickCapture: handleClick,
       style: {
         display: "flex",
         alignItems: "center",

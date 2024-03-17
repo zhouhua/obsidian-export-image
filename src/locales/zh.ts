@@ -7,4 +7,5 @@ export default {
   includingFilename: "包含文件名作为标题：",
   imageWidth: "图片宽度：",
   exportImage: "导出为图片",
+  invalidWidth: "请设置合理的宽度。",
 };
