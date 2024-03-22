@@ -224,8 +224,8 @@ class ImageSettingTab extends PluginSettingTab {
         input.onchange = async () => {
           const file = input.files?.[0];
           if (file) {
-            this.plugin.settings.authorInfo.avator = await fileToBase64(file);
-            setAvatar(this.plugin.settings.authorInfo.avator);
+            this.plugin.settings.authorInfo.avatar = await fileToBase64(file);
+            setAvatar(this.plugin.settings.authorInfo.avatar);
             this.plugin.saveSettings();
           }
         };
@@ -239,7 +239,7 @@ class ImageSettingTab extends PluginSettingTab {
         button.setButtonText(L.setting.watermark.image.src.select());
         button.onClick(async () => {
           const modal = new ImageSelectModal(this.plugin.app, (img) => {
-            this.plugin.settings.authorInfo.avator = img;
+            this.plugin.settings.authorInfo.avatar = img;
             this.plugin.saveSettings();
             setAvatar(img);
             modal.close();

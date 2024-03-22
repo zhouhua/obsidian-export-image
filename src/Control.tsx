@@ -98,6 +98,7 @@ const Control: FC<{
             {L.setting.watermark.image.src.upload()}
             <input
               style={{ display: "none" }}
+              type="file"
               ref={inputRef}
               onChange={upload}
             />

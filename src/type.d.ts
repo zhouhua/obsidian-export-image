@@ -6,7 +6,7 @@ export interface ISettings {
     show: boolean;
     name?: string;
     remark?: string;
-    avator?: string;
+    avatar?: string;
     align?: "left" | "center" | "right";
     position?: "top" | "bottom";
   };

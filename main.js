@@ -12842,6 +12842,7 @@ var Control = ({ fieldSchema, setting, updata, app }) => {
         "input",
         {
           style: { display: "none" },
+          type: "file",
           ref: inputRef,
           onChange: upload
         }
@@ -13145,7 +13146,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
                 }
               }
             )),
-            formData.authorInfo.show && (formData.authorInfo.avator || formData.authorInfo.name) && /* @__PURE__ */ import_react7.default.createElement(
+            formData.authorInfo.show && (formData.authorInfo.avatar || formData.authorInfo.name) && /* @__PURE__ */ import_react7.default.createElement(
               "div",
               {
                 style: {
@@ -13156,7 +13157,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
                   alignItems: "center"
                 }
               },
-              formData.authorInfo.avator && /* @__PURE__ */ import_react7.default.createElement(
+              formData.authorInfo.avatar && /* @__PURE__ */ import_react7.default.createElement(
                 "div",
                 {
                   style: {
@@ -13164,7 +13165,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
                     height: 36,
                     borderRadius: "50%",
                     border: "1px solid var(--background-modifier-border)",
-                    backgroundImage: `url(${formData.authorInfo.avator})`,
+                    backgroundImage: `url(${formData.authorInfo.avatar})`,
                     backgroundSize: "cover",
                     margin: "0 20px"
                   }
@@ -13445,8 +13446,8 @@ var ImageSettingTab = class extends import_obsidian7.PluginSettingTab {
       input.onchange = async () => {
         const file = input.files?.[0];
         if (file) {
-          this.plugin.settings.authorInfo.avator = await fileToBase64(file);
-          setAvatar(this.plugin.settings.authorInfo.avator);
+          this.plugin.settings.authorInfo.avatar = await fileToBase64(file);
+          setAvatar(this.plugin.settings.authorInfo.avatar);
           this.plugin.saveSettings();
         }
       };
@@ -13457,7 +13458,7 @@ var ImageSettingTab = class extends import_obsidian7.PluginSettingTab {
       button.setButtonText(L_default.setting.watermark.image.src.select());
       button.onClick(async () => {
         const modal = new ImageSelectModal(this.plugin.app, (img) => {
-          this.plugin.settings.authorInfo.avator = img;
+          this.plugin.settings.authorInfo.avatar = img;
           this.plugin.saveSettings();
           setAvatar(img);
           modal.close();

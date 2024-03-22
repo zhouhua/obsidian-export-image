@@ -331,7 +331,7 @@ const ModalContent: FC<{
                     ></div>
                   </Watermark>
                   {formData.authorInfo.show &&
-                    (formData.authorInfo.avator ||
+                    (formData.authorInfo.avatar ||
                       formData.authorInfo.name) && (
                       <div
                         style={{
@@ -346,7 +346,7 @@ const ModalContent: FC<{
                           alignItems: "center",
                         }}
                       >
-                        {formData.authorInfo.avator && (
+                        {formData.authorInfo.avatar && (
                           <div
                             style={{
                               width: 36,
@@ -354,7 +354,7 @@ const ModalContent: FC<{
                               borderRadius: "50%",
                               border:
                                 "1px solid var(--background-modifier-border)",
-                              backgroundImage: `url(${formData.authorInfo.avator})`,
+                              backgroundImage: `url(${formData.authorInfo.avatar})`,
                               backgroundSize: "cover",
                               margin: "0 20px",
                             }}
