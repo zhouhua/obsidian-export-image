@@ -1,14 +1,15 @@
 import React from "react";
 import { MarkdownRenderChild, MarkdownRenderer, Modal, Notice } from "obsidian";
-import i18n from "./i18n";
 import { createRoot } from "react-dom/client";
 import ModalContent from "./ModalContent";
 import { copy, save } from "./capture";
+import L from "./L";
+import { ISettings } from "./type";
 
-export default async function () {
+export default async function (settings: ISettings) {
   const activeFile = this.app.workspace.getActiveFile();
-  if (!activeFile) {
-    new Notice(i18n("noActiveFile"));
+  if (!activeFile || !["md", "markdown"].includes(activeFile.extension)) {
+    new Notice(L.noActiveFile());
     return;
   }
   const markdown = await this.app.vault.cachedRead(activeFile);
@@ -31,14 +32,18 @@ export default async function () {
     new MarkdownRenderChild(el)
   );
   const modal = new Modal(this.app);
-  modal.setTitle(i18n("imageExportPreview"));
+  modal.setTitle(L.imageExportPreview());
+  modal.modalEl.style.width = "85vw";
+  modal.modalEl.style.maxWidth = "1500px";
   modal.open();
   const root = createRoot(modal.contentEl);
   root.render(
     <ModalContent
       markdownEl={el}
-      save={() => save(el, activeFile.basename)}
-      copy={() => copy(el)}
+      save={() => save(el, activeFile.basename, settings["2x"])}
+      copy={() => copy(el, settings["2x"])}
+      settings={settings}
+      app={this.app}
     />
   );
   modal.onClose = () => {

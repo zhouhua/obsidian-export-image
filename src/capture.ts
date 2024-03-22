@@ -1,30 +1,35 @@
 import { Notice, requestUrl } from "obsidian";
 import domtoimage from "./dom-to-image-more";
 import saveAs from "file-saver";
-import i18n from "./i18n";
+import L from "./L";
 
-async function getBlob(el: HTMLElement) {
-  return await domtoimage.toBlob(el, {
-    width: el.clientWidth,
-    height: el.clientHeight,
+async function getBlob(el: HTMLElement, higtResolution: boolean) {
+  const root = el.closest(".export-image-root") || el;
+  return await domtoimage.toBlob(root, {
+    width: root.clientWidth,
+    height: root.clientHeight,
     quality: 0.85,
-    scale: 2,
+    scale: higtResolution ? 2 : 1,
     requestUrl,
   });
 }
 
-export async function save(el: HTMLElement, title: string) {
-  const blob = await getBlob(el);
+export async function save(
+  el: HTMLElement,
+  title: string,
+  higtResolution: boolean
+) {
+  const blob = await getBlob(el, higtResolution);
   saveAs(blob, `${title.replace(/\s+/g, "_")}.jpg`);
 }
 
-export async function copy(el: HTMLElement) {
-  const blob = await getBlob(el);
+export async function copy(el: HTMLElement, higtResolution: boolean) {
+  const blob = await getBlob(el, higtResolution);
   const data = [
     new ClipboardItem({
       [blob.type]: blob,
     }),
   ];
   await navigator.clipboard.write(data);
-  new Notice(i18n("copiedSuccess"));
+  new Notice(L.copiedSuccess());
 }

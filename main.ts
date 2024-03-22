@@ -1,3 +1,3 @@
-import ExportImagePlugin from "src/ExportImagePlugin";
+import ExportImagePlugin from "./src/ExportImagePlugin";
 
 export default ExportImagePlugin;

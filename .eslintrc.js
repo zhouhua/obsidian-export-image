@@ -1,35 +1,31 @@
 module.export = {
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "env": {
-    "node": true
+  root: true,
+  parser: "@typescript-eslint/parser",
+  env: {
+    node: true,
   },
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "extends": [
+  plugins: ["@typescript-eslint"],
+  extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "airbnb"
+    "airbnb",
   ],
-  "parserOptions": {
-    "sourceType": "module",
-    "tsconfigRootDir": __dirname,
-    "project": [
-      "./tsconfig.json"
-    ]
+  parserOptions: {
+    sourceType: "module",
+    tsconfigRootDir: __dirname,
+    project: ["./tsconfig.json"],
   },
-  "rules": {
+  rules: {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        "args": "none"
-      }
+        args: "none",
+      },
     ],
     "@typescript-eslint/ban-ts-comment": "off",
     "no-prototype-builtins": "off",
-    "@typescript-eslint/no-empty-function": "off"
-  }
-}
+    "@typescript-eslint/no-empty-function": "off",
+  },
+};

@@ -5,8 +5,9 @@
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-    "version": "node version-bump.mjs && git add manifest.json versions.json"
+    "build": "tsc -noEmit -skipLibCheck && cross-env NODE_ENV=production node esbuild.config.mjs production",
+    "version": "node version-bump.mjs && git add manifest.json versions.json",
+    "typesafe-i18n": "typesafe-i18n"
   },
   "keywords": [],
   "author": "",
@@ -14,29 +15,34 @@
   "devDependencies": {
     "@types/dom-to-image": "^2.6.7",
     "@types/file-saver": "^2.0.7",
-    "@types/node": "^20.11.27",
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.11.28",
     "@typescript-eslint/eslint-plugin": "7.2.0",
     "@typescript-eslint/parser": "7.2.0",
     "builtin-modules": "3.3.0",
+    "cross-env": "^7.0.3",
     "esbuild": "0.20.2",
     "eslint": "^8.2.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "obsidian": "latest",
     "tslib": "2.6.2",
     "typescript": "5.4.2"
   },
   "dependencies": {
+    "@pansy/react-watermark": "^3.1.14",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "dom-to-image-more": "^3.2.0",
     "file-saver": "^2.0.5",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-zoom-pan-pinch": "^3.4.3"
+    "react-zoom-pan-pinch": "^3.4.3",
+    "typesafe-i18n": "^5.26.2"
   }
 }
