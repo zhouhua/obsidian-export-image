@@ -2,6 +2,7 @@ import type { BaseTranslation } from "../i18n-types";
 
 const en = {
   // TODO: your translations go here
+  command: "Export as an image",
   noActiveFile: "Please open an article first!",
   imageExportPreview: "Image Export Preview",
   copiedSuccess: "Copied to clipboard",

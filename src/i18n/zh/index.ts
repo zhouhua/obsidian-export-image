@@ -1,7 +1,7 @@
 import type { Translation } from "../i18n-types";
 
 const zh = {
-  // this is an example Translation, just rename or delete this folder if you want
+  command: "Export as an image（导出为图片）",
   noActiveFile: "请先打开一篇文档！",
   imageExportPreview: "图片导出预览",
   copiedSuccess: "已复制到剪贴板",

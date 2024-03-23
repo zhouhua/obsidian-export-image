@@ -12358,6 +12358,7 @@ var initFormatters = (locale2) => {
 // src/i18n/en/index.ts
 var en = {
   // TODO: your translations go here
+  command: "Export as an image",
   noActiveFile: "Please open an article first!",
   imageExportPreview: "Image Export Preview",
   copiedSuccess: "Copied to clipboard",
@@ -12443,7 +12444,7 @@ var en_default = en;
 
 // src/i18n/zh/index.ts
 var zh = {
-  // this is an example Translation, just rename or delete this folder if you want
+  command: "Export as an image\uFF08\u5BFC\u51FA\u4E3A\u56FE\u7247\uFF09",
   noActiveFile: "\u8BF7\u5148\u6253\u5F00\u4E00\u7BC7\u6587\u6863\uFF01",
   imageExportPreview: "\u56FE\u7247\u5BFC\u51FA\u9884\u89C8",
   copiedSuccess: "\u5DF2\u590D\u5236\u5230\u526A\u8D34\u677F",
@@ -13354,7 +13355,7 @@ var ExportImagePlugin = class extends import_obsidian7.Plugin {
     );
     this.addCommand({
       id: "export-image",
-      name: "Export as a image",
+      name: L_default.command(),
       checkCallback: (checking) => {
         if (!checking) {
           (async () => {

@@ -96,7 +96,7 @@ export default class ExportImagePlugin extends Plugin {
 
     this.addCommand({
       id: "export-image",
-      name: "Export as an image",
+      name: L.command(),
       checkCallback: (checking: boolean) => {
         // If checking is true, we're simply "checking" if the command can be run.
         // If checking is false, then we want to actually perform the operation.

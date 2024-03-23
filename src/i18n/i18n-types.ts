@@ -15,6 +15,10 @@ export type Translations = RootTranslation
 
 type RootTranslation = {
 	/**
+	 * E​x​p​o​r​t​ ​a​s​ ​a​n​ ​i​m​a​g​e
+	 */
+	command: string
+	/**
 	 * P​l​e​a​s​e​ ​o​p​e​n​ ​a​n​ ​a​r​t​i​c​l​e​ ​f​i​r​s​t​!
 	 */
 	noActiveFile: string
@@ -259,6 +263,10 @@ type RootTranslation = {
 }
 
 export type TranslationFunctions = {
+	/**
+	 * Export as an image
+	 */
+	command: () => LocalizedString
 	/**
 	 * Please open an article first!
 	 */
