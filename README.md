@@ -7,9 +7,9 @@ This Obsidian plugin can easily help you export any article as an image.
 ## Features
 
 - :memo: Export any article as an image, with the option to save it as a local image file or copy it to the clipboard.
-- :bubbles: Support adding watermarks, both text and image watermarks, to protect your copyrights.
-- :identification_card: Support adding author information (avatar, name, etc.) for easier sharing and dissemination.
-- :mobile_phone: Support outputting images at twice the resolution for clearer display on high PPI devices like smartphones.
+- :closed_lock_with_key: Support adding watermarks, both text and image watermarks, to protect your copyrights.
+- :technologist: Support adding author information (avatar, name, etc.) for easier sharing and dissemination.
+- :iphone: Support outputting images at twice the resolution for clearer display on high PPI devices like smartphones.
 - :straight_ruler: Support adjusting the image width to cater to different scenarios, such as exporting images suitable for viewing on mobile devices or ensuring readability when embedding images in articles.
 - :gear: Offer flexible configuration options with a convenient WYSIWYG (What You See Is What You Get) interface.
 
