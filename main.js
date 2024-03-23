@@ -12125,7 +12125,7 @@ var TransformComponent = function(_a) {
 var import_react7 = __toESM(require_react());
 var import_get2 = __toESM(require_get());
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/runtime/esm/parser/src/basic.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/runtime/esm/parser/src/basic.mjs
 var removeEmptyValues = (object) => Object.fromEntries(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Object.entries(object).map(([key, value]) => key !== "i" && value && value != "0" && [key, value]).filter(Boolean)
@@ -12196,7 +12196,7 @@ var parseRawText = (rawText, optimize = true, firstKey = "", lastKey = "") => ra
   return optimize ? removeEmptyValues(trimmed) : trimmed;
 });
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/runtime/esm/runtime/src/core.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/runtime/esm/runtime/src/core.mjs
 var applyFormatters = (formatters, formatterKeys, initialValue) => formatterKeys.reduce((value, formatterKey) => {
   var _a, _b;
   return (_b = formatterKey.match(REGEX_SWITCH_CASE) ? ((cases) => {
@@ -12240,10 +12240,10 @@ var translate = (textParts, pluralRules, formatters, args) => {
   return applyArguments(textParts, pluralRules, formatters, transformedArgs);
 };
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.string.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.string.mjs
 var getPartsFromString = (cache, text) => cache[text] || (cache[text] = parseRawText(text));
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.object.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.object.mjs
 var getTranslateInstance = (locale2, formatters) => {
   const cache = {};
   const pluralRules = new Intl.PluralRules(locale2);
@@ -12261,7 +12261,7 @@ var createProxy = (proxyObject, translateFn) => new Proxy(wrap(proxyObject, tran
   }
 });
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.instance.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.instance.mjs
 var i18n = (translations, formatters) => {
   const cache = {};
   return new Proxy({}, {
@@ -12269,7 +12269,7 @@ var i18n = (translations, formatters) => {
   });
 };
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/detectors/detectors/browser/document-cookie.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/detectors/detectors/browser/document-cookie.mjs
 var r = (o2, c2) => {
   let t3 = o2?.split(";").map((e3) => e3.trim()).find((e3) => e3.startsWith(c2))?.split("=")[1];
   return t3 ? [t3] : [];
@@ -12277,24 +12277,24 @@ var r = (o2, c2) => {
 var i = (o2 = "lang") => () => r(document?.cookie, o2);
 var n = i();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/detectors/detectors/browser/localstorage-detector.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/detectors/detectors/browser/localstorage-detector.mjs
 var e = (r4) => !!r4;
 var t = (r4 = "lang") => () => [window?.localStorage?.getItem(r4)].filter(e);
 var xe = t();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/detectors/detectors/browser/query-string.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/detectors/detectors/browser/query-string.mjs
 var o = (e3 = "lang") => () => {
   let t3 = location?.search?.slice(1).split("&").find((r4) => r4.startsWith(e3))?.split("=")[1];
   return t3 ? [t3] : [];
 };
 var c = o();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/detectors/detectors/browser/sessionstorage-detector.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/detectors/detectors/browser/sessionstorage-detector.mjs
 var r2 = (e3) => !!e3;
 var t2 = (e3 = "lang") => () => [window?.sessionStorage?.getItem(e3)].filter(r2);
 var lr = t2();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.2/node_modules/typesafe-i18n/utils/index.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/utils/index.mjs
 var objectExtend = extend;
 function extend() {
   var args = [].slice.call(arguments);
@@ -13092,8 +13092,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
         ref: previewOutRef,
         style: {
           height: mainHeight,
-          width: formData.width + "px",
-          maxWidth: "100%",
+          width: "100%",
           transition: "width 0.25s",
           cursor: isGrabbing ? "grabbing" : "grab"
         }
@@ -13154,7 +13153,8 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
                   [formData.authorInfo.position === "top" ? "borderBottom" : "borderTop"]: "1px solid var(--background-modifier-border)",
                   padding: "16px 32px",
                   justifyContent: alignMap[formData.authorInfo.align || "right"],
-                  alignItems: "center"
+                  alignItems: "center",
+                  background: "var(--background-primary)"
                 }
               },
               formData.authorInfo.avatar && /* @__PURE__ */ import_react7.default.createElement(
