@@ -279,8 +279,7 @@ const ModalContent: FC<{
             ref={previewOutRef}
             style={{
               height: mainHeight,
-              width: formData.width + "px",
-              maxWidth: "100%",
+              width: "100%",
               transition: "width 0.25s",
               cursor: isGrabbing ? "grabbing" : "grab",
             }}
