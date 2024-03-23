@@ -43,3 +43,7 @@ Search `Export Image` in community plugins.
 ## Special Thanks
 
 - [dom-to-image](https://github.com/tsayen/dom-to-image) & [dom-to-image-more](https://github.com/1904labs/dom-to-image-more). This repo borrows lots of code from [dom-to-image-more](https://github.com/1904labs/dom-to-image-more). The amazing lib helps me generate images from dom.
+
+## My Other Obsidian Plugins
+
+- [markdown-media-card](https://github.com/zhouhua/obsidian-markdown-media-card])
