@@ -2,7 +2,16 @@
 
 ![GitHub Release](https://img.shields.io/github/v/release/zhouhua/obsidian-export-image?include_prereleases&style=flat) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/zhouhua/obsidian-export-image/total?style=flat)
 
-This plugin helps you to export any articles to images easily.
+This Obsidian plugin can easily help you export any article as an image.
+
+## Features
+
+- :memo: Export any article as an image, with the option to save it as a local image file or copy it to the clipboard.
+- :bubbles: Support adding watermarks, both text and image watermarks, to protect your copyrights.
+- :identification_card: Support adding author information (avatar, name, etc.) for easier sharing and dissemination.
+- :mobile_phone: Support outputting images at twice the resolution for clearer display on high PPI devices like smartphones.
+- :straight_ruler: Support adjusting the image width to cater to different scenarios, such as exporting images suitable for viewing on mobile devices or ensuring readability when embedding images in articles.
+- :gear: Offer flexible configuration options with a convenient WYSIWYG (What You See Is What You Get) interface.
 
 ## Usage
 
