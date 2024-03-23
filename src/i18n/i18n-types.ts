@@ -47,6 +47,10 @@ type RootTranslation = {
 	 */
 	exportImage: string
 	/**
+	 * E​x​p​o​r​t​ ​s​e​l​e​c​t​i​o​n​ ​t​o​ ​i​m​a​g​e
+	 */
+	exportSelectionImage: string
+	/**
 	 * P​l​e​a​s​e​ ​s​e​t​ ​w​i​d​t​h​ ​w​i​t​h​ ​a​ ​r​e​a​s​o​n​a​b​l​e​ ​n​u​m​b​e​r​.
 	 */
 	invalidWidth: string
@@ -287,6 +291,10 @@ export type TranslationFunctions = {
 	 * Export to image
 	 */
 	exportImage: () => LocalizedString
+	/**
+	 * Export selection to image
+	 */
+	exportSelectionImage: () => LocalizedString
 	/**
 	 * Please set width with a reasonable number.
 	 */

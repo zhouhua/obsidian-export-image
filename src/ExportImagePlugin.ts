@@ -1,9 +1,21 @@
-import { Plugin, PluginSettingTab, App, Setting } from "obsidian";
+import {
+  Plugin,
+  PluginSettingTab,
+  App,
+  Setting,
+  TFile,
+  Notice,
+} from "obsidian";
 import { renderPreview } from "./settingPreview";
 import exportImage from "./exportImage";
 import type { ISettings } from "./type";
 import L from "./L";
-import { fileToBase64, fileToUrl, getSizeOfImage } from "./utils";
+import {
+  fileToBase64,
+  fileToUrl,
+  getSizeOfImage,
+  isMarkdownFile,
+} from "./utils";
 import ImageSelectModal from "./imageSelectModal";
 
 const DEFAULT_SETTINGS: ISettings = {
@@ -42,23 +54,42 @@ export default class ExportImagePlugin extends Plugin {
     await this.loadSettings();
 
     this.registerEvent(
-      this.app.workspace.on("file-menu", (menu) => {
-        menu.addItem((item) => {
-          item
-            .setTitle(L.exportImage())
-            .setIcon("image-down")
-            .onClick(() => exportImage(this.settings));
-        });
+      this.app.workspace.on("file-menu", (menu, file) => {
+        if (isMarkdownFile(file)) {
+          menu.addItem((item) => {
+            item
+              .setTitle(L.exportImage())
+              .setIcon("image-down")
+              .onClick(async () => {
+                const markdown = await this.app.vault.cachedRead(file as TFile);
+                exportImage(this.settings, markdown, file as TFile);
+              });
+          });
+        }
       })
     );
 
     this.registerEvent(
-      this.app.workspace.on("editor-menu", (menu) => {
+      this.app.workspace.on("editor-menu", (menu, editor) => {
+        const file: TFile =
+          // @ts-ignore
+          editor.editorComponent.file || this.app.workspace.getActiveFile();
+        if (!file) return;
+        if (editor.somethingSelected()) {
+          menu.addItem((item) => {
+            item
+              .setTitle(L.exportSelectionImage())
+              .setIcon("text-select")
+              .onClick(() =>
+                exportImage(this.settings, editor.getSelection(), file)
+              );
+          });
+        }
         menu.addItem((item) => {
           item
             .setTitle(L.exportImage())
             .setIcon("image-down")
-            .onClick(() => exportImage(this.settings));
+            .onClick(() => exportImage(this.settings, editor.getValue(), file));
         });
       })
     );
@@ -70,7 +101,18 @@ export default class ExportImagePlugin extends Plugin {
         // If checking is true, we're simply "checking" if the command can be run.
         // If checking is false, then we want to actually perform the operation.
         if (!checking) {
-          exportImage(this.settings);
+          (async () => {
+            const activeFile = this.app.workspace.getActiveFile();
+            if (
+              !activeFile ||
+              !["md", "markdown"].includes(activeFile.extension)
+            ) {
+              new Notice(L.noActiveFile());
+              return;
+            }
+            const markdown = await this.app.vault.cachedRead(activeFile);
+            exportImage(this.settings, markdown, activeFile);
+          })();
         }
 
         // This command will only show up in Command Palette when the check function returns true

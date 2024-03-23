@@ -2,8 +2,14 @@ import {
   App,
   MarkdownRenderChild,
   MarkdownRenderer,
+  TAbstractFile,
+  TFile,
   normalizePath,
 } from "obsidian";
+
+export function isMarkdownFile(file: TFile | TAbstractFile) {
+  return ["md", "markdown"].includes((file as TFile)?.extension ?? "");
+}
 
 export async function fileToBase64(file: Blob): Promise<string> {
   const reader = new FileReader();

@@ -10,6 +10,7 @@ const zh = {
   includingFilename: "包含文件名作为标题：",
   imageWidth: "图片宽度：",
   exportImage: "导出为图片",
+  exportSelectionImage: "导出选中内容为图片",
   invalidWidth: "请设置合理的宽度。",
   "2x": "输出 2 倍分辨率的图",
   moreSetting: "更详细的配置请进入 Export Image 插件的设置界面。",

@@ -10,6 +10,7 @@ const en = {
   includingFilename: "Including File Name As Title: ",
   imageWidth: "Image Width: ",
   exportImage: "Export to image",
+  exportSelectionImage: "Export selection to image",
   invalidWidth: "Please set width with a reasonable number.",
   "2x": "Enable 2x resolution image",
   moreSetting:
