@@ -17,6 +17,7 @@
     "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.11.30",
+    "@types/obsidian-typings": "npm:obsidian-typings@^1.0.4",
     "@typescript-eslint/eslint-plugin": "7.3.1",
     "@typescript-eslint/parser": "7.3.1",
     "builtin-modules": "3.3.0",
@@ -35,7 +36,7 @@
   },
   "dependencies": {
     "@pansy/react-watermark": "^3.1.14",
-    "@types/react": "^18.2.67",
+    "@types/react": "^18.2.69",
     "@types/react-dom": "^18.2.22",
     "dom-to-image-more": "^3.2.0",
     "file-saver": "^2.0.5",

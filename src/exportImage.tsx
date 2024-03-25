@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  MarkdownRenderChild,
-  MarkdownRenderer,
-  Modal,
-  Notice,
-  TFile,
-} from "obsidian";
+import { MarkdownRenderChild, MarkdownRenderer, Modal, TFile } from "obsidian";
 import { createRoot } from "react-dom/client";
 import ModalContent from "./ModalContent";
 import { copy, save } from "./capture";
@@ -33,7 +27,7 @@ export default async function (
     markdown,
     el,
     file.path,
-    new MarkdownRenderChild(el)
+    this.app.workspace.activeLeaf?.view || new MarkdownRenderChild(el)
   );
   const modal = new Modal(this.app);
   modal.setTitle(L.imageExportPreview());

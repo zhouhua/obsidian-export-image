@@ -13264,7 +13264,7 @@ async function exportImage_default(settings, markdown, file) {
     markdown,
     el,
     file.path,
-    new import_obsidian6.MarkdownRenderChild(el)
+    this.app.workspace.activeLeaf?.view || new import_obsidian6.MarkdownRenderChild(el)
   );
   const modal = new import_obsidian6.Modal(this.app);
   modal.setTitle(L_default.imageExportPreview());

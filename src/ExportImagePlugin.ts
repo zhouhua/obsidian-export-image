@@ -134,6 +134,7 @@ export default class ExportImagePlugin extends Plugin {
     await this.saveData(this.settings);
   }
 }
+// FIXME: need refactor
 class ImageSettingTab extends PluginSettingTab {
   plugin: ExportImagePlugin;
   render: (settings: ISettings) => void;
