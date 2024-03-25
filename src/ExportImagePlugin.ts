@@ -8,7 +8,7 @@ import {
 } from "obsidian";
 import { renderPreview } from "./settingPreview";
 import exportImage from "./exportImage";
-import type { ISettings } from "./type";
+import type { FileFormat, ISettings } from "./type";
 import L from "./L";
 import {
   fileToBase64,
@@ -22,6 +22,7 @@ const DEFAULT_SETTINGS: ISettings = {
   width: 640,
   showFilename: true,
   "2x": true,
+  format: "jpg",
   authorInfo: {
     show: false,
     align: "right",
@@ -196,6 +197,22 @@ class ImageSettingTab extends PluginSettingTab {
           this.plugin.settings["2x"] = value;
           await this.update();
         });
+      });
+    new Setting(containerEl)
+      .setName(L.setting.format.title())
+      .setDesc(L.setting.format.description())
+      .addDropdown((dropdown) => {
+        dropdown
+          .addOptions({
+            jpg: L.setting.format.jpg(),
+            png: L.setting.format.png(),
+            pdf: L.setting.format.pdf(),
+          })
+          .setValue(this.plugin.settings.format)
+          .onChange(async (value: FileFormat) => {
+            this.plugin.settings.format = value;
+            await this.update();
+          });
       });
     new Setting(containerEl).setHeading().setName(L.setting.userInfo.title());
     let userInfoEl: HTMLDivElement, avatarEl: HTMLDivElement;

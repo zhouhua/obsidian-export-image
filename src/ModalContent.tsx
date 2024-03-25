@@ -343,7 +343,10 @@ const ModalContent: FC<{
                           justifyContent:
                             alignMap[formData.authorInfo.align || "right"],
                           alignItems: "center",
-                          background: "var(--background-primary)",
+                          background:
+                            formData.format === "png"
+                              ? "unset"
+                              : "var(--background-primary)",
                         }}
                       >
                         {formData.authorInfo.avatar && (

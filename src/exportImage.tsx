@@ -21,7 +21,9 @@ export default async function (
     "markdown-rendered",
     "export-image-preview-container",
   ]);
-  el.style.backgroundColor = "var(--background-primary)";
+  if (settings.format !== "png") {
+    el.style.backgroundColor = "var(--background-primary)";
+  }
   MarkdownRenderer.render(
     this.app,
     markdown,
@@ -38,8 +40,8 @@ export default async function (
   root.render(
     <ModalContent
       markdownEl={el}
-      save={() => save(el, file.basename, settings["2x"])}
-      copy={() => copy(el, settings["2x"])}
+      save={() => save(el, file.basename, settings["2x"], settings.format)}
+      copy={() => copy(el, settings["2x"], settings.format)}
       settings={settings}
       app={this.app}
     />

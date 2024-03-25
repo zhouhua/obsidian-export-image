@@ -1,7 +1,10 @@
+export type FileFormat = "jpg" | "png" | "pdf";
+
 export interface ISettings {
   width?: number;
   showFilename: boolean;
   "2x": boolean;
+  format: FileFormat;
   authorInfo: {
     show: boolean;
     name?: string;

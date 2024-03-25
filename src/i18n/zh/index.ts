@@ -15,6 +15,7 @@ const zh = {
   "2x": "输出 2 倍分辨率的图",
   moreSetting: "更详细的配置请进入 Export Image 插件的设置界面。",
   guide: "拖动可移动，滚轮或双指滑动可放大/缩小，双击可重置。",
+  copyNotAllowed: "pdf 格式不支持复制",
   setting: {
     title: "导出图片",
     imageWidth: {
@@ -30,6 +31,14 @@ const zh = {
       label: "启用 2x 分辨率图片",
       description:
         "设置是否启用 2x 分辨率图片。启用后，图片会显示得更清晰，在高 PPI 屏幕上体验更好，如智能手机。但缺点是图片文件大小会变大。",
+    },
+    format: {
+      title: "输出文件格式",
+      description:
+        "默认的 jpg 格式图片应该满足绝大多数需求，但为了一些定制化的场景：1. 支持 png 格式图片，以输出透明背景的图片；2. 支持导出成单页 pdf 功能，这与通常 pdf 的纸张格式不同，请注意不要误用。",
+      jpg: "jpg - 默认",
+      png: "png - 导出透明背景的图片",
+      pdf: "pdf - 导出单页 pdf",
     },
     userInfo: {
       title: "作者信息",

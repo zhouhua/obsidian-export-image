@@ -1,5 +1,5 @@
 (function (global) {
-  "use strict";
+  ("use strict");
 
   const util = newUtil();
   const inliner = newInliner();
@@ -84,6 +84,7 @@
      *         - @param {Object} headers - eg: { "Content-Type", "application/json;charset=UTF-8" }
      *         - @param {Object} data - post payload
      * @param {Function} options.requestUrl - override request to resolve cors promblems
+     * @param {string} options.type - use for toBlob, define the image format of blob
      * @return {Promise} - A promise that is fulfilled with a SVG image data URL
      * */
   function toSvg(node, options) {
@@ -293,6 +294,7 @@
       domtoimage.impl.options.styleCaching = options.styleCaching;
     }
     domtoimage.impl.options.requestUrl = options.requestUrl;
+    domtoimage.impl.options.type = options.type || "image/png";
   }
 
   function draw(domNode, options) {
@@ -710,7 +712,7 @@
 
         resolve(
           new Blob([binaryArray], {
-            type: "image/jpeg",
+            type: domtoimage.impl.options.type,
           })
         );
       });

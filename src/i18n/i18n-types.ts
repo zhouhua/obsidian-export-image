@@ -70,6 +70,10 @@ type RootTranslation = {
 	 * D​r​a​g​ ​t​o​ ​M​o​v​e​,​ ​s​c​r​o​l​l​ ​o​r​ ​p​i​n​c​h​ ​t​o​ ​z​o​o​m​ ​i​n​/​o​u​t​,​ ​d​o​u​b​l​e​ ​c​l​i​c​k​ ​t​o​ ​r​e​s​e​t​.
 	 */
 	guide: string
+	/**
+	 * p​d​f​ ​f​o​r​m​a​t​ ​i​s​ ​n​o​t​ ​s​u​p​p​o​r​t​e​d​ ​f​o​r​ ​c​o​p​y
+	 */
+	copyNotAllowed: string
 	setting: {
 		/**
 		 * E​x​p​o​r​t​ ​I​m​a​g​e
@@ -104,6 +108,28 @@ type RootTranslation = {
 			 * S​e​t​ ​w​h​e​t​h​e​r​ ​t​o​ ​e​n​a​b​l​e​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e​.​ ​I​m​a​g​e​s​ ​w​i​t​h​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​w​i​l​l​ ​a​p​p​e​a​r​ ​s​h​a​r​p​e​r​ ​a​n​d​ ​p​r​o​v​i​d​e​ ​a​ ​b​e​t​t​e​r​ ​e​x​p​e​r​i​e​n​c​e​ ​o​n​ ​h​i​g​h​ ​P​P​I​ ​s​c​r​e​e​n​s​,​ ​s​u​c​h​ ​a​s​ ​t​h​o​s​e​ ​o​n​ ​s​m​a​r​t​p​h​o​n​e​s​.​ ​H​o​w​e​v​e​r​,​ ​t​h​e​ ​d​o​w​n​s​i​d​e​ ​i​s​ ​t​h​a​t​ ​t​h​e​ ​f​i​l​e​ ​s​i​z​e​ ​o​f​ ​t​h​e​ ​i​m​a​g​e​s​ ​i​s​ ​l​a​r​g​e​r​.
 			 */
 			description: string
+		}
+		format: {
+			/**
+			 * O​u​t​p​u​t​ ​f​i​l​e​ ​f​o​r​m​a​t
+			 */
+			title: string
+			/**
+			 * T​h​e​ ​d​e​f​a​u​l​t​ ​J​P​G​ ​f​o​r​m​a​t​ ​f​o​r​ ​i​m​a​g​e​s​ ​s​h​o​u​l​d​ ​s​u​f​f​i​c​e​ ​f​o​r​ ​m​o​s​t​ ​n​e​e​d​s​.​ ​H​o​w​e​v​e​r​,​ ​f​o​r​ ​c​u​s​t​o​m​i​z​a​t​i​o​n​:​ ​1​.​ ​S​u​p​p​o​r​t​ ​P​N​G​ ​f​o​r​m​a​t​ ​f​o​r​ ​i​m​a​g​e​s​ ​w​i​t​h​ ​t​r​a​n​s​p​a​r​e​n​t​ ​b​a​c​k​g​r​o​u​n​d​s​.​ ​2​.​ ​O​f​f​e​r​ ​t​h​e​ ​a​b​i​l​i​t​y​ ​t​o​ ​e​x​p​o​r​t​ ​a​s​ ​a​ ​s​i​n​g​l​e​-​p​a​g​e​ ​P​D​F​ ​w​i​t​h​ ​a​ ​n​o​n​-​s​t​a​n​d​a​r​d​ ​p​a​p​e​r​ ​s​i​z​e​,​ ​p​l​e​a​s​e​ ​e​n​s​u​r​e​ ​i​t​ ​i​s​ ​u​s​e​d​ ​c​o​r​r​e​c​t​l​y​.
+			 */
+			description: string
+			/**
+			 * .​j​p​g​ ​-​ ​d​e​f​a​u​l​t
+			 */
+			jpg: string
+			/**
+			 * .​p​n​g​ ​-​ ​t​r​a​n​s​p​a​r​e​n​t​ ​b​a​c​k​g​r​o​u​n​d​ ​i​m​a​g​e
+			 */
+			png: string
+			/**
+			 * .​p​d​f​ ​-​ ​s​i​n​g​l​e​ ​p​a​g​e​ ​p​d​f
+			 */
+			pdf: string
 		}
 		userInfo: {
 			/**
@@ -319,6 +345,10 @@ export type TranslationFunctions = {
 	 * Drag to Move, scroll or pinch to zoom in/out, double click to reset.
 	 */
 	guide: () => LocalizedString
+	/**
+	 * pdf format is not supported for copy
+	 */
+	copyNotAllowed: () => LocalizedString
 	setting: {
 		/**
 		 * Export Image
@@ -353,6 +383,28 @@ export type TranslationFunctions = {
 			 * Set whether to enable 2x resolution image. Images with 2x resolution will appear sharper and provide a better experience on high PPI screens, such as those on smartphones. However, the downside is that the file size of the images is larger.
 			 */
 			description: () => LocalizedString
+		}
+		format: {
+			/**
+			 * Output file format
+			 */
+			title: () => LocalizedString
+			/**
+			 * The default JPG format for images should suffice for most needs. However, for customization: 1. Support PNG format for images with transparent backgrounds. 2. Offer the ability to export as a single-page PDF with a non-standard paper size, please ensure it is used correctly.
+			 */
+			description: () => LocalizedString
+			/**
+			 * .jpg - default
+			 */
+			jpg: () => LocalizedString
+			/**
+			 * .png - transparent background image
+			 */
+			png: () => LocalizedString
+			/**
+			 * .pdf - single page pdf
+			 */
+			pdf: () => LocalizedString
 		}
 		userInfo: {
 			/**

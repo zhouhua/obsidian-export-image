@@ -17,6 +17,7 @@ const en = {
   moreSetting:
     "More detailed settings can be found in the `Export Image` plugin settings.",
   guide: "Drag to Move, scroll or pinch to zoom in/out, double click to reset.",
+  copyNotAllowed: "pdf format is not supported for copy",
   setting: {
     title: "Export Image",
     imageWidth: {
@@ -33,6 +34,14 @@ const en = {
       label: "Enable 2x resolution image",
       description:
         "Set whether to enable 2x resolution image. Images with 2x resolution will appear sharper and provide a better experience on high PPI screens, such as those on smartphones. However, the downside is that the file size of the images is larger.",
+    },
+    format: {
+      title: "Output file format",
+      description:
+        "The default JPG format for images should suffice for most needs. However, for customization: 1. Support PNG format for images with transparent backgrounds. 2. Offer the ability to export as a single-page PDF with a non-standard paper size, please ensure it is used correctly.",
+      jpg: ".jpg - default",
+      png: ".png - transparent background image",
+      pdf: ".pdf - single page pdf",
     },
     userInfo: {
       title: "Author info",
