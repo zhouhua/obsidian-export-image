@@ -21,3 +21,12 @@ If your plugin does not need CSS, delete this file.
 .export-image-preview-container {
   pointer-events: none;
 }
+
+.export-image-root .obsidian-banner-wrapper {
+  margin-top: 0 !important;
+  padding-top: 0;
+}
+
+.export-image-root .markdown-preview-view:has(.obsidian-banner-wrapper) {
+  padding-top: calc(var(--banner-height) + var(--file-margins));
+}

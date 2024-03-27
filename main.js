@@ -42015,10 +42015,11 @@ async function exportImage_default(app, settings, markdown, file, frontmatter) {
   import_obsidian6.MarkdownRenderer.render(
     app,
     markdown,
-    el,
+    el.createDiv(),
     file.path,
     app.workspace.activeLeaf?.view || new import_obsidian6.MarkdownRenderChild(el)
   );
+  console.log(app.workspace.getActiveViewOfType(import_obsidian6.MarkdownView));
   const modal = new import_obsidian6.Modal(this.app);
   modal.setTitle(L_default.imageExportPreview());
   modal.modalEl.style.width = "85vw";

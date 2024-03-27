@@ -4,6 +4,7 @@ import {
   FrontMatterCache,
   MarkdownRenderChild,
   MarkdownRenderer,
+  MarkdownView,
   Modal,
   TFile,
   getFrontMatterInfo,
@@ -28,10 +29,13 @@ export default async function (
   MarkdownRenderer.render(
     app,
     markdown,
-    el,
+    el.createDiv(),
     file.path,
-    app.workspace.activeLeaf?.view || new MarkdownRenderChild(el)
+    app.workspace.getActiveViewOfType(MarkdownView) ||
+      app.workspace.activeLeaf?.view ||
+      new MarkdownRenderChild(el)
   );
+  console.log(app.workspace.getActiveViewOfType(MarkdownView));
   const modal = new Modal(this.app);
   modal.setTitle(L.imageExportPreview());
   modal.modalEl.style.width = "85vw";
