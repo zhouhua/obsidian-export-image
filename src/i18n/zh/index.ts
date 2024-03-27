@@ -32,6 +32,9 @@ const zh = {
       description:
         "设置是否启用 2x 分辨率图片。启用后，图片会显示得更清晰，在高 PPI 屏幕上体验更好，如智能手机。但缺点是图片文件大小会变大。",
     },
+    metadata: {
+      label: "显示 metadata",
+    },
     format: {
       title: "输出文件格式",
       description:

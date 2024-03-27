@@ -29980,13 +29980,13 @@ var renderPreview = (root, app) => {
 };
 
 // src/exportImage.tsx
-var import_react8 = __toESM(require_react());
+var import_react9 = __toESM(require_react());
 var import_obsidian6 = require("obsidian");
 var import_client3 = __toESM(require_client());
 
 // src/ModalContent.tsx
 var import_obsidian4 = require("obsidian");
-var import_react6 = __toESM(require_react());
+var import_react7 = __toESM(require_react());
 
 // node_modules/.pnpm/react-zoom-pan-pinch@3.4.3_react-dom@18.2.0_react@18.2.0/node_modules/react-zoom-pan-pinch/dist/index.esm.js
 var import_react3 = __toESM(require_react());
@@ -31620,7 +31620,7 @@ var TransformComponent = function(_a2) {
 };
 
 // src/ModalContent.tsx
-var import_react7 = __toESM(require_react());
+var import_react8 = __toESM(require_react());
 var import_get2 = __toESM(require_get());
 
 // node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/runtime/esm/parser/src/basic.mjs
@@ -31885,6 +31885,9 @@ var en = {
       label: "Enable 2x resolution image",
       description: "Set whether to enable 2x resolution image. Images with 2x resolution will appear sharper and provide a better experience on high PPI screens, such as those on smartphones. However, the downside is that the file size of the images is larger."
     },
+    metadata: {
+      label: "Show metadata"
+    },
     format: {
       title: "Output file format",
       description: "The default JPG format for images should suffice for most needs. However, for customization: 1. Support PNG format for images with transparent backgrounds. 2. Offer the ability to export as a single-page PDF with a non-standard paper size, please ensure it is used correctly.",
@@ -31978,6 +31981,9 @@ var zh = {
     "2x": {
       label: "\u542F\u7528 2x \u5206\u8FA8\u7387\u56FE\u7247",
       description: "\u8BBE\u7F6E\u662F\u5426\u542F\u7528 2x \u5206\u8FA8\u7387\u56FE\u7247\u3002\u542F\u7528\u540E\uFF0C\u56FE\u7247\u4F1A\u663E\u793A\u5F97\u66F4\u6E05\u6670\uFF0C\u5728\u9AD8 PPI \u5C4F\u5E55\u4E0A\u4F53\u9A8C\u66F4\u597D\uFF0C\u5982\u667A\u80FD\u624B\u673A\u3002\u4F46\u7F3A\u70B9\u662F\u56FE\u7247\u6587\u4EF6\u5927\u5C0F\u4F1A\u53D8\u5927\u3002"
+    },
+    metadata: {
+      label: "\u663E\u793A metadata"
     },
     format: {
       title: "\u8F93\u51FA\u6587\u4EF6\u683C\u5F0F",
@@ -32120,6 +32126,9 @@ async function createHtml(path, app) {
     new import_obsidian2.MarkdownRenderChild(div)
   );
   return div;
+}
+function getMetadata(file, app) {
+  return app.metadataCache.getFileCache(file)?.frontmatter;
 }
 
 // src/imageSelectModal.tsx
@@ -32374,6 +32383,247 @@ var Control = ({ fieldSchema, setting, updata, app }) => {
 };
 var Control_default = Control;
 
+// src/Metadata.tsx
+var import_react6 = __toESM(require_react());
+var iconMap = {
+  text: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      className: "svg-icon"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M17 6.1H3" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 12.1H3" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M15.1 18H3" })
+  ),
+  number: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("rect", { x: "14", y: "14", width: "4", height: "6", rx: "2" }),
+    /* @__PURE__ */ import_react6.default.createElement("rect", { x: "6", y: "4", width: "4", height: "6", rx: "2" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M6 20h4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M14 10h4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M6 14h2v6" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M14 4h2v6" })
+  ),
+  multitext: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "6", y2: "6" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "12", y2: "12" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "18", y2: "18" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "6", y2: "6" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "12", y2: "12" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "18", y2: "18" })
+  ),
+  tags: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z" }),
+    /* @__PURE__ */ import_react6.default.createElement("circle", { cx: "6.5", cy: "9.5", r: ".5", fill: "currentColor" })
+  ),
+  date: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M8 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M16 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("rect", { width: "18", height: "18", x: "3", y: "4", rx: "2" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M3 10h18" })
+  ),
+  datetime: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M16 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M8 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M3 10h5" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M17.5 17.5 16 16.3V14" }),
+    /* @__PURE__ */ import_react6.default.createElement("circle", { cx: "16", cy: "16", r: "6" })
+  ),
+  checkbox: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "m9 11 3 3L22 4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" })
+  ),
+  aliases: /* @__PURE__ */ import_react6.default.createElement(import_react6.default.Fragment, null)
+};
+var Metadata = ({ type, name, value }) => {
+  if (["aliases", "cssclasses"].contains(name)) {
+    return null;
+  }
+  if (value === null) {
+    return null;
+  }
+  const iconSvg = iconMap[type] || iconMap["text"];
+  let valueElement;
+  switch (type) {
+    case "text":
+      if (!value)
+        return null;
+      const match = value.match(/^\[\[(.+)\]\]$/);
+      if (match) {
+        valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-link-inner internal-link" }, match[1]);
+      } else {
+        valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
+      }
+      break;
+    case "number":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement(
+        "input",
+        {
+          className: "metadata-input metadata-input-number",
+          type: "number",
+          value
+        }
+      );
+      break;
+    case "checkbox":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement(
+        "input",
+        {
+          className: "metadata-input-checkbox",
+          type: "checkbox",
+          checked: value
+        }
+      );
+      break;
+    case "date":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement(
+        "input",
+        {
+          className: "metadata-input metadata-input-text",
+          type: "date",
+          value
+        }
+      );
+      break;
+    case "datetime":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement(
+        "input",
+        {
+          className: "metadata-input metadata-input-text",
+          type: "datetime-local",
+          value
+        }
+      );
+      break;
+    case "multitext":
+    case "tags":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-container" }, value.map((str) => /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-pill" }, /* @__PURE__ */ import_react6.default.createElement(
+        "div",
+        {
+          className: "multi-select-pill-content",
+          style: { margin: "0 6px" }
+        },
+        /* @__PURE__ */ import_react6.default.createElement("span", null, str)
+      ))));
+      break;
+    case "aliases":
+      return null;
+    default:
+      valueElement = value;
+      break;
+  }
+  return /* @__PURE__ */ import_react6.default.createElement(
+    "div",
+    {
+      className: "metadata-property",
+      "data-property-type": type,
+      "data-property-key": name
+    },
+    /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-property-key" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "metadata-property-icon" }, iconSvg), /* @__PURE__ */ import_react6.default.createElement(
+      "span",
+      {
+        style: {
+          padding: "var(--size-4-1) var(--size-4-2)",
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+          height: "var(--input-height)"
+        }
+      },
+      name
+    )),
+    /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-property-value" }, valueElement)
+  );
+};
+var Metadata_default = Metadata;
+
 // src/ModalContent.tsx
 var alignMap = {
   left: "flex-start",
@@ -32497,22 +32747,33 @@ function isShow(field, settings) {
   }
   return (0, import_get2.default)(settings, field.when.path) === field.when.flag;
 }
-var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => {
-  const [formData, setFormData] = (0, import_react6.useState)(settings);
-  const [watermarkProps, setWatermarkProps] = (0, import_react6.useState)({});
-  const [isGrabbing, setIsGrabbing] = (0, import_react6.useState)(false);
-  const contentRef = (0, import_react6.useRef)(null);
-  const actionsRef = (0, import_react6.useRef)(null);
-  const previewOutRef = (0, import_react6.useRef)(null);
+var ModalContent = ({
+  markdownEl,
+  copy: copy2,
+  save: save2,
+  settings,
+  app,
+  frontmatter,
+  title,
+  metadataMap
+}) => {
+  const [formData, setFormData] = (0, import_react7.useState)(settings);
+  const [watermarkProps, setWatermarkProps] = (0, import_react7.useState)({});
+  const [isGrabbing, setIsGrabbing] = (0, import_react7.useState)(false);
+  const contentRef = (0, import_react7.useRef)(null);
+  const actionsRef = (0, import_react7.useRef)(null);
+  const previewOutRef = (0, import_react7.useRef)(null);
   const mainHeight = Math.min(764, window.innerHeight * 0.85 - 225);
   const root = markdownEl.closest(".export-image-root") || markdownEl;
-  (0, import_react6.useEffect)(() => {
-    contentRef.current?.appendChild?.(markdownEl);
+  (0, import_react7.useEffect)(() => {
+    markdownEl.childNodes.forEach(
+      (child) => contentRef.current?.appendChild?.(child)
+    );
   }, []);
-  (0, import_react6.useEffect)(() => {
+  (0, import_react7.useEffect)(() => {
     setFormData(settings);
   }, [settings]);
-  (0, import_react6.useEffect)(() => {
+  (0, import_react7.useEffect)(() => {
     const props = {
       monitor: false,
       mode: "interval",
@@ -32534,7 +32795,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
     }
     setWatermarkProps(props);
   }, [formData]);
-  const handleClick = (0, import_react6.useCallback)(
+  const handleClick = (0, import_react7.useCallback)(
     (e4) => {
       if (e4.target.closest("button") && (formData.width || 640) <= 20) {
         new import_obsidian4.Notice(L_default.invalidWidth());
@@ -32544,7 +32805,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
     },
     [formData.width]
   );
-  (0, import_react6.useEffect)(() => {
+  (0, import_react7.useEffect)(() => {
     if (actionsRef.current) {
       const copyButton = new import_obsidian4.ButtonComponent(actionsRef.current);
       copyButton.setIcon("clipboard-copy").buttonEl.createSpan({
@@ -32564,7 +32825,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
       actionsRef.current?.childNodes.forEach((c5) => c5.remove());
     };
   }, [copy2, save2]);
-  return /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement(
+  return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement(
     "div",
     {
       style: {
@@ -32573,7 +32834,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
         ["--line-height-tight"]: "20px"
       }
     },
-    /* @__PURE__ */ import_react7.default.createElement(
+    /* @__PURE__ */ import_react8.default.createElement(
       "div",
       {
         style: {
@@ -32585,15 +32846,15 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
         }
       },
       formSchema.map(
-        (fieldSchema) => isShow(fieldSchema, formData) && /* @__PURE__ */ import_react7.default.createElement(
+        (fieldSchema) => isShow(fieldSchema, formData) && /* @__PURE__ */ import_react8.default.createElement(
           "div",
           {
             className: "setting-item",
             key: fieldSchema.path,
             style: { padding: "10px 0" }
           },
-          /* @__PURE__ */ import_react7.default.createElement("div", { className: "setting-item-info" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "setting-item-name" }, fieldSchema.label), fieldSchema.desc && /* @__PURE__ */ import_react7.default.createElement("div", { className: "setting-item-description" }, fieldSchema.desc)),
-          /* @__PURE__ */ import_react7.default.createElement("div", { className: "setting-item-control" }, /* @__PURE__ */ import_react7.default.createElement(
+          /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-info" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-name" }, fieldSchema.label), fieldSchema.desc && /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-description" }, fieldSchema.desc)),
+          /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-control" }, /* @__PURE__ */ import_react8.default.createElement(
             Control_default,
             {
               fieldSchema,
@@ -32604,9 +32865,9 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
           ))
         )
       ),
-      /* @__PURE__ */ import_react7.default.createElement("div", { style: { lineHeight: "20px", opacity: 0.6, fontSize: "12px" } }, L_default.moreSetting())
+      /* @__PURE__ */ import_react8.default.createElement("div", { style: { lineHeight: "20px", opacity: 0.6, fontSize: "12px" } }, L_default.moreSetting())
     ),
-    /* @__PURE__ */ import_react7.default.createElement("div", { style: { width: "50%", padding: 20 } }, /* @__PURE__ */ import_react7.default.createElement(
+    /* @__PURE__ */ import_react8.default.createElement("div", { style: { width: "50%", padding: 20 } }, /* @__PURE__ */ import_react8.default.createElement(
       "div",
       {
         ref: previewOutRef,
@@ -32617,7 +32878,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
           cursor: isGrabbing ? "grabbing" : "grab"
         }
       },
-      /* @__PURE__ */ import_react7.default.createElement(
+      /* @__PURE__ */ import_react8.default.createElement(
         TransformWrapper,
         {
           minScale: Math.min(
@@ -32632,7 +32893,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
           onPanning: () => setIsGrabbing(true),
           onPanningStop: () => setIsGrabbing(false)
         },
-        /* @__PURE__ */ import_react7.default.createElement(
+        /* @__PURE__ */ import_react8.default.createElement(
           TransformComponent,
           {
             wrapperStyle: {
@@ -32645,27 +32906,49 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
               overflow: "hidden"
             }
           },
-          /* @__PURE__ */ import_react7.default.createElement(
+          /* @__PURE__ */ import_react8.default.createElement(
             "div",
             {
-              className: "export-image-root",
+              className: `export-image-root ${(frontmatter?.cssclasses || []).join(" ")}`,
               style: {
                 display: "flex",
                 flexDirection: formData.authorInfo.position === "bottom" ? "column" : "column-reverse"
               }
             },
-            /* @__PURE__ */ import_react7.default.createElement(src_default, { ...watermarkProps }, /* @__PURE__ */ import_react7.default.createElement(
+            /* @__PURE__ */ import_react8.default.createElement(src_default, { ...watermarkProps }, /* @__PURE__ */ import_react8.default.createElement(
               "div",
               {
-                className: formData.showFilename ? "" : "hide-filename",
-                ref: contentRef,
+                className: "markdown-preview-view markdown-rendered export-image-preview-container",
                 style: {
                   width: `${formData.width}px`,
                   transition: "width 0.25s"
                 }
-              }
+              },
+              formData.showFilename && /* @__PURE__ */ import_react8.default.createElement("div", { className: "inline-title", autoCapitalize: "on" }, title),
+              formData.showMetadata && frontmatter && Object.keys(frontmatter).length > 0 && /* @__PURE__ */ import_react8.default.createElement(
+                "div",
+                {
+                  className: "metadata-content",
+                  style: {
+                    color: "var(--metadata-label-text-color)",
+                    fontSize: "var(--metadata-label-font-size)",
+                    fontWeight: "var(--metadata-label-font-weight)",
+                    padding: "20px 0"
+                  }
+                },
+                Object.keys(frontmatter).map((name) => /* @__PURE__ */ import_react8.default.createElement(
+                  Metadata_default,
+                  {
+                    name,
+                    key: name,
+                    value: frontmatter[name],
+                    type: metadataMap[name]?.type || "text"
+                  }
+                ))
+              ),
+              /* @__PURE__ */ import_react8.default.createElement("div", { ref: contentRef })
             )),
-            formData.authorInfo.show && (formData.authorInfo.avatar || formData.authorInfo.name) && /* @__PURE__ */ import_react7.default.createElement(
+            formData.authorInfo.show && (formData.authorInfo.avatar || formData.authorInfo.name) && /* @__PURE__ */ import_react8.default.createElement(
               "div",
               {
                 style: {
@@ -32677,7 +32960,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
                   background: formData.format === "png" ? "unset" : "var(--background-primary)"
                 }
               },
-              formData.authorInfo.avatar && /* @__PURE__ */ import_react7.default.createElement(
+              formData.authorInfo.avatar && /* @__PURE__ */ import_react8.default.createElement(
                 "div",
                 {
                   style: {
@@ -32691,7 +32974,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
                   }
                 }
               ),
-              formData.authorInfo.name && /* @__PURE__ */ import_react7.default.createElement("div", null, /* @__PURE__ */ import_react7.default.createElement(
+              formData.authorInfo.name && /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement(
                 "div",
                 {
                   style: {
@@ -32700,7 +32983,7 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
                   }
                 },
                 formData.authorInfo.name
-              ), formData.authorInfo.remark && /* @__PURE__ */ import_react7.default.createElement(
+              ), formData.authorInfo.remark && /* @__PURE__ */ import_react8.default.createElement(
                 "div",
                 {
                   style: {
@@ -32714,8 +32997,8 @@ var ModalContent = ({ markdownEl, copy: copy2, save: save2, settings, app }) => 
           )
         )
       )
-    ), /* @__PURE__ */ import_react7.default.createElement("div", { style: { lineHeight: "20px", opacity: 0.6, fontSize: "12px" } }, L_default.guide()))
-  ), /* @__PURE__ */ import_react7.default.createElement(
+    ), /* @__PURE__ */ import_react8.default.createElement("div", { style: { lineHeight: "20px", opacity: 0.6, fontSize: "12px" } }, L_default.guide()))
+  ), /* @__PURE__ */ import_react8.default.createElement(
     "div",
     {
       ref: actionsRef,
@@ -41724,26 +42007,17 @@ async function copy(el, higtResolution, format) {
 }
 
 // src/exportImage.tsx
-async function exportImage_default(settings, markdown, file) {
+async function exportImage_default(app, settings, markdown, file, frontmatter) {
   const el = document.createElement("div");
-  el.createEl("h1", {
-    text: file.basename,
-    cls: "export-image-preview-filename"
-  });
-  el.addClasses([
-    "markdown-preview-view",
-    "markdown-rendered",
-    "export-image-preview-container"
-  ]);
   if (settings.format !== "png") {
     el.style.backgroundColor = "var(--background-primary)";
   }
   import_obsidian6.MarkdownRenderer.render(
-    this.app,
+    app,
     markdown,
     el,
     file.path,
-    this.app.workspace.activeLeaf?.view || new import_obsidian6.MarkdownRenderChild(el)
+    app.workspace.activeLeaf?.view || new import_obsidian6.MarkdownRenderChild(el)
   );
   const modal = new import_obsidian6.Modal(this.app);
   modal.setTitle(L_default.imageExportPreview());
@@ -41751,15 +42025,36 @@ async function exportImage_default(settings, markdown, file) {
   modal.modalEl.style.maxWidth = "1500px";
   modal.open();
   const root = (0, import_client3.createRoot)(modal.contentEl);
+  const metadataMap = (
+    // @ts-ignore
+    app.metadataCache.getAllPropertyInfos()
+  );
+  const aaa = {
+    "22": { name: "22", count: 1, type: "text" },
+    date: { name: "Date", count: 1, type: "date" },
+    test: { name: "test", count: 2, type: "text" },
+    test1: { name: "test1", count: 1, type: "checkbox" },
+    test2: { name: "test2", count: 1, type: "multitext" },
+    test3: { name: "test3", count: 1, type: "number" },
+    test4: { name: "test4", count: 1, type: "date" },
+    test5: { name: "test5", count: 1, type: "datetime" },
+    empty: { name: "empty", count: 1 },
+    cssclasses: { name: "cssclasses", count: 1, type: "multitext" },
+    tags: { name: "tags", count: 1, type: "tags" },
+    aliases: { name: "aliases", type: "aliases", count: 0 }
+  };
   root.render(
-    /* @__PURE__ */ import_react8.default.createElement(
+    /* @__PURE__ */ import_react9.default.createElement(
       ModalContent_default,
       {
         markdownEl: el,
         save: () => save(el, file.basename, settings["2x"], settings.format),
         copy: () => copy(el, settings["2x"], settings.format),
         settings,
-        app: this.app
+        frontmatter,
+        title: file.basename,
+        metadataMap,
+        app
       }
     )
   );
@@ -41774,6 +42069,7 @@ var DEFAULT_SETTINGS = {
   showFilename: true,
   "2x": true,
   format: "jpg",
+  showMetadata: false,
   authorInfo: {
     show: false,
     align: "right",
@@ -41804,10 +42100,17 @@ var ExportImagePlugin = class extends import_obsidian7.Plugin {
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
         if (isMarkdownFile(file)) {
+          const frontmatter = getMetadata(file, this.app);
           menu.addItem((item) => {
             item.setTitle(L_default.exportImage()).setIcon("image-down").onClick(async () => {
               const markdown = await this.app.vault.cachedRead(file);
-              exportImage_default(this.settings, markdown, file);
+              exportImage_default(
+                this.app,
+                this.settings,
+                markdown,
+                file,
+                frontmatter
+              );
             });
           });
         }
@@ -41819,17 +42122,32 @@ var ExportImagePlugin = class extends import_obsidian7.Plugin {
           // @ts-ignore
           editor.editorComponent.file || this.app.workspace.getActiveFile()
         );
+        const frontmatter = getMetadata(file, this.app);
         if (!file)
           return;
         if (editor.somethingSelected()) {
           menu.addItem((item) => {
             item.setTitle(L_default.exportSelectionImage()).setIcon("text-select").onClick(
-              () => exportImage_default(this.settings, editor.getSelection(), file)
+              () => exportImage_default(
+                this.app,
+                this.settings,
+                editor.getSelection(),
+                file,
+                frontmatter
+              )
             );
           });
         }
         menu.addItem((item) => {
-          item.setTitle(L_default.exportImage()).setIcon("image-down").onClick(() => exportImage_default(this.settings, editor.getValue(), file));
+          item.setTitle(L_default.exportImage()).setIcon("image-down").onClick(
+            () => exportImage_default(
+              this.app,
+              this.settings,
+              editor.getValue(),
+              file,
+              frontmatter
+            )
+          );
         });
       })
     );
@@ -41844,8 +42162,15 @@ var ExportImagePlugin = class extends import_obsidian7.Plugin {
               new import_obsidian7.Notice(L_default.noActiveFile());
               return;
             }
+            const frontmatter = getMetadata(activeFile, this.app);
             const markdown = await this.app.vault.cachedRead(activeFile);
-            exportImage_default(this.settings, markdown, activeFile);
+            exportImage_default(
+              this.app,
+              this.settings,
+              markdown,
+              activeFile,
+              frontmatter
+            );
           })();
         }
         return true;
@@ -41892,6 +42217,12 @@ var ImageSettingTab = class extends import_obsidian7.PluginSettingTab {
     new import_obsidian7.Setting(containerEl).setName(L_default.setting.filename.label()).setDesc(L_default.setting.filename.desscription()).addToggle((toggle) => {
       toggle.setValue(this.plugin.settings.showFilename).onChange(async (value) => {
         this.plugin.settings.showFilename = value;
+        await this.update();
+      });
+    });
+    new import_obsidian7.Setting(containerEl).setName(L_default.setting.metadata.label()).addToggle((toggle) => {
+      toggle.setValue(this.plugin.settings.showMetadata).onChange(async (value) => {
+        this.plugin.settings.showMetadata = value;
         await this.update();
       });
     });

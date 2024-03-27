@@ -109,6 +109,12 @@ type RootTranslation = {
 			 */
 			description: string
 		}
+		metadata: {
+			/**
+			 * S​h​o​w​ ​m​e​t​a​d​a​t​a
+			 */
+			label: string
+		}
 		format: {
 			/**
 			 * O​u​t​p​u​t​ ​f​i​l​e​ ​f​o​r​m​a​t
@@ -383,6 +389,12 @@ export type TranslationFunctions = {
 			 * Set whether to enable 2x resolution image. Images with 2x resolution will appear sharper and provide a better experience on high PPI screens, such as those on smartphones. However, the downside is that the file size of the images is larger.
 			 */
 			description: () => LocalizedString
+		}
+		metadata: {
+			/**
+			 * Show metadata
+			 */
+			label: () => LocalizedString
 		}
 		format: {
 			/**

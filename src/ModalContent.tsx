@@ -1,4 +1,4 @@
-import { App, ButtonComponent, Notice } from "obsidian";
+import { App, ButtonComponent, FrontMatterCache, Notice } from "obsidian";
 import {
   useState,
   useRef,
@@ -11,9 +11,10 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import React from "react";
 import get from "lodash/get";
 import L from "./L";
-import { FieldSchema, FormSchema, ISettings } from "./type";
+import { FieldSchema, FormSchema, ISettings, MetadataType } from "./type";
 import Control from "./Control";
 import Watermark, { WatermarkProps } from "@pansy/react-watermark";
+import Metadata from "./Metadata";
 
 const alignMap = {
   left: "flex-start",
@@ -147,8 +148,20 @@ const ModalContent: FC<{
   copy: () => void;
   save: () => void;
   settings: ISettings;
+  frontmatter: FrontMatterCache | undefined;
+  title: string;
   app: App;
-}> = ({ markdownEl, copy, save, settings, app }) => {
+  metadataMap: Record<string, { type: MetadataType }>;
+}> = ({
+  markdownEl,
+  copy,
+  save,
+  settings,
+  app,
+  frontmatter,
+  title,
+  metadataMap,
+}) => {
   const [formData, setFormData] = useState<ISettings>(settings);
   const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
   const [isGrabbing, setIsGrabbing] = useState(false);
@@ -160,7 +173,9 @@ const ModalContent: FC<{
     (markdownEl as HTMLDivElement).closest(".export-image-root") || markdownEl;
 
   useEffect(() => {
-    contentRef.current?.appendChild?.(markdownEl);
+    markdownEl.childNodes.forEach((child) =>
+      contentRef.current?.appendChild?.(child)
+    );
   }, []);
 
   useEffect(() => {
@@ -310,7 +325,9 @@ const ModalContent: FC<{
                 }}
               >
                 <div
-                  className="export-image-root"
+                  className={`export-image-root ${(
+                    frontmatter?.cssclasses || []
+                  ).join(" ")}`}
                   style={{
                     display: "flex",
                     flexDirection:
@@ -321,13 +338,41 @@ const ModalContent: FC<{
                 >
                   <Watermark {...watermarkProps}>
                     <div
-                      className={formData.showFilename ? "" : "hide-filename"}
-                      ref={contentRef}
+                      className="markdown-preview-view markdown-rendered export-image-preview-container"
                       style={{
                         width: `${formData.width}px`,
                         transition: "width 0.25s",
                       }}
-                    ></div>
+                    >
+                      {formData.showFilename && (
+                        <div className="inline-title" autoCapitalize="on">
+                          {title}
+                        </div>
+                      )}
+                      {formData.showMetadata &&
+                        frontmatter &&
+                        Object.keys(frontmatter).length > 0 && (
+                          <div
+                            className="metadata-content"
+                            style={{
+                              color: "var(--metadata-label-text-color)",
+                              fontSize: "var(--metadata-label-font-size)",
+                              fontWeight: "var(--metadata-label-font-weight)",
+                              padding: "20px 0",
+                            }}
+                          >
+                            {Object.keys(frontmatter).map((name) => (
+                              <Metadata
+                                name={name}
+                                key={name}
+                                value={frontmatter[name]}
+                                type={metadataMap[name]?.type || "text"}
+                              ></Metadata>
+                            ))}
+                          </div>
+                        )}
+                      <div ref={contentRef}></div>
+                    </div>
                   </Watermark>
                   {formData.authorInfo.show &&
                     (formData.authorInfo.avatar ||

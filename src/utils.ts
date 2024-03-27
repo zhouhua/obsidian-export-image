@@ -64,3 +64,7 @@ export async function createHtml(
   );
   return div;
 }
+
+export function getMetadata(file: TFile, app: App) {
+  return app.metadataCache.getFileCache(file)?.frontmatter;
+}

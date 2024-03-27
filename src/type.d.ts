@@ -5,6 +5,7 @@ export interface ISettings {
   showFilename: boolean;
   "2x": boolean;
   format: FileFormat;
+  showMetadata: boolean;
   authorInfo: {
     show: boolean;
     name?: string;
@@ -54,3 +55,13 @@ interface SelectFieldSchema {
 }
 export type FieldSchema = BaseFieldSchema | SelectFieldSchema;
 export type FormSchema = FieldSchema[];
+
+export type MetadataType =
+  | "text"
+  | "date"
+  | "datetime"
+  | "checkbox"
+  | "multitext"
+  | "number"
+  | "tags"
+  | "aliases";

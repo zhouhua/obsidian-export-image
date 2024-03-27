@@ -13,6 +13,7 @@ import L from "./L";
 import {
   fileToBase64,
   fileToUrl,
+  getMetadata,
   getSizeOfImage,
   isMarkdownFile,
 } from "./utils";
@@ -23,6 +24,7 @@ const DEFAULT_SETTINGS: ISettings = {
   showFilename: true,
   "2x": true,
   format: "jpg",
+  showMetadata: false,
   authorInfo: {
     show: false,
     align: "right",
@@ -57,13 +59,20 @@ export default class ExportImagePlugin extends Plugin {
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
         if (isMarkdownFile(file)) {
+          const frontmatter = getMetadata(file as TFile, this.app);
           menu.addItem((item) => {
             item
               .setTitle(L.exportImage())
               .setIcon("image-down")
               .onClick(async () => {
                 const markdown = await this.app.vault.cachedRead(file as TFile);
-                exportImage(this.settings, markdown, file as TFile);
+                exportImage(
+                  this.app,
+                  this.settings,
+                  markdown,
+                  file as TFile,
+                  frontmatter
+                );
               });
           });
         }
@@ -75,6 +84,7 @@ export default class ExportImagePlugin extends Plugin {
         const file: TFile =
           // @ts-ignore
           editor.editorComponent.file || this.app.workspace.getActiveFile();
+        const frontmatter = getMetadata(file, this.app);
         if (!file) return;
         if (editor.somethingSelected()) {
           menu.addItem((item) => {
@@ -82,7 +92,13 @@ export default class ExportImagePlugin extends Plugin {
               .setTitle(L.exportSelectionImage())
               .setIcon("text-select")
               .onClick(() =>
-                exportImage(this.settings, editor.getSelection(), file)
+                exportImage(
+                  this.app,
+                  this.settings,
+                  editor.getSelection(),
+                  file,
+                  frontmatter
+                )
               );
           });
         }
@@ -90,7 +106,15 @@ export default class ExportImagePlugin extends Plugin {
           item
             .setTitle(L.exportImage())
             .setIcon("image-down")
-            .onClick(() => exportImage(this.settings, editor.getValue(), file));
+            .onClick(() =>
+              exportImage(
+                this.app,
+                this.settings,
+                editor.getValue(),
+                file,
+                frontmatter
+              )
+            );
         });
       })
     );
@@ -111,8 +135,15 @@ export default class ExportImagePlugin extends Plugin {
               new Notice(L.noActiveFile());
               return;
             }
+            const frontmatter = getMetadata(activeFile, this.app);
             const markdown = await this.app.vault.cachedRead(activeFile);
-            exportImage(this.settings, markdown, activeFile);
+            exportImage(
+              this.app,
+              this.settings,
+              markdown,
+              activeFile,
+              frontmatter
+            );
           })();
         }
 
@@ -185,6 +216,17 @@ class ImageSettingTab extends PluginSettingTab {
           .setValue(this.plugin.settings.showFilename)
           .onChange(async (value) => {
             this.plugin.settings.showFilename = value;
+            await this.update();
+          });
+      });
+
+    new Setting(containerEl)
+      .setName(L.setting.metadata.label())
+      .addToggle((toggle) => {
+        toggle
+          .setValue(this.plugin.settings.showMetadata)
+          .onChange(async (value) => {
+            this.plugin.settings.showMetadata = value;
             await this.update();
           });
       });

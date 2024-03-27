@@ -35,6 +35,9 @@ const en = {
       description:
         "Set whether to enable 2x resolution image. Images with 2x resolution will appear sharper and provide a better experience on high PPI screens, such as those on smartphones. However, the downside is that the file size of the images is larger.",
     },
+    metadata: {
+      label: "Show metadata",
+    },
     format: {
       title: "Output file format",
       description:
