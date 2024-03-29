@@ -171,16 +171,18 @@ const Metadata: FC<PropType> = ({ type, name, value }) => {
   switch (type) {
     case "text":
       if (!value) return null;
-      const match = value.match(/^\[\[(.+)\]\]$/);
-      if (match) {
-        valueElement = (
-          <div className="metadata-link-inner internal-link">{match[1]}</div>
-        );
+      let content = value;
+      if (typeof value !== "string") {
+        content = JSON.stringify(value);
       } else {
-        valueElement = (
-          <div className="metadata-input-longtext mod-truncate">{value}</div>
-        );
+        const match = value.match(/^\[\[(.+)\]\]$/);
+        if (match) {
+          content = match[1];
+        }
       }
+      valueElement = (
+        <div className="metadata-input-longtext mod-truncate">{content}</div>
+      );
       break;
     case "number":
       valueElement = (
@@ -202,20 +204,12 @@ const Metadata: FC<PropType> = ({ type, name, value }) => {
       break;
     case "date":
       valueElement = (
-        <input
-          className="metadata-input metadata-input-text"
-          type="date"
-          value={value}
-        />
+        <div className="metadata-input-longtext mod-truncate">{value}</div>
       );
       break;
     case "datetime":
       valueElement = (
-        <input
-          className="metadata-input metadata-input-text"
-          type="datetime-local"
-          value={value}
-        />
+        <div className="metadata-input-longtext mod-truncate">{value}</div>
       );
       break;
     case "multitext":
@@ -223,7 +217,7 @@ const Metadata: FC<PropType> = ({ type, name, value }) => {
       valueElement = (
         <div className="multi-select-container">
           {value.map((str) => (
-            <div className="multi-select-pill">
+            <div className="multi-select-pill" style={{ border: "none" }}>
               <div
                 className="multi-select-pill-content"
                 style={{ margin: "0 6px" }}
@@ -246,6 +240,7 @@ const Metadata: FC<PropType> = ({ type, name, value }) => {
       className="metadata-property"
       data-property-type={type}
       data-property-key={name}
+      style={{ border: 0 }}
     >
       <div className="metadata-property-key">
         <span className="metadata-property-icon">{iconSvg}</span>

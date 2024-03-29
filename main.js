@@ -32536,12 +32536,16 @@ var Metadata = ({ type, name, value }) => {
     case "text":
       if (!value)
         return null;
-      const match = value.match(/^\[\[(.+)\]\]$/);
-      if (match) {
-        valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-link-inner internal-link" }, match[1]);
+      let content = value;
+      if (typeof value !== "string") {
+        content = JSON.stringify(value);
       } else {
-        valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
+        const match = value.match(/^\[\[(.+)\]\]$/);
+        if (match) {
+          content = match[1];
+        }
       }
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, content);
       break;
     case "number":
       valueElement = /* @__PURE__ */ import_react6.default.createElement(
@@ -32564,28 +32568,14 @@ var Metadata = ({ type, name, value }) => {
       );
       break;
     case "date":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement(
-        "input",
-        {
-          className: "metadata-input metadata-input-text",
-          type: "date",
-          value
-        }
-      );
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
       break;
     case "datetime":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement(
-        "input",
-        {
-          className: "metadata-input metadata-input-text",
-          type: "datetime-local",
-          value
-        }
-      );
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
       break;
     case "multitext":
     case "tags":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-container" }, value.map((str) => /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-pill" }, /* @__PURE__ */ import_react6.default.createElement(
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-container" }, value.map((str) => /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-pill", style: { border: "none" } }, /* @__PURE__ */ import_react6.default.createElement(
         "div",
         {
           className: "multi-select-pill-content",
@@ -32605,7 +32595,8 @@ var Metadata = ({ type, name, value }) => {
     {
       className: "metadata-property",
       "data-property-type": type,
-      "data-property-key": name
+      "data-property-key": name,
+      style: { border: 0 }
     },
     /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-property-key" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "metadata-property-icon" }, iconSvg), /* @__PURE__ */ import_react6.default.createElement(
       "span",
