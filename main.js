@@ -32766,9 +32766,7 @@ var ModalContent = ({
   const mainHeight = Math.min(764, window.innerHeight * 0.85 - 225);
   const root = markdownEl.closest(".export-image-root") || markdownEl;
   (0, import_react7.useEffect)(() => {
-    markdownEl.childNodes.forEach(
-      (child) => contentRef.current?.appendChild?.(child)
-    );
+    contentRef.current?.appendChild(markdownEl);
   }, []);
   (0, import_react7.useEffect)(() => {
     setFormData(settings);
@@ -32912,7 +32910,8 @@ var ModalContent = ({
               className: `export-image-root ${(frontmatter?.cssclasses || []).join(" ")}`,
               style: {
                 display: "flex",
-                flexDirection: formData.authorInfo.position === "bottom" ? "column" : "column-reverse"
+                flexDirection: formData.authorInfo.position === "bottom" ? "column" : "column-reverse",
+                backgroundColor: formData.format === "png" ? "unset" : "var(--background-primary)"
               }
             },
             /* @__PURE__ */ import_react8.default.createElement(src_default, { ...watermarkProps }, /* @__PURE__ */ import_react8.default.createElement(
@@ -42009,17 +42008,13 @@ async function copy(el, higtResolution, format) {
 // src/exportImage.tsx
 async function exportImage_default(app, settings, markdown, file, frontmatter) {
   const el = document.createElement("div");
-  if (settings.format !== "png") {
-    el.style.backgroundColor = "var(--background-primary)";
-  }
   import_obsidian6.MarkdownRenderer.render(
     app,
     markdown,
     el.createDiv(),
     file.path,
-    app.workspace.activeLeaf?.view || new import_obsidian6.MarkdownRenderChild(el)
+    app.workspace.getActiveViewOfType(import_obsidian6.MarkdownView) || app.workspace.activeLeaf?.view || new import_obsidian6.MarkdownRenderChild(el)
   );
-  console.log(app.workspace.getActiveViewOfType(import_obsidian6.MarkdownView));
   const modal = new import_obsidian6.Modal(this.app);
   modal.setTitle(L_default.imageExportPreview());
   modal.modalEl.style.width = "85vw";
@@ -42030,20 +42025,6 @@ async function exportImage_default(app, settings, markdown, file, frontmatter) {
     // @ts-ignore
     app.metadataCache.getAllPropertyInfos()
   );
-  const aaa = {
-    "22": { name: "22", count: 1, type: "text" },
-    date: { name: "Date", count: 1, type: "date" },
-    test: { name: "test", count: 2, type: "text" },
-    test1: { name: "test1", count: 1, type: "checkbox" },
-    test2: { name: "test2", count: 1, type: "multitext" },
-    test3: { name: "test3", count: 1, type: "number" },
-    test4: { name: "test4", count: 1, type: "date" },
-    test5: { name: "test5", count: 1, type: "datetime" },
-    empty: { name: "empty", count: 1 },
-    cssclasses: { name: "cssclasses", count: 1, type: "multitext" },
-    tags: { name: "tags", count: 1, type: "tags" },
-    aliases: { name: "aliases", type: "aliases", count: 0 }
-  };
   root.render(
     /* @__PURE__ */ import_react9.default.createElement(
       ModalContent_default,

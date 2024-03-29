@@ -173,9 +173,10 @@ const ModalContent: FC<{
     (markdownEl as HTMLDivElement).closest(".export-image-root") || markdownEl;
 
   useEffect(() => {
-    markdownEl.childNodes.forEach((child) =>
-      contentRef.current?.appendChild?.(child)
-    );
+    // markdownEl.childNodes.forEach((child) =>
+    //   contentRef.current?.appendChild?.(child)
+    // );
+    contentRef.current?.appendChild(markdownEl);
   }, []);
 
   useEffect(() => {
@@ -334,6 +335,10 @@ const ModalContent: FC<{
                       formData.authorInfo.position === "bottom"
                         ? "column"
                         : "column-reverse",
+                    backgroundColor:
+                      formData.format === "png"
+                        ? "unset"
+                        : "var(--background-primary)",
                   }}
                 >
                   <Watermark {...watermarkProps}>

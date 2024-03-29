@@ -23,9 +23,6 @@ export default async function (
   frontmatter: FrontMatterCache | undefined
 ) {
   const el = document.createElement("div");
-  if (settings.format !== "png") {
-    el.style.backgroundColor = "var(--background-primary)";
-  }
   MarkdownRenderer.render(
     app,
     markdown,
@@ -35,7 +32,6 @@ export default async function (
       app.workspace.activeLeaf?.view ||
       new MarkdownRenderChild(el)
   );
-  console.log(app.workspace.getActiveViewOfType(MarkdownView));
   const modal = new Modal(this.app);
   modal.setTitle(L.imageExportPreview());
   modal.modalEl.style.width = "85vw";
@@ -45,21 +41,6 @@ export default async function (
   const metadataMap: Record<string, { type: MetadataType }> =
     // @ts-ignore
     app.metadataCache.getAllPropertyInfos();
-
-  const aaa = {
-    "22": { name: "22", count: 1, type: "text" },
-    date: { name: "Date", count: 1, type: "date" },
-    test: { name: "test", count: 2, type: "text" },
-    test1: { name: "test1", count: 1, type: "checkbox" },
-    test2: { name: "test2", count: 1, type: "multitext" },
-    test3: { name: "test3", count: 1, type: "number" },
-    test4: { name: "test4", count: 1, type: "date" },
-    test5: { name: "test5", count: 1, type: "datetime" },
-    empty: { name: "empty", count: 1 },
-    cssclasses: { name: "cssclasses", count: 1, type: "multitext" },
-    tags: { name: "tags", count: 1, type: "tags" },
-    aliases: { name: "aliases", type: "aliases", count: 0 },
-  };
   root.render(
     <ModalContent
       markdownEl={el}
