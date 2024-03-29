@@ -32918,15 +32918,10 @@ var ModalContent = ({
               formData.showMetadata && frontmatter && Object.keys(frontmatter).length > 0 && /* @__PURE__ */ import_react8.default.createElement(
                 "div",
                 {
-                  className: "metadata-content",
-                  style: {
-                    color: "var(--metadata-label-text-color)",
-                    fontSize: "var(--metadata-label-font-size)",
-                    fontWeight: "var(--metadata-label-font-weight)",
-                    padding: "20px 0"
-                  }
+                  className: "metadata-container",
+                  style: { display: "block" }
                 },
-                Object.keys(frontmatter).map((name) => /* @__PURE__ */ import_react8.default.createElement(
+                /* @__PURE__ */ import_react8.default.createElement("div", { className: "metadata-content" }, Object.keys(frontmatter).map((name) => /* @__PURE__ */ import_react8.default.createElement(
                   Metadata_default,
                   {
                     name,
@@ -32934,7 +32929,7 @@ var ModalContent = ({
                     value: frontmatter[name],
                     type: metadataMap[name]?.type || "text"
                   }
-                ))
+                )))
               ),
               /* @__PURE__ */ import_react8.default.createElement("div", { ref: contentRef })
             )),

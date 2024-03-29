@@ -358,22 +358,19 @@ const ModalContent: FC<{
                         frontmatter &&
                         Object.keys(frontmatter).length > 0 && (
                           <div
-                            className="metadata-content"
-                            style={{
-                              color: "var(--metadata-label-text-color)",
-                              fontSize: "var(--metadata-label-font-size)",
-                              fontWeight: "var(--metadata-label-font-weight)",
-                              padding: "20px 0",
-                            }}
+                            className="metadata-container"
+                            style={{ display: "block" }}
                           >
-                            {Object.keys(frontmatter).map((name) => (
-                              <Metadata
-                                name={name}
-                                key={name}
-                                value={frontmatter[name]}
-                                type={metadataMap[name]?.type || "text"}
-                              ></Metadata>
-                            ))}
+                            <div className="metadata-content">
+                              {Object.keys(frontmatter).map((name) => (
+                                <Metadata
+                                  name={name}
+                                  key={name}
+                                  value={frontmatter[name]}
+                                  type={metadataMap[name]?.type || "text"}
+                                ></Metadata>
+                              ))}
+                            </div>
                           </div>
                         )}
                       <div ref={contentRef}></div>
