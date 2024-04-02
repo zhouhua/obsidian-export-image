@@ -1,16 +1,15 @@
-import { Notice, requestUrl } from "obsidian";
-import domtoimage from "./dom-to-image-more";
+import { Notice, requestUrl, App } from "obsidian";
+import domtoimage from "../dom-to-image-more";
 import saveAs from "file-saver";
-import L from "./L";
-import { fileToBase64 } from "./utils";
+import L from "../L";
+import { fileToBase64 } from ".";
 import jsPdf from "jspdf";
-import { FileFormat } from "./type";
+import { FileFormat } from "../type";
 
 async function getBlob(el: HTMLElement, higtResolution: boolean, type: string) {
-  const root = el.closest(".export-image-root") || el;
-  return await domtoimage.toBlob(root, {
-    width: root.clientWidth,
-    height: root.clientHeight,
+  return await domtoimage.toBlob(el, {
+    width: el.clientWidth,
+    height: el.clientHeight,
     quality: 0.85,
     scale: higtResolution ? 2 : 1,
     requestUrl,
@@ -37,24 +36,43 @@ async function makePdf(blob: any, el: HTMLElement) {
 }
 
 export async function save(
+  app: App,
   el: HTMLElement,
   title: string,
   higtResolution: boolean,
-  format: FileFormat
+  format: FileFormat,
+  isMobile: boolean
 ) {
-  const blob = await getBlob(
+  const blob: Blob = await getBlob(
     el,
     higtResolution,
     `image/${format === "png" ? "png" : "jpeg"}`
   );
+  const filename = `${title.replace(/\s+/g, "_")}.${format}`;
   switch (format) {
     case "jpg":
     case "png":
-      saveAs(blob, `${title.replace(/\s+/g, "_")}.${format}`);
+      if (isMobile) {
+        const filePath = await app.fileManager.getAvailablePathForAttachment(
+          filename
+        );
+        await app.vault.createBinary(filePath, await blob.arrayBuffer());
+        new Notice(L.saveSuccess({ filePath }));
+      } else {
+        saveAs(blob, filename);
+      }
       break;
     case "pdf":
       const pdf = await makePdf(blob, el);
-      pdf.save(`${title.replace(/\s+/g, "_")}.${format}`);
+      if (isMobile) {
+        const filePath = await app.fileManager.getAvailablePathForAttachment(
+          filename
+        );
+        await app.vault.createBinary(filePath, await blob.arrayBuffer());
+        new Notice(L.saveSuccess({ filePath }));
+      } else {
+        pdf.save(filename);
+      }
       break;
     default:
       break;

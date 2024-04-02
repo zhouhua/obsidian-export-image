@@ -13,6 +13,7 @@ This Obsidian plugin can easily help you export any article as an image.
 - :straight_ruler: Support adjusting the image width to cater to different scenarios, such as exporting images suitable for viewing on mobile devices or ensuring readability when embedding images in articles.
 - :gear: Offer flexible configuration options with a convenient WYSIWYG (What You See Is What You Get) interface.
 - :page_facing_up: Support exporting selected content as an image.
+- :capital_abcd: Support displaying obsidian [metadata](https://help.obsidian.md/Editing+and+formatting/Properties).
 
 ## Usage
 
@@ -33,6 +34,9 @@ Use the command `export as a image` in command palette (Press cmd/ctrl+P to ente
 Also, you can access this function from the editor menu:
 
 ![](./assets/menu.png)
+
+> [!NOTE]
+> Due to device limitations, exporting images on mobile can only be saved to the current vault.
 
 ## Installation
 

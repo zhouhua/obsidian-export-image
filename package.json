@@ -16,10 +16,10 @@
     "@types/dom-to-image": "^2.6.7",
     "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.0",
-    "@types/node": "^20.11.30",
-    "@types/obsidian-typings": "npm:obsidian-typings@^1.0.4",
-    "@typescript-eslint/eslint-plugin": "7.3.1",
-    "@typescript-eslint/parser": "7.3.1",
+    "@types/node": "^20.12.2",
+    "@types/obsidian-typings": "npm:obsidian-typings@^1.0.5",
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.5.0",
     "builtin-modules": "3.3.0",
     "cross-env": "^7.0.3",
     "esbuild": "0.20.2",
@@ -36,15 +36,15 @@
   },
   "dependencies": {
     "@pansy/react-watermark": "^3.1.14",
-    "@types/react": "^18.2.69",
-    "@types/react-dom": "^18.2.22",
+    "@types/react": "^18.2.73",
+    "@types/react-dom": "^18.2.23",
     "dom-to-image-more": "^3.2.0",
     "file-saver": "^2.0.5",
     "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-zoom-pan-pinch": "^3.4.3",
+    "react-zoom-pan-pinch": "^3.4.4",
     "typesafe-i18n": "^5.26.2"
   }
 }

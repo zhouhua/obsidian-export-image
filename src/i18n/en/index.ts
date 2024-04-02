@@ -8,6 +8,8 @@ const en = {
   copiedSuccess: "Copied to clipboard",
   copy: "Copy to Clipboard",
   save: "Save Image",
+  saveSuccess: "Export and save the image as {filePath: string}.",
+  saveVault: "Save to Vault",
   includingFilename: "Including File Name As Title: ",
   imageWidth: "Image Width: ",
   exportImage: "Export to image",

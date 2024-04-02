@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useRef } from "react";
-import { FieldSchema, ISettings } from "./type";
+import { FieldSchema, ISettings } from "../../type";
 import get from "lodash/get";
 import set from "lodash/set";
-import { fileToBase64 } from "./utils";
-import L from "./L";
+import { fileToBase64 } from "../../utils";
+import L from "../../L";
 import ImageSelectModal from "./imageSelectModal";
 import { App } from "obsidian";
 
@@ -84,13 +84,9 @@ const Control: FC<{
       return (
         <>
           <div
+            className="user-info-avatar"
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: "50%",
-              border: "1px solid var(--background-modifier-border)",
               backgroundImage: value ? `url(${value})` : "none",
-              backgroundSize: "cover",
               display: value ? "block" : "none",
             }}
           ></div>

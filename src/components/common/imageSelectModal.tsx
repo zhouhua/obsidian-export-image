@@ -1,8 +1,15 @@
 import { App, Modal, TFile } from "obsidian";
-import React, { FC, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Root, createRoot } from "react-dom/client";
-import { createHtml, fileToBase64 } from "./utils";
-import L from "./L";
+import { createHtml, fileToBase64 } from "../../utils";
+import L from "../../L";
 
 const ImageSelect: FC<{
   imageList: TFile[];
@@ -48,7 +55,7 @@ const ImageSelect: FC<{
     }
   }, [onSelect, selected]);
   return (
-    <div style={{ padding: 20, display: "flex", flexDirection: "column" }}>
+    <div className="export-image-select-photo">
       <div className="search-input-container">
         <input
           enterKeyHint="search"
@@ -60,27 +67,8 @@ const ImageSelect: FC<{
         />
         <div className="search-input-clear-button"></div>
       </div>
-      <div
-        style={{
-          marginTop: 20,
-          borderRadius: 8,
-          border: "1px solid var(--background-modifier-border)",
-          display: "flex",
-        }}
-      >
-        <div
-          style={{
-            borderRight: "1px solid var(--background-modifier-border)",
-            height: 300,
-            overflowY: "auto",
-            flex: 1,
-            fontSize: "14px",
-            lineHeight: "28px",
-            padding: 8,
-            wordBreak: "keep-all",
-            overflowX: "hidden",
-          }}
-        >
+      <div className="export-image-select-photo-main">
+        <div className="export-image-select-photo-left">
           {list.length ? (
             list.map((file) => (
               <div
@@ -92,44 +80,23 @@ const ImageSelect: FC<{
                     selected?.path === file.path
                       ? "var(--background-modifier-hover)"
                       : "transparent",
-                  cursor: "pointer",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  overflowX: "hidden",
                 }}
               >
                 {file.path}
               </div>
             ))
           ) : (
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "16",
-                marginTop: 50,
-                opacity: 0.8,
-              }}
-            >
+            <div className="export-image-select-empty">
               {L.imageSelect.empty()}
             </div>
           )}
         </div>
-        <div
-          ref={previewRef}
-          style={{
-            padding: 20,
-            height: 300,
-            width: 200,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        ></div>
+        <div className="export-image-select-preview" ref={previewRef}></div>
       </div>
-      <div style={{ fontSize: "12px", marginTop: 8, opacity: 0.7 }}>
+      <div className="export-image-select-selected">
         {selected?.path || " "}
       </div>
-      <div style={{ marginTop: 40, display: "flex", justifyContent: "center" }}>
+      <div className="export-image-select-actions">
         <button
           className="mod-cta"
           disabled={!selected}

@@ -1,5 +1,5 @@
 import React, { FC, JSX } from "react";
-import { MetadataType } from "./type";
+import { MetadataType } from "../../type";
 
 type PropType = { name: string } & (
   | {
@@ -218,10 +218,7 @@ const Metadata: FC<PropType> = ({ type, name, value }) => {
         <div className="multi-select-container">
           {value.map((str) => (
             <div className="multi-select-pill" style={{ border: "none" }}>
-              <div
-                className="multi-select-pill-content"
-                style={{ margin: "0 6px" }}
-              >
+              <div className="multi-select-pill-content">
                 <span>{str}</span>
               </div>
             </div>
@@ -244,16 +241,7 @@ const Metadata: FC<PropType> = ({ type, name, value }) => {
     >
       <div className="metadata-property-key">
         <span className="metadata-property-icon">{iconSvg}</span>
-        <span
-          style={{
-            padding: "var(--size-4-1) var(--size-4-2)",
-            textOverflow: "ellipsis",
-            overflow: "hidden",
-            height: "var(--input-height)",
-          }}
-        >
-          {name}
-        </span>
+        <span className="metadata-property-name">{name}</span>
       </div>
       <div className="metadata-property-value">{valueElement}</div>
     </div>

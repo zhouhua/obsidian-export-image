@@ -17,7 +17,7 @@ import {
   getSizeOfImage,
   isMarkdownFile,
 } from "./utils";
-import ImageSelectModal from "./imageSelectModal";
+import ImageSelectModal from "./components/common/imageSelectModal";
 
 const DEFAULT_SETTINGS: ISettings = {
   width: 640,

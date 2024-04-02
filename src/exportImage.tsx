@@ -7,11 +7,10 @@ import {
   MarkdownView,
   Modal,
   TFile,
-  getFrontMatterInfo,
 } from "obsidian";
 import { createRoot } from "react-dom/client";
-import ModalContent from "./ModalContent";
-import { copy, save } from "./capture";
+import ModalContent from "./components/ModalContent";
+import { copy, save } from "./utils/capture";
 import L from "./L";
 import { ISettings, MetadataType } from "./type";
 
@@ -44,8 +43,6 @@ export default async function (
   root.render(
     <ModalContent
       markdownEl={el}
-      save={() => save(el, file.basename, settings["2x"], settings.format)}
-      copy={() => copy(el, settings["2x"], settings.format)}
       settings={settings}
       frontmatter={frontmatter}
       title={file.basename}

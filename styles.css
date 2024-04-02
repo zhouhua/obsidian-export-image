@@ -6,17 +6,6 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
-.export-image-force-no-margin {
-  margin: 0 !important;
-  padding: 20px 20px 40px 20px !important;
-  box-sizing: content-box;
-  text-align: justify;
-  hyphens: auto;
-}
-
-.export-image-force-no-margin .obsidian-metatable {
-  display: none;
-}
 
 .export-image-preview-container {
   pointer-events: none;
@@ -28,5 +17,167 @@ If your plugin does not need CSS, delete this file.
 }
 
 .export-image-root .markdown-preview-view:has(.obsidian-banner-wrapper) {
-  padding-top: calc(var(--banner-height) + var(--file-margins));
+  padding-top: calc(var(--banner-height) + var(--size-4-6));
+}
+
+.export-image-preview-main {
+  display: flex;
+  margin: 20px 0;
+  flex-wrap: nowrap;
+  --line-height-tight: 20px;
+}
+
+.export-image-preview-left {
+  width: 50%;
+  padding: 20px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 28px;
+  box-sizing: border-box;
+}
+
+.export-image-preview-right {
+  width: 50%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1000px) {
+  .export-image-preview-main {
+    flex-wrap: wrap;
+  }
+  .export-image-preview-left {
+    width: 100%;
+  }
+
+  .export-image-preview-right {
+    width: 100%;
+  }
+}
+
+.export-image-preview-out {
+  width: 100%;
+  transition: width 0.25s;
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  background-image: linear-gradient(
+      45deg,
+      var(--background-modifier-border) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--background-modifier-border) 75%
+    ),
+    linear-gradient(
+      45deg,
+      var(--background-modifier-border) 25%,
+      transparent 25%,
+      transparent 75%,
+      var(--background-modifier-border) 75%
+    );
+}
+
+.export-image-preview-root .info-text {
+  line-height: 20px;
+  opacity: 0.6;
+  font-size: 12px;
+}
+.export-image-preview-root .user-info-container {
+  display: flex;
+  padding: 16px 32px;
+  alignitems: center;
+}
+.user-info-avatar {
+  width: 36px;
+  height: 36px;
+  borderradius: 50%;
+  border: 1px solid var(--background-modifier-border);
+  background-size: cover;
+  margin: 0 20px;
+}
+.export-image-preview-root .user-info-name {
+  font-size: 16px;
+  padding-bottom: 6px;
+}
+.export-image-preview-root .user-info-remark {
+  opacity: 0.5;
+  font-size: 12px;
+}
+
+.export-image-preview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.export-image-preview-actions button {
+  margin-left: 10px;
+}
+
+.export-image-preview-container .multi-select-pill-content {
+  margin: 0 6px;
+}
+.export-image-preview-container .metadata-property-name {
+  padding: var(--size-4-1) var(--size-4-2);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: var(--input-height);
+}
+
+.export-image-select-photo {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.export-image-select-photo-main {
+  margin-top: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--background-modifier-border);
+  display: flex;
+}
+.export-image-select-photo-left {
+  border-right: 1px solid var(--background-modifier-border);
+  height: 300px;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 14px;
+  line-height: 28px;
+  padding: 8px;
+  word-break: keep-all;
+  overflow-x: hidden;
+}
+.export-image-select-item {
+  cursor: pointer;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+}
+.export-image-select-empty {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 50px;
+  opacity: 0.8;
+}
+.export-image-select-preview {
+  padding: 20px;
+  height: 300px;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.export-image-select-selected {
+  font-size: 12px;
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+.export-image-select-actions {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.export-image-setting-preview-mock {
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
 }

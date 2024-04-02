@@ -1,20 +1,14 @@
-import { App, ButtonComponent, FrontMatterCache, Notice } from "obsidian";
-import {
-  useState,
-  useRef,
-  FC,
-  useEffect,
-  useCallback,
-  MouseEventHandler,
-} from "react";
+import { App, FrontMatterCache, Notice } from "obsidian";
+import { useState, useRef, FC, useEffect, useCallback } from "react";
+import { copy, save } from "../utils/capture";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import React from "react";
 import get from "lodash/get";
-import L from "./L";
-import { FieldSchema, FormSchema, ISettings, MetadataType } from "./type";
-import Control from "./Control";
+import L from "../L";
+import { FieldSchema, FormSchema, ISettings, MetadataType } from "../type";
+import Control from "./common/Control";
 import Watermark, { WatermarkProps } from "@pansy/react-watermark";
-import Metadata from "./Metadata";
+import Metadata from "./common/Metadata";
 
 const alignMap = {
   left: "flex-start",
@@ -145,23 +139,12 @@ function isShow(field: FieldSchema, settings: ISettings) {
 
 const ModalContent: FC<{
   markdownEl: Node;
-  copy: () => void;
-  save: () => void;
   settings: ISettings;
   frontmatter: FrontMatterCache | undefined;
   title: string;
   app: App;
   metadataMap: Record<string, { type: MetadataType }>;
-}> = ({
-  markdownEl,
-  copy,
-  save,
-  settings,
-  app,
-  frontmatter,
-  title,
-  metadataMap,
-}) => {
+}> = ({ markdownEl, settings, app, frontmatter, title, metadataMap }) => {
   const [formData, setFormData] = useState<ISettings>(settings);
   const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
   const [isGrabbing, setIsGrabbing] = useState(false);
@@ -173,15 +156,41 @@ const ModalContent: FC<{
     (markdownEl as HTMLDivElement).closest(".export-image-root") || markdownEl;
 
   useEffect(() => {
-    // markdownEl.childNodes.forEach((child) =>
-    //   contentRef.current?.appendChild?.(child)
-    // );
     contentRef.current?.appendChild(markdownEl);
   }, []);
 
   useEffect(() => {
     setFormData(settings);
   }, [settings]);
+
+  const [processing, setProcessing] = useState(false);
+
+  const handleSave = useCallback(async () => {
+    if ((formData.width || 640) <= 20) {
+      new Notice(L.invalidWidth());
+      return;
+    }
+    setProcessing(true);
+    await save(
+      app,
+      root as HTMLDivElement,
+      title,
+      formData["2x"],
+      formData.format,
+      // @ts-ignore
+      app.isMobile
+    );
+    setProcessing(false);
+  }, [root, formData["2x"], formData.format, title, formData.width]);
+  const handleCopy = useCallback(async () => {
+    if ((formData.width || 640) <= 20) {
+      new Notice(L.invalidWidth());
+      return;
+    }
+    setProcessing(true);
+    await copy(root as HTMLDivElement, formData["2x"], formData.format);
+    setProcessing(false);
+  }, [root, formData["2x"], formData.format, title, formData.width]);
 
   useEffect(() => {
     const props: WatermarkProps = {
@@ -207,58 +216,10 @@ const ModalContent: FC<{
     setWatermarkProps(props);
   }, [formData]);
 
-  const handleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
-    (e) => {
-      if (
-        (e.target as HTMLElement).closest("button") &&
-        (formData.width || 640) <= 20
-      ) {
-        new Notice(L.invalidWidth());
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    },
-    [formData.width]
-  );
-
-  useEffect(() => {
-    if (actionsRef.current) {
-      const copyButton = new ButtonComponent(actionsRef.current);
-      copyButton.setIcon("clipboard-copy").buttonEl.createSpan({
-        text: L.copy(),
-        attr: { style: "padding-left: 10px" },
-      });
-      copyButton.buttonEl.style.marginRight = "40px";
-      copyButton.onClick(copy);
-      const saveButton = new ButtonComponent(actionsRef.current);
-      saveButton.setIcon("image-down").buttonEl.createSpan({
-        text: L.save(),
-        attr: { style: "padding-left: 10px" },
-      });
-      saveButton.onClick(save);
-    }
-    return () => {
-      actionsRef.current?.childNodes.forEach((c) => c.remove());
-    };
-  }, [copy, save]);
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          margin: "20px 0",
-          ["--line-height-tight" as any]: "20px",
-        }}
-      >
-        <div
-          style={{
-            flex: 1,
-            padding: "20px",
-            overflowY: "auto",
-            fontSize: "14px",
-            lineHeight: "28px",
-          }}
-        >
+    <div className="export-image-preview-root">
+      <div className="export-image-preview-main">
+        <div className="export-image-preview-left">
           {formSchema.map(
             (fieldSchema) =>
               isShow(fieldSchema, formData) && (
@@ -286,27 +247,26 @@ const ModalContent: FC<{
                 </div>
               )
           )}
-          <div style={{ lineHeight: "20px", opacity: 0.6, fontSize: "12px" }}>
-            {L.moreSetting()}
-          </div>
+          <div className="info-text">{L.moreSetting()}</div>
         </div>
-        <div style={{ width: "50%", padding: 20 }}>
+        <div className="export-image-preview-right">
           <div
+            className="export-image-preview-out"
             ref={previewOutRef}
             style={{
               height: mainHeight,
-              width: "100%",
-              transition: "width 0.25s",
               cursor: isGrabbing ? "grabbing" : "grab",
             }}
           >
             <TransformWrapper
-              minScale={Math.min(
-                1,
-                mainHeight / (root as HTMLDivElement).clientHeight,
-                (previewOutRef.current?.clientWidth || 400) /
-                  ((root as HTMLDivElement).clientWidth + 2)
-              )}
+              minScale={
+                Math.min(
+                  1,
+                  mainHeight / (root as HTMLDivElement).clientHeight,
+                  (previewOutRef.current?.clientWidth || 400) /
+                    ((root as HTMLDivElement).clientWidth + 2)
+                ) / 2
+              }
               maxScale={4}
               pinch={{ step: 20 }}
               doubleClick={{ mode: "reset" }}
@@ -323,6 +283,7 @@ const ModalContent: FC<{
                   border: "1px var(--divider-color) solid",
                   borderRadius: "8px",
                   overflow: "hidden",
+                  boxShadow: "0 0 10px 10px rgba(0,0,0,0.15)",
                 }}
               >
                 <div
@@ -380,16 +341,15 @@ const ModalContent: FC<{
                     (formData.authorInfo.avatar ||
                       formData.authorInfo.name) && (
                       <div
+                        className="user-info-container"
                         style={{
-                          display: "flex",
                           [formData.authorInfo.position === "top"
                             ? "borderBottom"
                             : "borderTop"]:
                             "1px solid var(--background-modifier-border)",
-                          padding: "16px 32px",
+
                           justifyContent:
                             alignMap[formData.authorInfo.align || "right"],
-                          alignItems: "center",
                           background:
                             formData.format === "png"
                               ? "unset"
@@ -398,35 +358,19 @@ const ModalContent: FC<{
                       >
                         {formData.authorInfo.avatar && (
                           <div
+                            className="user-info-avatar"
                             style={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: "50%",
-                              border:
-                                "1px solid var(--background-modifier-border)",
                               backgroundImage: `url(${formData.authorInfo.avatar})`,
-                              backgroundSize: "cover",
-                              margin: "0 20px",
                             }}
                           ></div>
                         )}
                         {formData.authorInfo.name && (
                           <div>
-                            <div
-                              style={{
-                                fontSize: "16px",
-                                paddingBottom: "6",
-                              }}
-                            >
+                            <div className="user-info-name">
                               {formData.authorInfo.name}
                             </div>
                             {formData.authorInfo.remark && (
-                              <div
-                                style={{
-                                  opacity: 0.5,
-                                  fontSize: "12px",
-                                }}
-                              >
+                              <div className="user-info-remark">
                                 {formData.authorInfo.remark}
                               </div>
                             )}
@@ -438,21 +382,18 @@ const ModalContent: FC<{
               </TransformComponent>
             </TransformWrapper>
           </div>
-          <div style={{ lineHeight: "20px", opacity: 0.6, fontSize: "12px" }}>
-            {L.guide()}
-          </div>
+          <div className="info-text">{L.guide()}</div>
         </div>
       </div>
-      <div
-        ref={actionsRef}
-        onClickCapture={handleClick}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: "20px",
-        }}
-      ></div>
+      <div ref={actionsRef} className="export-image-preview-actions">
+        <button onClick={handleCopy} disabled={processing}>
+          {L.copy()}
+        </button>
+        <button onClick={handleSave} disabled={processing}>
+          {/* @ts-ignore */}
+          {app.isMobile ? L.saveVault() : L.save()}
+        </button>
+      </div>
     </div>
   );
 };

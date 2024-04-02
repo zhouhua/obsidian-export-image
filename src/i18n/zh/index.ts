@@ -7,6 +7,8 @@ const zh = {
   copiedSuccess: "已复制到剪贴板",
   copy: "复制到剪贴板",
   save: "保存图片",
+  saveSuccess: "已导出并保存图片至 {filePath}。",
+  saveVault: "保存到 vault",
   includingFilename: "包含文件名作为标题：",
   imageWidth: "图片宽度：",
   exportImage: "导出为图片",

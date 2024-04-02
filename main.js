@@ -7828,923 +7828,6 @@ var require_client = __commonJS({
   }
 });
 
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js
-var require_isArray = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js"(exports, module2) {
-    var isArray = Array.isArray;
-    module2.exports = isArray;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js
-var require_freeGlobal = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js"(exports, module2) {
-    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
-    module2.exports = freeGlobal;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js
-var require_root = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js"(exports, module2) {
-    var freeGlobal = require_freeGlobal();
-    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-    var root = freeGlobal || freeSelf || Function("return this")();
-    module2.exports = root;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js
-var require_Symbol = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js"(exports, module2) {
-    var root = require_root();
-    var Symbol2 = root.Symbol;
-    module2.exports = Symbol2;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js
-var require_getRawTag = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js"(exports, module2) {
-    var Symbol2 = require_Symbol();
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    var nativeObjectToString = objectProto.toString;
-    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-    function getRawTag(value) {
-      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-      try {
-        value[symToStringTag] = void 0;
-        var unmasked = true;
-      } catch (e4) {
-      }
-      var result = nativeObjectToString.call(value);
-      if (unmasked) {
-        if (isOwn) {
-          value[symToStringTag] = tag;
-        } else {
-          delete value[symToStringTag];
-        }
-      }
-      return result;
-    }
-    module2.exports = getRawTag;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js
-var require_objectToString = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js"(exports, module2) {
-    var objectProto = Object.prototype;
-    var nativeObjectToString = objectProto.toString;
-    function objectToString(value) {
-      return nativeObjectToString.call(value);
-    }
-    module2.exports = objectToString;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js
-var require_baseGetTag = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js"(exports, module2) {
-    var Symbol2 = require_Symbol();
-    var getRawTag = require_getRawTag();
-    var objectToString = require_objectToString();
-    var nullTag = "[object Null]";
-    var undefinedTag = "[object Undefined]";
-    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-    function baseGetTag(value) {
-      if (value == null) {
-        return value === void 0 ? undefinedTag : nullTag;
-      }
-      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
-    }
-    module2.exports = baseGetTag;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js
-var require_isObjectLike = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js"(exports, module2) {
-    function isObjectLike(value) {
-      return value != null && typeof value == "object";
-    }
-    module2.exports = isObjectLike;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js
-var require_isSymbol = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js"(exports, module2) {
-    var baseGetTag = require_baseGetTag();
-    var isObjectLike = require_isObjectLike();
-    var symbolTag = "[object Symbol]";
-    function isSymbol(value) {
-      return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
-    }
-    module2.exports = isSymbol;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js
-var require_isKey = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js"(exports, module2) {
-    var isArray = require_isArray();
-    var isSymbol = require_isSymbol();
-    var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
-    var reIsPlainProp = /^\w*$/;
-    function isKey(value, object) {
-      if (isArray(value)) {
-        return false;
-      }
-      var type = typeof value;
-      if (type == "number" || type == "symbol" || type == "boolean" || value == null || isSymbol(value)) {
-        return true;
-      }
-      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
-    }
-    module2.exports = isKey;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js
-var require_isObject = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js"(exports, module2) {
-    function isObject(value) {
-      var type = typeof value;
-      return value != null && (type == "object" || type == "function");
-    }
-    module2.exports = isObject;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js
-var require_isFunction = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js"(exports, module2) {
-    var baseGetTag = require_baseGetTag();
-    var isObject = require_isObject();
-    var asyncTag = "[object AsyncFunction]";
-    var funcTag = "[object Function]";
-    var genTag = "[object GeneratorFunction]";
-    var proxyTag = "[object Proxy]";
-    function isFunction(value) {
-      if (!isObject(value)) {
-        return false;
-      }
-      var tag = baseGetTag(value);
-      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
-    }
-    module2.exports = isFunction;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js
-var require_coreJsData = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js"(exports, module2) {
-    var root = require_root();
-    var coreJsData = root["__core-js_shared__"];
-    module2.exports = coreJsData;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js
-var require_isMasked = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js"(exports, module2) {
-    var coreJsData = require_coreJsData();
-    var maskSrcKey = function() {
-      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
-      return uid ? "Symbol(src)_1." + uid : "";
-    }();
-    function isMasked(func) {
-      return !!maskSrcKey && maskSrcKey in func;
-    }
-    module2.exports = isMasked;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js
-var require_toSource = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js"(exports, module2) {
-    var funcProto = Function.prototype;
-    var funcToString = funcProto.toString;
-    function toSource(func) {
-      if (func != null) {
-        try {
-          return funcToString.call(func);
-        } catch (e4) {
-        }
-        try {
-          return func + "";
-        } catch (e4) {
-        }
-      }
-      return "";
-    }
-    module2.exports = toSource;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js
-var require_baseIsNative = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js"(exports, module2) {
-    var isFunction = require_isFunction();
-    var isMasked = require_isMasked();
-    var isObject = require_isObject();
-    var toSource = require_toSource();
-    var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-    var reIsHostCtor = /^\[object .+?Constructor\]$/;
-    var funcProto = Function.prototype;
-    var objectProto = Object.prototype;
-    var funcToString = funcProto.toString;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    var reIsNative = RegExp(
-      "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
-    );
-    function baseIsNative(value) {
-      if (!isObject(value) || isMasked(value)) {
-        return false;
-      }
-      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
-      return pattern.test(toSource(value));
-    }
-    module2.exports = baseIsNative;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js
-var require_getValue = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js"(exports, module2) {
-    function getValue(object, key) {
-      return object == null ? void 0 : object[key];
-    }
-    module2.exports = getValue;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js
-var require_getNative = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js"(exports, module2) {
-    var baseIsNative = require_baseIsNative();
-    var getValue = require_getValue();
-    function getNative(object, key) {
-      var value = getValue(object, key);
-      return baseIsNative(value) ? value : void 0;
-    }
-    module2.exports = getNative;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js
-var require_nativeCreate = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js"(exports, module2) {
-    var getNative = require_getNative();
-    var nativeCreate = getNative(Object, "create");
-    module2.exports = nativeCreate;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js
-var require_hashClear = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    function hashClear() {
-      this.__data__ = nativeCreate ? nativeCreate(null) : {};
-      this.size = 0;
-    }
-    module2.exports = hashClear;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js
-var require_hashDelete = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js"(exports, module2) {
-    function hashDelete(key) {
-      var result = this.has(key) && delete this.__data__[key];
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-    module2.exports = hashDelete;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js
-var require_hashGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    var HASH_UNDEFINED = "__lodash_hash_undefined__";
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    function hashGet(key) {
-      var data = this.__data__;
-      if (nativeCreate) {
-        var result = data[key];
-        return result === HASH_UNDEFINED ? void 0 : result;
-      }
-      return hasOwnProperty.call(data, key) ? data[key] : void 0;
-    }
-    module2.exports = hashGet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js
-var require_hashHas = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    function hashHas(key) {
-      var data = this.__data__;
-      return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
-    }
-    module2.exports = hashHas;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js
-var require_hashSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    var HASH_UNDEFINED = "__lodash_hash_undefined__";
-    function hashSet(key, value) {
-      var data = this.__data__;
-      this.size += this.has(key) ? 0 : 1;
-      data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
-      return this;
-    }
-    module2.exports = hashSet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js
-var require_Hash = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js"(exports, module2) {
-    var hashClear = require_hashClear();
-    var hashDelete = require_hashDelete();
-    var hashGet = require_hashGet();
-    var hashHas = require_hashHas();
-    var hashSet = require_hashSet();
-    function Hash(entries) {
-      var index2 = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index2 < length) {
-        var entry = entries[index2];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    Hash.prototype.clear = hashClear;
-    Hash.prototype["delete"] = hashDelete;
-    Hash.prototype.get = hashGet;
-    Hash.prototype.has = hashHas;
-    Hash.prototype.set = hashSet;
-    module2.exports = Hash;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js
-var require_listCacheClear = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js"(exports, module2) {
-    function listCacheClear() {
-      this.__data__ = [];
-      this.size = 0;
-    }
-    module2.exports = listCacheClear;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js
-var require_eq = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js"(exports, module2) {
-    function eq(value, other) {
-      return value === other || value !== value && other !== other;
-    }
-    module2.exports = eq;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js
-var require_assocIndexOf = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js"(exports, module2) {
-    var eq = require_eq();
-    function assocIndexOf(array, key) {
-      var length = array.length;
-      while (length--) {
-        if (eq(array[length][0], key)) {
-          return length;
-        }
-      }
-      return -1;
-    }
-    module2.exports = assocIndexOf;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js
-var require_listCacheDelete = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    var arrayProto = Array.prototype;
-    var splice = arrayProto.splice;
-    function listCacheDelete(key) {
-      var data = this.__data__, index2 = assocIndexOf(data, key);
-      if (index2 < 0) {
-        return false;
-      }
-      var lastIndex = data.length - 1;
-      if (index2 == lastIndex) {
-        data.pop();
-      } else {
-        splice.call(data, index2, 1);
-      }
-      --this.size;
-      return true;
-    }
-    module2.exports = listCacheDelete;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js
-var require_listCacheGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    function listCacheGet(key) {
-      var data = this.__data__, index2 = assocIndexOf(data, key);
-      return index2 < 0 ? void 0 : data[index2][1];
-    }
-    module2.exports = listCacheGet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js
-var require_listCacheHas = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    function listCacheHas(key) {
-      return assocIndexOf(this.__data__, key) > -1;
-    }
-    module2.exports = listCacheHas;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js
-var require_listCacheSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    function listCacheSet(key, value) {
-      var data = this.__data__, index2 = assocIndexOf(data, key);
-      if (index2 < 0) {
-        ++this.size;
-        data.push([key, value]);
-      } else {
-        data[index2][1] = value;
-      }
-      return this;
-    }
-    module2.exports = listCacheSet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js
-var require_ListCache = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js"(exports, module2) {
-    var listCacheClear = require_listCacheClear();
-    var listCacheDelete = require_listCacheDelete();
-    var listCacheGet = require_listCacheGet();
-    var listCacheHas = require_listCacheHas();
-    var listCacheSet = require_listCacheSet();
-    function ListCache(entries) {
-      var index2 = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index2 < length) {
-        var entry = entries[index2];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    ListCache.prototype.clear = listCacheClear;
-    ListCache.prototype["delete"] = listCacheDelete;
-    ListCache.prototype.get = listCacheGet;
-    ListCache.prototype.has = listCacheHas;
-    ListCache.prototype.set = listCacheSet;
-    module2.exports = ListCache;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js
-var require_Map = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js"(exports, module2) {
-    var getNative = require_getNative();
-    var root = require_root();
-    var Map2 = getNative(root, "Map");
-    module2.exports = Map2;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js
-var require_mapCacheClear = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js"(exports, module2) {
-    var Hash = require_Hash();
-    var ListCache = require_ListCache();
-    var Map2 = require_Map();
-    function mapCacheClear() {
-      this.size = 0;
-      this.__data__ = {
-        "hash": new Hash(),
-        "map": new (Map2 || ListCache)(),
-        "string": new Hash()
-      };
-    }
-    module2.exports = mapCacheClear;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js
-var require_isKeyable = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js"(exports, module2) {
-    function isKeyable(value) {
-      var type = typeof value;
-      return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
-    }
-    module2.exports = isKeyable;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js
-var require_getMapData = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js"(exports, module2) {
-    var isKeyable = require_isKeyable();
-    function getMapData(map, key) {
-      var data = map.__data__;
-      return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
-    }
-    module2.exports = getMapData;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js
-var require_mapCacheDelete = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheDelete(key) {
-      var result = getMapData(this, key)["delete"](key);
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-    module2.exports = mapCacheDelete;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js
-var require_mapCacheGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheGet(key) {
-      return getMapData(this, key).get(key);
-    }
-    module2.exports = mapCacheGet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js
-var require_mapCacheHas = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheHas(key) {
-      return getMapData(this, key).has(key);
-    }
-    module2.exports = mapCacheHas;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js
-var require_mapCacheSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheSet(key, value) {
-      var data = getMapData(this, key), size = data.size;
-      data.set(key, value);
-      this.size += data.size == size ? 0 : 1;
-      return this;
-    }
-    module2.exports = mapCacheSet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js
-var require_MapCache = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js"(exports, module2) {
-    var mapCacheClear = require_mapCacheClear();
-    var mapCacheDelete = require_mapCacheDelete();
-    var mapCacheGet = require_mapCacheGet();
-    var mapCacheHas = require_mapCacheHas();
-    var mapCacheSet = require_mapCacheSet();
-    function MapCache(entries) {
-      var index2 = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index2 < length) {
-        var entry = entries[index2];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    MapCache.prototype.clear = mapCacheClear;
-    MapCache.prototype["delete"] = mapCacheDelete;
-    MapCache.prototype.get = mapCacheGet;
-    MapCache.prototype.has = mapCacheHas;
-    MapCache.prototype.set = mapCacheSet;
-    module2.exports = MapCache;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js
-var require_memoize = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js"(exports, module2) {
-    var MapCache = require_MapCache();
-    var FUNC_ERROR_TEXT = "Expected a function";
-    function memoize(func, resolver) {
-      if (typeof func != "function" || resolver != null && typeof resolver != "function") {
-        throw new TypeError(FUNC_ERROR_TEXT);
-      }
-      var memoized = function() {
-        var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache = memoized.cache;
-        if (cache.has(key)) {
-          return cache.get(key);
-        }
-        var result = func.apply(this, args);
-        memoized.cache = cache.set(key, result) || cache;
-        return result;
-      };
-      memoized.cache = new (memoize.Cache || MapCache)();
-      return memoized;
-    }
-    memoize.Cache = MapCache;
-    module2.exports = memoize;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js
-var require_memoizeCapped = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js"(exports, module2) {
-    var memoize = require_memoize();
-    var MAX_MEMOIZE_SIZE = 500;
-    function memoizeCapped(func) {
-      var result = memoize(func, function(key) {
-        if (cache.size === MAX_MEMOIZE_SIZE) {
-          cache.clear();
-        }
-        return key;
-      });
-      var cache = result.cache;
-      return result;
-    }
-    module2.exports = memoizeCapped;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js
-var require_stringToPath = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js"(exports, module2) {
-    var memoizeCapped = require_memoizeCapped();
-    var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-    var reEscapeChar = /\\(\\)?/g;
-    var stringToPath = memoizeCapped(function(string) {
-      var result = [];
-      if (string.charCodeAt(0) === 46) {
-        result.push("");
-      }
-      string.replace(rePropName, function(match, number, quote, subString) {
-        result.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
-      });
-      return result;
-    });
-    module2.exports = stringToPath;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js
-var require_arrayMap = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js"(exports, module2) {
-    function arrayMap(array, iteratee) {
-      var index2 = -1, length = array == null ? 0 : array.length, result = Array(length);
-      while (++index2 < length) {
-        result[index2] = iteratee(array[index2], index2, array);
-      }
-      return result;
-    }
-    module2.exports = arrayMap;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js
-var require_baseToString = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js"(exports, module2) {
-    var Symbol2 = require_Symbol();
-    var arrayMap = require_arrayMap();
-    var isArray = require_isArray();
-    var isSymbol = require_isSymbol();
-    var INFINITY = 1 / 0;
-    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
-    var symbolToString = symbolProto ? symbolProto.toString : void 0;
-    function baseToString(value) {
-      if (typeof value == "string") {
-        return value;
-      }
-      if (isArray(value)) {
-        return arrayMap(value, baseToString) + "";
-      }
-      if (isSymbol(value)) {
-        return symbolToString ? symbolToString.call(value) : "";
-      }
-      var result = value + "";
-      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
-    }
-    module2.exports = baseToString;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js
-var require_toString = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js"(exports, module2) {
-    var baseToString = require_baseToString();
-    function toString(value) {
-      return value == null ? "" : baseToString(value);
-    }
-    module2.exports = toString;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js
-var require_castPath = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js"(exports, module2) {
-    var isArray = require_isArray();
-    var isKey = require_isKey();
-    var stringToPath = require_stringToPath();
-    var toString = require_toString();
-    function castPath(value, object) {
-      if (isArray(value)) {
-        return value;
-      }
-      return isKey(value, object) ? [value] : stringToPath(toString(value));
-    }
-    module2.exports = castPath;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js
-var require_toKey = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js"(exports, module2) {
-    var isSymbol = require_isSymbol();
-    var INFINITY = 1 / 0;
-    function toKey(value) {
-      if (typeof value == "string" || isSymbol(value)) {
-        return value;
-      }
-      var result = value + "";
-      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
-    }
-    module2.exports = toKey;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js
-var require_baseGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js"(exports, module2) {
-    var castPath = require_castPath();
-    var toKey = require_toKey();
-    function baseGet(object, path) {
-      path = castPath(path, object);
-      var index2 = 0, length = path.length;
-      while (object != null && index2 < length) {
-        object = object[toKey(path[index2++])];
-      }
-      return index2 && index2 == length ? object : void 0;
-    }
-    module2.exports = baseGet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/get.js
-var require_get = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/get.js"(exports, module2) {
-    var baseGet = require_baseGet();
-    function get3(object, path, defaultValue) {
-      var result = object == null ? void 0 : baseGet(object, path);
-      return result === void 0 ? defaultValue : result;
-    }
-    module2.exports = get3;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js
-var require_defineProperty = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js"(exports, module2) {
-    var getNative = require_getNative();
-    var defineProperty = function() {
-      try {
-        var func = getNative(Object, "defineProperty");
-        func({}, "", {});
-        return func;
-      } catch (e4) {
-      }
-    }();
-    module2.exports = defineProperty;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js
-var require_baseAssignValue = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js"(exports, module2) {
-    var defineProperty = require_defineProperty();
-    function baseAssignValue(object, key, value) {
-      if (key == "__proto__" && defineProperty) {
-        defineProperty(object, key, {
-          "configurable": true,
-          "enumerable": true,
-          "value": value,
-          "writable": true
-        });
-      } else {
-        object[key] = value;
-      }
-    }
-    module2.exports = baseAssignValue;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js
-var require_assignValue = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js"(exports, module2) {
-    var baseAssignValue = require_baseAssignValue();
-    var eq = require_eq();
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    function assignValue(object, key, value) {
-      var objValue = object[key];
-      if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
-        baseAssignValue(object, key, value);
-      }
-    }
-    module2.exports = assignValue;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js
-var require_isIndex = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js"(exports, module2) {
-    var MAX_SAFE_INTEGER = 9007199254740991;
-    var reIsUint = /^(?:0|[1-9]\d*)$/;
-    function isIndex(value, length) {
-      var type = typeof value;
-      length = length == null ? MAX_SAFE_INTEGER : length;
-      return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
-    }
-    module2.exports = isIndex;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js
-var require_baseSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js"(exports, module2) {
-    var assignValue = require_assignValue();
-    var castPath = require_castPath();
-    var isIndex = require_isIndex();
-    var isObject = require_isObject();
-    var toKey = require_toKey();
-    function baseSet(object, path, value, customizer) {
-      if (!isObject(object)) {
-        return object;
-      }
-      path = castPath(path, object);
-      var index2 = -1, length = path.length, lastIndex = length - 1, nested = object;
-      while (nested != null && ++index2 < length) {
-        var key = toKey(path[index2]), newValue = value;
-        if (key === "__proto__" || key === "constructor" || key === "prototype") {
-          return object;
-        }
-        if (index2 != lastIndex) {
-          var objValue = nested[key];
-          newValue = customizer ? customizer(objValue, key, nested) : void 0;
-          if (newValue === void 0) {
-            newValue = isObject(objValue) ? objValue : isIndex(path[index2 + 1]) ? [] : {};
-          }
-        }
-        assignValue(nested, key, newValue);
-        nested = nested[key];
-      }
-      return object;
-    }
-    module2.exports = baseSet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/set.js
-var require_set = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/set.js"(exports, module2) {
-    var baseSet = require_baseSet();
-    function set2(object, path, value) {
-      return object == null ? object : baseSet(object, path, value);
-    }
-    module2.exports = set2;
-  }
-});
-
 // src/dom-to-image-more.js
 var require_dom_to_image_more = __commonJS({
   "src/dom-to-image-more.js"(exports, module2) {
@@ -29438,6 +28521,923 @@ var init_index_es = __esm({
   }
 });
 
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js
+var require_isArray = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js"(exports, module2) {
+    var isArray = Array.isArray;
+    module2.exports = isArray;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js
+var require_freeGlobal = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js"(exports, module2) {
+    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+    module2.exports = freeGlobal;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js
+var require_root = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js"(exports, module2) {
+    var freeGlobal = require_freeGlobal();
+    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+    var root = freeGlobal || freeSelf || Function("return this")();
+    module2.exports = root;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js
+var require_Symbol = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js"(exports, module2) {
+    var root = require_root();
+    var Symbol2 = root.Symbol;
+    module2.exports = Symbol2;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js
+var require_getRawTag = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var nativeObjectToString = objectProto.toString;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+      try {
+        value[symToStringTag] = void 0;
+        var unmasked = true;
+      } catch (e4) {
+      }
+      var result = nativeObjectToString.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag] = tag;
+        } else {
+          delete value[symToStringTag];
+        }
+      }
+      return result;
+    }
+    module2.exports = getRawTag;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js
+var require_objectToString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js"(exports, module2) {
+    var objectProto = Object.prototype;
+    var nativeObjectToString = objectProto.toString;
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+    module2.exports = objectToString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js
+var require_baseGetTag = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var getRawTag = require_getRawTag();
+    var objectToString = require_objectToString();
+    var nullTag = "[object Null]";
+    var undefinedTag = "[object Undefined]";
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === void 0 ? undefinedTag : nullTag;
+      }
+      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+    }
+    module2.exports = baseGetTag;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js
+var require_isObjectLike = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js"(exports, module2) {
+    function isObjectLike(value) {
+      return value != null && typeof value == "object";
+    }
+    module2.exports = isObjectLike;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js
+var require_isSymbol = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isObjectLike = require_isObjectLike();
+    var symbolTag = "[object Symbol]";
+    function isSymbol(value) {
+      return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+    }
+    module2.exports = isSymbol;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js
+var require_isKey = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js"(exports, module2) {
+    var isArray = require_isArray();
+    var isSymbol = require_isSymbol();
+    var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
+    var reIsPlainProp = /^\w*$/;
+    function isKey(value, object) {
+      if (isArray(value)) {
+        return false;
+      }
+      var type = typeof value;
+      if (type == "number" || type == "symbol" || type == "boolean" || value == null || isSymbol(value)) {
+        return true;
+      }
+      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
+    }
+    module2.exports = isKey;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js
+var require_isObject = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js"(exports, module2) {
+    function isObject(value) {
+      var type = typeof value;
+      return value != null && (type == "object" || type == "function");
+    }
+    module2.exports = isObject;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js
+var require_isFunction = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isObject = require_isObject();
+    var asyncTag = "[object AsyncFunction]";
+    var funcTag = "[object Function]";
+    var genTag = "[object GeneratorFunction]";
+    var proxyTag = "[object Proxy]";
+    function isFunction(value) {
+      if (!isObject(value)) {
+        return false;
+      }
+      var tag = baseGetTag(value);
+      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+    }
+    module2.exports = isFunction;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js
+var require_coreJsData = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js"(exports, module2) {
+    var root = require_root();
+    var coreJsData = root["__core-js_shared__"];
+    module2.exports = coreJsData;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js
+var require_isMasked = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js"(exports, module2) {
+    var coreJsData = require_coreJsData();
+    var maskSrcKey = function() {
+      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+      return uid ? "Symbol(src)_1." + uid : "";
+    }();
+    function isMasked(func) {
+      return !!maskSrcKey && maskSrcKey in func;
+    }
+    module2.exports = isMasked;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js
+var require_toSource = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js"(exports, module2) {
+    var funcProto = Function.prototype;
+    var funcToString = funcProto.toString;
+    function toSource(func) {
+      if (func != null) {
+        try {
+          return funcToString.call(func);
+        } catch (e4) {
+        }
+        try {
+          return func + "";
+        } catch (e4) {
+        }
+      }
+      return "";
+    }
+    module2.exports = toSource;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js
+var require_baseIsNative = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js"(exports, module2) {
+    var isFunction = require_isFunction();
+    var isMasked = require_isMasked();
+    var isObject = require_isObject();
+    var toSource = require_toSource();
+    var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+    var reIsHostCtor = /^\[object .+?Constructor\]$/;
+    var funcProto = Function.prototype;
+    var objectProto = Object.prototype;
+    var funcToString = funcProto.toString;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var reIsNative = RegExp(
+      "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
+    );
+    function baseIsNative(value) {
+      if (!isObject(value) || isMasked(value)) {
+        return false;
+      }
+      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+      return pattern.test(toSource(value));
+    }
+    module2.exports = baseIsNative;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js
+var require_getValue = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js"(exports, module2) {
+    function getValue(object, key) {
+      return object == null ? void 0 : object[key];
+    }
+    module2.exports = getValue;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js
+var require_getNative = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js"(exports, module2) {
+    var baseIsNative = require_baseIsNative();
+    var getValue = require_getValue();
+    function getNative(object, key) {
+      var value = getValue(object, key);
+      return baseIsNative(value) ? value : void 0;
+    }
+    module2.exports = getNative;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js
+var require_nativeCreate = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js"(exports, module2) {
+    var getNative = require_getNative();
+    var nativeCreate = getNative(Object, "create");
+    module2.exports = nativeCreate;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js
+var require_hashClear = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    function hashClear() {
+      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+      this.size = 0;
+    }
+    module2.exports = hashClear;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js
+var require_hashDelete = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js"(exports, module2) {
+    function hashDelete(key) {
+      var result = this.has(key) && delete this.__data__[key];
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    module2.exports = hashDelete;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js
+var require_hashGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    var HASH_UNDEFINED = "__lodash_hash_undefined__";
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function hashGet(key) {
+      var data = this.__data__;
+      if (nativeCreate) {
+        var result = data[key];
+        return result === HASH_UNDEFINED ? void 0 : result;
+      }
+      return hasOwnProperty.call(data, key) ? data[key] : void 0;
+    }
+    module2.exports = hashGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js
+var require_hashHas = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function hashHas(key) {
+      var data = this.__data__;
+      return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
+    }
+    module2.exports = hashHas;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js
+var require_hashSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    var HASH_UNDEFINED = "__lodash_hash_undefined__";
+    function hashSet(key, value) {
+      var data = this.__data__;
+      this.size += this.has(key) ? 0 : 1;
+      data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
+      return this;
+    }
+    module2.exports = hashSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js
+var require_Hash = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js"(exports, module2) {
+    var hashClear = require_hashClear();
+    var hashDelete = require_hashDelete();
+    var hashGet = require_hashGet();
+    var hashHas = require_hashHas();
+    var hashSet = require_hashSet();
+    function Hash(entries) {
+      var index2 = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index2 < length) {
+        var entry = entries[index2];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    Hash.prototype.clear = hashClear;
+    Hash.prototype["delete"] = hashDelete;
+    Hash.prototype.get = hashGet;
+    Hash.prototype.has = hashHas;
+    Hash.prototype.set = hashSet;
+    module2.exports = Hash;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js
+var require_listCacheClear = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js"(exports, module2) {
+    function listCacheClear() {
+      this.__data__ = [];
+      this.size = 0;
+    }
+    module2.exports = listCacheClear;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js
+var require_eq = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js"(exports, module2) {
+    function eq(value, other) {
+      return value === other || value !== value && other !== other;
+    }
+    module2.exports = eq;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js
+var require_assocIndexOf = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js"(exports, module2) {
+    var eq = require_eq();
+    function assocIndexOf(array, key) {
+      var length = array.length;
+      while (length--) {
+        if (eq(array[length][0], key)) {
+          return length;
+        }
+      }
+      return -1;
+    }
+    module2.exports = assocIndexOf;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js
+var require_listCacheDelete = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    var arrayProto = Array.prototype;
+    var splice = arrayProto.splice;
+    function listCacheDelete(key) {
+      var data = this.__data__, index2 = assocIndexOf(data, key);
+      if (index2 < 0) {
+        return false;
+      }
+      var lastIndex = data.length - 1;
+      if (index2 == lastIndex) {
+        data.pop();
+      } else {
+        splice.call(data, index2, 1);
+      }
+      --this.size;
+      return true;
+    }
+    module2.exports = listCacheDelete;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js
+var require_listCacheGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    function listCacheGet(key) {
+      var data = this.__data__, index2 = assocIndexOf(data, key);
+      return index2 < 0 ? void 0 : data[index2][1];
+    }
+    module2.exports = listCacheGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js
+var require_listCacheHas = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    function listCacheHas(key) {
+      return assocIndexOf(this.__data__, key) > -1;
+    }
+    module2.exports = listCacheHas;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js
+var require_listCacheSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    function listCacheSet(key, value) {
+      var data = this.__data__, index2 = assocIndexOf(data, key);
+      if (index2 < 0) {
+        ++this.size;
+        data.push([key, value]);
+      } else {
+        data[index2][1] = value;
+      }
+      return this;
+    }
+    module2.exports = listCacheSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js
+var require_ListCache = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js"(exports, module2) {
+    var listCacheClear = require_listCacheClear();
+    var listCacheDelete = require_listCacheDelete();
+    var listCacheGet = require_listCacheGet();
+    var listCacheHas = require_listCacheHas();
+    var listCacheSet = require_listCacheSet();
+    function ListCache(entries) {
+      var index2 = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index2 < length) {
+        var entry = entries[index2];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    ListCache.prototype.clear = listCacheClear;
+    ListCache.prototype["delete"] = listCacheDelete;
+    ListCache.prototype.get = listCacheGet;
+    ListCache.prototype.has = listCacheHas;
+    ListCache.prototype.set = listCacheSet;
+    module2.exports = ListCache;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js
+var require_Map = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js"(exports, module2) {
+    var getNative = require_getNative();
+    var root = require_root();
+    var Map2 = getNative(root, "Map");
+    module2.exports = Map2;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js
+var require_mapCacheClear = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js"(exports, module2) {
+    var Hash = require_Hash();
+    var ListCache = require_ListCache();
+    var Map2 = require_Map();
+    function mapCacheClear() {
+      this.size = 0;
+      this.__data__ = {
+        "hash": new Hash(),
+        "map": new (Map2 || ListCache)(),
+        "string": new Hash()
+      };
+    }
+    module2.exports = mapCacheClear;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js
+var require_isKeyable = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js"(exports, module2) {
+    function isKeyable(value) {
+      var type = typeof value;
+      return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
+    }
+    module2.exports = isKeyable;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js
+var require_getMapData = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js"(exports, module2) {
+    var isKeyable = require_isKeyable();
+    function getMapData(map, key) {
+      var data = map.__data__;
+      return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
+    }
+    module2.exports = getMapData;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js
+var require_mapCacheDelete = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheDelete(key) {
+      var result = getMapData(this, key)["delete"](key);
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    module2.exports = mapCacheDelete;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js
+var require_mapCacheGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheGet(key) {
+      return getMapData(this, key).get(key);
+    }
+    module2.exports = mapCacheGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js
+var require_mapCacheHas = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheHas(key) {
+      return getMapData(this, key).has(key);
+    }
+    module2.exports = mapCacheHas;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js
+var require_mapCacheSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheSet(key, value) {
+      var data = getMapData(this, key), size = data.size;
+      data.set(key, value);
+      this.size += data.size == size ? 0 : 1;
+      return this;
+    }
+    module2.exports = mapCacheSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js
+var require_MapCache = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js"(exports, module2) {
+    var mapCacheClear = require_mapCacheClear();
+    var mapCacheDelete = require_mapCacheDelete();
+    var mapCacheGet = require_mapCacheGet();
+    var mapCacheHas = require_mapCacheHas();
+    var mapCacheSet = require_mapCacheSet();
+    function MapCache(entries) {
+      var index2 = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index2 < length) {
+        var entry = entries[index2];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    MapCache.prototype.clear = mapCacheClear;
+    MapCache.prototype["delete"] = mapCacheDelete;
+    MapCache.prototype.get = mapCacheGet;
+    MapCache.prototype.has = mapCacheHas;
+    MapCache.prototype.set = mapCacheSet;
+    module2.exports = MapCache;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js
+var require_memoize = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js"(exports, module2) {
+    var MapCache = require_MapCache();
+    var FUNC_ERROR_TEXT = "Expected a function";
+    function memoize(func, resolver) {
+      if (typeof func != "function" || resolver != null && typeof resolver != "function") {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      var memoized = function() {
+        var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache = memoized.cache;
+        if (cache.has(key)) {
+          return cache.get(key);
+        }
+        var result = func.apply(this, args);
+        memoized.cache = cache.set(key, result) || cache;
+        return result;
+      };
+      memoized.cache = new (memoize.Cache || MapCache)();
+      return memoized;
+    }
+    memoize.Cache = MapCache;
+    module2.exports = memoize;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js
+var require_memoizeCapped = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js"(exports, module2) {
+    var memoize = require_memoize();
+    var MAX_MEMOIZE_SIZE = 500;
+    function memoizeCapped(func) {
+      var result = memoize(func, function(key) {
+        if (cache.size === MAX_MEMOIZE_SIZE) {
+          cache.clear();
+        }
+        return key;
+      });
+      var cache = result.cache;
+      return result;
+    }
+    module2.exports = memoizeCapped;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js
+var require_stringToPath = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js"(exports, module2) {
+    var memoizeCapped = require_memoizeCapped();
+    var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+    var reEscapeChar = /\\(\\)?/g;
+    var stringToPath = memoizeCapped(function(string) {
+      var result = [];
+      if (string.charCodeAt(0) === 46) {
+        result.push("");
+      }
+      string.replace(rePropName, function(match, number, quote, subString) {
+        result.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
+      });
+      return result;
+    });
+    module2.exports = stringToPath;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js
+var require_arrayMap = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js"(exports, module2) {
+    function arrayMap(array, iteratee) {
+      var index2 = -1, length = array == null ? 0 : array.length, result = Array(length);
+      while (++index2 < length) {
+        result[index2] = iteratee(array[index2], index2, array);
+      }
+      return result;
+    }
+    module2.exports = arrayMap;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js
+var require_baseToString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var arrayMap = require_arrayMap();
+    var isArray = require_isArray();
+    var isSymbol = require_isSymbol();
+    var INFINITY = 1 / 0;
+    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
+    var symbolToString = symbolProto ? symbolProto.toString : void 0;
+    function baseToString(value) {
+      if (typeof value == "string") {
+        return value;
+      }
+      if (isArray(value)) {
+        return arrayMap(value, baseToString) + "";
+      }
+      if (isSymbol(value)) {
+        return symbolToString ? symbolToString.call(value) : "";
+      }
+      var result = value + "";
+      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
+    }
+    module2.exports = baseToString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js
+var require_toString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js"(exports, module2) {
+    var baseToString = require_baseToString();
+    function toString(value) {
+      return value == null ? "" : baseToString(value);
+    }
+    module2.exports = toString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js
+var require_castPath = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js"(exports, module2) {
+    var isArray = require_isArray();
+    var isKey = require_isKey();
+    var stringToPath = require_stringToPath();
+    var toString = require_toString();
+    function castPath(value, object) {
+      if (isArray(value)) {
+        return value;
+      }
+      return isKey(value, object) ? [value] : stringToPath(toString(value));
+    }
+    module2.exports = castPath;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js
+var require_toKey = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js"(exports, module2) {
+    var isSymbol = require_isSymbol();
+    var INFINITY = 1 / 0;
+    function toKey(value) {
+      if (typeof value == "string" || isSymbol(value)) {
+        return value;
+      }
+      var result = value + "";
+      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
+    }
+    module2.exports = toKey;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js
+var require_baseGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js"(exports, module2) {
+    var castPath = require_castPath();
+    var toKey = require_toKey();
+    function baseGet(object, path) {
+      path = castPath(path, object);
+      var index2 = 0, length = path.length;
+      while (object != null && index2 < length) {
+        object = object[toKey(path[index2++])];
+      }
+      return index2 && index2 == length ? object : void 0;
+    }
+    module2.exports = baseGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/get.js
+var require_get = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/get.js"(exports, module2) {
+    var baseGet = require_baseGet();
+    function get3(object, path, defaultValue) {
+      var result = object == null ? void 0 : baseGet(object, path);
+      return result === void 0 ? defaultValue : result;
+    }
+    module2.exports = get3;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js
+var require_defineProperty = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js"(exports, module2) {
+    var getNative = require_getNative();
+    var defineProperty = function() {
+      try {
+        var func = getNative(Object, "defineProperty");
+        func({}, "", {});
+        return func;
+      } catch (e4) {
+      }
+    }();
+    module2.exports = defineProperty;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js
+var require_baseAssignValue = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js"(exports, module2) {
+    var defineProperty = require_defineProperty();
+    function baseAssignValue(object, key, value) {
+      if (key == "__proto__" && defineProperty) {
+        defineProperty(object, key, {
+          "configurable": true,
+          "enumerable": true,
+          "value": value,
+          "writable": true
+        });
+      } else {
+        object[key] = value;
+      }
+    }
+    module2.exports = baseAssignValue;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js
+var require_assignValue = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js"(exports, module2) {
+    var baseAssignValue = require_baseAssignValue();
+    var eq = require_eq();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function assignValue(object, key, value) {
+      var objValue = object[key];
+      if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
+        baseAssignValue(object, key, value);
+      }
+    }
+    module2.exports = assignValue;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js
+var require_isIndex = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js"(exports, module2) {
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    var reIsUint = /^(?:0|[1-9]\d*)$/;
+    function isIndex(value, length) {
+      var type = typeof value;
+      length = length == null ? MAX_SAFE_INTEGER : length;
+      return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+    }
+    module2.exports = isIndex;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js
+var require_baseSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js"(exports, module2) {
+    var assignValue = require_assignValue();
+    var castPath = require_castPath();
+    var isIndex = require_isIndex();
+    var isObject = require_isObject();
+    var toKey = require_toKey();
+    function baseSet(object, path, value, customizer) {
+      if (!isObject(object)) {
+        return object;
+      }
+      path = castPath(path, object);
+      var index2 = -1, length = path.length, lastIndex = length - 1, nested = object;
+      while (nested != null && ++index2 < length) {
+        var key = toKey(path[index2]), newValue = value;
+        if (key === "__proto__" || key === "constructor" || key === "prototype") {
+          return object;
+        }
+        if (index2 != lastIndex) {
+          var objValue = nested[key];
+          newValue = customizer ? customizer(objValue, key, nested) : void 0;
+          if (newValue === void 0) {
+            newValue = isObject(objValue) ? objValue : isIndex(path[index2 + 1]) ? [] : {};
+          }
+        }
+        assignValue(nested, key, newValue);
+        nested = nested[key];
+      }
+      return object;
+    }
+    module2.exports = baseSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/set.js
+var require_set = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/set.js"(exports, module2) {
+    var baseSet = require_baseSet();
+    function set2(object, path, value) {
+      return object == null ? object : baseSet(object, path, value);
+    }
+    module2.exports = set2;
+  }
+});
+
 // main.ts
 var main_exports = {};
 __export(main_exports, {
@@ -29951,12 +29951,8 @@ var Preview = ({
   return /* @__PURE__ */ import_react2.default.createElement(Watermark2, { ...props }, /* @__PURE__ */ import_react2.default.createElement(
     "div",
     {
-      className: "markdown-preview-view markdown-rendered",
-      ref: container,
-      style: {
-        border: "1px solid var(--background-modifier-border)",
-        borderRadius: 8
-      }
+      className: "markdown-preview-view markdown-rendered export-image-setting-preview-mock",
+      ref: container
     }
   ));
 };
@@ -29984,1644 +29980,14 @@ var import_react9 = __toESM(require_react());
 var import_obsidian6 = require("obsidian");
 var import_client3 = __toESM(require_client());
 
-// src/ModalContent.tsx
-var import_obsidian4 = require("obsidian");
+// src/components/ModalContent.tsx
+var import_obsidian5 = require("obsidian");
 var import_react7 = __toESM(require_react());
 
-// node_modules/.pnpm/react-zoom-pan-pinch@3.4.3_react-dom@18.2.0_react@18.2.0/node_modules/react-zoom-pan-pinch/dist/index.esm.js
-var import_react3 = __toESM(require_react());
-var roundNumber = function(num, decimal) {
-  return Number(num.toFixed(decimal));
-};
-var checkIsNumber = function(num, defaultValue) {
-  return typeof num === "number" ? num : defaultValue;
-};
-var handleCallback = function(context, event, callback) {
-  if (callback && typeof callback === "function") {
-    callback(context, event);
-  }
-};
-var easeOut = function(t5) {
-  return -Math.cos(t5 * Math.PI) / 2 + 0.5;
-};
-var linear = function(t5) {
-  return t5;
-};
-var easeInQuad = function(t5) {
-  return t5 * t5;
-};
-var easeOutQuad = function(t5) {
-  return t5 * (2 - t5);
-};
-var easeInOutQuad = function(t5) {
-  return t5 < 0.5 ? 2 * t5 * t5 : -1 + (4 - 2 * t5) * t5;
-};
-var easeInCubic = function(t5) {
-  return t5 * t5 * t5;
-};
-var easeOutCubic = function(t5) {
-  return --t5 * t5 * t5 + 1;
-};
-var easeInOutCubic = function(t5) {
-  return t5 < 0.5 ? 4 * t5 * t5 * t5 : (t5 - 1) * (2 * t5 - 2) * (2 * t5 - 2) + 1;
-};
-var easeInQuart = function(t5) {
-  return t5 * t5 * t5 * t5;
-};
-var easeOutQuart = function(t5) {
-  return 1 - --t5 * t5 * t5 * t5;
-};
-var easeInOutQuart = function(t5) {
-  return t5 < 0.5 ? 8 * t5 * t5 * t5 * t5 : 1 - 8 * --t5 * t5 * t5 * t5;
-};
-var easeInQuint = function(t5) {
-  return t5 * t5 * t5 * t5 * t5;
-};
-var easeOutQuint = function(t5) {
-  return 1 + --t5 * t5 * t5 * t5 * t5;
-};
-var easeInOutQuint = function(t5) {
-  return t5 < 0.5 ? 16 * t5 * t5 * t5 * t5 * t5 : 1 + 16 * --t5 * t5 * t5 * t5 * t5;
-};
-var animations = {
-  easeOut,
-  linear,
-  easeInQuad,
-  easeOutQuad,
-  easeInOutQuad,
-  easeInCubic,
-  easeOutCubic,
-  easeInOutCubic,
-  easeInQuart,
-  easeOutQuart,
-  easeInOutQuart,
-  easeInQuint,
-  easeOutQuint,
-  easeInOutQuint
-};
-var handleCancelAnimationFrame = function(animation) {
-  if (typeof animation === "number") {
-    cancelAnimationFrame(animation);
-  }
-};
-var handleCancelAnimation = function(contextInstance) {
-  if (!contextInstance.mounted)
-    return;
-  handleCancelAnimationFrame(contextInstance.animation);
-  contextInstance.animate = false;
-  contextInstance.animation = null;
-  contextInstance.velocity = null;
-};
-function handleSetupAnimation(contextInstance, animationName, animationTime, callback) {
-  if (!contextInstance.mounted)
-    return;
-  var startTime = (/* @__PURE__ */ new Date()).getTime();
-  var lastStep = 1;
-  handleCancelAnimation(contextInstance);
-  contextInstance.animation = function() {
-    if (!contextInstance.mounted) {
-      return handleCancelAnimationFrame(contextInstance.animation);
-    }
-    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
-    var animationProgress = frameTime / animationTime;
-    var animationType = animations[animationName];
-    var step = animationType(animationProgress);
-    if (frameTime >= animationTime) {
-      callback(lastStep);
-      contextInstance.animation = null;
-    } else if (contextInstance.animation) {
-      callback(step);
-      requestAnimationFrame(contextInstance.animation);
-    }
-  };
-  requestAnimationFrame(contextInstance.animation);
-}
-function isValidTargetState(targetState) {
-  var scale = targetState.scale, positionX = targetState.positionX, positionY = targetState.positionY;
-  if (Number.isNaN(scale) || Number.isNaN(positionX) || Number.isNaN(positionY)) {
-    return false;
-  }
-  return true;
-}
-function animate(contextInstance, targetState, animationTime, animationName) {
-  var isValid = isValidTargetState(targetState);
-  if (!contextInstance.mounted || !isValid)
-    return;
-  var setTransformState = contextInstance.setTransformState;
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  var scaleDiff = targetState.scale - scale;
-  var positionXDiff = targetState.positionX - positionX;
-  var positionYDiff = targetState.positionY - positionY;
-  if (animationTime === 0) {
-    setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
-  } else {
-    handleSetupAnimation(contextInstance, animationName, animationTime, function(step) {
-      var newScale = scale + scaleDiff * step;
-      var newPositionX = positionX + positionXDiff * step;
-      var newPositionY = positionY + positionYDiff * step;
-      setTransformState(newScale, newPositionX, newPositionY);
-    });
-  }
-}
-function getComponentsSizes(wrapperComponent, contentComponent, newScale) {
-  var wrapperWidth = wrapperComponent.offsetWidth;
-  var wrapperHeight = wrapperComponent.offsetHeight;
-  var contentWidth = contentComponent.offsetWidth;
-  var contentHeight = contentComponent.offsetHeight;
-  var newContentWidth = contentWidth * newScale;
-  var newContentHeight = contentHeight * newScale;
-  var newDiffWidth = wrapperWidth - newContentWidth;
-  var newDiffHeight = wrapperHeight - newContentHeight;
-  return {
-    wrapperWidth,
-    wrapperHeight,
-    newContentWidth,
-    newDiffWidth,
-    newContentHeight,
-    newDiffHeight
-  };
-}
-var getBounds = function(wrapperWidth, newContentWidth, diffWidth, wrapperHeight, newContentHeight, diffHeight, centerZoomedOut) {
-  var scaleWidthFactor = wrapperWidth > newContentWidth ? diffWidth * (centerZoomedOut ? 1 : 0.5) : 0;
-  var scaleHeightFactor = wrapperHeight > newContentHeight ? diffHeight * (centerZoomedOut ? 1 : 0.5) : 0;
-  var minPositionX = wrapperWidth - newContentWidth - scaleWidthFactor;
-  var maxPositionX = scaleWidthFactor;
-  var minPositionY = wrapperHeight - newContentHeight - scaleHeightFactor;
-  var maxPositionY = scaleHeightFactor;
-  return { minPositionX, maxPositionX, minPositionY, maxPositionY };
-};
-var calculateBounds = function(contextInstance, newScale) {
-  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-  var centerZoomedOut = contextInstance.setup.centerZoomedOut;
-  if (!wrapperComponent || !contentComponent) {
-    throw new Error("Components are not mounted");
-  }
-  var _a2 = getComponentsSizes(wrapperComponent, contentComponent, newScale), wrapperWidth = _a2.wrapperWidth, wrapperHeight = _a2.wrapperHeight, newContentWidth = _a2.newContentWidth, newDiffWidth = _a2.newDiffWidth, newContentHeight = _a2.newContentHeight, newDiffHeight = _a2.newDiffHeight;
-  var bounds = getBounds(wrapperWidth, newContentWidth, newDiffWidth, wrapperHeight, newContentHeight, newDiffHeight, Boolean(centerZoomedOut));
-  return bounds;
-};
-var boundLimiter = function(value, minBound, maxBound, isActive) {
-  if (!isActive)
-    return roundNumber(value, 2);
-  if (value < minBound)
-    return roundNumber(minBound, 2);
-  if (value > maxBound)
-    return roundNumber(maxBound, 2);
-  return roundNumber(value, 2);
-};
-var handleCalculateBounds = function(contextInstance, newScale) {
-  var bounds = calculateBounds(contextInstance, newScale);
-  contextInstance.bounds = bounds;
-  return bounds;
-};
-function getMouseBoundedPosition(positionX, positionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent) {
-  var minPositionX = bounds.minPositionX, minPositionY = bounds.minPositionY, maxPositionX = bounds.maxPositionX, maxPositionY = bounds.maxPositionY;
-  var paddingX = 0;
-  var paddingY = 0;
-  if (wrapperComponent) {
-    paddingX = paddingValueX;
-    paddingY = paddingValueY;
-  }
-  var x2 = boundLimiter(positionX, minPositionX - paddingX, maxPositionX + paddingX, limitToBounds);
-  var y3 = boundLimiter(positionY, minPositionY - paddingY, maxPositionY + paddingY, limitToBounds);
-  return { x: x2, y: y3 };
-}
-function handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds) {
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  var scaleDifference = newScale - scale;
-  if (typeof mouseX !== "number" || typeof mouseY !== "number") {
-    console.error("Mouse X and Y position were not provided!");
-    return { x: positionX, y: positionY };
-  }
-  var calculatedPositionX = positionX - mouseX * scaleDifference;
-  var calculatedPositionY = positionY - mouseY * scaleDifference;
-  var newPositions = getMouseBoundedPosition(calculatedPositionX, calculatedPositionY, bounds, limitToBounds, 0, 0, null);
-  return newPositions;
-}
-function checkZoomBounds(zoom, minScale, maxScale, zoomPadding, enablePadding) {
-  var scalePadding = enablePadding ? zoomPadding : 0;
-  var minScaleWithPadding = minScale - scalePadding;
-  if (!Number.isNaN(maxScale) && zoom >= maxScale)
-    return maxScale;
-  if (!Number.isNaN(minScale) && zoom <= minScaleWithPadding)
-    return minScaleWithPadding;
-  return zoom;
-}
-var isPanningStartAllowed = function(contextInstance, event) {
-  var excluded = contextInstance.setup.panning.excluded;
-  var isInitialized = contextInstance.isInitialized, wrapperComponent = contextInstance.wrapperComponent;
-  var target = event.target;
-  var targetIsShadowDom = "shadowRoot" in target && "composedPath" in event;
-  var isWrapperChild = targetIsShadowDom ? event.composedPath().some(function(el) {
-    if (!(el instanceof Element)) {
-      return false;
-    }
-    return wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(el);
-  }) : wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
-  var isAllowed = isInitialized && target && isWrapperChild;
-  if (!isAllowed)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var isPanningAllowed = function(contextInstance) {
-  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning, setup = contextInstance.setup;
-  var disabled = setup.panning.disabled;
-  var isAllowed = isInitialized && isPanning && !disabled;
-  if (!isAllowed)
-    return false;
-  return true;
-};
-var handlePanningSetup = function(contextInstance, event) {
-  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
-  contextInstance.isPanning = true;
-  var x2 = event.clientX;
-  var y3 = event.clientY;
-  contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
-};
-var handleTouchPanningSetup = function(contextInstance, event) {
-  var touches = event.touches;
-  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
-  contextInstance.isPanning = true;
-  var oneFingerTouch = touches.length === 1;
-  if (oneFingerTouch) {
-    var x2 = touches[0].clientX;
-    var y3 = touches[0].clientY;
-    contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
-  }
-};
-function handlePanToBounds(contextInstance) {
-  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
-  var _b2 = contextInstance.setup, disabled = _b2.disabled, limitToBounds = _b2.limitToBounds, centerZoomedOut = _b2.centerZoomedOut;
-  var wrapperComponent = contextInstance.wrapperComponent;
-  if (disabled || !wrapperComponent || !contextInstance.bounds)
-    return;
-  var _c = contextInstance.bounds, maxPositionX = _c.maxPositionX, minPositionX = _c.minPositionX, maxPositionY = _c.maxPositionY, minPositionY = _c.minPositionY;
-  var xChanged = positionX > maxPositionX || positionX < minPositionX;
-  var yChanged = positionY > maxPositionY || positionY < minPositionY;
-  var mousePosX = positionX > maxPositionX ? wrapperComponent.offsetWidth : contextInstance.setup.minPositionX || 0;
-  var mousePosY = positionY > maxPositionY ? wrapperComponent.offsetHeight : contextInstance.setup.minPositionY || 0;
-  var _d = handleCalculateZoomPositions(contextInstance, mousePosX, mousePosY, scale, contextInstance.bounds, limitToBounds || centerZoomedOut), x2 = _d.x, y3 = _d.y;
-  return {
-    scale,
-    positionX: xChanged ? x2 : positionX,
-    positionY: yChanged ? y3 : positionY
-  };
-}
-function handleNewPosition(contextInstance, newPositionX, newPositionY, paddingValueX, paddingValueY) {
-  var limitToBounds = contextInstance.setup.limitToBounds;
-  var wrapperComponent = contextInstance.wrapperComponent, bounds = contextInstance.bounds;
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  if (wrapperComponent === null || bounds === null || newPositionX === positionX && newPositionY === positionY) {
-    return;
-  }
-  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
-  contextInstance.setTransformState(scale, x2, y3);
-}
-var getPanningClientPosition = function(contextInstance, clientX, clientY) {
-  var startCoords = contextInstance.startCoords, transformState = contextInstance.transformState;
-  var panning = contextInstance.setup.panning;
-  var lockAxisX = panning.lockAxisX, lockAxisY = panning.lockAxisY;
-  var positionX = transformState.positionX, positionY = transformState.positionY;
-  if (!startCoords) {
-    return { x: positionX, y: positionY };
-  }
-  var mouseX = clientX - startCoords.x;
-  var mouseY = clientY - startCoords.y;
-  var newPositionX = lockAxisX ? positionX : mouseX;
-  var newPositionY = lockAxisY ? positionY : mouseY;
-  return { x: newPositionX, y: newPositionY };
-};
-var getPaddingValue = function(contextInstance, size) {
-  var setup = contextInstance.setup, transformState = contextInstance.transformState;
-  var scale = transformState.scale;
-  var minScale = setup.minScale, disablePadding = setup.disablePadding;
-  if (size > 0 && scale >= minScale && !disablePadding) {
-    return size;
-  }
-  return 0;
-};
-var isVelocityCalculationAllowed = function(contextInstance) {
-  var mounted = contextInstance.mounted;
-  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
-  var scale = contextInstance.transformState.scale;
-  var disabledVelocity = velocityAnimation.disabled;
-  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
-  if (!isAllowed)
-    return false;
-  return true;
-};
-var isVelocityAllowed = function(contextInstance) {
-  var mounted = contextInstance.mounted, velocity = contextInstance.velocity, bounds = contextInstance.bounds;
-  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
-  var scale = contextInstance.transformState.scale;
-  var disabledVelocity = velocityAnimation.disabled;
-  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
-  if (!isAllowed)
-    return false;
-  if (!velocity || !bounds)
-    return false;
-  return true;
-};
-function getVelocityMoveTime(contextInstance, velocity) {
-  var velocityAnimation = contextInstance.setup.velocityAnimation;
-  var equalToMove = velocityAnimation.equalToMove, animationTime = velocityAnimation.animationTime, sensitivity = velocityAnimation.sensitivity;
-  if (equalToMove) {
-    return animationTime * velocity * sensitivity;
-  }
-  return animationTime;
-}
-function getVelocityPosition(newPosition, startPosition, currentPosition, isLocked, limitToBounds, minPosition, maxPosition, minTarget, maxTarget, step) {
-  if (limitToBounds) {
-    if (startPosition > maxPosition && currentPosition > maxPosition) {
-      var calculatedPosition = maxPosition + (newPosition - maxPosition) * step;
-      if (calculatedPosition > maxTarget)
-        return maxTarget;
-      if (calculatedPosition < maxPosition)
-        return maxPosition;
-      return calculatedPosition;
-    }
-    if (startPosition < minPosition && currentPosition < minPosition) {
-      var calculatedPosition = minPosition + (newPosition - minPosition) * step;
-      if (calculatedPosition < minTarget)
-        return minTarget;
-      if (calculatedPosition > minPosition)
-        return minPosition;
-      return calculatedPosition;
-    }
-  }
-  if (isLocked)
-    return startPosition;
-  return boundLimiter(newPosition, minPosition, maxPosition, limitToBounds);
-}
-function getSizeMultiplier(wrapperComponent, equalToMove) {
-  var defaultMultiplier = 1;
-  if (equalToMove) {
-    return Math.min(defaultMultiplier, wrapperComponent.offsetWidth / window.innerWidth);
-  }
-  return defaultMultiplier;
-}
-function handleCalculateVelocity(contextInstance, position) {
-  var isAllowed = isVelocityCalculationAllowed(contextInstance);
-  if (!isAllowed) {
-    return;
-  }
-  var lastMousePosition = contextInstance.lastMousePosition, velocityTime = contextInstance.velocityTime, setup = contextInstance.setup;
-  var wrapperComponent = contextInstance.wrapperComponent;
-  var equalToMove = setup.velocityAnimation.equalToMove;
-  var now = Date.now();
-  if (lastMousePosition && velocityTime && wrapperComponent) {
-    var sizeMultiplier = getSizeMultiplier(wrapperComponent, equalToMove);
-    var distanceX = position.x - lastMousePosition.x;
-    var distanceY = position.y - lastMousePosition.y;
-    var velocityX = distanceX / sizeMultiplier;
-    var velocityY = distanceY / sizeMultiplier;
-    var interval = now - velocityTime;
-    var speed = distanceX * distanceX + distanceY * distanceY;
-    var velocity = Math.sqrt(speed) / interval;
-    contextInstance.velocity = { velocityX, velocityY, total: velocity };
-  }
-  contextInstance.lastMousePosition = position;
-  contextInstance.velocityTime = now;
-}
-function handleVelocityPanning(contextInstance) {
-  var velocity = contextInstance.velocity, bounds = contextInstance.bounds, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
-  var isAllowed = isVelocityAllowed(contextInstance);
-  if (!isAllowed || !velocity || !bounds || !wrapperComponent) {
-    return;
-  }
-  var velocityX = velocity.velocityX, velocityY = velocity.velocityY, total = velocity.total;
-  var maxPositionX = bounds.maxPositionX, minPositionX = bounds.minPositionX, maxPositionY = bounds.maxPositionY, minPositionY = bounds.minPositionY;
-  var limitToBounds = setup.limitToBounds, alignmentAnimation = setup.alignmentAnimation;
-  var zoomAnimation = setup.zoomAnimation, panning = setup.panning;
-  var lockAxisY = panning.lockAxisY, lockAxisX = panning.lockAxisX;
-  var animationType = zoomAnimation.animationType;
-  var sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, velocityAlignmentTime = alignmentAnimation.velocityAlignmentTime;
-  var alignAnimationTime = velocityAlignmentTime;
-  var moveAnimationTime = getVelocityMoveTime(contextInstance, total);
-  var finalAnimationTime = Math.max(moveAnimationTime, alignAnimationTime);
-  var paddingValueX = getPaddingValue(contextInstance, sizeX);
-  var paddingValueY = getPaddingValue(contextInstance, sizeY);
-  var paddingX = paddingValueX * wrapperComponent.offsetWidth / 100;
-  var paddingY = paddingValueY * wrapperComponent.offsetHeight / 100;
-  var maxTargetX = maxPositionX + paddingX;
-  var minTargetX = minPositionX - paddingX;
-  var maxTargetY = maxPositionY + paddingY;
-  var minTargetY = minPositionY - paddingY;
-  var startState = contextInstance.transformState;
-  var startTime = (/* @__PURE__ */ new Date()).getTime();
-  handleSetupAnimation(contextInstance, animationType, finalAnimationTime, function(step) {
-    var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
-    var animationProgress = frameTime / alignAnimationTime;
-    var alignAnimation = animations[alignmentAnimation.animationType];
-    var alignStep = 1 - alignAnimation(Math.min(1, animationProgress));
-    var customStep = 1 - step;
-    var newPositionX = positionX + velocityX * customStep;
-    var newPositionY = positionY + velocityY * customStep;
-    var currentPositionX = getVelocityPosition(newPositionX, startState.positionX, positionX, lockAxisX, limitToBounds, minPositionX, maxPositionX, minTargetX, maxTargetX, alignStep);
-    var currentPositionY = getVelocityPosition(newPositionY, startState.positionY, positionY, lockAxisY, limitToBounds, minPositionY, maxPositionY, minTargetY, maxTargetY, alignStep);
-    if (positionX !== newPositionX || positionY !== newPositionY) {
-      contextInstance.setTransformState(scale, currentPositionX, currentPositionY);
-    }
-  });
-}
-function handlePanningStart(contextInstance, event) {
-  var scale = contextInstance.transformState.scale;
-  handleCancelAnimation(contextInstance);
-  handleCalculateBounds(contextInstance, scale);
-  if (window.TouchEvent !== void 0 && event instanceof TouchEvent) {
-    handleTouchPanningSetup(contextInstance, event);
-  } else {
-    handlePanningSetup(contextInstance, event);
-  }
-}
-function handleAlignToBounds(contextInstance) {
-  var scale = contextInstance.transformState.scale;
-  var _a2 = contextInstance.setup, minScale = _a2.minScale, alignmentAnimation = _a2.alignmentAnimation;
-  var disabled = alignmentAnimation.disabled, sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, animationTime = alignmentAnimation.animationTime, animationType = alignmentAnimation.animationType;
-  var isDisabled = disabled || scale < minScale || !sizeX && !sizeY;
-  if (isDisabled)
-    return;
-  var targetState = handlePanToBounds(contextInstance);
-  if (targetState) {
-    animate(contextInstance, targetState, animationTime, animationType);
-  }
-}
-function handlePanning(contextInstance, clientX, clientY) {
-  var startCoords = contextInstance.startCoords, setup = contextInstance.setup;
-  var _a2 = setup.alignmentAnimation, sizeX = _a2.sizeX, sizeY = _a2.sizeY;
-  if (!startCoords)
-    return;
-  var _b2 = getPanningClientPosition(contextInstance, clientX, clientY), x2 = _b2.x, y3 = _b2.y;
-  var paddingValueX = getPaddingValue(contextInstance, sizeX);
-  var paddingValueY = getPaddingValue(contextInstance, sizeY);
-  handleCalculateVelocity(contextInstance, { x: x2, y: y3 });
-  handleNewPosition(contextInstance, x2, y3, paddingValueX, paddingValueY);
-}
-function handlePanningEnd(contextInstance) {
-  if (contextInstance.isPanning) {
-    var velocityDisabled = contextInstance.setup.panning.velocityDisabled;
-    var velocity = contextInstance.velocity, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-    contextInstance.isPanning = false;
-    contextInstance.animate = false;
-    contextInstance.animation = null;
-    var wrapperRect = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.getBoundingClientRect();
-    var contentRect = contentComponent === null || contentComponent === void 0 ? void 0 : contentComponent.getBoundingClientRect();
-    var wrapperWidth = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.width) || 0;
-    var wrapperHeight = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.height) || 0;
-    var contentWidth = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.width) || 0;
-    var contentHeight = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.height) || 0;
-    var isZoomed = wrapperWidth < contentWidth || wrapperHeight < contentHeight;
-    var shouldAnimate = !velocityDisabled && velocity && (velocity === null || velocity === void 0 ? void 0 : velocity.total) > 0.1 && isZoomed;
-    if (shouldAnimate) {
-      handleVelocityPanning(contextInstance);
-    } else {
-      handleAlignToBounds(contextInstance);
-    }
-  }
-}
-function handleZoomToPoint(contextInstance, scale, mouseX, mouseY) {
-  var _a2 = contextInstance.setup, minScale = _a2.minScale, maxScale = _a2.maxScale, limitToBounds = _a2.limitToBounds;
-  var newScale = checkZoomBounds(roundNumber(scale, 2), minScale, maxScale, 0, false);
-  var bounds = handleCalculateBounds(contextInstance, newScale);
-  var _b2 = handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds), x2 = _b2.x, y3 = _b2.y;
-  return { scale: newScale, positionX: x2, positionY: y3 };
-}
-function handleAlignToScaleBounds(contextInstance, mousePositionX, mousePositionY) {
-  var scale = contextInstance.transformState.scale;
-  var wrapperComponent = contextInstance.wrapperComponent;
-  var _a2 = contextInstance.setup, minScale = _a2.minScale, limitToBounds = _a2.limitToBounds, zoomAnimation = _a2.zoomAnimation;
-  var disabled = zoomAnimation.disabled, animationTime = zoomAnimation.animationTime, animationType = zoomAnimation.animationType;
-  var isDisabled = disabled || scale >= minScale;
-  if (scale >= 1 || limitToBounds) {
-    handleAlignToBounds(contextInstance);
-  }
-  if (isDisabled || !wrapperComponent || !contextInstance.mounted)
-    return;
-  var mouseX = mousePositionX || wrapperComponent.offsetWidth / 2;
-  var mouseY = mousePositionY || wrapperComponent.offsetHeight / 2;
-  var targetState = handleZoomToPoint(contextInstance, minScale, mouseX, mouseY);
-  if (targetState) {
-    animate(contextInstance, targetState, animationTime, animationType);
-  }
-}
-var __assign = function() {
-  __assign = Object.assign || function __assign2(t5) {
-    for (var s3, i4 = 1, n4 = arguments.length; i4 < n4; i4++) {
-      s3 = arguments[i4];
-      for (var p3 in s3)
-        if (Object.prototype.hasOwnProperty.call(s3, p3))
-          t5[p3] = s3[p3];
-    }
-    return t5;
-  };
-  return __assign.apply(this, arguments);
-};
-function __spreadArray(to, from, pack) {
-  if (pack || arguments.length === 2)
-    for (var i4 = 0, l3 = from.length, ar2; i4 < l3; i4++) {
-      if (ar2 || !(i4 in from)) {
-        if (!ar2)
-          ar2 = Array.prototype.slice.call(from, 0, i4);
-        ar2[i4] = from[i4];
-      }
-    }
-  return to.concat(ar2 || Array.prototype.slice.call(from));
-}
-var initialState = {
-  previousScale: 1,
-  scale: 1,
-  positionX: 0,
-  positionY: 0
-};
-var initialSetup = {
-  disabled: false,
-  minPositionX: null,
-  maxPositionX: null,
-  minPositionY: null,
-  maxPositionY: null,
-  minScale: 1,
-  maxScale: 8,
-  limitToBounds: true,
-  centerZoomedOut: false,
-  centerOnInit: false,
-  disablePadding: false,
-  smooth: true,
-  wheel: {
-    step: 0.2,
-    disabled: false,
-    smoothStep: 1e-3,
-    wheelDisabled: false,
-    touchPadDisabled: false,
-    activationKeys: [],
-    excluded: []
-  },
-  panning: {
-    disabled: false,
-    velocityDisabled: false,
-    lockAxisX: false,
-    lockAxisY: false,
-    allowLeftClickPan: true,
-    allowMiddleClickPan: true,
-    allowRightClickPan: true,
-    wheelPanning: false,
-    activationKeys: [],
-    excluded: []
-  },
-  pinch: {
-    step: 5,
-    disabled: false,
-    excluded: []
-  },
-  doubleClick: {
-    disabled: false,
-    step: 0.7,
-    mode: "zoomIn",
-    animationType: "easeOut",
-    animationTime: 200,
-    excluded: []
-  },
-  zoomAnimation: {
-    disabled: false,
-    size: 0.4,
-    animationTime: 200,
-    animationType: "easeOut"
-  },
-  alignmentAnimation: {
-    disabled: false,
-    sizeX: 100,
-    sizeY: 100,
-    animationTime: 200,
-    velocityAlignmentTime: 400,
-    animationType: "easeOut"
-  },
-  velocityAnimation: {
-    disabled: false,
-    sensitivity: 1,
-    animationTime: 400,
-    animationType: "easeOut",
-    equalToMove: true
-  }
-};
-var createState = function(props) {
-  var _a2, _b2, _c, _d;
-  return {
-    previousScale: (_a2 = props.initialScale) !== null && _a2 !== void 0 ? _a2 : initialState.scale,
-    scale: (_b2 = props.initialScale) !== null && _b2 !== void 0 ? _b2 : initialState.scale,
-    positionX: (_c = props.initialPositionX) !== null && _c !== void 0 ? _c : initialState.positionX,
-    positionY: (_d = props.initialPositionY) !== null && _d !== void 0 ? _d : initialState.positionY
-  };
-};
-var createSetup = function(props) {
-  var newSetup = __assign({}, initialSetup);
-  Object.keys(props).forEach(function(key) {
-    var validValue = typeof props[key] !== "undefined";
-    var validParameter = typeof initialSetup[key] !== "undefined";
-    if (validParameter && validValue) {
-      var dataType = Object.prototype.toString.call(initialSetup[key]);
-      var isObject = dataType === "[object Object]";
-      var isArray = dataType === "[object Array]";
-      if (isObject) {
-        newSetup[key] = __assign(__assign({}, initialSetup[key]), props[key]);
-      } else if (isArray) {
-        newSetup[key] = __spreadArray(__spreadArray([], initialSetup[key], true), props[key], true);
-      } else {
-        newSetup[key] = props[key];
-      }
-    }
-  });
-  return newSetup;
-};
-var handleCalculateButtonZoom = function(contextInstance, delta, step) {
-  var scale = contextInstance.transformState.scale;
-  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
-  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, smooth = setup.smooth;
-  var size = zoomAnimation.size;
-  if (!wrapperComponent) {
-    throw new Error("Wrapper is not mounted");
-  }
-  var targetScale = smooth ? scale * Math.exp(delta * step) : scale + delta * step;
-  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, false);
-  return newScale;
-};
-function handleZoomToViewCenter(contextInstance, delta, step, animationTime, animationType) {
-  var wrapperComponent = contextInstance.wrapperComponent;
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  if (!wrapperComponent)
-    return console.error("No WrapperComponent found");
-  var wrapperWidth = wrapperComponent.offsetWidth;
-  var wrapperHeight = wrapperComponent.offsetHeight;
-  var mouseX = (wrapperWidth / 2 - positionX) / scale;
-  var mouseY = (wrapperHeight / 2 - positionY) / scale;
-  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
-  var targetState = handleZoomToPoint(contextInstance, newScale, mouseX, mouseY);
-  if (!targetState) {
-    return console.error("Error during zoom event. New transformation state was not calculated.");
-  }
-  animate(contextInstance, targetState, animationTime, animationType);
-}
-function resetTransformations(contextInstance, animationTime, animationType, onResetTransformation) {
-  var setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
-  var limitToBounds = setup.limitToBounds;
-  var initialTransformation = createState(contextInstance.props);
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  if (!wrapperComponent)
-    return;
-  var newBounds = calculateBounds(contextInstance, initialTransformation.scale);
-  var boundedPositions = getMouseBoundedPosition(initialTransformation.positionX, initialTransformation.positionY, newBounds, limitToBounds, 0, 0, wrapperComponent);
-  var newState = {
-    scale: initialTransformation.scale,
-    positionX: boundedPositions.x,
-    positionY: boundedPositions.y
-  };
-  if (scale === initialTransformation.scale && positionX === initialTransformation.positionX && positionY === initialTransformation.positionY) {
-    return;
-  }
-  onResetTransformation === null || onResetTransformation === void 0 ? void 0 : onResetTransformation();
-  animate(contextInstance, newState, animationTime, animationType);
-}
-function getOffset(element, wrapper, content, state) {
-  var offset = element.getBoundingClientRect();
-  var wrapperOffset = wrapper.getBoundingClientRect();
-  var contentOffset = content.getBoundingClientRect();
-  var xOff = wrapperOffset.x * state.scale;
-  var yOff = wrapperOffset.y * state.scale;
-  return {
-    x: (offset.x - contentOffset.x + xOff) / state.scale,
-    y: (offset.y - contentOffset.y + yOff) / state.scale
-  };
-}
-function calculateZoomToNode(contextInstance, node2, customZoom) {
-  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent, transformState = contextInstance.transformState;
-  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, minScale = _a2.minScale, maxScale = _a2.maxScale;
-  if (!wrapperComponent || !contentComponent)
-    return transformState;
-  var wrapperRect = wrapperComponent.getBoundingClientRect();
-  var nodeRect = node2.getBoundingClientRect();
-  var nodeOffset = getOffset(node2, wrapperComponent, contentComponent, transformState);
-  var nodeLeft = nodeOffset.x;
-  var nodeTop = nodeOffset.y;
-  var nodeWidth = nodeRect.width / transformState.scale;
-  var nodeHeight = nodeRect.height / transformState.scale;
-  var scaleX = wrapperComponent.offsetWidth / nodeWidth;
-  var scaleY = wrapperComponent.offsetHeight / nodeHeight;
-  var newScale = checkZoomBounds(customZoom || Math.min(scaleX, scaleY), minScale, maxScale, 0, false);
-  var offsetX = (wrapperRect.width - nodeWidth * newScale) / 2;
-  var offsetY = (wrapperRect.height - nodeHeight * newScale) / 2;
-  var newPositionX = (wrapperRect.left - nodeLeft) * newScale + offsetX;
-  var newPositionY = (wrapperRect.top - nodeTop) * newScale + offsetY;
-  var bounds = calculateBounds(contextInstance, newScale);
-  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, 0, 0, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
-  return { positionX: x2, positionY: y3, scale: newScale };
-}
-var zoomIn = function(contextInstance) {
-  return function(step, animationTime, animationType) {
-    if (step === void 0) {
-      step = 0.5;
-    }
-    if (animationTime === void 0) {
-      animationTime = 300;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    handleZoomToViewCenter(contextInstance, 1, step, animationTime, animationType);
-  };
-};
-var zoomOut = function(contextInstance) {
-  return function(step, animationTime, animationType) {
-    if (step === void 0) {
-      step = 0.5;
-    }
-    if (animationTime === void 0) {
-      animationTime = 300;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    handleZoomToViewCenter(contextInstance, -1, step, animationTime, animationType);
-  };
-};
-var setTransform = function(contextInstance) {
-  return function(newPositionX, newPositionY, newScale, animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 300;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
-    var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-    var disabled = contextInstance.setup.disabled;
-    if (disabled || !wrapperComponent || !contentComponent)
-      return;
-    var targetState = {
-      positionX: Number.isNaN(newPositionX) ? positionX : newPositionX,
-      positionY: Number.isNaN(newPositionY) ? positionY : newPositionY,
-      scale: Number.isNaN(newScale) ? scale : newScale
-    };
-    animate(contextInstance, targetState, animationTime, animationType);
-  };
-};
-var resetTransform = function(contextInstance) {
-  return function(animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 200;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    resetTransformations(contextInstance, animationTime, animationType);
-  };
-};
-var centerView = function(contextInstance) {
-  return function(scale, animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 200;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    var transformState = contextInstance.transformState, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-    if (wrapperComponent && contentComponent) {
-      var targetState = getCenterPosition(scale || transformState.scale, wrapperComponent, contentComponent);
-      animate(contextInstance, targetState, animationTime, animationType);
-    }
-  };
-};
-var zoomToElement = function(contextInstance) {
-  return function(node2, scale, animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 600;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    handleCancelAnimation(contextInstance);
-    var wrapperComponent = contextInstance.wrapperComponent;
-    var target = typeof node2 === "string" ? document.getElementById(node2) : node2;
-    if (wrapperComponent && target && wrapperComponent.contains(target)) {
-      var targetState = calculateZoomToNode(contextInstance, target, scale);
-      animate(contextInstance, targetState, animationTime, animationType);
-    }
-  };
-};
-var getControls = function(contextInstance) {
-  return {
-    instance: contextInstance,
-    zoomIn: zoomIn(contextInstance),
-    zoomOut: zoomOut(contextInstance),
-    setTransform: setTransform(contextInstance),
-    resetTransform: resetTransform(contextInstance),
-    centerView: centerView(contextInstance),
-    zoomToElement: zoomToElement(contextInstance)
-  };
-};
-var getState = function(contextInstance) {
-  return {
-    instance: contextInstance,
-    state: contextInstance.transformState
-  };
-};
-var getContext = function(contextInstance) {
-  var ref = {};
-  Object.assign(ref, getState(contextInstance));
-  Object.assign(ref, getControls(contextInstance));
-  return ref;
-};
-var passiveSupported = false;
-function makePassiveEventOption() {
-  try {
-    var options = {
-      get passive() {
-        passiveSupported = true;
-        return false;
-      }
-    };
-    return options;
-  } catch (err) {
-    passiveSupported = false;
-    return passiveSupported;
-  }
-}
-var isExcludedNode = function(node2, excluded) {
-  return excluded.some(function(exclude) {
-    return node2.matches("".concat(exclude, ", .").concat(exclude, ", ").concat(exclude, " *, .").concat(exclude, " *"));
-  });
-};
-var cancelTimeout = function(timeout) {
-  if (timeout) {
-    clearTimeout(timeout);
-  }
-};
-var getTransformStyles = function(x2, y3, scale) {
-  return "translate(".concat(x2, "px, ").concat(y3, "px) scale(").concat(scale, ")");
-};
-var getCenterPosition = function(scale, wrapperComponent, contentComponent) {
-  var contentWidth = contentComponent.offsetWidth * scale;
-  var contentHeight = contentComponent.offsetHeight * scale;
-  var centerPositionX = (wrapperComponent.offsetWidth - contentWidth) / 2;
-  var centerPositionY = (wrapperComponent.offsetHeight - contentHeight) / 2;
-  return {
-    scale,
-    positionX: centerPositionX,
-    positionY: centerPositionY
-  };
-};
-function mergeRefs(refs) {
-  return function(value) {
-    refs.forEach(function(ref) {
-      if (typeof ref === "function") {
-        ref(value);
-      } else if (ref != null) {
-        ref.current = value;
-      }
-    });
-  };
-}
-var isWheelAllowed = function(contextInstance, event) {
-  var _a2 = contextInstance.setup.wheel, disabled = _a2.disabled, wheelDisabled = _a2.wheelDisabled, touchPadDisabled = _a2.touchPadDisabled, excluded = _a2.excluded;
-  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning;
-  var target = event.target;
-  var isAllowed = isInitialized && !isPanning && !disabled && target;
-  if (!isAllowed)
-    return false;
-  if (wheelDisabled && !event.ctrlKey)
-    return false;
-  if (touchPadDisabled && event.ctrlKey)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var getDeltaY = function(event) {
-  if (event) {
-    return event.deltaY < 0 ? 1 : -1;
-  }
-  return 0;
-};
-function getDelta(event, customDelta) {
-  var deltaY = getDeltaY(event);
-  var delta = checkIsNumber(customDelta, deltaY);
-  return delta;
-}
-function getMousePosition(event, contentComponent, scale) {
-  var contentRect = contentComponent.getBoundingClientRect();
-  var mouseX = 0;
-  var mouseY = 0;
-  if ("clientX" in event) {
-    mouseX = (event.clientX - contentRect.left) / scale;
-    mouseY = (event.clientY - contentRect.top) / scale;
-  } else {
-    var touch = event.touches[0];
-    mouseX = (touch.clientX - contentRect.left) / scale;
-    mouseY = (touch.clientY - contentRect.top) / scale;
-  }
-  if (Number.isNaN(mouseX) || Number.isNaN(mouseY))
-    console.error("No mouse or touch offset found");
-  return {
-    x: mouseX,
-    y: mouseY
-  };
-}
-var handleCalculateWheelZoom = function(contextInstance, delta, step, disable, getTarget) {
-  var scale = contextInstance.transformState.scale;
-  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
-  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
-  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
-  if (!wrapperComponent) {
-    throw new Error("Wrapper is not mounted");
-  }
-  var targetScale = scale + delta * step;
-  if (getTarget)
-    return targetScale;
-  var paddingEnabled = disable ? false : !disabled;
-  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, paddingEnabled && !disablePadding);
-  return newScale;
-};
-var handleWheelZoomStop = function(contextInstance, event) {
-  var previousWheelEvent = contextInstance.previousWheelEvent;
-  var scale = contextInstance.transformState.scale;
-  var _a2 = contextInstance.setup, maxScale = _a2.maxScale, minScale = _a2.minScale;
-  if (!previousWheelEvent)
-    return false;
-  if (scale < maxScale || scale > minScale)
-    return true;
-  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
-    return true;
-  if (previousWheelEvent.deltaY > 0 && previousWheelEvent.deltaY < event.deltaY)
-    return true;
-  if (previousWheelEvent.deltaY < 0 && previousWheelEvent.deltaY > event.deltaY)
-    return true;
-  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
-    return true;
-  return false;
-};
-var isPinchStartAllowed = function(contextInstance, event) {
-  var _a2 = contextInstance.setup.pinch, disabled = _a2.disabled, excluded = _a2.excluded;
-  var isInitialized = contextInstance.isInitialized;
-  var target = event.target;
-  var isAllowed = isInitialized && !disabled && target;
-  if (!isAllowed)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var isPinchAllowed = function(contextInstance) {
-  var disabled = contextInstance.setup.pinch.disabled;
-  var isInitialized = contextInstance.isInitialized, pinchStartDistance = contextInstance.pinchStartDistance;
-  var isAllowed = isInitialized && !disabled && pinchStartDistance;
-  if (!isAllowed)
-    return false;
-  return true;
-};
-var calculateTouchMidPoint = function(event, scale, contentComponent) {
-  var contentRect = contentComponent.getBoundingClientRect();
-  var touches = event.touches;
-  var firstPointX = roundNumber(touches[0].clientX - contentRect.left, 5);
-  var firstPointY = roundNumber(touches[0].clientY - contentRect.top, 5);
-  var secondPointX = roundNumber(touches[1].clientX - contentRect.left, 5);
-  var secondPointY = roundNumber(touches[1].clientY - contentRect.top, 5);
-  return {
-    x: (firstPointX + secondPointX) / 2 / scale,
-    y: (firstPointY + secondPointY) / 2 / scale
-  };
-};
-var getTouchDistance = function(event) {
-  return Math.sqrt(Math.pow(event.touches[0].pageX - event.touches[1].pageX, 2) + Math.pow(event.touches[0].pageY - event.touches[1].pageY, 2));
-};
-var calculatePinchZoom = function(contextInstance, currentDistance) {
-  var pinchStartScale = contextInstance.pinchStartScale, pinchStartDistance = contextInstance.pinchStartDistance, setup = contextInstance.setup;
-  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
-  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
-  if (!pinchStartScale || pinchStartDistance === null || !currentDistance) {
-    throw new Error("Pinch touches distance was not provided");
-  }
-  if (currentDistance < 0) {
-    return contextInstance.transformState.scale;
-  }
-  var touchProportion = currentDistance / pinchStartDistance;
-  var scaleDifference = touchProportion * pinchStartScale;
-  return checkZoomBounds(roundNumber(scaleDifference, 2), minScale, maxScale, size, !disabled && !disablePadding);
-};
-var wheelStopEventTime = 160;
-var wheelAnimationTime = 100;
-var handleWheelStart = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onWheelStart = _a2.onWheelStart, onZoomStart = _a2.onZoomStart;
-  if (!contextInstance.wheelStopEventTimer) {
-    handleCancelAnimation(contextInstance);
-    handleCallback(getContext(contextInstance), event, onWheelStart);
-    handleCallback(getContext(contextInstance), event, onZoomStart);
-  }
-};
-var handleWheelZoom = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onWheel = _a2.onWheel, onZoom = _a2.onZoom;
-  var contentComponent = contextInstance.contentComponent, setup = contextInstance.setup, transformState = contextInstance.transformState;
-  var scale = transformState.scale;
-  var limitToBounds = setup.limitToBounds, centerZoomedOut = setup.centerZoomedOut, zoomAnimation = setup.zoomAnimation, wheel = setup.wheel, disablePadding = setup.disablePadding, smooth = setup.smooth;
-  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
-  var step = wheel.step, smoothStep = wheel.smoothStep;
-  if (!contentComponent) {
-    throw new Error("Component not mounted");
-  }
-  event.preventDefault();
-  event.stopPropagation();
-  var delta = getDelta(event, null);
-  var zoomStep = smooth ? smoothStep * Math.abs(event.deltaY) : step;
-  var newScale = handleCalculateWheelZoom(contextInstance, delta, zoomStep, !event.ctrlKey);
-  if (scale === newScale)
-    return;
-  var bounds = handleCalculateBounds(contextInstance, newScale);
-  var mousePosition = getMousePosition(event, contentComponent, scale);
-  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut || disablePadding;
-  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
-  var _b2 = handleCalculateZoomPositions(contextInstance, mousePosition.x, mousePosition.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
-  contextInstance.previousWheelEvent = event;
-  contextInstance.setTransformState(newScale, x2, y3);
-  handleCallback(getContext(contextInstance), event, onWheel);
-  handleCallback(getContext(contextInstance), event, onZoom);
-};
-var handleWheelStop = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onWheelStop = _a2.onWheelStop, onZoomStop = _a2.onZoomStop;
-  cancelTimeout(contextInstance.wheelAnimationTimer);
-  contextInstance.wheelAnimationTimer = setTimeout(function() {
-    if (!contextInstance.mounted)
-      return;
-    handleAlignToScaleBounds(contextInstance, event.x, event.y);
-    contextInstance.wheelAnimationTimer = null;
-  }, wheelAnimationTime);
-  var hasStoppedZooming = handleWheelZoomStop(contextInstance, event);
-  if (hasStoppedZooming) {
-    cancelTimeout(contextInstance.wheelStopEventTimer);
-    contextInstance.wheelStopEventTimer = setTimeout(function() {
-      if (!contextInstance.mounted)
-        return;
-      contextInstance.wheelStopEventTimer = null;
-      handleCallback(getContext(contextInstance), event, onWheelStop);
-      handleCallback(getContext(contextInstance), event, onZoomStop);
-    }, wheelStopEventTime);
-  }
-};
-var handlePinchStart = function(contextInstance, event) {
-  var distance = getTouchDistance(event);
-  contextInstance.pinchStartDistance = distance;
-  contextInstance.lastDistance = distance;
-  contextInstance.pinchStartScale = contextInstance.transformState.scale;
-  contextInstance.isPanning = false;
-  handleCancelAnimation(contextInstance);
-};
-var handlePinchZoom = function(contextInstance, event) {
-  var contentComponent = contextInstance.contentComponent, pinchStartDistance = contextInstance.pinchStartDistance;
-  var scale = contextInstance.transformState.scale;
-  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, centerZoomedOut = _a2.centerZoomedOut, zoomAnimation = _a2.zoomAnimation;
-  var disabled = zoomAnimation.disabled, size = zoomAnimation.size;
-  if (pinchStartDistance === null || !contentComponent)
-    return;
-  var midPoint = calculateTouchMidPoint(event, scale, contentComponent);
-  if (!Number.isFinite(midPoint.x) || !Number.isFinite(midPoint.y))
-    return;
-  var currentDistance = getTouchDistance(event);
-  var newScale = calculatePinchZoom(contextInstance, currentDistance);
-  if (newScale === scale)
-    return;
-  var bounds = handleCalculateBounds(contextInstance, newScale);
-  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut;
-  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
-  var _b2 = handleCalculateZoomPositions(contextInstance, midPoint.x, midPoint.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
-  contextInstance.pinchMidpoint = midPoint;
-  contextInstance.lastDistance = currentDistance;
-  contextInstance.setTransformState(newScale, x2, y3);
-};
-var handlePinchStop = function(contextInstance) {
-  var pinchMidpoint = contextInstance.pinchMidpoint;
-  contextInstance.velocity = null;
-  contextInstance.lastDistance = null;
-  contextInstance.pinchMidpoint = null;
-  contextInstance.pinchStartScale = null;
-  contextInstance.pinchStartDistance = null;
-  handleAlignToScaleBounds(contextInstance, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.x, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.y);
-};
-var handleDoubleClickStop = function(contextInstance, event) {
-  var onZoomStop = contextInstance.props.onZoomStop;
-  var animationTime = contextInstance.setup.doubleClick.animationTime;
-  cancelTimeout(contextInstance.doubleClickStopEventTimer);
-  contextInstance.doubleClickStopEventTimer = setTimeout(function() {
-    contextInstance.doubleClickStopEventTimer = null;
-    handleCallback(getContext(contextInstance), event, onZoomStop);
-  }, animationTime);
-};
-var handleDoubleClickResetMode = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
-  var _b2 = contextInstance.setup.doubleClick, animationTime = _b2.animationTime, animationType = _b2.animationType;
-  handleCallback(getContext(contextInstance), event, onZoomStart);
-  resetTransformations(contextInstance, animationTime, animationType, function() {
-    return handleCallback(getContext(contextInstance), event, onZoom);
-  });
-  handleDoubleClickStop(contextInstance, event);
-};
-function getDoubleClickScale(mode, scale) {
-  if (mode === "toggle") {
-    return scale === 1 ? 1 : -1;
-  }
-  return mode === "zoomOut" ? -1 : 1;
-}
-function handleDoubleClick(contextInstance, event) {
-  var setup = contextInstance.setup, doubleClickStopEventTimer = contextInstance.doubleClickStopEventTimer, transformState = contextInstance.transformState, contentComponent = contextInstance.contentComponent;
-  var scale = transformState.scale;
-  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
-  var _b2 = setup.doubleClick, disabled = _b2.disabled, mode = _b2.mode, step = _b2.step, animationTime = _b2.animationTime, animationType = _b2.animationType;
-  if (disabled)
-    return;
-  if (doubleClickStopEventTimer)
-    return;
-  if (mode === "reset") {
-    return handleDoubleClickResetMode(contextInstance, event);
-  }
-  if (!contentComponent)
-    return console.error("No ContentComponent found");
-  var delta = getDoubleClickScale(mode, contextInstance.transformState.scale);
-  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
-  if (scale === newScale)
-    return;
-  handleCallback(getContext(contextInstance), event, onZoomStart);
-  var mousePosition = getMousePosition(event, contentComponent, scale);
-  var targetState = handleZoomToPoint(contextInstance, newScale, mousePosition.x, mousePosition.y);
-  if (!targetState) {
-    return console.error("Error during zoom event. New transformation state was not calculated.");
-  }
-  handleCallback(getContext(contextInstance), event, onZoom);
-  animate(contextInstance, targetState, animationTime, animationType);
-  handleDoubleClickStop(contextInstance, event);
-}
-var isDoubleClickAllowed = function(contextInstance, event) {
-  var isInitialized = contextInstance.isInitialized, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
-  var _a2 = setup.doubleClick, disabled = _a2.disabled, excluded = _a2.excluded;
-  var target = event.target;
-  var isWrapperChild = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
-  var isAllowed = isInitialized && target && isWrapperChild && !disabled;
-  if (!isAllowed)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var ZoomPanPinch = (
-  /** @class */
-  /* @__PURE__ */ function() {
-    function ZoomPanPinch2(props) {
-      var _this = this;
-      this.mounted = true;
-      this.onChangeCallbacks = /* @__PURE__ */ new Set();
-      this.onInitCallbacks = /* @__PURE__ */ new Set();
-      this.wrapperComponent = null;
-      this.contentComponent = null;
-      this.isInitialized = false;
-      this.bounds = null;
-      this.previousWheelEvent = null;
-      this.wheelStopEventTimer = null;
-      this.wheelAnimationTimer = null;
-      this.isPanning = false;
-      this.isWheelPanning = false;
-      this.startCoords = null;
-      this.lastTouch = null;
-      this.distance = null;
-      this.lastDistance = null;
-      this.pinchStartDistance = null;
-      this.pinchStartScale = null;
-      this.pinchMidpoint = null;
-      this.doubleClickStopEventTimer = null;
-      this.velocity = null;
-      this.velocityTime = null;
-      this.lastMousePosition = null;
-      this.animate = false;
-      this.animation = null;
-      this.maxBounds = null;
-      this.pressedKeys = {};
-      this.mount = function() {
-        _this.initializeWindowEvents();
-      };
-      this.unmount = function() {
-        _this.cleanupWindowEvents();
-      };
-      this.update = function(newProps) {
-        _this.props = newProps;
-        handleCalculateBounds(_this, _this.transformState.scale);
-        _this.setup = createSetup(newProps);
-      };
-      this.initializeWindowEvents = function() {
-        var _a2, _b2;
-        var passive = makePassiveEventOption();
-        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
-        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
-        (_b2 = _this.wrapperComponent) === null || _b2 === void 0 ? void 0 : _b2.addEventListener("wheel", _this.onWheelPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousedown", _this.onPanningStart, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousemove", _this.onPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mouseup", _this.onPanningStop, passive);
-        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.addEventListener("mouseleave", _this.clearPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keyup", _this.setKeyUnPressed, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keydown", _this.setKeyPressed, passive);
-      };
-      this.cleanupWindowEvents = function() {
-        var _a2, _b2;
-        var passive = makePassiveEventOption();
-        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
-        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousedown", _this.onPanningStart, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousemove", _this.onPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mouseup", _this.onPanningStop, passive);
-        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.removeEventListener("mouseleave", _this.clearPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keyup", _this.setKeyUnPressed, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keydown", _this.setKeyPressed, passive);
-        document.removeEventListener("mouseleave", _this.clearPanning, passive);
-        handleCancelAnimation(_this);
-        (_b2 = _this.observer) === null || _b2 === void 0 ? void 0 : _b2.disconnect();
-      };
-      this.handleInitializeWrapperEvents = function(wrapper) {
-        var passive = makePassiveEventOption();
-        wrapper.addEventListener("wheel", _this.onWheelZoom, passive);
-        wrapper.addEventListener("dblclick", _this.onDoubleClick, passive);
-        wrapper.addEventListener("touchstart", _this.onTouchPanningStart, passive);
-        wrapper.addEventListener("touchmove", _this.onTouchPanning, passive);
-        wrapper.addEventListener("touchend", _this.onTouchPanningStop, passive);
-      };
-      this.handleInitialize = function(contentComponent) {
-        var centerOnInit = _this.setup.centerOnInit;
-        _this.applyTransformation();
-        _this.onInitCallbacks.forEach(function(callback) {
-          return callback(getContext(_this));
-        });
-        if (centerOnInit) {
-          _this.setCenter();
-          _this.observer = new ResizeObserver(function() {
-            var _a2;
-            _this.onInitCallbacks.forEach(function(callback) {
-              return callback(getContext(_this));
-            });
-            _this.setCenter();
-            (_a2 = _this.observer) === null || _a2 === void 0 ? void 0 : _a2.disconnect();
-          });
-          _this.observer.observe(contentComponent);
-        }
-      };
-      this.onWheelZoom = function(event) {
-        var disabled = _this.setup.disabled;
-        if (disabled)
-          return;
-        var isAllowed = isWheelAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        var keysPressed = _this.isPressingKeys(_this.setup.wheel.activationKeys);
-        if (!keysPressed)
-          return;
-        handleWheelStart(_this, event);
-        handleWheelZoom(_this, event);
-        handleWheelStop(_this, event);
-      };
-      this.onWheelPanning = function(event) {
-        var _a2 = _this.setup, disabled = _a2.disabled, wheel = _a2.wheel, panning = _a2.panning;
-        if (!_this.wrapperComponent || !_this.contentComponent || disabled || !wheel.wheelDisabled || panning.disabled || !panning.wheelPanning || event.ctrlKey) {
-          return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        var _b2 = _this.transformState, positionX = _b2.positionX, positionY = _b2.positionY;
-        var mouseX = positionX - event.deltaX;
-        var mouseY = positionY - event.deltaY;
-        var newPositionX = panning.lockAxisX ? positionX : mouseX;
-        var newPositionY = panning.lockAxisY ? positionY : mouseY;
-        var _c = _this.setup.alignmentAnimation, sizeX = _c.sizeX, sizeY = _c.sizeY;
-        var paddingValueX = getPaddingValue(_this, sizeX);
-        var paddingValueY = getPaddingValue(_this, sizeY);
-        if (newPositionX === positionX && newPositionY === positionY)
-          return;
-        handleNewPosition(_this, newPositionX, newPositionY, paddingValueX, paddingValueY);
-      };
-      this.onPanningStart = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanningStart = _this.props.onPanningStart;
-        if (disabled)
-          return;
-        var isAllowed = isPanningStartAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
-        if (!keysPressed)
-          return;
-        if (event.button === 0 && !_this.setup.panning.allowLeftClickPan)
-          return;
-        if (event.button === 1 && !_this.setup.panning.allowMiddleClickPan)
-          return;
-        if (event.button === 2 && !_this.setup.panning.allowRightClickPan)
-          return;
-        event.preventDefault();
-        event.stopPropagation();
-        handleCancelAnimation(_this);
-        handlePanningStart(_this, event);
-        handleCallback(getContext(_this), event, onPanningStart);
-      };
-      this.onPanning = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanning = _this.props.onPanning;
-        if (disabled)
-          return;
-        var isAllowed = isPanningAllowed(_this);
-        if (!isAllowed)
-          return;
-        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
-        if (!keysPressed)
-          return;
-        event.preventDefault();
-        event.stopPropagation();
-        handlePanning(_this, event.clientX, event.clientY);
-        handleCallback(getContext(_this), event, onPanning);
-      };
-      this.onPanningStop = function(event) {
-        var onPanningStop = _this.props.onPanningStop;
-        if (_this.isPanning) {
-          handlePanningEnd(_this);
-          handleCallback(getContext(_this), event, onPanningStop);
-        }
-      };
-      this.onPinchStart = function(event) {
-        var disabled = _this.setup.disabled;
-        var _a2 = _this.props, onPinchingStart = _a2.onPinchingStart, onZoomStart = _a2.onZoomStart;
-        if (disabled)
-          return;
-        var isAllowed = isPinchStartAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        handlePinchStart(_this, event);
-        handleCancelAnimation(_this);
-        handleCallback(getContext(_this), event, onPinchingStart);
-        handleCallback(getContext(_this), event, onZoomStart);
-      };
-      this.onPinch = function(event) {
-        var disabled = _this.setup.disabled;
-        var _a2 = _this.props, onPinching = _a2.onPinching, onZoom = _a2.onZoom;
-        if (disabled)
-          return;
-        var isAllowed = isPinchAllowed(_this);
-        if (!isAllowed)
-          return;
-        event.preventDefault();
-        event.stopPropagation();
-        handlePinchZoom(_this, event);
-        handleCallback(getContext(_this), event, onPinching);
-        handleCallback(getContext(_this), event, onZoom);
-      };
-      this.onPinchStop = function(event) {
-        var _a2 = _this.props, onPinchingStop = _a2.onPinchingStop, onZoomStop = _a2.onZoomStop;
-        if (_this.pinchStartScale) {
-          handlePinchStop(_this);
-          handleCallback(getContext(_this), event, onPinchingStop);
-          handleCallback(getContext(_this), event, onZoomStop);
-        }
-      };
-      this.onTouchPanningStart = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanningStart = _this.props.onPanningStart;
-        if (disabled)
-          return;
-        var isAllowed = isPanningStartAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        var isDoubleTap = _this.lastTouch && +/* @__PURE__ */ new Date() - _this.lastTouch < 200;
-        if (isDoubleTap && event.touches.length === 1) {
-          _this.onDoubleClick(event);
-        } else {
-          _this.lastTouch = +/* @__PURE__ */ new Date();
-          handleCancelAnimation(_this);
-          var touches = event.touches;
-          var isPanningAction = touches.length === 1;
-          var isPinchAction = touches.length === 2;
-          if (isPanningAction) {
-            handleCancelAnimation(_this);
-            handlePanningStart(_this, event);
-            handleCallback(getContext(_this), event, onPanningStart);
-          }
-          if (isPinchAction) {
-            _this.onPinchStart(event);
-          }
-        }
-      };
-      this.onTouchPanning = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanning = _this.props.onPanning;
-        if (_this.isPanning && event.touches.length === 1) {
-          if (disabled)
-            return;
-          var isAllowed = isPanningAllowed(_this);
-          if (!isAllowed)
-            return;
-          event.preventDefault();
-          event.stopPropagation();
-          var touch = event.touches[0];
-          handlePanning(_this, touch.clientX, touch.clientY);
-          handleCallback(getContext(_this), event, onPanning);
-        } else if (event.touches.length > 1) {
-          _this.onPinch(event);
-        }
-      };
-      this.onTouchPanningStop = function(event) {
-        _this.onPanningStop(event);
-        _this.onPinchStop(event);
-      };
-      this.onDoubleClick = function(event) {
-        var disabled = _this.setup.disabled;
-        if (disabled)
-          return;
-        var isAllowed = isDoubleClickAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        handleDoubleClick(_this, event);
-      };
-      this.clearPanning = function(event) {
-        if (_this.isPanning) {
-          _this.onPanningStop(event);
-        }
-      };
-      this.setKeyPressed = function(e4) {
-        _this.pressedKeys[e4.key] = true;
-      };
-      this.setKeyUnPressed = function(e4) {
-        _this.pressedKeys[e4.key] = false;
-      };
-      this.isPressingKeys = function(keys) {
-        if (!keys.length) {
-          return true;
-        }
-        return Boolean(keys.find(function(key) {
-          return _this.pressedKeys[key];
-        }));
-      };
-      this.setTransformState = function(scale, positionX, positionY) {
-        var onTransformed = _this.props.onTransformed;
-        if (!Number.isNaN(scale) && !Number.isNaN(positionX) && !Number.isNaN(positionY)) {
-          if (scale !== _this.transformState.scale) {
-            _this.transformState.previousScale = _this.transformState.scale;
-            _this.transformState.scale = scale;
-          }
-          _this.transformState.positionX = positionX;
-          _this.transformState.positionY = positionY;
-          _this.applyTransformation();
-          var ctx_1 = getContext(_this);
-          _this.onChangeCallbacks.forEach(function(callback) {
-            return callback(ctx_1);
-          });
-          handleCallback(ctx_1, { scale, positionX, positionY }, onTransformed);
-        } else {
-          console.error("Detected NaN set state values");
-        }
-      };
-      this.setCenter = function() {
-        if (_this.wrapperComponent && _this.contentComponent) {
-          var targetState = getCenterPosition(_this.transformState.scale, _this.wrapperComponent, _this.contentComponent);
-          _this.setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
-        }
-      };
-      this.handleTransformStyles = function(x2, y3, scale) {
-        if (_this.props.customTransform) {
-          return _this.props.customTransform(x2, y3, scale);
-        }
-        return getTransformStyles(x2, y3, scale);
-      };
-      this.applyTransformation = function() {
-        if (!_this.mounted || !_this.contentComponent)
-          return;
-        var _a2 = _this.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-        var transform = _this.handleTransformStyles(positionX, positionY, scale);
-        _this.contentComponent.style.transform = transform;
-      };
-      this.getContext = function() {
-        return getContext(_this);
-      };
-      this.onChange = function(callback) {
-        if (!_this.onChangeCallbacks.has(callback)) {
-          _this.onChangeCallbacks.add(callback);
-        }
-        return function() {
-          _this.onChangeCallbacks.delete(callback);
-        };
-      };
-      this.onInit = function(callback) {
-        if (!_this.onInitCallbacks.has(callback)) {
-          _this.onInitCallbacks.add(callback);
-        }
-        return function() {
-          _this.onInitCallbacks.delete(callback);
-        };
-      };
-      this.init = function(wrapperComponent, contentComponent) {
-        _this.cleanupWindowEvents();
-        _this.wrapperComponent = wrapperComponent;
-        _this.contentComponent = contentComponent;
-        handleCalculateBounds(_this, _this.transformState.scale);
-        _this.handleInitializeWrapperEvents(wrapperComponent);
-        _this.handleInitialize(contentComponent);
-        _this.initializeWindowEvents();
-        _this.isInitialized = true;
-        var ctx = getContext(_this);
-        handleCallback(ctx, void 0, _this.props.onInit);
-      };
-      this.props = props;
-      this.setup = createSetup(this.props);
-      this.transformState = createState(this.props);
-    }
-    return ZoomPanPinch2;
-  }()
-);
-var Context = import_react3.default.createContext(null);
-var getContent2 = function(children, ctx) {
-  if (typeof children === "function") {
-    return children(ctx);
-  }
-  return children;
-};
-var TransformWrapper = import_react3.default.forwardRef(function(props, ref) {
-  var instance = (0, import_react3.useRef)(new ZoomPanPinch(props)).current;
-  var content = getContent2(props.children, getControls(instance));
-  (0, import_react3.useImperativeHandle)(ref, function() {
-    return getControls(instance);
-  }, [instance]);
-  (0, import_react3.useEffect)(function() {
-    instance.update(props);
-  }, [instance, props]);
-  return import_react3.default.createElement(Context.Provider, { value: instance }, content);
-});
-var KeepScale = import_react3.default.forwardRef(function(props, ref) {
-  var localRef = (0, import_react3.useRef)(null);
-  var instance = (0, import_react3.useContext)(Context);
-  (0, import_react3.useEffect)(function() {
-    return instance.onChange(function(ctx) {
-      if (localRef.current) {
-        var positionX = 0;
-        var positionY = 0;
-        localRef.current.style.transform = instance.handleTransformStyles(positionX, positionY, 1 / ctx.instance.transformState.scale);
-      }
-    });
-  }, [instance]);
-  return import_react3.default.createElement("div", __assign({}, props, { ref: mergeRefs([localRef, ref]) }));
-});
-function styleInject(css, ref) {
-  if (ref === void 0)
-    ref = {};
-  var insertAt = ref.insertAt;
-  if (!css || typeof document === "undefined") {
-    return;
-  }
-  var head = document.head || document.getElementsByTagName("head")[0];
-  var style = document.createElement("style");
-  style.type = "text/css";
-  if (insertAt === "top") {
-    if (head.firstChild) {
-      head.insertBefore(style, head.firstChild);
-    } else {
-      head.appendChild(style);
-    }
-  } else {
-    head.appendChild(style);
-  }
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-}
-var css_248z = ".transform-component-module_wrapper__SPB86 {\n  position: relative;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  overflow: hidden;\n  -webkit-touch-callout: none; /* iOS Safari */\n  -webkit-user-select: none; /* Safari */\n  -khtml-user-select: none; /* Konqueror HTML */\n  -moz-user-select: none; /* Firefox */\n  -ms-user-select: none; /* Internet Explorer/Edge */\n  user-select: none;\n  margin: 0;\n  padding: 0;\n}\n.transform-component-module_content__FBWxo {\n  display: flex;\n  flex-wrap: wrap;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  margin: 0;\n  padding: 0;\n  transform-origin: 0% 0%;\n}\n.transform-component-module_content__FBWxo img {\n  pointer-events: none;\n}\n";
-var styles = { "wrapper": "transform-component-module_wrapper__SPB86", "content": "transform-component-module_content__FBWxo" };
-styleInject(css_248z);
-var TransformComponent = function(_a2) {
-  var children = _a2.children, _b2 = _a2.wrapperClass, wrapperClass = _b2 === void 0 ? "" : _b2, _c = _a2.contentClass, contentClass = _c === void 0 ? "" : _c, wrapperStyle = _a2.wrapperStyle, contentStyle = _a2.contentStyle, _d = _a2.wrapperProps, wrapperProps = _d === void 0 ? {} : _d, _e = _a2.contentProps, contentProps = _e === void 0 ? {} : _e;
-  var _f = (0, import_react3.useContext)(Context), init = _f.init, cleanupWindowEvents = _f.cleanupWindowEvents;
-  var wrapperRef = (0, import_react3.useRef)(null);
-  var contentRef = (0, import_react3.useRef)(null);
-  (0, import_react3.useEffect)(function() {
-    var wrapper = wrapperRef.current;
-    var content = contentRef.current;
-    if (wrapper !== null && content !== null && init) {
-      init === null || init === void 0 ? void 0 : init(wrapper, content);
-    }
-    return function() {
-      cleanupWindowEvents === null || cleanupWindowEvents === void 0 ? void 0 : cleanupWindowEvents();
-    };
-  }, []);
-  return import_react3.default.createElement(
-    "div",
-    __assign({}, wrapperProps, { ref: wrapperRef, className: "react-transform-wrapper ".concat(styles.wrapper, " ").concat(wrapperClass), style: wrapperStyle }),
-    import_react3.default.createElement("div", __assign({}, contentProps, { ref: contentRef, className: "react-transform-component ".concat(styles.content, " ").concat(contentClass), style: contentStyle }), children)
-  );
-};
-
-// src/ModalContent.tsx
-var import_react8 = __toESM(require_react());
-var import_get2 = __toESM(require_get());
+// src/utils/capture.ts
+var import_obsidian3 = require("obsidian");
+var import_dom_to_image_more = __toESM(require_dom_to_image_more());
+var import_file_saver = __toESM(require_FileSaver_min());
 
 // node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.3/node_modules/typesafe-i18n/runtime/esm/parser/src/basic.mjs
 var removeEmptyValues = (object) => Object.fromEntries(
@@ -31862,6 +30228,8 @@ var en = {
   copiedSuccess: "Copied to clipboard",
   copy: "Copy to Clipboard",
   save: "Save Image",
+  saveSuccess: "Export and save the image as {filePath: string}.",
+  saveVault: "Save to Vault",
   includingFilename: "Including File Name As Title: ",
   imageWidth: "Image Width: ",
   exportImage: "Export to image",
@@ -31959,6 +30327,8 @@ var zh = {
   copiedSuccess: "\u5DF2\u590D\u5236\u5230\u526A\u8D34\u677F",
   copy: "\u590D\u5236\u5230\u526A\u8D34\u677F",
   save: "\u4FDD\u5B58\u56FE\u7247",
+  saveSuccess: "\u5DF2\u5BFC\u51FA\u5E76\u4FDD\u5B58\u56FE\u7247\u81F3 {filePath}\u3002",
+  saveVault: "\u4FDD\u5B58\u5230 vault",
   includingFilename: "\u5305\u542B\u6587\u4EF6\u540D\u4F5C\u4E3A\u6807\u9898\uFF1A",
   imageWidth: "\u56FE\u7247\u5BBD\u5EA6\uFF1A",
   exportImage: "\u5BFC\u51FA\u4E3A\u56FE\u7247",
@@ -32072,12 +30442,7 @@ try {
 var L = i18n2()[locale];
 var L_default = L;
 
-// src/Control.tsx
-var import_react5 = __toESM(require_react());
-var import_get = __toESM(require_get());
-var import_set = __toESM(require_set());
-
-// src/utils.ts
+// src/utils/index.ts
 var import_obsidian2 = require("obsidian");
 function isMarkdownFile(file) {
   return ["md", "markdown"].includes(file?.extension ?? "");
@@ -32130,879 +30495,6 @@ async function createHtml(path, app) {
 function getMetadata(file, app) {
   return app.metadataCache.getFileCache(file)?.frontmatter;
 }
-
-// src/imageSelectModal.tsx
-var import_obsidian3 = require("obsidian");
-var import_react4 = __toESM(require_react());
-var import_client2 = __toESM(require_client());
-var ImageSelect = ({ imageList, app, onSelect, onClose }) => {
-  const [list, setList] = (0, import_react4.useState)(imageList);
-  const [keyword, setKeyword] = (0, import_react4.useState)("");
-  const [selected, setSelected] = (0, import_react4.useState)(
-    imageList?.[0] || null
-  );
-  const previewRef = (0, import_react4.useRef)(null);
-  (0, import_react4.useEffect)(() => {
-    if (!keyword) {
-      setList(imageList);
-    } else {
-      const regExp = new RegExp(keyword.split("").join(".*"), "i");
-      setList(imageList.filter((file) => regExp.test(file.path)));
-    }
-  }, [keyword, imageList]);
-  (0, import_react4.useEffect)(() => {
-    if (!list.length) {
-      setSelected(null);
-    } else if (!selected || !list.find((file) => file.path === selected.path)) {
-      setSelected(list?.[0] || null);
-    }
-  }, [selected, list]);
-  (0, import_react4.useEffect)(() => {
-    previewRef.current?.empty();
-    if (selected) {
-      createHtml(selected.path, app).then(
-        (html) => previewRef.current?.appendChild(html)
-      );
-    }
-  }, [selected]);
-  const submit = (0, import_react4.useCallback)(async () => {
-    if (selected) {
-      const file = await selected.vault.adapter.readBinary(selected.path);
-      const blob = new Blob([file], { type: "image/" + selected.extension });
-      const url = await fileToBase64(blob);
-      onSelect(url);
-    }
-  }, [onSelect, selected]);
-  return /* @__PURE__ */ import_react4.default.createElement("div", { style: { padding: 20, display: "flex", flexDirection: "column" } }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "search-input-container" }, /* @__PURE__ */ import_react4.default.createElement(
-    "input",
-    {
-      enterKeyHint: "search",
-      type: "search",
-      spellCheck: "false",
-      value: keyword,
-      placeholder: L_default.imageSelect.search(),
-      onChange: (e4) => setKeyword(e4.target.value)
-    }
-  ), /* @__PURE__ */ import_react4.default.createElement("div", { className: "search-input-clear-button" })), /* @__PURE__ */ import_react4.default.createElement(
-    "div",
-    {
-      style: {
-        marginTop: 20,
-        borderRadius: 8,
-        border: "1px solid var(--background-modifier-border)",
-        display: "flex"
-      }
-    },
-    /* @__PURE__ */ import_react4.default.createElement(
-      "div",
-      {
-        style: {
-          borderRight: "1px solid var(--background-modifier-border)",
-          height: 300,
-          overflowY: "auto",
-          flex: 1,
-          fontSize: "14px",
-          lineHeight: "28px",
-          padding: 8,
-          wordBreak: "keep-all",
-          overflowX: "hidden"
-        }
-      },
-      list.length ? list.map((file) => /* @__PURE__ */ import_react4.default.createElement(
-        "div",
-        {
-          key: file.path,
-          title: file.path,
-          onClick: () => setSelected(file),
-          style: {
-            background: selected?.path === file.path ? "var(--background-modifier-hover)" : "transparent",
-            cursor: "pointer",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            overflowX: "hidden"
-          }
-        },
-        file.path
-      )) : /* @__PURE__ */ import_react4.default.createElement(
-        "div",
-        {
-          style: {
-            textAlign: "center",
-            fontSize: "16",
-            marginTop: 50,
-            opacity: 0.8
-          }
-        },
-        L_default.imageSelect.empty()
-      )
-    ),
-    /* @__PURE__ */ import_react4.default.createElement(
-      "div",
-      {
-        ref: previewRef,
-        style: {
-          padding: 20,
-          height: 300,
-          width: 200,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center"
-        }
-      }
-    )
-  ), /* @__PURE__ */ import_react4.default.createElement("div", { style: { fontSize: "12px", marginTop: 8, opacity: 0.7 } }, selected?.path || " "), /* @__PURE__ */ import_react4.default.createElement("div", { style: { marginTop: 40, display: "flex", justifyContent: "center" } }, /* @__PURE__ */ import_react4.default.createElement(
-    "button",
-    {
-      className: "mod-cta",
-      disabled: !selected,
-      onClick: submit,
-      style: { marginRight: 40 }
-    },
-    L_default.imageSelect.select()
-  ), /* @__PURE__ */ import_react4.default.createElement("button", { onClick: onClose }, L_default.imageSelect.cancel())));
-};
-var ImageSelectModal = class extends import_obsidian3.Modal {
-  constructor(app, select) {
-    super(app);
-    this.select = select;
-  }
-  onOpen() {
-    let { contentEl, select } = this;
-    const imageList = this.app.vault.getFiles().filter((file) => /^jpe?g|png$/i.test(file.extension || ""));
-    this.root = (0, import_client2.createRoot)(contentEl);
-    this.root.render(
-      /* @__PURE__ */ import_react4.default.createElement(
-        ImageSelect,
-        {
-          imageList,
-          app: this.app,
-          onSelect: select,
-          onClose: () => this.close()
-        }
-      )
-    );
-  }
-  onClose() {
-    let { contentEl, root } = this;
-    root?.unmount();
-    contentEl.empty();
-  }
-};
-
-// src/Control.tsx
-var Control = ({ fieldSchema, setting, updata, app }) => {
-  const value = (0, import_get.default)(setting, fieldSchema.path);
-  const inputRef = (0, import_react5.useRef)(null);
-  const onChange = (value2) => {
-    const newSetting = { ...setting };
-    (0, import_set.default)(newSetting, fieldSchema.path, value2);
-    updata(newSetting);
-  };
-  const upload = async () => {
-    const file = inputRef.current?.files?.[0];
-    if (file) {
-      onChange(await fileToBase64(file));
-    }
-  };
-  const select = () => {
-    const modal = new ImageSelectModal(app, (img) => {
-      onChange(img);
-      modal.close();
-    });
-    modal.open();
-  };
-  switch (fieldSchema.type) {
-    case "number": {
-      return /* @__PURE__ */ import_react5.default.createElement(
-        "input",
-        {
-          type: "number",
-          value,
-          onChange: (e4) => onChange(e4.target.value ? Number(e4.target.value) : void 0)
-        }
-      );
-    }
-    case "string": {
-      return /* @__PURE__ */ import_react5.default.createElement(
-        "input",
-        {
-          type: "text",
-          value,
-          onChange: (e4) => onChange(e4.target.value)
-        }
-      );
-    }
-    case "boolean": {
-      return /* @__PURE__ */ import_react5.default.createElement(
-        "div",
-        {
-          className: `checkbox-container${value ? " is-enabled" : ""}`,
-          onClick: () => onChange(!(0, import_get.default)(setting, fieldSchema.path))
-        },
-        /* @__PURE__ */ import_react5.default.createElement("input", { type: "checkbox", checked: value })
-      );
-    }
-    case "select": {
-      return /* @__PURE__ */ import_react5.default.createElement(
-        "select",
-        {
-          value,
-          onChange: (e4) => onChange(e4.target.value),
-          className: "dropdown"
-        },
-        fieldSchema.options?.map((option) => /* @__PURE__ */ import_react5.default.createElement("option", { key: option.value, value: option.value }, option.text))
-      );
-    }
-    case "file": {
-      return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(
-        "div",
-        {
-          style: {
-            width: 32,
-            height: 32,
-            borderRadius: "50%",
-            border: "1px solid var(--background-modifier-border)",
-            backgroundImage: value ? `url(${value})` : "none",
-            backgroundSize: "cover",
-            display: value ? "block" : "none"
-          }
-        }
-      ), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: () => inputRef.current?.click() }, L_default.setting.watermark.image.src.upload(), /* @__PURE__ */ import_react5.default.createElement(
-        "input",
-        {
-          style: { display: "none" },
-          type: "file",
-          ref: inputRef,
-          onChange: upload
-        }
-      )), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: select }, L_default.setting.watermark.image.src.select()));
-    }
-    default:
-      return null;
-  }
-};
-var Control_default = Control;
-
-// src/Metadata.tsx
-var import_react6 = __toESM(require_react());
-var iconMap = {
-  text: /* @__PURE__ */ import_react6.default.createElement(
-    "svg",
-    {
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      "stroke-width": "2",
-      "stroke-linecap": "round",
-      "stroke-linejoin": "round",
-      className: "svg-icon"
-    },
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M17 6.1H3" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 12.1H3" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M15.1 18H3" })
-  ),
-  number: /* @__PURE__ */ import_react6.default.createElement(
-    "svg",
-    {
-      className: "svg-icon",
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      "stroke-width": "2",
-      "stroke-linecap": "round",
-      "stroke-linejoin": "round"
-    },
-    /* @__PURE__ */ import_react6.default.createElement("rect", { x: "14", y: "14", width: "4", height: "6", rx: "2" }),
-    /* @__PURE__ */ import_react6.default.createElement("rect", { x: "6", y: "4", width: "4", height: "6", rx: "2" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M6 20h4" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M14 10h4" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M6 14h2v6" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M14 4h2v6" })
-  ),
-  multitext: /* @__PURE__ */ import_react6.default.createElement(
-    "svg",
-    {
-      className: "svg-icon",
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      "stroke-width": "2",
-      "stroke-linecap": "round",
-      "stroke-linejoin": "round"
-    },
-    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "6", y2: "6" }),
-    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "12", y2: "12" }),
-    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "18", y2: "18" }),
-    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "6", y2: "6" }),
-    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "12", y2: "12" }),
-    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "18", y2: "18" })
-  ),
-  tags: /* @__PURE__ */ import_react6.default.createElement(
-    "svg",
-    {
-      className: "svg-icon",
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      "stroke-width": "2",
-      "stroke-linecap": "round",
-      "stroke-linejoin": "round"
-    },
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z" }),
-    /* @__PURE__ */ import_react6.default.createElement("circle", { cx: "6.5", cy: "9.5", r: ".5", fill: "currentColor" })
-  ),
-  date: /* @__PURE__ */ import_react6.default.createElement(
-    "svg",
-    {
-      className: "svg-icon",
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      "stroke-width": "2",
-      "stroke-linecap": "round",
-      "stroke-linejoin": "round"
-    },
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M8 2v4" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M16 2v4" }),
-    /* @__PURE__ */ import_react6.default.createElement("rect", { width: "18", height: "18", x: "3", y: "4", rx: "2" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M3 10h18" })
-  ),
-  datetime: /* @__PURE__ */ import_react6.default.createElement(
-    "svg",
-    {
-      className: "svg-icon",
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      "stroke-width": "2",
-      "stroke-linecap": "round",
-      "stroke-linejoin": "round"
-    },
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M16 2v4" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M8 2v4" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M3 10h5" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M17.5 17.5 16 16.3V14" }),
-    /* @__PURE__ */ import_react6.default.createElement("circle", { cx: "16", cy: "16", r: "6" })
-  ),
-  checkbox: /* @__PURE__ */ import_react6.default.createElement(
-    "svg",
-    {
-      className: "svg-icon",
-      xmlns: "http://www.w3.org/2000/svg",
-      width: "24",
-      height: "24",
-      viewBox: "0 0 24 24",
-      fill: "none",
-      stroke: "currentColor",
-      "stroke-width": "2",
-      "stroke-linecap": "round",
-      "stroke-linejoin": "round"
-    },
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "m9 11 3 3L22 4" }),
-    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" })
-  ),
-  aliases: /* @__PURE__ */ import_react6.default.createElement(import_react6.default.Fragment, null)
-};
-var Metadata = ({ type, name, value }) => {
-  if (["aliases", "cssclasses"].contains(name)) {
-    return null;
-  }
-  if (value === null) {
-    return null;
-  }
-  const iconSvg = iconMap[type] || iconMap["text"];
-  let valueElement;
-  switch (type) {
-    case "text":
-      if (!value)
-        return null;
-      let content = value;
-      if (typeof value !== "string") {
-        content = JSON.stringify(value);
-      } else {
-        const match = value.match(/^\[\[(.+)\]\]$/);
-        if (match) {
-          content = match[1];
-        }
-      }
-      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, content);
-      break;
-    case "number":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement(
-        "input",
-        {
-          className: "metadata-input metadata-input-number",
-          type: "number",
-          value
-        }
-      );
-      break;
-    case "checkbox":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement(
-        "input",
-        {
-          className: "metadata-input-checkbox",
-          type: "checkbox",
-          checked: value
-        }
-      );
-      break;
-    case "date":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
-      break;
-    case "datetime":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
-      break;
-    case "multitext":
-    case "tags":
-      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-container" }, value.map((str) => /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-pill", style: { border: "none" } }, /* @__PURE__ */ import_react6.default.createElement(
-        "div",
-        {
-          className: "multi-select-pill-content",
-          style: { margin: "0 6px" }
-        },
-        /* @__PURE__ */ import_react6.default.createElement("span", null, str)
-      ))));
-      break;
-    case "aliases":
-      return null;
-    default:
-      valueElement = value;
-      break;
-  }
-  return /* @__PURE__ */ import_react6.default.createElement(
-    "div",
-    {
-      className: "metadata-property",
-      "data-property-type": type,
-      "data-property-key": name,
-      style: { border: 0 }
-    },
-    /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-property-key" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "metadata-property-icon" }, iconSvg), /* @__PURE__ */ import_react6.default.createElement(
-      "span",
-      {
-        style: {
-          padding: "var(--size-4-1) var(--size-4-2)",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-          height: "var(--input-height)"
-        }
-      },
-      name
-    )),
-    /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-property-value" }, valueElement)
-  );
-};
-var Metadata_default = Metadata;
-
-// src/ModalContent.tsx
-var alignMap = {
-  left: "flex-start",
-  center: "center",
-  right: "flex-end"
-};
-var formSchema = [
-  {
-    label: L_default.includingFilename(),
-    path: "showFilename",
-    type: "boolean"
-  },
-  {
-    label: L_default.imageWidth(),
-    path: "width",
-    type: "number"
-  },
-  {
-    label: L_default.setting.userInfo.show(),
-    path: "authorInfo.show",
-    type: "boolean"
-  },
-  {
-    label: L_default.setting.userInfo.name(),
-    path: "authorInfo.name",
-    type: "string",
-    when: { flag: true, path: "authorInfo.show" }
-  },
-  {
-    label: L_default.setting.userInfo.remark(),
-    path: "authorInfo.remark",
-    type: "string",
-    when: { flag: true, path: "authorInfo.show" }
-  },
-  {
-    label: L_default.setting.userInfo.avatar.title(),
-    desc: L_default.setting.userInfo.avatar.description(),
-    path: "authorInfo.avatar",
-    type: "file",
-    when: { flag: true, path: "authorInfo.show" }
-  },
-  {
-    label: L_default.setting.userInfo.align(),
-    path: "authorInfo.align",
-    type: "select",
-    options: [
-      { text: "Left", value: "left" },
-      { text: "Center", value: "center" },
-      { text: "Right", value: "right" }
-    ],
-    when: { flag: true, path: "authorInfo.show" }
-  },
-  {
-    label: L_default.setting.userInfo.position(),
-    path: "authorInfo.position",
-    type: "select",
-    options: [
-      { text: "Top", value: "top" },
-      { text: "Bottom", value: "bottom" }
-    ],
-    when: { flag: true, path: "authorInfo.show" }
-  },
-  {
-    label: L_default.setting.watermark.enable.label(),
-    path: "watermark.enable",
-    type: "boolean"
-  },
-  {
-    label: L_default.setting.watermark.type.label(),
-    path: "watermark.type",
-    type: "select",
-    options: [
-      { text: L_default.setting.watermark.type.text(), value: "text" },
-      { text: L_default.setting.watermark.type.image(), value: "image" }
-    ],
-    when: { flag: true, path: "watermark.enable" }
-  },
-  {
-    label: L_default.setting.watermark.text.content(),
-    path: "watermark.text.content",
-    type: "string",
-    when: (settings) => settings.watermark.enable && settings.watermark.type === "text"
-  },
-  {
-    label: L_default.setting.watermark.image.src.label(),
-    path: "watermark.image.src",
-    type: "file",
-    when: (settings) => settings.watermark.enable && settings.watermark.type === "image"
-  },
-  {
-    label: L_default.setting.watermark.opacity(),
-    path: "watermark.opacity",
-    type: "number",
-    when: { flag: true, path: "watermark.enable" }
-  },
-  {
-    label: L_default.setting.watermark.rotate(),
-    path: "watermark.rotate",
-    type: "number",
-    when: { flag: true, path: "watermark.enable" }
-  },
-  {
-    label: L_default.setting.watermark.width(),
-    path: "watermark.width",
-    type: "number",
-    when: { flag: true, path: "watermark.enable" }
-  },
-  {
-    label: L_default.setting.watermark.height(),
-    path: "watermark.height",
-    type: "number",
-    when: { flag: true, path: "watermark.enable" }
-  }
-];
-function isShow(field, settings) {
-  if (!field.when) {
-    return true;
-  }
-  if (typeof field.when === "function") {
-    return field.when(settings);
-  }
-  return (0, import_get2.default)(settings, field.when.path) === field.when.flag;
-}
-var ModalContent = ({
-  markdownEl,
-  copy: copy2,
-  save: save2,
-  settings,
-  app,
-  frontmatter,
-  title,
-  metadataMap
-}) => {
-  const [formData, setFormData] = (0, import_react7.useState)(settings);
-  const [watermarkProps, setWatermarkProps] = (0, import_react7.useState)({});
-  const [isGrabbing, setIsGrabbing] = (0, import_react7.useState)(false);
-  const contentRef = (0, import_react7.useRef)(null);
-  const actionsRef = (0, import_react7.useRef)(null);
-  const previewOutRef = (0, import_react7.useRef)(null);
-  const mainHeight = Math.min(764, window.innerHeight * 0.85 - 225);
-  const root = markdownEl.closest(".export-image-root") || markdownEl;
-  (0, import_react7.useEffect)(() => {
-    contentRef.current?.appendChild(markdownEl);
-  }, []);
-  (0, import_react7.useEffect)(() => {
-    setFormData(settings);
-  }, [settings]);
-  (0, import_react7.useEffect)(() => {
-    const props = {
-      monitor: false,
-      mode: "interval",
-      visible: formData.watermark.enable,
-      rotate: formData.watermark.rotate ?? -30,
-      opacity: formData.watermark.opacity ?? 0.2,
-      height: formData.watermark.height ?? 64,
-      width: formData.watermark.width ?? 120,
-      gapX: formData.watermark.x ?? 100,
-      gapY: formData.watermark.y ?? 100
-    };
-    if (formData.watermark.type === "text") {
-      props.text = formData.watermark.text.content;
-      props.fontSize = formData.watermark.text.fontSize || 16;
-      props.fontColor = formData.watermark.text.color || "#cccccc";
-      props.image = void 0;
-    } else {
-      props.image = formData.watermark.image.src;
-    }
-    setWatermarkProps(props);
-  }, [formData]);
-  const handleClick = (0, import_react7.useCallback)(
-    (e4) => {
-      if (e4.target.closest("button") && (formData.width || 640) <= 20) {
-        new import_obsidian4.Notice(L_default.invalidWidth());
-        e4.preventDefault();
-        e4.stopPropagation();
-      }
-    },
-    [formData.width]
-  );
-  (0, import_react7.useEffect)(() => {
-    if (actionsRef.current) {
-      const copyButton = new import_obsidian4.ButtonComponent(actionsRef.current);
-      copyButton.setIcon("clipboard-copy").buttonEl.createSpan({
-        text: L_default.copy(),
-        attr: { style: "padding-left: 10px" }
-      });
-      copyButton.buttonEl.style.marginRight = "40px";
-      copyButton.onClick(copy2);
-      const saveButton = new import_obsidian4.ButtonComponent(actionsRef.current);
-      saveButton.setIcon("image-down").buttonEl.createSpan({
-        text: L_default.save(),
-        attr: { style: "padding-left: 10px" }
-      });
-      saveButton.onClick(save2);
-    }
-    return () => {
-      actionsRef.current?.childNodes.forEach((c5) => c5.remove());
-    };
-  }, [copy2, save2]);
-  return /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement(
-    "div",
-    {
-      style: {
-        display: "flex",
-        margin: "20px 0",
-        ["--line-height-tight"]: "20px"
-      }
-    },
-    /* @__PURE__ */ import_react8.default.createElement(
-      "div",
-      {
-        style: {
-          flex: 1,
-          padding: "20px",
-          overflowY: "auto",
-          fontSize: "14px",
-          lineHeight: "28px"
-        }
-      },
-      formSchema.map(
-        (fieldSchema) => isShow(fieldSchema, formData) && /* @__PURE__ */ import_react8.default.createElement(
-          "div",
-          {
-            className: "setting-item",
-            key: fieldSchema.path,
-            style: { padding: "10px 0" }
-          },
-          /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-info" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-name" }, fieldSchema.label), fieldSchema.desc && /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-description" }, fieldSchema.desc)),
-          /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-control" }, /* @__PURE__ */ import_react8.default.createElement(
-            Control_default,
-            {
-              fieldSchema,
-              setting: formData,
-              updata: setFormData,
-              app
-            }
-          ))
-        )
-      ),
-      /* @__PURE__ */ import_react8.default.createElement("div", { style: { lineHeight: "20px", opacity: 0.6, fontSize: "12px" } }, L_default.moreSetting())
-    ),
-    /* @__PURE__ */ import_react8.default.createElement("div", { style: { width: "50%", padding: 20 } }, /* @__PURE__ */ import_react8.default.createElement(
-      "div",
-      {
-        ref: previewOutRef,
-        style: {
-          height: mainHeight,
-          width: "100%",
-          transition: "width 0.25s",
-          cursor: isGrabbing ? "grabbing" : "grab"
-        }
-      },
-      /* @__PURE__ */ import_react8.default.createElement(
-        TransformWrapper,
-        {
-          minScale: Math.min(
-            1,
-            mainHeight / root.clientHeight,
-            (previewOutRef.current?.clientWidth || 400) / (root.clientWidth + 2)
-          ),
-          maxScale: 4,
-          pinch: { step: 20 },
-          doubleClick: { mode: "reset" },
-          centerZoomedOut: false,
-          onPanning: () => setIsGrabbing(true),
-          onPanningStop: () => setIsGrabbing(false)
-        },
-        /* @__PURE__ */ import_react8.default.createElement(
-          TransformComponent,
-          {
-            wrapperStyle: {
-              width: "100%",
-              height: mainHeight
-            },
-            contentStyle: {
-              border: "1px var(--divider-color) solid",
-              borderRadius: "8px",
-              overflow: "hidden"
-            }
-          },
-          /* @__PURE__ */ import_react8.default.createElement(
-            "div",
-            {
-              className: `export-image-root ${(frontmatter?.cssclasses || []).join(" ")}`,
-              style: {
-                display: "flex",
-                flexDirection: formData.authorInfo.position === "bottom" ? "column" : "column-reverse",
-                backgroundColor: formData.format === "png" ? "unset" : "var(--background-primary)"
-              }
-            },
-            /* @__PURE__ */ import_react8.default.createElement(src_default, { ...watermarkProps }, /* @__PURE__ */ import_react8.default.createElement(
-              "div",
-              {
-                className: "markdown-preview-view markdown-rendered export-image-preview-container",
-                style: {
-                  width: `${formData.width}px`,
-                  transition: "width 0.25s"
-                }
-              },
-              formData.showFilename && /* @__PURE__ */ import_react8.default.createElement("div", { className: "inline-title", autoCapitalize: "on" }, title),
-              formData.showMetadata && frontmatter && Object.keys(frontmatter).length > 0 && /* @__PURE__ */ import_react8.default.createElement(
-                "div",
-                {
-                  className: "metadata-container",
-                  style: { display: "block" }
-                },
-                /* @__PURE__ */ import_react8.default.createElement("div", { className: "metadata-content" }, Object.keys(frontmatter).map((name) => /* @__PURE__ */ import_react8.default.createElement(
-                  Metadata_default,
-                  {
-                    name,
-                    key: name,
-                    value: frontmatter[name],
-                    type: metadataMap[name]?.type || "text"
-                  }
-                )))
-              ),
-              /* @__PURE__ */ import_react8.default.createElement("div", { ref: contentRef })
-            )),
-            formData.authorInfo.show && (formData.authorInfo.avatar || formData.authorInfo.name) && /* @__PURE__ */ import_react8.default.createElement(
-              "div",
-              {
-                style: {
-                  display: "flex",
-                  [formData.authorInfo.position === "top" ? "borderBottom" : "borderTop"]: "1px solid var(--background-modifier-border)",
-                  padding: "16px 32px",
-                  justifyContent: alignMap[formData.authorInfo.align || "right"],
-                  alignItems: "center",
-                  background: formData.format === "png" ? "unset" : "var(--background-primary)"
-                }
-              },
-              formData.authorInfo.avatar && /* @__PURE__ */ import_react8.default.createElement(
-                "div",
-                {
-                  style: {
-                    width: 36,
-                    height: 36,
-                    borderRadius: "50%",
-                    border: "1px solid var(--background-modifier-border)",
-                    backgroundImage: `url(${formData.authorInfo.avatar})`,
-                    backgroundSize: "cover",
-                    margin: "0 20px"
-                  }
-                }
-              ),
-              formData.authorInfo.name && /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement(
-                "div",
-                {
-                  style: {
-                    fontSize: "16px",
-                    paddingBottom: "6"
-                  }
-                },
-                formData.authorInfo.name
-              ), formData.authorInfo.remark && /* @__PURE__ */ import_react8.default.createElement(
-                "div",
-                {
-                  style: {
-                    opacity: 0.5,
-                    fontSize: "12px"
-                  }
-                },
-                formData.authorInfo.remark
-              ))
-            )
-          )
-        )
-      )
-    ), /* @__PURE__ */ import_react8.default.createElement("div", { style: { lineHeight: "20px", opacity: 0.6, fontSize: "12px" } }, L_default.guide()))
-  ), /* @__PURE__ */ import_react8.default.createElement(
-    "div",
-    {
-      ref: actionsRef,
-      onClickCapture: handleClick,
-      style: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        marginBottom: "20px"
-      }
-    }
-  ));
-};
-var ModalContent_default = ModalContent;
-
-// src/capture.ts
-var import_obsidian5 = require("obsidian");
-var import_dom_to_image_more = __toESM(require_dom_to_image_more());
-var import_file_saver = __toESM(require_FileSaver_min());
 
 // node_modules/.pnpm/jspdf@2.5.1/node_modules/jspdf/dist/jspdf.es.min.js
 init_typeof();
@@ -41923,15 +39415,14 @@ E.API.PDFObject = function() {
 }();
 var jspdf_es_min_default = E;
 
-// src/capture.ts
+// src/utils/capture.ts
 async function getBlob(el, higtResolution, type) {
-  const root = el.closest(".export-image-root") || el;
-  return await import_dom_to_image_more.default.toBlob(root, {
-    width: root.clientWidth,
-    height: root.clientHeight,
+  return await import_dom_to_image_more.default.toBlob(el, {
+    width: el.clientWidth,
+    height: el.clientHeight,
     quality: 0.85,
     scale: higtResolution ? 2 : 1,
-    requestUrl: import_obsidian5.requestUrl,
+    requestUrl: import_obsidian3.requestUrl,
     type
   });
 }
@@ -41952,20 +39443,37 @@ async function makePdf(blob, el) {
   );
   return pdf;
 }
-async function save(el, title, higtResolution, format) {
+async function save(app, el, title, higtResolution, format, isMobile) {
   const blob = await getBlob(
     el,
     higtResolution,
     `image/${format === "png" ? "png" : "jpeg"}`
   );
+  const filename = `${title.replace(/\s+/g, "_")}.${format}`;
   switch (format) {
     case "jpg":
     case "png":
-      (0, import_file_saver.default)(blob, `${title.replace(/\s+/g, "_")}.${format}`);
+      if (isMobile) {
+        const filePath = await app.fileManager.getAvailablePathForAttachment(
+          filename
+        );
+        await app.vault.createBinary(filePath, await blob.arrayBuffer());
+        new import_obsidian3.Notice(L_default.saveSuccess({ filePath }));
+      } else {
+        (0, import_file_saver.default)(blob, filename);
+      }
       break;
     case "pdf":
       const pdf = await makePdf(blob, el);
-      pdf.save(`${title.replace(/\s+/g, "_")}.${format}`);
+      if (isMobile) {
+        const filePath = await app.fileManager.getAvailablePathForAttachment(
+          filename
+        );
+        await app.vault.createBinary(filePath, await blob.arrayBuffer());
+        new import_obsidian3.Notice(L_default.saveSuccess({ filePath }));
+      } else {
+        pdf.save(filename);
+      }
       break;
     default:
       break;
@@ -41973,7 +39481,7 @@ async function save(el, title, higtResolution, format) {
 }
 async function copy(el, higtResolution, format) {
   if (format === "pdf") {
-    new import_obsidian5.Notice("pdf \u683C\u5F0F\u4E0D\u652F\u6301\u590D\u5236");
+    new import_obsidian3.Notice("pdf \u683C\u5F0F\u4E0D\u652F\u6301\u590D\u5236");
     return;
   }
   const blob = await getBlob(
@@ -41988,8 +39496,2373 @@ async function copy(el, higtResolution, format) {
     })
   );
   await navigator.clipboard.write(data);
-  new import_obsidian5.Notice(L_default.copiedSuccess());
+  new import_obsidian3.Notice(L_default.copiedSuccess());
 }
+
+// node_modules/.pnpm/react-zoom-pan-pinch@3.4.4_react-dom@18.2.0_react@18.2.0/node_modules/react-zoom-pan-pinch/dist/index.esm.js
+var import_react3 = __toESM(require_react());
+var roundNumber = function(num, decimal) {
+  return Number(num.toFixed(decimal));
+};
+var checkIsNumber = function(num, defaultValue) {
+  return typeof num === "number" ? num : defaultValue;
+};
+var handleCallback = function(context, event, callback) {
+  if (callback && typeof callback === "function") {
+    callback(context, event);
+  }
+};
+var easeOut = function(t5) {
+  return -Math.cos(t5 * Math.PI) / 2 + 0.5;
+};
+var linear = function(t5) {
+  return t5;
+};
+var easeInQuad = function(t5) {
+  return t5 * t5;
+};
+var easeOutQuad = function(t5) {
+  return t5 * (2 - t5);
+};
+var easeInOutQuad = function(t5) {
+  return t5 < 0.5 ? 2 * t5 * t5 : -1 + (4 - 2 * t5) * t5;
+};
+var easeInCubic = function(t5) {
+  return t5 * t5 * t5;
+};
+var easeOutCubic = function(t5) {
+  return --t5 * t5 * t5 + 1;
+};
+var easeInOutCubic = function(t5) {
+  return t5 < 0.5 ? 4 * t5 * t5 * t5 : (t5 - 1) * (2 * t5 - 2) * (2 * t5 - 2) + 1;
+};
+var easeInQuart = function(t5) {
+  return t5 * t5 * t5 * t5;
+};
+var easeOutQuart = function(t5) {
+  return 1 - --t5 * t5 * t5 * t5;
+};
+var easeInOutQuart = function(t5) {
+  return t5 < 0.5 ? 8 * t5 * t5 * t5 * t5 : 1 - 8 * --t5 * t5 * t5 * t5;
+};
+var easeInQuint = function(t5) {
+  return t5 * t5 * t5 * t5 * t5;
+};
+var easeOutQuint = function(t5) {
+  return 1 + --t5 * t5 * t5 * t5 * t5;
+};
+var easeInOutQuint = function(t5) {
+  return t5 < 0.5 ? 16 * t5 * t5 * t5 * t5 * t5 : 1 + 16 * --t5 * t5 * t5 * t5 * t5;
+};
+var animations = {
+  easeOut,
+  linear,
+  easeInQuad,
+  easeOutQuad,
+  easeInOutQuad,
+  easeInCubic,
+  easeOutCubic,
+  easeInOutCubic,
+  easeInQuart,
+  easeOutQuart,
+  easeInOutQuart,
+  easeInQuint,
+  easeOutQuint,
+  easeInOutQuint
+};
+var handleCancelAnimationFrame = function(animation) {
+  if (typeof animation === "number") {
+    cancelAnimationFrame(animation);
+  }
+};
+var handleCancelAnimation = function(contextInstance) {
+  if (!contextInstance.mounted)
+    return;
+  handleCancelAnimationFrame(contextInstance.animation);
+  contextInstance.animate = false;
+  contextInstance.animation = null;
+  contextInstance.velocity = null;
+};
+function handleSetupAnimation(contextInstance, animationName, animationTime, callback) {
+  if (!contextInstance.mounted)
+    return;
+  var startTime = (/* @__PURE__ */ new Date()).getTime();
+  var lastStep = 1;
+  handleCancelAnimation(contextInstance);
+  contextInstance.animation = function() {
+    if (!contextInstance.mounted) {
+      return handleCancelAnimationFrame(contextInstance.animation);
+    }
+    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
+    var animationProgress = frameTime / animationTime;
+    var animationType = animations[animationName];
+    var step = animationType(animationProgress);
+    if (frameTime >= animationTime) {
+      callback(lastStep);
+      contextInstance.animation = null;
+    } else if (contextInstance.animation) {
+      callback(step);
+      requestAnimationFrame(contextInstance.animation);
+    }
+  };
+  requestAnimationFrame(contextInstance.animation);
+}
+function isValidTargetState(targetState) {
+  var scale = targetState.scale, positionX = targetState.positionX, positionY = targetState.positionY;
+  if (Number.isNaN(scale) || Number.isNaN(positionX) || Number.isNaN(positionY)) {
+    return false;
+  }
+  return true;
+}
+function animate(contextInstance, targetState, animationTime, animationName) {
+  var isValid = isValidTargetState(targetState);
+  if (!contextInstance.mounted || !isValid)
+    return;
+  var setTransformState = contextInstance.setTransformState;
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  var scaleDiff = targetState.scale - scale;
+  var positionXDiff = targetState.positionX - positionX;
+  var positionYDiff = targetState.positionY - positionY;
+  if (animationTime === 0) {
+    setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
+  } else {
+    handleSetupAnimation(contextInstance, animationName, animationTime, function(step) {
+      var newScale = scale + scaleDiff * step;
+      var newPositionX = positionX + positionXDiff * step;
+      var newPositionY = positionY + positionYDiff * step;
+      setTransformState(newScale, newPositionX, newPositionY);
+    });
+  }
+}
+function getComponentsSizes(wrapperComponent, contentComponent, newScale) {
+  var wrapperWidth = wrapperComponent.offsetWidth;
+  var wrapperHeight = wrapperComponent.offsetHeight;
+  var contentWidth = contentComponent.offsetWidth;
+  var contentHeight = contentComponent.offsetHeight;
+  var newContentWidth = contentWidth * newScale;
+  var newContentHeight = contentHeight * newScale;
+  var newDiffWidth = wrapperWidth - newContentWidth;
+  var newDiffHeight = wrapperHeight - newContentHeight;
+  return {
+    wrapperWidth,
+    wrapperHeight,
+    newContentWidth,
+    newDiffWidth,
+    newContentHeight,
+    newDiffHeight
+  };
+}
+var getBounds = function(wrapperWidth, newContentWidth, diffWidth, wrapperHeight, newContentHeight, diffHeight, centerZoomedOut) {
+  var scaleWidthFactor = wrapperWidth > newContentWidth ? diffWidth * (centerZoomedOut ? 1 : 0.5) : 0;
+  var scaleHeightFactor = wrapperHeight > newContentHeight ? diffHeight * (centerZoomedOut ? 1 : 0.5) : 0;
+  var minPositionX = wrapperWidth - newContentWidth - scaleWidthFactor;
+  var maxPositionX = scaleWidthFactor;
+  var minPositionY = wrapperHeight - newContentHeight - scaleHeightFactor;
+  var maxPositionY = scaleHeightFactor;
+  return { minPositionX, maxPositionX, minPositionY, maxPositionY };
+};
+var calculateBounds = function(contextInstance, newScale) {
+  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+  var centerZoomedOut = contextInstance.setup.centerZoomedOut;
+  if (!wrapperComponent || !contentComponent) {
+    throw new Error("Components are not mounted");
+  }
+  var _a2 = getComponentsSizes(wrapperComponent, contentComponent, newScale), wrapperWidth = _a2.wrapperWidth, wrapperHeight = _a2.wrapperHeight, newContentWidth = _a2.newContentWidth, newDiffWidth = _a2.newDiffWidth, newContentHeight = _a2.newContentHeight, newDiffHeight = _a2.newDiffHeight;
+  var bounds = getBounds(wrapperWidth, newContentWidth, newDiffWidth, wrapperHeight, newContentHeight, newDiffHeight, Boolean(centerZoomedOut));
+  return bounds;
+};
+var boundLimiter = function(value, minBound, maxBound, isActive) {
+  if (!isActive)
+    return roundNumber(value, 2);
+  if (value < minBound)
+    return roundNumber(minBound, 2);
+  if (value > maxBound)
+    return roundNumber(maxBound, 2);
+  return roundNumber(value, 2);
+};
+var handleCalculateBounds = function(contextInstance, newScale) {
+  var bounds = calculateBounds(contextInstance, newScale);
+  contextInstance.bounds = bounds;
+  return bounds;
+};
+function getMouseBoundedPosition(positionX, positionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent) {
+  var minPositionX = bounds.minPositionX, minPositionY = bounds.minPositionY, maxPositionX = bounds.maxPositionX, maxPositionY = bounds.maxPositionY;
+  var paddingX = 0;
+  var paddingY = 0;
+  if (wrapperComponent) {
+    paddingX = paddingValueX;
+    paddingY = paddingValueY;
+  }
+  var x2 = boundLimiter(positionX, minPositionX - paddingX, maxPositionX + paddingX, limitToBounds);
+  var y3 = boundLimiter(positionY, minPositionY - paddingY, maxPositionY + paddingY, limitToBounds);
+  return { x: x2, y: y3 };
+}
+function handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds) {
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  var scaleDifference = newScale - scale;
+  if (typeof mouseX !== "number" || typeof mouseY !== "number") {
+    console.error("Mouse X and Y position were not provided!");
+    return { x: positionX, y: positionY };
+  }
+  var calculatedPositionX = positionX - mouseX * scaleDifference;
+  var calculatedPositionY = positionY - mouseY * scaleDifference;
+  var newPositions = getMouseBoundedPosition(calculatedPositionX, calculatedPositionY, bounds, limitToBounds, 0, 0, null);
+  return newPositions;
+}
+function checkZoomBounds(zoom, minScale, maxScale, zoomPadding, enablePadding) {
+  var scalePadding = enablePadding ? zoomPadding : 0;
+  var minScaleWithPadding = minScale - scalePadding;
+  if (!Number.isNaN(maxScale) && zoom >= maxScale)
+    return maxScale;
+  if (!Number.isNaN(minScale) && zoom <= minScaleWithPadding)
+    return minScaleWithPadding;
+  return zoom;
+}
+var isPanningStartAllowed = function(contextInstance, event) {
+  var excluded = contextInstance.setup.panning.excluded;
+  var isInitialized = contextInstance.isInitialized, wrapperComponent = contextInstance.wrapperComponent;
+  var target = event.target;
+  var targetIsShadowDom = "shadowRoot" in target && "composedPath" in event;
+  var isWrapperChild = targetIsShadowDom ? event.composedPath().some(function(el) {
+    if (!(el instanceof Element)) {
+      return false;
+    }
+    return wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(el);
+  }) : wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
+  var isAllowed = isInitialized && target && isWrapperChild;
+  if (!isAllowed)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var isPanningAllowed = function(contextInstance) {
+  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning, setup = contextInstance.setup;
+  var disabled = setup.panning.disabled;
+  var isAllowed = isInitialized && isPanning && !disabled;
+  if (!isAllowed)
+    return false;
+  return true;
+};
+var handlePanningSetup = function(contextInstance, event) {
+  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
+  contextInstance.isPanning = true;
+  var x2 = event.clientX;
+  var y3 = event.clientY;
+  contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
+};
+var handleTouchPanningSetup = function(contextInstance, event) {
+  var touches = event.touches;
+  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
+  contextInstance.isPanning = true;
+  var oneFingerTouch = touches.length === 1;
+  if (oneFingerTouch) {
+    var x2 = touches[0].clientX;
+    var y3 = touches[0].clientY;
+    contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
+  }
+};
+function handlePanToBounds(contextInstance) {
+  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
+  var _b2 = contextInstance.setup, disabled = _b2.disabled, limitToBounds = _b2.limitToBounds, centerZoomedOut = _b2.centerZoomedOut;
+  var wrapperComponent = contextInstance.wrapperComponent;
+  if (disabled || !wrapperComponent || !contextInstance.bounds)
+    return;
+  var _c = contextInstance.bounds, maxPositionX = _c.maxPositionX, minPositionX = _c.minPositionX, maxPositionY = _c.maxPositionY, minPositionY = _c.minPositionY;
+  var xChanged = positionX > maxPositionX || positionX < minPositionX;
+  var yChanged = positionY > maxPositionY || positionY < minPositionY;
+  var mousePosX = positionX > maxPositionX ? wrapperComponent.offsetWidth : contextInstance.setup.minPositionX || 0;
+  var mousePosY = positionY > maxPositionY ? wrapperComponent.offsetHeight : contextInstance.setup.minPositionY || 0;
+  var _d = handleCalculateZoomPositions(contextInstance, mousePosX, mousePosY, scale, contextInstance.bounds, limitToBounds || centerZoomedOut), x2 = _d.x, y3 = _d.y;
+  return {
+    scale,
+    positionX: xChanged ? x2 : positionX,
+    positionY: yChanged ? y3 : positionY
+  };
+}
+function handleNewPosition(contextInstance, newPositionX, newPositionY, paddingValueX, paddingValueY) {
+  var limitToBounds = contextInstance.setup.limitToBounds;
+  var wrapperComponent = contextInstance.wrapperComponent, bounds = contextInstance.bounds;
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  if (wrapperComponent === null || bounds === null || newPositionX === positionX && newPositionY === positionY) {
+    return;
+  }
+  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
+  contextInstance.setTransformState(scale, x2, y3);
+}
+var getPanningClientPosition = function(contextInstance, clientX, clientY) {
+  var startCoords = contextInstance.startCoords, transformState = contextInstance.transformState;
+  var panning = contextInstance.setup.panning;
+  var lockAxisX = panning.lockAxisX, lockAxisY = panning.lockAxisY;
+  var positionX = transformState.positionX, positionY = transformState.positionY;
+  if (!startCoords) {
+    return { x: positionX, y: positionY };
+  }
+  var mouseX = clientX - startCoords.x;
+  var mouseY = clientY - startCoords.y;
+  var newPositionX = lockAxisX ? positionX : mouseX;
+  var newPositionY = lockAxisY ? positionY : mouseY;
+  return { x: newPositionX, y: newPositionY };
+};
+var getPaddingValue = function(contextInstance, size) {
+  var setup = contextInstance.setup, transformState = contextInstance.transformState;
+  var scale = transformState.scale;
+  var minScale = setup.minScale, disablePadding = setup.disablePadding;
+  if (size > 0 && scale >= minScale && !disablePadding) {
+    return size;
+  }
+  return 0;
+};
+var isVelocityCalculationAllowed = function(contextInstance) {
+  var mounted = contextInstance.mounted;
+  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
+  var scale = contextInstance.transformState.scale;
+  var disabledVelocity = velocityAnimation.disabled;
+  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
+  if (!isAllowed)
+    return false;
+  return true;
+};
+var isVelocityAllowed = function(contextInstance) {
+  var mounted = contextInstance.mounted, velocity = contextInstance.velocity, bounds = contextInstance.bounds;
+  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
+  var scale = contextInstance.transformState.scale;
+  var disabledVelocity = velocityAnimation.disabled;
+  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
+  if (!isAllowed)
+    return false;
+  if (!velocity || !bounds)
+    return false;
+  return true;
+};
+function getVelocityMoveTime(contextInstance, velocity) {
+  var velocityAnimation = contextInstance.setup.velocityAnimation;
+  var equalToMove = velocityAnimation.equalToMove, animationTime = velocityAnimation.animationTime, sensitivity = velocityAnimation.sensitivity;
+  if (equalToMove) {
+    return animationTime * velocity * sensitivity;
+  }
+  return animationTime;
+}
+function getVelocityPosition(newPosition, startPosition, currentPosition, isLocked, limitToBounds, minPosition, maxPosition, minTarget, maxTarget, step) {
+  if (limitToBounds) {
+    if (startPosition > maxPosition && currentPosition > maxPosition) {
+      var calculatedPosition = maxPosition + (newPosition - maxPosition) * step;
+      if (calculatedPosition > maxTarget)
+        return maxTarget;
+      if (calculatedPosition < maxPosition)
+        return maxPosition;
+      return calculatedPosition;
+    }
+    if (startPosition < minPosition && currentPosition < minPosition) {
+      var calculatedPosition = minPosition + (newPosition - minPosition) * step;
+      if (calculatedPosition < minTarget)
+        return minTarget;
+      if (calculatedPosition > minPosition)
+        return minPosition;
+      return calculatedPosition;
+    }
+  }
+  if (isLocked)
+    return startPosition;
+  return boundLimiter(newPosition, minPosition, maxPosition, limitToBounds);
+}
+function getSizeMultiplier(wrapperComponent, equalToMove) {
+  var defaultMultiplier = 1;
+  if (equalToMove) {
+    return Math.min(defaultMultiplier, wrapperComponent.offsetWidth / window.innerWidth);
+  }
+  return defaultMultiplier;
+}
+function handleCalculateVelocity(contextInstance, position) {
+  var isAllowed = isVelocityCalculationAllowed(contextInstance);
+  if (!isAllowed) {
+    return;
+  }
+  var lastMousePosition = contextInstance.lastMousePosition, velocityTime = contextInstance.velocityTime, setup = contextInstance.setup;
+  var wrapperComponent = contextInstance.wrapperComponent;
+  var equalToMove = setup.velocityAnimation.equalToMove;
+  var now = Date.now();
+  if (lastMousePosition && velocityTime && wrapperComponent) {
+    var sizeMultiplier = getSizeMultiplier(wrapperComponent, equalToMove);
+    var distanceX = position.x - lastMousePosition.x;
+    var distanceY = position.y - lastMousePosition.y;
+    var velocityX = distanceX / sizeMultiplier;
+    var velocityY = distanceY / sizeMultiplier;
+    var interval = now - velocityTime;
+    var speed = distanceX * distanceX + distanceY * distanceY;
+    var velocity = Math.sqrt(speed) / interval;
+    contextInstance.velocity = { velocityX, velocityY, total: velocity };
+  }
+  contextInstance.lastMousePosition = position;
+  contextInstance.velocityTime = now;
+}
+function handleVelocityPanning(contextInstance) {
+  var velocity = contextInstance.velocity, bounds = contextInstance.bounds, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
+  var isAllowed = isVelocityAllowed(contextInstance);
+  if (!isAllowed || !velocity || !bounds || !wrapperComponent) {
+    return;
+  }
+  var velocityX = velocity.velocityX, velocityY = velocity.velocityY, total = velocity.total;
+  var maxPositionX = bounds.maxPositionX, minPositionX = bounds.minPositionX, maxPositionY = bounds.maxPositionY, minPositionY = bounds.minPositionY;
+  var limitToBounds = setup.limitToBounds, alignmentAnimation = setup.alignmentAnimation;
+  var zoomAnimation = setup.zoomAnimation, panning = setup.panning;
+  var lockAxisY = panning.lockAxisY, lockAxisX = panning.lockAxisX;
+  var animationType = zoomAnimation.animationType;
+  var sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, velocityAlignmentTime = alignmentAnimation.velocityAlignmentTime;
+  var alignAnimationTime = velocityAlignmentTime;
+  var moveAnimationTime = getVelocityMoveTime(contextInstance, total);
+  var finalAnimationTime = Math.max(moveAnimationTime, alignAnimationTime);
+  var paddingValueX = getPaddingValue(contextInstance, sizeX);
+  var paddingValueY = getPaddingValue(contextInstance, sizeY);
+  var paddingX = paddingValueX * wrapperComponent.offsetWidth / 100;
+  var paddingY = paddingValueY * wrapperComponent.offsetHeight / 100;
+  var maxTargetX = maxPositionX + paddingX;
+  var minTargetX = minPositionX - paddingX;
+  var maxTargetY = maxPositionY + paddingY;
+  var minTargetY = minPositionY - paddingY;
+  var startState = contextInstance.transformState;
+  var startTime = (/* @__PURE__ */ new Date()).getTime();
+  handleSetupAnimation(contextInstance, animationType, finalAnimationTime, function(step) {
+    var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
+    var animationProgress = frameTime / alignAnimationTime;
+    var alignAnimation = animations[alignmentAnimation.animationType];
+    var alignStep = 1 - alignAnimation(Math.min(1, animationProgress));
+    var customStep = 1 - step;
+    var newPositionX = positionX + velocityX * customStep;
+    var newPositionY = positionY + velocityY * customStep;
+    var currentPositionX = getVelocityPosition(newPositionX, startState.positionX, positionX, lockAxisX, limitToBounds, minPositionX, maxPositionX, minTargetX, maxTargetX, alignStep);
+    var currentPositionY = getVelocityPosition(newPositionY, startState.positionY, positionY, lockAxisY, limitToBounds, minPositionY, maxPositionY, minTargetY, maxTargetY, alignStep);
+    if (positionX !== newPositionX || positionY !== newPositionY) {
+      contextInstance.setTransformState(scale, currentPositionX, currentPositionY);
+    }
+  });
+}
+function handlePanningStart(contextInstance, event) {
+  var scale = contextInstance.transformState.scale;
+  handleCancelAnimation(contextInstance);
+  handleCalculateBounds(contextInstance, scale);
+  if (window.TouchEvent !== void 0 && event instanceof TouchEvent) {
+    handleTouchPanningSetup(contextInstance, event);
+  } else {
+    handlePanningSetup(contextInstance, event);
+  }
+}
+function handleAlignToBounds(contextInstance) {
+  var scale = contextInstance.transformState.scale;
+  var _a2 = contextInstance.setup, minScale = _a2.minScale, alignmentAnimation = _a2.alignmentAnimation;
+  var disabled = alignmentAnimation.disabled, sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, animationTime = alignmentAnimation.animationTime, animationType = alignmentAnimation.animationType;
+  var isDisabled = disabled || scale < minScale || !sizeX && !sizeY;
+  if (isDisabled)
+    return;
+  var targetState = handlePanToBounds(contextInstance);
+  if (targetState) {
+    animate(contextInstance, targetState, animationTime, animationType);
+  }
+}
+function handlePanning(contextInstance, clientX, clientY) {
+  var startCoords = contextInstance.startCoords, setup = contextInstance.setup;
+  var _a2 = setup.alignmentAnimation, sizeX = _a2.sizeX, sizeY = _a2.sizeY;
+  if (!startCoords)
+    return;
+  var _b2 = getPanningClientPosition(contextInstance, clientX, clientY), x2 = _b2.x, y3 = _b2.y;
+  var paddingValueX = getPaddingValue(contextInstance, sizeX);
+  var paddingValueY = getPaddingValue(contextInstance, sizeY);
+  handleCalculateVelocity(contextInstance, { x: x2, y: y3 });
+  handleNewPosition(contextInstance, x2, y3, paddingValueX, paddingValueY);
+}
+function handlePanningEnd(contextInstance) {
+  if (contextInstance.isPanning) {
+    var velocityDisabled = contextInstance.setup.panning.velocityDisabled;
+    var velocity = contextInstance.velocity, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+    contextInstance.isPanning = false;
+    contextInstance.animate = false;
+    contextInstance.animation = null;
+    var wrapperRect = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.getBoundingClientRect();
+    var contentRect = contentComponent === null || contentComponent === void 0 ? void 0 : contentComponent.getBoundingClientRect();
+    var wrapperWidth = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.width) || 0;
+    var wrapperHeight = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.height) || 0;
+    var contentWidth = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.width) || 0;
+    var contentHeight = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.height) || 0;
+    var isZoomed = wrapperWidth < contentWidth || wrapperHeight < contentHeight;
+    var shouldAnimate = !velocityDisabled && velocity && (velocity === null || velocity === void 0 ? void 0 : velocity.total) > 0.1 && isZoomed;
+    if (shouldAnimate) {
+      handleVelocityPanning(contextInstance);
+    } else {
+      handleAlignToBounds(contextInstance);
+    }
+  }
+}
+function handleZoomToPoint(contextInstance, scale, mouseX, mouseY) {
+  var _a2 = contextInstance.setup, minScale = _a2.minScale, maxScale = _a2.maxScale, limitToBounds = _a2.limitToBounds;
+  var newScale = checkZoomBounds(roundNumber(scale, 2), minScale, maxScale, 0, false);
+  var bounds = handleCalculateBounds(contextInstance, newScale);
+  var _b2 = handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds), x2 = _b2.x, y3 = _b2.y;
+  return { scale: newScale, positionX: x2, positionY: y3 };
+}
+function handleAlignToScaleBounds(contextInstance, mousePositionX, mousePositionY) {
+  var scale = contextInstance.transformState.scale;
+  var wrapperComponent = contextInstance.wrapperComponent;
+  var _a2 = contextInstance.setup, minScale = _a2.minScale, limitToBounds = _a2.limitToBounds, zoomAnimation = _a2.zoomAnimation;
+  var disabled = zoomAnimation.disabled, animationTime = zoomAnimation.animationTime, animationType = zoomAnimation.animationType;
+  var isDisabled = disabled || scale >= minScale;
+  if (scale >= 1 || limitToBounds) {
+    handleAlignToBounds(contextInstance);
+  }
+  if (isDisabled || !wrapperComponent || !contextInstance.mounted)
+    return;
+  var mouseX = mousePositionX || wrapperComponent.offsetWidth / 2;
+  var mouseY = mousePositionY || wrapperComponent.offsetHeight / 2;
+  var targetState = handleZoomToPoint(contextInstance, minScale, mouseX, mouseY);
+  if (targetState) {
+    animate(contextInstance, targetState, animationTime, animationType);
+  }
+}
+var __assign = function() {
+  __assign = Object.assign || function __assign2(t5) {
+    for (var s3, i4 = 1, n4 = arguments.length; i4 < n4; i4++) {
+      s3 = arguments[i4];
+      for (var p3 in s3)
+        if (Object.prototype.hasOwnProperty.call(s3, p3))
+          t5[p3] = s3[p3];
+    }
+    return t5;
+  };
+  return __assign.apply(this, arguments);
+};
+function __spreadArray(to, from, pack) {
+  if (pack || arguments.length === 2)
+    for (var i4 = 0, l3 = from.length, ar2; i4 < l3; i4++) {
+      if (ar2 || !(i4 in from)) {
+        if (!ar2)
+          ar2 = Array.prototype.slice.call(from, 0, i4);
+        ar2[i4] = from[i4];
+      }
+    }
+  return to.concat(ar2 || Array.prototype.slice.call(from));
+}
+var initialState = {
+  previousScale: 1,
+  scale: 1,
+  positionX: 0,
+  positionY: 0
+};
+var initialSetup = {
+  disabled: false,
+  minPositionX: null,
+  maxPositionX: null,
+  minPositionY: null,
+  maxPositionY: null,
+  minScale: 1,
+  maxScale: 8,
+  limitToBounds: true,
+  centerZoomedOut: false,
+  centerOnInit: false,
+  disablePadding: false,
+  smooth: true,
+  wheel: {
+    step: 0.2,
+    disabled: false,
+    smoothStep: 1e-3,
+    wheelDisabled: false,
+    touchPadDisabled: false,
+    activationKeys: [],
+    excluded: []
+  },
+  panning: {
+    disabled: false,
+    velocityDisabled: false,
+    lockAxisX: false,
+    lockAxisY: false,
+    allowLeftClickPan: true,
+    allowMiddleClickPan: true,
+    allowRightClickPan: true,
+    wheelPanning: false,
+    activationKeys: [],
+    excluded: []
+  },
+  pinch: {
+    step: 5,
+    disabled: false,
+    excluded: []
+  },
+  doubleClick: {
+    disabled: false,
+    step: 0.7,
+    mode: "zoomIn",
+    animationType: "easeOut",
+    animationTime: 200,
+    excluded: []
+  },
+  zoomAnimation: {
+    disabled: false,
+    size: 0.4,
+    animationTime: 200,
+    animationType: "easeOut"
+  },
+  alignmentAnimation: {
+    disabled: false,
+    sizeX: 100,
+    sizeY: 100,
+    animationTime: 200,
+    velocityAlignmentTime: 400,
+    animationType: "easeOut"
+  },
+  velocityAnimation: {
+    disabled: false,
+    sensitivity: 1,
+    animationTime: 400,
+    animationType: "easeOut",
+    equalToMove: true
+  }
+};
+var createState = function(props) {
+  var _a2, _b2, _c, _d;
+  return {
+    previousScale: (_a2 = props.initialScale) !== null && _a2 !== void 0 ? _a2 : initialState.scale,
+    scale: (_b2 = props.initialScale) !== null && _b2 !== void 0 ? _b2 : initialState.scale,
+    positionX: (_c = props.initialPositionX) !== null && _c !== void 0 ? _c : initialState.positionX,
+    positionY: (_d = props.initialPositionY) !== null && _d !== void 0 ? _d : initialState.positionY
+  };
+};
+var createSetup = function(props) {
+  var newSetup = __assign({}, initialSetup);
+  Object.keys(props).forEach(function(key) {
+    var validValue = typeof props[key] !== "undefined";
+    var validParameter = typeof initialSetup[key] !== "undefined";
+    if (validParameter && validValue) {
+      var dataType = Object.prototype.toString.call(initialSetup[key]);
+      var isObject = dataType === "[object Object]";
+      var isArray = dataType === "[object Array]";
+      if (isObject) {
+        newSetup[key] = __assign(__assign({}, initialSetup[key]), props[key]);
+      } else if (isArray) {
+        newSetup[key] = __spreadArray(__spreadArray([], initialSetup[key], true), props[key], true);
+      } else {
+        newSetup[key] = props[key];
+      }
+    }
+  });
+  return newSetup;
+};
+var handleCalculateButtonZoom = function(contextInstance, delta, step) {
+  var scale = contextInstance.transformState.scale;
+  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
+  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, smooth = setup.smooth;
+  var size = zoomAnimation.size;
+  if (!wrapperComponent) {
+    throw new Error("Wrapper is not mounted");
+  }
+  var targetScale = smooth ? scale * Math.exp(delta * step) : scale + delta * step;
+  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, false);
+  return newScale;
+};
+function handleZoomToViewCenter(contextInstance, delta, step, animationTime, animationType) {
+  var wrapperComponent = contextInstance.wrapperComponent;
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  if (!wrapperComponent)
+    return console.error("No WrapperComponent found");
+  var wrapperWidth = wrapperComponent.offsetWidth;
+  var wrapperHeight = wrapperComponent.offsetHeight;
+  var mouseX = (wrapperWidth / 2 - positionX) / scale;
+  var mouseY = (wrapperHeight / 2 - positionY) / scale;
+  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
+  var targetState = handleZoomToPoint(contextInstance, newScale, mouseX, mouseY);
+  if (!targetState) {
+    return console.error("Error during zoom event. New transformation state was not calculated.");
+  }
+  animate(contextInstance, targetState, animationTime, animationType);
+}
+function resetTransformations(contextInstance, animationTime, animationType, onResetTransformation) {
+  var setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
+  var limitToBounds = setup.limitToBounds;
+  var initialTransformation = createState(contextInstance.props);
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  if (!wrapperComponent)
+    return;
+  var newBounds = calculateBounds(contextInstance, initialTransformation.scale);
+  var boundedPositions = getMouseBoundedPosition(initialTransformation.positionX, initialTransformation.positionY, newBounds, limitToBounds, 0, 0, wrapperComponent);
+  var newState = {
+    scale: initialTransformation.scale,
+    positionX: boundedPositions.x,
+    positionY: boundedPositions.y
+  };
+  if (scale === initialTransformation.scale && positionX === initialTransformation.positionX && positionY === initialTransformation.positionY) {
+    return;
+  }
+  onResetTransformation === null || onResetTransformation === void 0 ? void 0 : onResetTransformation();
+  animate(contextInstance, newState, animationTime, animationType);
+}
+function getOffset(element, wrapper, content, state) {
+  var offset = element.getBoundingClientRect();
+  var wrapperOffset = wrapper.getBoundingClientRect();
+  var contentOffset = content.getBoundingClientRect();
+  var xOff = wrapperOffset.x * state.scale;
+  var yOff = wrapperOffset.y * state.scale;
+  return {
+    x: (offset.x - contentOffset.x + xOff) / state.scale,
+    y: (offset.y - contentOffset.y + yOff) / state.scale
+  };
+}
+function calculateZoomToNode(contextInstance, node2, customZoom) {
+  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent, transformState = contextInstance.transformState;
+  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, minScale = _a2.minScale, maxScale = _a2.maxScale;
+  if (!wrapperComponent || !contentComponent)
+    return transformState;
+  var wrapperRect = wrapperComponent.getBoundingClientRect();
+  var nodeRect = node2.getBoundingClientRect();
+  var nodeOffset = getOffset(node2, wrapperComponent, contentComponent, transformState);
+  var nodeLeft = nodeOffset.x;
+  var nodeTop = nodeOffset.y;
+  var nodeWidth = nodeRect.width / transformState.scale;
+  var nodeHeight = nodeRect.height / transformState.scale;
+  var scaleX = wrapperComponent.offsetWidth / nodeWidth;
+  var scaleY = wrapperComponent.offsetHeight / nodeHeight;
+  var newScale = checkZoomBounds(customZoom || Math.min(scaleX, scaleY), minScale, maxScale, 0, false);
+  var offsetX = (wrapperRect.width - nodeWidth * newScale) / 2;
+  var offsetY = (wrapperRect.height - nodeHeight * newScale) / 2;
+  var newPositionX = (wrapperRect.left - nodeLeft) * newScale + offsetX;
+  var newPositionY = (wrapperRect.top - nodeTop) * newScale + offsetY;
+  var bounds = calculateBounds(contextInstance, newScale);
+  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, 0, 0, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
+  return { positionX: x2, positionY: y3, scale: newScale };
+}
+var zoomIn = function(contextInstance) {
+  return function(step, animationTime, animationType) {
+    if (step === void 0) {
+      step = 0.5;
+    }
+    if (animationTime === void 0) {
+      animationTime = 300;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    handleZoomToViewCenter(contextInstance, 1, step, animationTime, animationType);
+  };
+};
+var zoomOut = function(contextInstance) {
+  return function(step, animationTime, animationType) {
+    if (step === void 0) {
+      step = 0.5;
+    }
+    if (animationTime === void 0) {
+      animationTime = 300;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    handleZoomToViewCenter(contextInstance, -1, step, animationTime, animationType);
+  };
+};
+var setTransform = function(contextInstance) {
+  return function(newPositionX, newPositionY, newScale, animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 300;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
+    var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+    var disabled = contextInstance.setup.disabled;
+    if (disabled || !wrapperComponent || !contentComponent)
+      return;
+    var targetState = {
+      positionX: Number.isNaN(newPositionX) ? positionX : newPositionX,
+      positionY: Number.isNaN(newPositionY) ? positionY : newPositionY,
+      scale: Number.isNaN(newScale) ? scale : newScale
+    };
+    animate(contextInstance, targetState, animationTime, animationType);
+  };
+};
+var resetTransform = function(contextInstance) {
+  return function(animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 200;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    resetTransformations(contextInstance, animationTime, animationType);
+  };
+};
+var centerView = function(contextInstance) {
+  return function(scale, animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 200;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    var transformState = contextInstance.transformState, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+    if (wrapperComponent && contentComponent) {
+      var targetState = getCenterPosition(scale || transformState.scale, wrapperComponent, contentComponent);
+      animate(contextInstance, targetState, animationTime, animationType);
+    }
+  };
+};
+var zoomToElement = function(contextInstance) {
+  return function(node2, scale, animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 600;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    handleCancelAnimation(contextInstance);
+    var wrapperComponent = contextInstance.wrapperComponent;
+    var target = typeof node2 === "string" ? document.getElementById(node2) : node2;
+    if (wrapperComponent && target && wrapperComponent.contains(target)) {
+      var targetState = calculateZoomToNode(contextInstance, target, scale);
+      animate(contextInstance, targetState, animationTime, animationType);
+    }
+  };
+};
+var getControls = function(contextInstance) {
+  return {
+    instance: contextInstance,
+    zoomIn: zoomIn(contextInstance),
+    zoomOut: zoomOut(contextInstance),
+    setTransform: setTransform(contextInstance),
+    resetTransform: resetTransform(contextInstance),
+    centerView: centerView(contextInstance),
+    zoomToElement: zoomToElement(contextInstance)
+  };
+};
+var getState = function(contextInstance) {
+  return {
+    instance: contextInstance,
+    state: contextInstance.transformState
+  };
+};
+var getContext = function(contextInstance) {
+  var ref = {};
+  Object.assign(ref, getState(contextInstance));
+  Object.assign(ref, getControls(contextInstance));
+  return ref;
+};
+var passiveSupported = false;
+function makePassiveEventOption() {
+  try {
+    var options = {
+      get passive() {
+        passiveSupported = true;
+        return false;
+      }
+    };
+    return options;
+  } catch (err) {
+    passiveSupported = false;
+    return passiveSupported;
+  }
+}
+var isExcludedNode = function(node2, excluded) {
+  return excluded.some(function(exclude) {
+    return node2.matches("".concat(exclude, ", .").concat(exclude, ", ").concat(exclude, " *, .").concat(exclude, " *"));
+  });
+};
+var cancelTimeout = function(timeout) {
+  if (timeout) {
+    clearTimeout(timeout);
+  }
+};
+var getTransformStyles = function(x2, y3, scale) {
+  return "translate(".concat(x2, "px, ").concat(y3, "px) scale(").concat(scale, ")");
+};
+var getCenterPosition = function(scale, wrapperComponent, contentComponent) {
+  var contentWidth = contentComponent.offsetWidth * scale;
+  var contentHeight = contentComponent.offsetHeight * scale;
+  var centerPositionX = (wrapperComponent.offsetWidth - contentWidth) / 2;
+  var centerPositionY = (wrapperComponent.offsetHeight - contentHeight) / 2;
+  return {
+    scale,
+    positionX: centerPositionX,
+    positionY: centerPositionY
+  };
+};
+function mergeRefs(refs) {
+  return function(value) {
+    refs.forEach(function(ref) {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        ref.current = value;
+      }
+    });
+  };
+}
+var isWheelAllowed = function(contextInstance, event) {
+  var _a2 = contextInstance.setup.wheel, disabled = _a2.disabled, wheelDisabled = _a2.wheelDisabled, touchPadDisabled = _a2.touchPadDisabled, excluded = _a2.excluded;
+  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning;
+  var target = event.target;
+  var isAllowed = isInitialized && !isPanning && !disabled && target;
+  if (!isAllowed)
+    return false;
+  if (wheelDisabled && !event.ctrlKey)
+    return false;
+  if (touchPadDisabled && event.ctrlKey)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var getDeltaY = function(event) {
+  if (event) {
+    return event.deltaY < 0 ? 1 : -1;
+  }
+  return 0;
+};
+function getDelta(event, customDelta) {
+  var deltaY = getDeltaY(event);
+  var delta = checkIsNumber(customDelta, deltaY);
+  return delta;
+}
+function getMousePosition(event, contentComponent, scale) {
+  var contentRect = contentComponent.getBoundingClientRect();
+  var mouseX = 0;
+  var mouseY = 0;
+  if ("clientX" in event) {
+    mouseX = (event.clientX - contentRect.left) / scale;
+    mouseY = (event.clientY - contentRect.top) / scale;
+  } else {
+    var touch = event.touches[0];
+    mouseX = (touch.clientX - contentRect.left) / scale;
+    mouseY = (touch.clientY - contentRect.top) / scale;
+  }
+  if (Number.isNaN(mouseX) || Number.isNaN(mouseY))
+    console.error("No mouse or touch offset found");
+  return {
+    x: mouseX,
+    y: mouseY
+  };
+}
+var handleCalculateWheelZoom = function(contextInstance, delta, step, disable, getTarget) {
+  var scale = contextInstance.transformState.scale;
+  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
+  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
+  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
+  if (!wrapperComponent) {
+    throw new Error("Wrapper is not mounted");
+  }
+  var targetScale = scale + delta * step;
+  if (getTarget)
+    return targetScale;
+  var paddingEnabled = disable ? false : !disabled;
+  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, paddingEnabled && !disablePadding);
+  return newScale;
+};
+var handleWheelZoomStop = function(contextInstance, event) {
+  var previousWheelEvent = contextInstance.previousWheelEvent;
+  var scale = contextInstance.transformState.scale;
+  var _a2 = contextInstance.setup, maxScale = _a2.maxScale, minScale = _a2.minScale;
+  if (!previousWheelEvent)
+    return false;
+  if (scale < maxScale || scale > minScale)
+    return true;
+  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
+    return true;
+  if (previousWheelEvent.deltaY > 0 && previousWheelEvent.deltaY < event.deltaY)
+    return true;
+  if (previousWheelEvent.deltaY < 0 && previousWheelEvent.deltaY > event.deltaY)
+    return true;
+  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
+    return true;
+  return false;
+};
+var isPinchStartAllowed = function(contextInstance, event) {
+  var _a2 = contextInstance.setup.pinch, disabled = _a2.disabled, excluded = _a2.excluded;
+  var isInitialized = contextInstance.isInitialized;
+  var target = event.target;
+  var isAllowed = isInitialized && !disabled && target;
+  if (!isAllowed)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var isPinchAllowed = function(contextInstance) {
+  var disabled = contextInstance.setup.pinch.disabled;
+  var isInitialized = contextInstance.isInitialized, pinchStartDistance = contextInstance.pinchStartDistance;
+  var isAllowed = isInitialized && !disabled && pinchStartDistance;
+  if (!isAllowed)
+    return false;
+  return true;
+};
+var calculateTouchMidPoint = function(event, scale, contentComponent) {
+  var contentRect = contentComponent.getBoundingClientRect();
+  var touches = event.touches;
+  var firstPointX = roundNumber(touches[0].clientX - contentRect.left, 5);
+  var firstPointY = roundNumber(touches[0].clientY - contentRect.top, 5);
+  var secondPointX = roundNumber(touches[1].clientX - contentRect.left, 5);
+  var secondPointY = roundNumber(touches[1].clientY - contentRect.top, 5);
+  return {
+    x: (firstPointX + secondPointX) / 2 / scale,
+    y: (firstPointY + secondPointY) / 2 / scale
+  };
+};
+var getTouchDistance = function(event) {
+  return Math.sqrt(Math.pow(event.touches[0].pageX - event.touches[1].pageX, 2) + Math.pow(event.touches[0].pageY - event.touches[1].pageY, 2));
+};
+var calculatePinchZoom = function(contextInstance, currentDistance) {
+  var pinchStartScale = contextInstance.pinchStartScale, pinchStartDistance = contextInstance.pinchStartDistance, setup = contextInstance.setup;
+  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
+  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
+  if (!pinchStartScale || pinchStartDistance === null || !currentDistance) {
+    throw new Error("Pinch touches distance was not provided");
+  }
+  if (currentDistance < 0) {
+    return contextInstance.transformState.scale;
+  }
+  var touchProportion = currentDistance / pinchStartDistance;
+  var scaleDifference = touchProportion * pinchStartScale;
+  return checkZoomBounds(roundNumber(scaleDifference, 2), minScale, maxScale, size, !disabled && !disablePadding);
+};
+var wheelStopEventTime = 160;
+var wheelAnimationTime = 100;
+var handleWheelStart = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onWheelStart = _a2.onWheelStart, onZoomStart = _a2.onZoomStart;
+  if (!contextInstance.wheelStopEventTimer) {
+    handleCancelAnimation(contextInstance);
+    handleCallback(getContext(contextInstance), event, onWheelStart);
+    handleCallback(getContext(contextInstance), event, onZoomStart);
+  }
+};
+var handleWheelZoom = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onWheel = _a2.onWheel, onZoom = _a2.onZoom;
+  var contentComponent = contextInstance.contentComponent, setup = contextInstance.setup, transformState = contextInstance.transformState;
+  var scale = transformState.scale;
+  var limitToBounds = setup.limitToBounds, centerZoomedOut = setup.centerZoomedOut, zoomAnimation = setup.zoomAnimation, wheel = setup.wheel, disablePadding = setup.disablePadding, smooth = setup.smooth;
+  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
+  var step = wheel.step, smoothStep = wheel.smoothStep;
+  if (!contentComponent) {
+    throw new Error("Component not mounted");
+  }
+  event.preventDefault();
+  event.stopPropagation();
+  var delta = getDelta(event, null);
+  var zoomStep = smooth ? smoothStep * Math.abs(event.deltaY) : step;
+  var newScale = handleCalculateWheelZoom(contextInstance, delta, zoomStep, !event.ctrlKey);
+  if (scale === newScale)
+    return;
+  var bounds = handleCalculateBounds(contextInstance, newScale);
+  var mousePosition = getMousePosition(event, contentComponent, scale);
+  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut || disablePadding;
+  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
+  var _b2 = handleCalculateZoomPositions(contextInstance, mousePosition.x, mousePosition.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
+  contextInstance.previousWheelEvent = event;
+  contextInstance.setTransformState(newScale, x2, y3);
+  handleCallback(getContext(contextInstance), event, onWheel);
+  handleCallback(getContext(contextInstance), event, onZoom);
+};
+var handleWheelStop = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onWheelStop = _a2.onWheelStop, onZoomStop = _a2.onZoomStop;
+  cancelTimeout(contextInstance.wheelAnimationTimer);
+  contextInstance.wheelAnimationTimer = setTimeout(function() {
+    if (!contextInstance.mounted)
+      return;
+    handleAlignToScaleBounds(contextInstance, event.x, event.y);
+    contextInstance.wheelAnimationTimer = null;
+  }, wheelAnimationTime);
+  var hasStoppedZooming = handleWheelZoomStop(contextInstance, event);
+  if (hasStoppedZooming) {
+    cancelTimeout(contextInstance.wheelStopEventTimer);
+    contextInstance.wheelStopEventTimer = setTimeout(function() {
+      if (!contextInstance.mounted)
+        return;
+      contextInstance.wheelStopEventTimer = null;
+      handleCallback(getContext(contextInstance), event, onWheelStop);
+      handleCallback(getContext(contextInstance), event, onZoomStop);
+    }, wheelStopEventTime);
+  }
+};
+var handlePinchStart = function(contextInstance, event) {
+  var distance = getTouchDistance(event);
+  contextInstance.pinchStartDistance = distance;
+  contextInstance.lastDistance = distance;
+  contextInstance.pinchStartScale = contextInstance.transformState.scale;
+  contextInstance.isPanning = false;
+  handleCancelAnimation(contextInstance);
+};
+var handlePinchZoom = function(contextInstance, event) {
+  var contentComponent = contextInstance.contentComponent, pinchStartDistance = contextInstance.pinchStartDistance;
+  var scale = contextInstance.transformState.scale;
+  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, centerZoomedOut = _a2.centerZoomedOut, zoomAnimation = _a2.zoomAnimation;
+  var disabled = zoomAnimation.disabled, size = zoomAnimation.size;
+  if (pinchStartDistance === null || !contentComponent)
+    return;
+  var midPoint = calculateTouchMidPoint(event, scale, contentComponent);
+  if (!Number.isFinite(midPoint.x) || !Number.isFinite(midPoint.y))
+    return;
+  var currentDistance = getTouchDistance(event);
+  var newScale = calculatePinchZoom(contextInstance, currentDistance);
+  if (newScale === scale)
+    return;
+  var bounds = handleCalculateBounds(contextInstance, newScale);
+  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut;
+  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
+  var _b2 = handleCalculateZoomPositions(contextInstance, midPoint.x, midPoint.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
+  contextInstance.pinchMidpoint = midPoint;
+  contextInstance.lastDistance = currentDistance;
+  contextInstance.setTransformState(newScale, x2, y3);
+};
+var handlePinchStop = function(contextInstance) {
+  var pinchMidpoint = contextInstance.pinchMidpoint;
+  contextInstance.velocity = null;
+  contextInstance.lastDistance = null;
+  contextInstance.pinchMidpoint = null;
+  contextInstance.pinchStartScale = null;
+  contextInstance.pinchStartDistance = null;
+  handleAlignToScaleBounds(contextInstance, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.x, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.y);
+};
+var handleDoubleClickStop = function(contextInstance, event) {
+  var onZoomStop = contextInstance.props.onZoomStop;
+  var animationTime = contextInstance.setup.doubleClick.animationTime;
+  cancelTimeout(contextInstance.doubleClickStopEventTimer);
+  contextInstance.doubleClickStopEventTimer = setTimeout(function() {
+    contextInstance.doubleClickStopEventTimer = null;
+    handleCallback(getContext(contextInstance), event, onZoomStop);
+  }, animationTime);
+};
+var handleDoubleClickResetMode = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
+  var _b2 = contextInstance.setup.doubleClick, animationTime = _b2.animationTime, animationType = _b2.animationType;
+  handleCallback(getContext(contextInstance), event, onZoomStart);
+  resetTransformations(contextInstance, animationTime, animationType, function() {
+    return handleCallback(getContext(contextInstance), event, onZoom);
+  });
+  handleDoubleClickStop(contextInstance, event);
+};
+function getDoubleClickScale(mode, scale) {
+  if (mode === "toggle") {
+    return scale === 1 ? 1 : -1;
+  }
+  return mode === "zoomOut" ? -1 : 1;
+}
+function handleDoubleClick(contextInstance, event) {
+  var setup = contextInstance.setup, doubleClickStopEventTimer = contextInstance.doubleClickStopEventTimer, transformState = contextInstance.transformState, contentComponent = contextInstance.contentComponent;
+  var scale = transformState.scale;
+  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
+  var _b2 = setup.doubleClick, disabled = _b2.disabled, mode = _b2.mode, step = _b2.step, animationTime = _b2.animationTime, animationType = _b2.animationType;
+  if (disabled)
+    return;
+  if (doubleClickStopEventTimer)
+    return;
+  if (mode === "reset") {
+    return handleDoubleClickResetMode(contextInstance, event);
+  }
+  if (!contentComponent)
+    return console.error("No ContentComponent found");
+  var delta = getDoubleClickScale(mode, contextInstance.transformState.scale);
+  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
+  if (scale === newScale)
+    return;
+  handleCallback(getContext(contextInstance), event, onZoomStart);
+  var mousePosition = getMousePosition(event, contentComponent, scale);
+  var targetState = handleZoomToPoint(contextInstance, newScale, mousePosition.x, mousePosition.y);
+  if (!targetState) {
+    return console.error("Error during zoom event. New transformation state was not calculated.");
+  }
+  handleCallback(getContext(contextInstance), event, onZoom);
+  animate(contextInstance, targetState, animationTime, animationType);
+  handleDoubleClickStop(contextInstance, event);
+}
+var isDoubleClickAllowed = function(contextInstance, event) {
+  var isInitialized = contextInstance.isInitialized, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
+  var _a2 = setup.doubleClick, disabled = _a2.disabled, excluded = _a2.excluded;
+  var target = event.target;
+  var isWrapperChild = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
+  var isAllowed = isInitialized && target && isWrapperChild && !disabled;
+  if (!isAllowed)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var ZoomPanPinch = (
+  /** @class */
+  /* @__PURE__ */ function() {
+    function ZoomPanPinch2(props) {
+      var _this = this;
+      this.mounted = true;
+      this.onChangeCallbacks = /* @__PURE__ */ new Set();
+      this.onInitCallbacks = /* @__PURE__ */ new Set();
+      this.wrapperComponent = null;
+      this.contentComponent = null;
+      this.isInitialized = false;
+      this.bounds = null;
+      this.previousWheelEvent = null;
+      this.wheelStopEventTimer = null;
+      this.wheelAnimationTimer = null;
+      this.isPanning = false;
+      this.isWheelPanning = false;
+      this.startCoords = null;
+      this.lastTouch = null;
+      this.distance = null;
+      this.lastDistance = null;
+      this.pinchStartDistance = null;
+      this.pinchStartScale = null;
+      this.pinchMidpoint = null;
+      this.doubleClickStopEventTimer = null;
+      this.velocity = null;
+      this.velocityTime = null;
+      this.lastMousePosition = null;
+      this.animate = false;
+      this.animation = null;
+      this.maxBounds = null;
+      this.pressedKeys = {};
+      this.mount = function() {
+        _this.initializeWindowEvents();
+      };
+      this.unmount = function() {
+        _this.cleanupWindowEvents();
+      };
+      this.update = function(newProps) {
+        _this.props = newProps;
+        handleCalculateBounds(_this, _this.transformState.scale);
+        _this.setup = createSetup(newProps);
+      };
+      this.initializeWindowEvents = function() {
+        var _a2, _b2;
+        var passive = makePassiveEventOption();
+        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
+        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
+        (_b2 = _this.wrapperComponent) === null || _b2 === void 0 ? void 0 : _b2.addEventListener("wheel", _this.onWheelPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousedown", _this.onPanningStart, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousemove", _this.onPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mouseup", _this.onPanningStop, passive);
+        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.addEventListener("mouseleave", _this.clearPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keyup", _this.setKeyUnPressed, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keydown", _this.setKeyPressed, passive);
+      };
+      this.cleanupWindowEvents = function() {
+        var _a2, _b2;
+        var passive = makePassiveEventOption();
+        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
+        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousedown", _this.onPanningStart, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousemove", _this.onPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mouseup", _this.onPanningStop, passive);
+        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.removeEventListener("mouseleave", _this.clearPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keyup", _this.setKeyUnPressed, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keydown", _this.setKeyPressed, passive);
+        document.removeEventListener("mouseleave", _this.clearPanning, passive);
+        handleCancelAnimation(_this);
+        (_b2 = _this.observer) === null || _b2 === void 0 ? void 0 : _b2.disconnect();
+      };
+      this.handleInitializeWrapperEvents = function(wrapper) {
+        var passive = makePassiveEventOption();
+        wrapper.addEventListener("wheel", _this.onWheelZoom, passive);
+        wrapper.addEventListener("dblclick", _this.onDoubleClick, passive);
+        wrapper.addEventListener("touchstart", _this.onTouchPanningStart, passive);
+        wrapper.addEventListener("touchmove", _this.onTouchPanning, passive);
+        wrapper.addEventListener("touchend", _this.onTouchPanningStop, passive);
+      };
+      this.handleInitialize = function(contentComponent) {
+        var centerOnInit = _this.setup.centerOnInit;
+        _this.applyTransformation();
+        _this.onInitCallbacks.forEach(function(callback) {
+          return callback(getContext(_this));
+        });
+        if (centerOnInit) {
+          _this.setCenter();
+          _this.observer = new ResizeObserver(function() {
+            var _a2;
+            var currentWidth = contentComponent.offsetWidth;
+            var currentHeight = contentComponent.offsetHeight;
+            if (currentWidth > 0 || currentHeight > 0) {
+              _this.onInitCallbacks.forEach(function(callback) {
+                return callback(getContext(_this));
+              });
+              _this.setCenter();
+              (_a2 = _this.observer) === null || _a2 === void 0 ? void 0 : _a2.disconnect();
+            }
+          });
+          setTimeout(function() {
+            var _a2;
+            (_a2 = _this.observer) === null || _a2 === void 0 ? void 0 : _a2.disconnect();
+          }, 5e3);
+          _this.observer.observe(contentComponent);
+        }
+      };
+      this.onWheelZoom = function(event) {
+        var disabled = _this.setup.disabled;
+        if (disabled)
+          return;
+        var isAllowed = isWheelAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        var keysPressed = _this.isPressingKeys(_this.setup.wheel.activationKeys);
+        if (!keysPressed)
+          return;
+        handleWheelStart(_this, event);
+        handleWheelZoom(_this, event);
+        handleWheelStop(_this, event);
+      };
+      this.onWheelPanning = function(event) {
+        var _a2 = _this.setup, disabled = _a2.disabled, wheel = _a2.wheel, panning = _a2.panning;
+        if (!_this.wrapperComponent || !_this.contentComponent || disabled || !wheel.wheelDisabled || panning.disabled || !panning.wheelPanning || event.ctrlKey) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        var _b2 = _this.transformState, positionX = _b2.positionX, positionY = _b2.positionY;
+        var mouseX = positionX - event.deltaX;
+        var mouseY = positionY - event.deltaY;
+        var newPositionX = panning.lockAxisX ? positionX : mouseX;
+        var newPositionY = panning.lockAxisY ? positionY : mouseY;
+        var _c = _this.setup.alignmentAnimation, sizeX = _c.sizeX, sizeY = _c.sizeY;
+        var paddingValueX = getPaddingValue(_this, sizeX);
+        var paddingValueY = getPaddingValue(_this, sizeY);
+        if (newPositionX === positionX && newPositionY === positionY)
+          return;
+        handleNewPosition(_this, newPositionX, newPositionY, paddingValueX, paddingValueY);
+      };
+      this.onPanningStart = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanningStart = _this.props.onPanningStart;
+        if (disabled)
+          return;
+        var isAllowed = isPanningStartAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
+        if (!keysPressed)
+          return;
+        if (event.button === 0 && !_this.setup.panning.allowLeftClickPan)
+          return;
+        if (event.button === 1 && !_this.setup.panning.allowMiddleClickPan)
+          return;
+        if (event.button === 2 && !_this.setup.panning.allowRightClickPan)
+          return;
+        event.preventDefault();
+        event.stopPropagation();
+        handleCancelAnimation(_this);
+        handlePanningStart(_this, event);
+        handleCallback(getContext(_this), event, onPanningStart);
+      };
+      this.onPanning = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanning = _this.props.onPanning;
+        if (disabled)
+          return;
+        var isAllowed = isPanningAllowed(_this);
+        if (!isAllowed)
+          return;
+        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
+        if (!keysPressed)
+          return;
+        event.preventDefault();
+        event.stopPropagation();
+        handlePanning(_this, event.clientX, event.clientY);
+        handleCallback(getContext(_this), event, onPanning);
+      };
+      this.onPanningStop = function(event) {
+        var onPanningStop = _this.props.onPanningStop;
+        if (_this.isPanning) {
+          handlePanningEnd(_this);
+          handleCallback(getContext(_this), event, onPanningStop);
+        }
+      };
+      this.onPinchStart = function(event) {
+        var disabled = _this.setup.disabled;
+        var _a2 = _this.props, onPinchingStart = _a2.onPinchingStart, onZoomStart = _a2.onZoomStart;
+        if (disabled)
+          return;
+        var isAllowed = isPinchStartAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        handlePinchStart(_this, event);
+        handleCancelAnimation(_this);
+        handleCallback(getContext(_this), event, onPinchingStart);
+        handleCallback(getContext(_this), event, onZoomStart);
+      };
+      this.onPinch = function(event) {
+        var disabled = _this.setup.disabled;
+        var _a2 = _this.props, onPinching = _a2.onPinching, onZoom = _a2.onZoom;
+        if (disabled)
+          return;
+        var isAllowed = isPinchAllowed(_this);
+        if (!isAllowed)
+          return;
+        event.preventDefault();
+        event.stopPropagation();
+        handlePinchZoom(_this, event);
+        handleCallback(getContext(_this), event, onPinching);
+        handleCallback(getContext(_this), event, onZoom);
+      };
+      this.onPinchStop = function(event) {
+        var _a2 = _this.props, onPinchingStop = _a2.onPinchingStop, onZoomStop = _a2.onZoomStop;
+        if (_this.pinchStartScale) {
+          handlePinchStop(_this);
+          handleCallback(getContext(_this), event, onPinchingStop);
+          handleCallback(getContext(_this), event, onZoomStop);
+        }
+      };
+      this.onTouchPanningStart = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanningStart = _this.props.onPanningStart;
+        if (disabled)
+          return;
+        var isAllowed = isPanningStartAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        var isDoubleTap = _this.lastTouch && +/* @__PURE__ */ new Date() - _this.lastTouch < 200;
+        if (isDoubleTap && event.touches.length === 1) {
+          _this.onDoubleClick(event);
+        } else {
+          _this.lastTouch = +/* @__PURE__ */ new Date();
+          handleCancelAnimation(_this);
+          var touches = event.touches;
+          var isPanningAction = touches.length === 1;
+          var isPinchAction = touches.length === 2;
+          if (isPanningAction) {
+            handleCancelAnimation(_this);
+            handlePanningStart(_this, event);
+            handleCallback(getContext(_this), event, onPanningStart);
+          }
+          if (isPinchAction) {
+            _this.onPinchStart(event);
+          }
+        }
+      };
+      this.onTouchPanning = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanning = _this.props.onPanning;
+        if (_this.isPanning && event.touches.length === 1) {
+          if (disabled)
+            return;
+          var isAllowed = isPanningAllowed(_this);
+          if (!isAllowed)
+            return;
+          event.preventDefault();
+          event.stopPropagation();
+          var touch = event.touches[0];
+          handlePanning(_this, touch.clientX, touch.clientY);
+          handleCallback(getContext(_this), event, onPanning);
+        } else if (event.touches.length > 1) {
+          _this.onPinch(event);
+        }
+      };
+      this.onTouchPanningStop = function(event) {
+        _this.onPanningStop(event);
+        _this.onPinchStop(event);
+      };
+      this.onDoubleClick = function(event) {
+        var disabled = _this.setup.disabled;
+        if (disabled)
+          return;
+        var isAllowed = isDoubleClickAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        handleDoubleClick(_this, event);
+      };
+      this.clearPanning = function(event) {
+        if (_this.isPanning) {
+          _this.onPanningStop(event);
+        }
+      };
+      this.setKeyPressed = function(e4) {
+        _this.pressedKeys[e4.key] = true;
+      };
+      this.setKeyUnPressed = function(e4) {
+        _this.pressedKeys[e4.key] = false;
+      };
+      this.isPressingKeys = function(keys) {
+        if (!keys.length) {
+          return true;
+        }
+        return Boolean(keys.find(function(key) {
+          return _this.pressedKeys[key];
+        }));
+      };
+      this.setTransformState = function(scale, positionX, positionY) {
+        var onTransformed = _this.props.onTransformed;
+        if (!Number.isNaN(scale) && !Number.isNaN(positionX) && !Number.isNaN(positionY)) {
+          if (scale !== _this.transformState.scale) {
+            _this.transformState.previousScale = _this.transformState.scale;
+            _this.transformState.scale = scale;
+          }
+          _this.transformState.positionX = positionX;
+          _this.transformState.positionY = positionY;
+          _this.applyTransformation();
+          var ctx_1 = getContext(_this);
+          _this.onChangeCallbacks.forEach(function(callback) {
+            return callback(ctx_1);
+          });
+          handleCallback(ctx_1, { scale, positionX, positionY }, onTransformed);
+        } else {
+          console.error("Detected NaN set state values");
+        }
+      };
+      this.setCenter = function() {
+        if (_this.wrapperComponent && _this.contentComponent) {
+          var targetState = getCenterPosition(_this.transformState.scale, _this.wrapperComponent, _this.contentComponent);
+          _this.setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
+        }
+      };
+      this.handleTransformStyles = function(x2, y3, scale) {
+        if (_this.props.customTransform) {
+          return _this.props.customTransform(x2, y3, scale);
+        }
+        return getTransformStyles(x2, y3, scale);
+      };
+      this.applyTransformation = function() {
+        if (!_this.mounted || !_this.contentComponent)
+          return;
+        var _a2 = _this.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+        var transform = _this.handleTransformStyles(positionX, positionY, scale);
+        _this.contentComponent.style.transform = transform;
+      };
+      this.getContext = function() {
+        return getContext(_this);
+      };
+      this.onChange = function(callback) {
+        if (!_this.onChangeCallbacks.has(callback)) {
+          _this.onChangeCallbacks.add(callback);
+        }
+        return function() {
+          _this.onChangeCallbacks.delete(callback);
+        };
+      };
+      this.onInit = function(callback) {
+        if (!_this.onInitCallbacks.has(callback)) {
+          _this.onInitCallbacks.add(callback);
+        }
+        return function() {
+          _this.onInitCallbacks.delete(callback);
+        };
+      };
+      this.init = function(wrapperComponent, contentComponent) {
+        _this.cleanupWindowEvents();
+        _this.wrapperComponent = wrapperComponent;
+        _this.contentComponent = contentComponent;
+        handleCalculateBounds(_this, _this.transformState.scale);
+        _this.handleInitializeWrapperEvents(wrapperComponent);
+        _this.handleInitialize(contentComponent);
+        _this.initializeWindowEvents();
+        _this.isInitialized = true;
+        var ctx = getContext(_this);
+        handleCallback(ctx, void 0, _this.props.onInit);
+      };
+      this.props = props;
+      this.setup = createSetup(this.props);
+      this.transformState = createState(this.props);
+    }
+    return ZoomPanPinch2;
+  }()
+);
+var Context = import_react3.default.createContext(null);
+var getContent2 = function(children, ctx) {
+  if (typeof children === "function") {
+    return children(ctx);
+  }
+  return children;
+};
+var TransformWrapper = import_react3.default.forwardRef(function(props, ref) {
+  var instance = (0, import_react3.useRef)(new ZoomPanPinch(props)).current;
+  var content = getContent2(props.children, getControls(instance));
+  (0, import_react3.useImperativeHandle)(ref, function() {
+    return getControls(instance);
+  }, [instance]);
+  (0, import_react3.useEffect)(function() {
+    instance.update(props);
+  }, [instance, props]);
+  return import_react3.default.createElement(Context.Provider, { value: instance }, content);
+});
+var KeepScale = import_react3.default.forwardRef(function(props, ref) {
+  var localRef = (0, import_react3.useRef)(null);
+  var instance = (0, import_react3.useContext)(Context);
+  (0, import_react3.useEffect)(function() {
+    return instance.onChange(function(ctx) {
+      if (localRef.current) {
+        var positionX = 0;
+        var positionY = 0;
+        localRef.current.style.transform = instance.handleTransformStyles(positionX, positionY, 1 / ctx.instance.transformState.scale);
+      }
+    });
+  }, [instance]);
+  return import_react3.default.createElement("div", __assign({}, props, { ref: mergeRefs([localRef, ref]) }));
+});
+function styleInject(css, ref) {
+  if (ref === void 0)
+    ref = {};
+  var insertAt = ref.insertAt;
+  if (!css || typeof document === "undefined") {
+    return;
+  }
+  var head = document.head || document.getElementsByTagName("head")[0];
+  var style = document.createElement("style");
+  style.type = "text/css";
+  if (insertAt === "top") {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+var css_248z = ".transform-component-module_wrapper__SPB86 {\n  position: relative;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  overflow: hidden;\n  -webkit-touch-callout: none; /* iOS Safari */\n  -webkit-user-select: none; /* Safari */\n  -khtml-user-select: none; /* Konqueror HTML */\n  -moz-user-select: none; /* Firefox */\n  -ms-user-select: none; /* Internet Explorer/Edge */\n  user-select: none;\n  margin: 0;\n  padding: 0;\n}\n.transform-component-module_content__FBWxo {\n  display: flex;\n  flex-wrap: wrap;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  margin: 0;\n  padding: 0;\n  transform-origin: 0% 0%;\n}\n.transform-component-module_content__FBWxo img {\n  pointer-events: none;\n}\n";
+var styles = { "wrapper": "transform-component-module_wrapper__SPB86", "content": "transform-component-module_content__FBWxo" };
+styleInject(css_248z);
+var TransformComponent = function(_a2) {
+  var children = _a2.children, _b2 = _a2.wrapperClass, wrapperClass = _b2 === void 0 ? "" : _b2, _c = _a2.contentClass, contentClass = _c === void 0 ? "" : _c, wrapperStyle = _a2.wrapperStyle, contentStyle = _a2.contentStyle, _d = _a2.wrapperProps, wrapperProps = _d === void 0 ? {} : _d, _e = _a2.contentProps, contentProps = _e === void 0 ? {} : _e;
+  var _f = (0, import_react3.useContext)(Context), init = _f.init, cleanupWindowEvents = _f.cleanupWindowEvents;
+  var wrapperRef = (0, import_react3.useRef)(null);
+  var contentRef = (0, import_react3.useRef)(null);
+  (0, import_react3.useEffect)(function() {
+    var wrapper = wrapperRef.current;
+    var content = contentRef.current;
+    if (wrapper !== null && content !== null && init) {
+      init === null || init === void 0 ? void 0 : init(wrapper, content);
+    }
+    return function() {
+      cleanupWindowEvents === null || cleanupWindowEvents === void 0 ? void 0 : cleanupWindowEvents();
+    };
+  }, []);
+  return import_react3.default.createElement(
+    "div",
+    __assign({}, wrapperProps, { ref: wrapperRef, className: "react-transform-wrapper ".concat(styles.wrapper, " ").concat(wrapperClass), style: wrapperStyle }),
+    import_react3.default.createElement("div", __assign({}, contentProps, { ref: contentRef, className: "react-transform-component ".concat(styles.content, " ").concat(contentClass), style: contentStyle }), children)
+  );
+};
+
+// src/components/ModalContent.tsx
+var import_react8 = __toESM(require_react());
+var import_get2 = __toESM(require_get());
+
+// src/components/common/Control.tsx
+var import_react5 = __toESM(require_react());
+var import_get = __toESM(require_get());
+var import_set = __toESM(require_set());
+
+// src/components/common/imageSelectModal.tsx
+var import_obsidian4 = require("obsidian");
+var import_react4 = __toESM(require_react());
+var import_client2 = __toESM(require_client());
+var ImageSelect = ({ imageList, app, onSelect, onClose }) => {
+  const [list, setList] = (0, import_react4.useState)(imageList);
+  const [keyword, setKeyword] = (0, import_react4.useState)("");
+  const [selected, setSelected] = (0, import_react4.useState)(
+    imageList?.[0] || null
+  );
+  const previewRef = (0, import_react4.useRef)(null);
+  (0, import_react4.useEffect)(() => {
+    if (!keyword) {
+      setList(imageList);
+    } else {
+      const regExp = new RegExp(keyword.split("").join(".*"), "i");
+      setList(imageList.filter((file) => regExp.test(file.path)));
+    }
+  }, [keyword, imageList]);
+  (0, import_react4.useEffect)(() => {
+    if (!list.length) {
+      setSelected(null);
+    } else if (!selected || !list.find((file) => file.path === selected.path)) {
+      setSelected(list?.[0] || null);
+    }
+  }, [selected, list]);
+  (0, import_react4.useEffect)(() => {
+    previewRef.current?.empty();
+    if (selected) {
+      createHtml(selected.path, app).then(
+        (html) => previewRef.current?.appendChild(html)
+      );
+    }
+  }, [selected]);
+  const submit = (0, import_react4.useCallback)(async () => {
+    if (selected) {
+      const file = await selected.vault.adapter.readBinary(selected.path);
+      const blob = new Blob([file], { type: "image/" + selected.extension });
+      const url = await fileToBase64(blob);
+      onSelect(url);
+    }
+  }, [onSelect, selected]);
+  return /* @__PURE__ */ import_react4.default.createElement("div", { className: "export-image-select-photo" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "search-input-container" }, /* @__PURE__ */ import_react4.default.createElement(
+    "input",
+    {
+      enterKeyHint: "search",
+      type: "search",
+      spellCheck: "false",
+      value: keyword,
+      placeholder: L_default.imageSelect.search(),
+      onChange: (e4) => setKeyword(e4.target.value)
+    }
+  ), /* @__PURE__ */ import_react4.default.createElement("div", { className: "search-input-clear-button" })), /* @__PURE__ */ import_react4.default.createElement("div", { className: "export-image-select-photo-main" }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "export-image-select-photo-left" }, list.length ? list.map((file) => /* @__PURE__ */ import_react4.default.createElement(
+    "div",
+    {
+      key: file.path,
+      title: file.path,
+      onClick: () => setSelected(file),
+      style: {
+        background: selected?.path === file.path ? "var(--background-modifier-hover)" : "transparent"
+      }
+    },
+    file.path
+  )) : /* @__PURE__ */ import_react4.default.createElement("div", { className: "export-image-select-empty" }, L_default.imageSelect.empty())), /* @__PURE__ */ import_react4.default.createElement("div", { className: "export-image-select-preview", ref: previewRef })), /* @__PURE__ */ import_react4.default.createElement("div", { className: "export-image-select-selected" }, selected?.path || " "), /* @__PURE__ */ import_react4.default.createElement("div", { className: "export-image-select-actions" }, /* @__PURE__ */ import_react4.default.createElement(
+    "button",
+    {
+      className: "mod-cta",
+      disabled: !selected,
+      onClick: submit,
+      style: { marginRight: 40 }
+    },
+    L_default.imageSelect.select()
+  ), /* @__PURE__ */ import_react4.default.createElement("button", { onClick: onClose }, L_default.imageSelect.cancel())));
+};
+var ImageSelectModal = class extends import_obsidian4.Modal {
+  constructor(app, select) {
+    super(app);
+    this.select = select;
+  }
+  onOpen() {
+    let { contentEl, select } = this;
+    const imageList = this.app.vault.getFiles().filter((file) => /^jpe?g|png$/i.test(file.extension || ""));
+    this.root = (0, import_client2.createRoot)(contentEl);
+    this.root.render(
+      /* @__PURE__ */ import_react4.default.createElement(
+        ImageSelect,
+        {
+          imageList,
+          app: this.app,
+          onSelect: select,
+          onClose: () => this.close()
+        }
+      )
+    );
+  }
+  onClose() {
+    let { contentEl, root } = this;
+    root?.unmount();
+    contentEl.empty();
+  }
+};
+
+// src/components/common/Control.tsx
+var Control = ({ fieldSchema, setting, updata, app }) => {
+  const value = (0, import_get.default)(setting, fieldSchema.path);
+  const inputRef = (0, import_react5.useRef)(null);
+  const onChange = (value2) => {
+    const newSetting = { ...setting };
+    (0, import_set.default)(newSetting, fieldSchema.path, value2);
+    updata(newSetting);
+  };
+  const upload = async () => {
+    const file = inputRef.current?.files?.[0];
+    if (file) {
+      onChange(await fileToBase64(file));
+    }
+  };
+  const select = () => {
+    const modal = new ImageSelectModal(app, (img) => {
+      onChange(img);
+      modal.close();
+    });
+    modal.open();
+  };
+  switch (fieldSchema.type) {
+    case "number": {
+      return /* @__PURE__ */ import_react5.default.createElement(
+        "input",
+        {
+          type: "number",
+          value,
+          onChange: (e4) => onChange(e4.target.value ? Number(e4.target.value) : void 0)
+        }
+      );
+    }
+    case "string": {
+      return /* @__PURE__ */ import_react5.default.createElement(
+        "input",
+        {
+          type: "text",
+          value,
+          onChange: (e4) => onChange(e4.target.value)
+        }
+      );
+    }
+    case "boolean": {
+      return /* @__PURE__ */ import_react5.default.createElement(
+        "div",
+        {
+          className: `checkbox-container${value ? " is-enabled" : ""}`,
+          onClick: () => onChange(!(0, import_get.default)(setting, fieldSchema.path))
+        },
+        /* @__PURE__ */ import_react5.default.createElement("input", { type: "checkbox", checked: value })
+      );
+    }
+    case "select": {
+      return /* @__PURE__ */ import_react5.default.createElement(
+        "select",
+        {
+          value,
+          onChange: (e4) => onChange(e4.target.value),
+          className: "dropdown"
+        },
+        fieldSchema.options?.map((option) => /* @__PURE__ */ import_react5.default.createElement("option", { key: option.value, value: option.value }, option.text))
+      );
+    }
+    case "file": {
+      return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement(
+        "div",
+        {
+          className: "user-info-avatar",
+          style: {
+            backgroundImage: value ? `url(${value})` : "none",
+            display: value ? "block" : "none"
+          }
+        }
+      ), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: () => inputRef.current?.click() }, L_default.setting.watermark.image.src.upload(), /* @__PURE__ */ import_react5.default.createElement(
+        "input",
+        {
+          style: { display: "none" },
+          type: "file",
+          ref: inputRef,
+          onChange: upload
+        }
+      )), /* @__PURE__ */ import_react5.default.createElement("button", { onClick: select }, L_default.setting.watermark.image.src.select()));
+    }
+    default:
+      return null;
+  }
+};
+var Control_default = Control;
+
+// src/components/common/Metadata.tsx
+var import_react6 = __toESM(require_react());
+var iconMap = {
+  text: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      className: "svg-icon"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M17 6.1H3" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 12.1H3" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M15.1 18H3" })
+  ),
+  number: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("rect", { x: "14", y: "14", width: "4", height: "6", rx: "2" }),
+    /* @__PURE__ */ import_react6.default.createElement("rect", { x: "6", y: "4", width: "4", height: "6", rx: "2" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M6 20h4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M14 10h4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M6 14h2v6" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M14 4h2v6" })
+  ),
+  multitext: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "6", y2: "6" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "12", y2: "12" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "8", x2: "21", y1: "18", y2: "18" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "6", y2: "6" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "12", y2: "12" }),
+    /* @__PURE__ */ import_react6.default.createElement("line", { x1: "3", x2: "3.01", y1: "18", y2: "18" })
+  ),
+  tags: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z" }),
+    /* @__PURE__ */ import_react6.default.createElement("circle", { cx: "6.5", cy: "9.5", r: ".5", fill: "currentColor" })
+  ),
+  date: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M8 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M16 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("rect", { width: "18", height: "18", x: "3", y: "4", rx: "2" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M3 10h18" })
+  ),
+  datetime: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M16 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M8 2v4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M3 10h5" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M17.5 17.5 16 16.3V14" }),
+    /* @__PURE__ */ import_react6.default.createElement("circle", { cx: "16", cy: "16", r: "6" })
+  ),
+  checkbox: /* @__PURE__ */ import_react6.default.createElement(
+    "svg",
+    {
+      className: "svg-icon",
+      xmlns: "http://www.w3.org/2000/svg",
+      width: "24",
+      height: "24",
+      viewBox: "0 0 24 24",
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-width": "2",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round"
+    },
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "m9 11 3 3L22 4" }),
+    /* @__PURE__ */ import_react6.default.createElement("path", { d: "M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" })
+  ),
+  aliases: /* @__PURE__ */ import_react6.default.createElement(import_react6.default.Fragment, null)
+};
+var Metadata = ({ type, name, value }) => {
+  if (["aliases", "cssclasses"].contains(name)) {
+    return null;
+  }
+  if (value === null) {
+    return null;
+  }
+  const iconSvg = iconMap[type] || iconMap["text"];
+  let valueElement;
+  switch (type) {
+    case "text":
+      if (!value)
+        return null;
+      let content = value;
+      if (typeof value !== "string") {
+        content = JSON.stringify(value);
+      } else {
+        const match = value.match(/^\[\[(.+)\]\]$/);
+        if (match) {
+          content = match[1];
+        }
+      }
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, content);
+      break;
+    case "number":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement(
+        "input",
+        {
+          className: "metadata-input metadata-input-number",
+          type: "number",
+          value
+        }
+      );
+      break;
+    case "checkbox":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement(
+        "input",
+        {
+          className: "metadata-input-checkbox",
+          type: "checkbox",
+          checked: value
+        }
+      );
+      break;
+    case "date":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
+      break;
+    case "datetime":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
+      break;
+    case "multitext":
+    case "tags":
+      valueElement = /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-container" }, value.map((str) => /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-pill", style: { border: "none" } }, /* @__PURE__ */ import_react6.default.createElement("div", { className: "multi-select-pill-content" }, /* @__PURE__ */ import_react6.default.createElement("span", null, str)))));
+      break;
+    case "aliases":
+      return null;
+    default:
+      valueElement = value;
+      break;
+  }
+  return /* @__PURE__ */ import_react6.default.createElement(
+    "div",
+    {
+      className: "metadata-property",
+      "data-property-type": type,
+      "data-property-key": name,
+      style: { border: 0 }
+    },
+    /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-property-key" }, /* @__PURE__ */ import_react6.default.createElement("span", { className: "metadata-property-icon" }, iconSvg), /* @__PURE__ */ import_react6.default.createElement("span", { className: "metadata-property-name" }, name)),
+    /* @__PURE__ */ import_react6.default.createElement("div", { className: "metadata-property-value" }, valueElement)
+  );
+};
+var Metadata_default = Metadata;
+
+// src/components/ModalContent.tsx
+var alignMap = {
+  left: "flex-start",
+  center: "center",
+  right: "flex-end"
+};
+var formSchema = [
+  {
+    label: L_default.includingFilename(),
+    path: "showFilename",
+    type: "boolean"
+  },
+  {
+    label: L_default.imageWidth(),
+    path: "width",
+    type: "number"
+  },
+  {
+    label: L_default.setting.userInfo.show(),
+    path: "authorInfo.show",
+    type: "boolean"
+  },
+  {
+    label: L_default.setting.userInfo.name(),
+    path: "authorInfo.name",
+    type: "string",
+    when: { flag: true, path: "authorInfo.show" }
+  },
+  {
+    label: L_default.setting.userInfo.remark(),
+    path: "authorInfo.remark",
+    type: "string",
+    when: { flag: true, path: "authorInfo.show" }
+  },
+  {
+    label: L_default.setting.userInfo.avatar.title(),
+    desc: L_default.setting.userInfo.avatar.description(),
+    path: "authorInfo.avatar",
+    type: "file",
+    when: { flag: true, path: "authorInfo.show" }
+  },
+  {
+    label: L_default.setting.userInfo.align(),
+    path: "authorInfo.align",
+    type: "select",
+    options: [
+      { text: "Left", value: "left" },
+      { text: "Center", value: "center" },
+      { text: "Right", value: "right" }
+    ],
+    when: { flag: true, path: "authorInfo.show" }
+  },
+  {
+    label: L_default.setting.userInfo.position(),
+    path: "authorInfo.position",
+    type: "select",
+    options: [
+      { text: "Top", value: "top" },
+      { text: "Bottom", value: "bottom" }
+    ],
+    when: { flag: true, path: "authorInfo.show" }
+  },
+  {
+    label: L_default.setting.watermark.enable.label(),
+    path: "watermark.enable",
+    type: "boolean"
+  },
+  {
+    label: L_default.setting.watermark.type.label(),
+    path: "watermark.type",
+    type: "select",
+    options: [
+      { text: L_default.setting.watermark.type.text(), value: "text" },
+      { text: L_default.setting.watermark.type.image(), value: "image" }
+    ],
+    when: { flag: true, path: "watermark.enable" }
+  },
+  {
+    label: L_default.setting.watermark.text.content(),
+    path: "watermark.text.content",
+    type: "string",
+    when: (settings) => settings.watermark.enable && settings.watermark.type === "text"
+  },
+  {
+    label: L_default.setting.watermark.image.src.label(),
+    path: "watermark.image.src",
+    type: "file",
+    when: (settings) => settings.watermark.enable && settings.watermark.type === "image"
+  },
+  {
+    label: L_default.setting.watermark.opacity(),
+    path: "watermark.opacity",
+    type: "number",
+    when: { flag: true, path: "watermark.enable" }
+  },
+  {
+    label: L_default.setting.watermark.rotate(),
+    path: "watermark.rotate",
+    type: "number",
+    when: { flag: true, path: "watermark.enable" }
+  },
+  {
+    label: L_default.setting.watermark.width(),
+    path: "watermark.width",
+    type: "number",
+    when: { flag: true, path: "watermark.enable" }
+  },
+  {
+    label: L_default.setting.watermark.height(),
+    path: "watermark.height",
+    type: "number",
+    when: { flag: true, path: "watermark.enable" }
+  }
+];
+function isShow(field, settings) {
+  if (!field.when) {
+    return true;
+  }
+  if (typeof field.when === "function") {
+    return field.when(settings);
+  }
+  return (0, import_get2.default)(settings, field.when.path) === field.when.flag;
+}
+var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap }) => {
+  const [formData, setFormData] = (0, import_react7.useState)(settings);
+  const [watermarkProps, setWatermarkProps] = (0, import_react7.useState)({});
+  const [isGrabbing, setIsGrabbing] = (0, import_react7.useState)(false);
+  const contentRef = (0, import_react7.useRef)(null);
+  const actionsRef = (0, import_react7.useRef)(null);
+  const previewOutRef = (0, import_react7.useRef)(null);
+  const mainHeight = Math.min(764, window.innerHeight * 0.85 - 225);
+  const root = markdownEl.closest(".export-image-root") || markdownEl;
+  (0, import_react7.useEffect)(() => {
+    contentRef.current?.appendChild(markdownEl);
+  }, []);
+  (0, import_react7.useEffect)(() => {
+    setFormData(settings);
+  }, [settings]);
+  const [processing, setProcessing] = (0, import_react7.useState)(false);
+  const handleSave = (0, import_react7.useCallback)(async () => {
+    if ((formData.width || 640) <= 20) {
+      new import_obsidian5.Notice(L_default.invalidWidth());
+      return;
+    }
+    setProcessing(true);
+    await save(
+      app,
+      root,
+      title,
+      formData["2x"],
+      formData.format,
+      // @ts-ignore
+      app.isMobile
+    );
+    setProcessing(false);
+  }, [root, formData["2x"], formData.format, title, formData.width]);
+  const handleCopy = (0, import_react7.useCallback)(async () => {
+    if ((formData.width || 640) <= 20) {
+      new import_obsidian5.Notice(L_default.invalidWidth());
+      return;
+    }
+    setProcessing(true);
+    await copy(root, formData["2x"], formData.format);
+    setProcessing(false);
+  }, [root, formData["2x"], formData.format, title, formData.width]);
+  (0, import_react7.useEffect)(() => {
+    const props = {
+      monitor: false,
+      mode: "interval",
+      visible: formData.watermark.enable,
+      rotate: formData.watermark.rotate ?? -30,
+      opacity: formData.watermark.opacity ?? 0.2,
+      height: formData.watermark.height ?? 64,
+      width: formData.watermark.width ?? 120,
+      gapX: formData.watermark.x ?? 100,
+      gapY: formData.watermark.y ?? 100
+    };
+    if (formData.watermark.type === "text") {
+      props.text = formData.watermark.text.content;
+      props.fontSize = formData.watermark.text.fontSize || 16;
+      props.fontColor = formData.watermark.text.color || "#cccccc";
+      props.image = void 0;
+    } else {
+      props.image = formData.watermark.image.src;
+    }
+    setWatermarkProps(props);
+  }, [formData]);
+  return /* @__PURE__ */ import_react8.default.createElement("div", { className: "export-image-preview-root" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "export-image-preview-main" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "export-image-preview-left" }, formSchema.map(
+    (fieldSchema) => isShow(fieldSchema, formData) && /* @__PURE__ */ import_react8.default.createElement(
+      "div",
+      {
+        className: "setting-item",
+        key: fieldSchema.path,
+        style: { padding: "10px 0" }
+      },
+      /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-info" }, /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-name" }, fieldSchema.label), fieldSchema.desc && /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-description" }, fieldSchema.desc)),
+      /* @__PURE__ */ import_react8.default.createElement("div", { className: "setting-item-control" }, /* @__PURE__ */ import_react8.default.createElement(
+        Control_default,
+        {
+          fieldSchema,
+          setting: formData,
+          updata: setFormData,
+          app
+        }
+      ))
+    )
+  ), /* @__PURE__ */ import_react8.default.createElement("div", { className: "info-text" }, L_default.moreSetting())), /* @__PURE__ */ import_react8.default.createElement("div", { className: "export-image-preview-right" }, /* @__PURE__ */ import_react8.default.createElement(
+    "div",
+    {
+      className: "export-image-preview-out",
+      ref: previewOutRef,
+      style: {
+        height: mainHeight,
+        cursor: isGrabbing ? "grabbing" : "grab"
+      }
+    },
+    /* @__PURE__ */ import_react8.default.createElement(
+      TransformWrapper,
+      {
+        minScale: Math.min(
+          1,
+          mainHeight / root.clientHeight,
+          (previewOutRef.current?.clientWidth || 400) / (root.clientWidth + 2)
+        ) / 2,
+        maxScale: 4,
+        pinch: { step: 20 },
+        doubleClick: { mode: "reset" },
+        centerZoomedOut: false,
+        onPanning: () => setIsGrabbing(true),
+        onPanningStop: () => setIsGrabbing(false)
+      },
+      /* @__PURE__ */ import_react8.default.createElement(
+        TransformComponent,
+        {
+          wrapperStyle: {
+            width: "100%",
+            height: mainHeight
+          },
+          contentStyle: {
+            border: "1px var(--divider-color) solid",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 0 10px 10px rgba(0,0,0,0.15)"
+          }
+        },
+        /* @__PURE__ */ import_react8.default.createElement(
+          "div",
+          {
+            className: `export-image-root ${(frontmatter?.cssclasses || []).join(" ")}`,
+            style: {
+              display: "flex",
+              flexDirection: formData.authorInfo.position === "bottom" ? "column" : "column-reverse",
+              backgroundColor: formData.format === "png" ? "unset" : "var(--background-primary)"
+            }
+          },
+          /* @__PURE__ */ import_react8.default.createElement(src_default, { ...watermarkProps }, /* @__PURE__ */ import_react8.default.createElement(
+            "div",
+            {
+              className: "markdown-preview-view markdown-rendered export-image-preview-container",
+              style: {
+                width: `${formData.width}px`,
+                transition: "width 0.25s"
+              }
+            },
+            formData.showFilename && /* @__PURE__ */ import_react8.default.createElement("div", { className: "inline-title", autoCapitalize: "on" }, title),
+            formData.showMetadata && frontmatter && Object.keys(frontmatter).length > 0 && /* @__PURE__ */ import_react8.default.createElement(
+              "div",
+              {
+                className: "metadata-container",
+                style: { display: "block" }
+              },
+              /* @__PURE__ */ import_react8.default.createElement("div", { className: "metadata-content" }, Object.keys(frontmatter).map((name) => /* @__PURE__ */ import_react8.default.createElement(
+                Metadata_default,
+                {
+                  name,
+                  key: name,
+                  value: frontmatter[name],
+                  type: metadataMap[name]?.type || "text"
+                }
+              )))
+            ),
+            /* @__PURE__ */ import_react8.default.createElement("div", { ref: contentRef })
+          )),
+          formData.authorInfo.show && (formData.authorInfo.avatar || formData.authorInfo.name) && /* @__PURE__ */ import_react8.default.createElement(
+            "div",
+            {
+              className: "user-info-container",
+              style: {
+                [formData.authorInfo.position === "top" ? "borderBottom" : "borderTop"]: "1px solid var(--background-modifier-border)",
+                justifyContent: alignMap[formData.authorInfo.align || "right"],
+                background: formData.format === "png" ? "unset" : "var(--background-primary)"
+              }
+            },
+            formData.authorInfo.avatar && /* @__PURE__ */ import_react8.default.createElement(
+              "div",
+              {
+                className: "user-info-avatar",
+                style: {
+                  backgroundImage: `url(${formData.authorInfo.avatar})`
+                }
+              }
+            ),
+            formData.authorInfo.name && /* @__PURE__ */ import_react8.default.createElement("div", null, /* @__PURE__ */ import_react8.default.createElement("div", { className: "user-info-name" }, formData.authorInfo.name), formData.authorInfo.remark && /* @__PURE__ */ import_react8.default.createElement("div", { className: "user-info-remark" }, formData.authorInfo.remark))
+          )
+        )
+      )
+    )
+  ), /* @__PURE__ */ import_react8.default.createElement("div", { className: "info-text" }, L_default.guide()))), /* @__PURE__ */ import_react8.default.createElement("div", { ref: actionsRef, className: "export-image-preview-actions" }, /* @__PURE__ */ import_react8.default.createElement("button", { onClick: handleCopy, disabled: processing }, L_default.copy()), /* @__PURE__ */ import_react8.default.createElement("button", { onClick: handleSave, disabled: processing }, app.isMobile ? L_default.saveVault() : L_default.save())));
+};
+var ModalContent_default = ModalContent;
 
 // src/exportImage.tsx
 async function exportImage_default(app, settings, markdown, file, frontmatter) {
@@ -42016,8 +41889,6 @@ async function exportImage_default(app, settings, markdown, file, frontmatter) {
       ModalContent_default,
       {
         markdownEl: el,
-        save: () => save(el, file.basename, settings["2x"], settings.format),
-        copy: () => copy(el, settings["2x"], settings.format),
         settings,
         frontmatter,
         title: file.basename,

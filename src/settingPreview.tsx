@@ -41,12 +41,8 @@ const Preview: FC<{ setting: ISettings; el: HTMLDivElement }> = ({
   return (
     <Watermark {...props}>
       <div
-        className="markdown-preview-view markdown-rendered"
+        className="markdown-preview-view markdown-rendered export-image-setting-preview-mock"
         ref={container}
-        style={{
-          border: "1px solid var(--background-modifier-border)",
-          borderRadius: 8,
-        }}
       ></div>
     </Watermark>
   );
