@@ -37,6 +37,7 @@ export default async function (
   modal.modalEl.style.maxWidth = "1500px";
   modal.open();
   const root = createRoot(modal.contentEl);
+  // @ts-ignore
   const metadataMap: Record<string, { type: MetadataType }> =
     // @ts-ignore
     app.metadataCache.getAllPropertyInfos();
