@@ -240,7 +240,7 @@ const ModalContent: FC<{
                     <Control
                       fieldSchema={fieldSchema}
                       setting={formData}
-                      updata={setFormData}
+                      update={setFormData}
                       app={app}
                     ></Control>
                   </div>

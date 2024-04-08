@@ -10,15 +10,15 @@ import { App } from "obsidian";
 const Control: FC<{
   fieldSchema: FieldSchema;
   setting: ISettings;
-  updata: (settings: ISettings) => void;
+  update: (settings: ISettings) => void;
   app: App;
-}> = ({ fieldSchema, setting, updata, app }) => {
+}> = ({ fieldSchema, setting, update, app }) => {
   const value = get(setting, fieldSchema.path);
   const inputRef = useRef<HTMLInputElement>(null);
   const onChange = (value: any) => {
     const newSetting = { ...setting };
     set(newSetting, fieldSchema.path, value);
-    updata(newSetting);
+    update(newSetting);
   };
   const upload = async () => {
     const file = inputRef.current?.files?.[0];
