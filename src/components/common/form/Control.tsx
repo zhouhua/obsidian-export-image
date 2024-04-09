@@ -1,14 +1,13 @@
 import React, { FC, useEffect, useRef } from "react";
-import { FieldSchema, ISettings } from "../../type";
 import get from "lodash/get";
 import set from "lodash/set";
-import { fileToBase64 } from "../../utils";
-import L from "../../L";
-import ImageSelectModal from "./imageSelectModal";
+import { fileToBase64 } from "../../../utils";
+import L from "../../../L";
+import ImageSelectModal from "../imageSelectModal";
 import { App } from "obsidian";
 
 const Control: FC<{
-  fieldSchema: FieldSchema;
+  fieldSchema: FieldSchema<ISettings>;
   setting: ISettings;
   update: (settings: ISettings) => void;
   app: App;

@@ -5,10 +5,10 @@ import {
   Setting,
   TFile,
   Notice,
+  TFolder,
 } from "obsidian";
 import { renderPreview } from "./settingPreview";
-import exportImage from "./exportImage";
-import type { FileFormat, ISettings } from "./type";
+import exportImage from "./components/file/exportImage";
 import L from "./L";
 import {
   fileToBase64,
@@ -18,61 +18,39 @@ import {
   isMarkdownFile,
 } from "./utils";
 import ImageSelectModal from "./components/common/imageSelectModal";
-
-const DEFAULT_SETTINGS: ISettings = {
-  width: 640,
-  showFilename: true,
-  "2x": true,
-  format: "jpg",
-  showMetadata: false,
-  authorInfo: {
-    show: false,
-    align: "right",
-    position: "bottom",
-  },
-  watermark: {
-    enable: false,
-    type: "text",
-    text: {
-      content: "",
-      fontSize: 28,
-      color: "#cccccc",
-    },
-    image: {
-      src: "",
-    },
-    opacity: 0.2,
-    rotate: 30,
-    height: 64,
-    width: 120,
-    x: 100,
-    y: 100,
-  },
-};
+import { DEFAULT_SETTINGS } from "./settings";
+import exportFolder from "./components/folder/exportFolder";
 
 export default class ExportImagePlugin extends Plugin {
   settings: ISettings;
+
+  async epxortFile(file: TFile) {
+    const frontmatter = getMetadata(file as TFile, this.app);
+    const markdown = await this.app.vault.cachedRead(file as TFile);
+    exportImage(this.app, this.settings, markdown, file as TFile, frontmatter);
+  }
 
   async onload() {
     await this.loadSettings();
 
     this.registerEvent(
       this.app.workspace.on("file-menu", (menu, file) => {
-        if (isMarkdownFile(file)) {
-          const frontmatter = getMetadata(file as TFile, this.app);
+        if (file instanceof TFile && isMarkdownFile(file)) {
           menu.addItem((item) => {
             item
               .setTitle(L.exportImage())
               .setIcon("image-down")
               .onClick(async () => {
-                const markdown = await this.app.vault.cachedRead(file as TFile);
-                exportImage(
-                  this.app,
-                  this.settings,
-                  markdown,
-                  file as TFile,
-                  frontmatter
-                );
+                await this.epxortFile(file);
+              });
+          });
+        } else if (file instanceof TFolder) {
+          menu.addItem((item) => {
+            item
+              .setTitle(L.exportFolder())
+              .setIcon("image-down")
+              .onClick(async () => {
+                exportFolder(this.app, this.settings, file);
               });
           });
         }
@@ -193,7 +171,6 @@ class ImageSettingTab extends PluginSettingTab {
         target: "_blank",
       },
     });
-
     new Setting(containerEl)
       .setName(L.setting.imageWidth.label())
       .setDesc(L.setting.imageWidth.description())

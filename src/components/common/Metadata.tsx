@@ -1,5 +1,4 @@
 import React, { FC, JSX } from "react";
-import { MetadataType } from "../../type";
 
 type PropType = { name: string } & (
   | {

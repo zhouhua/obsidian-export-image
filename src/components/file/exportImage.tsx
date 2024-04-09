@@ -9,10 +9,8 @@ import {
   TFile,
 } from "obsidian";
 import { createRoot } from "react-dom/client";
-import ModalContent from "./components/ModalContent";
-import { copy, save } from "./utils/capture";
-import L from "./L";
-import { ISettings, MetadataType } from "./type";
+import ModalContent from "./ModalContent";
+import L from "../../L";
 
 export default async function (
   app: App,

@@ -76,12 +76,12 @@ If your plugin does not need CSS, delete this file.
     );
 }
 
-.export-image-preview-root .info-text {
+.export-image-root .info-text {
   line-height: 20px;
   opacity: 0.6;
   font-size: 12px;
 }
-.export-image-preview-root .user-info-container {
+.export-image-root .user-info-container {
   display: flex;
   padding: 16px 32px;
   alignitems: center;
@@ -94,11 +94,11 @@ If your plugin does not need CSS, delete this file.
   background-size: cover;
   margin: 0 20px;
 }
-.export-image-preview-root .user-info-name {
+.export-image-root .user-info-name {
   font-size: 16px;
   padding-bottom: 6px;
 }
-.export-image-preview-root .user-info-remark {
+.export-image-root .user-info-remark {
   opacity: 0.5;
   font-size: 12px;
 }
@@ -113,10 +113,10 @@ If your plugin does not need CSS, delete this file.
   margin-left: 10px;
 }
 
-.export-image-preview-container .multi-select-pill-content {
+.export-image-root .multi-select-pill-content {
   margin: 0 6px;
 }
-.export-image-preview-container .metadata-property-name {
+.export-image-root .metadata-property-name {
   padding: var(--size-4-1) var(--size-4-2);
   text-overflow: ellipsis;
   overflow: hidden;
@@ -180,4 +180,49 @@ If your plugin does not need CSS, delete this file.
 .export-image-setting-preview-mock {
   border: 1px solid var(--background-modifier-border);
   border-radius: 8px;
+}
+
+.export-image-progress-bar {
+  max-width: 320px;
+  width: 100%;
+  height: var(--size-4-2);
+  border-radius: var(--radius-s);
+  background-color: var(--background-secondary);
+  box-shadow: inset 0 0 0 1px var(--background-modifier-border);
+}
+
+.export-image-progress-bar-inner {
+  width: 0;
+  height: 100%;
+  border-radius: var(--radius-s);
+  background-color: var(--interactive-accent);
+  transition: width 0.6s;
+}
+
+.export-image-preview-file-item {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+}
+.export-image-select-all {
+  font-weight: bolder;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--background-modifier-border);
+}
+.export-image-filename {
+  padding-left: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.export-image-select-number {
+  flex-grow: 1;
+  text-align: right;
+}
+
+.export-image-hidden {
+  position: fixed;
+  top: 9999px;
+  width: auto;
+  height: auto;
 }

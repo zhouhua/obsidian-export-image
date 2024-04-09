@@ -48,11 +48,11 @@ type RootTranslation = {
 	 */
 	saveVault: string
 	/**
-	 * I​n​c​l​u​d​i​n​g​ ​F​i​l​e​ ​N​a​m​e​ ​A​s​ ​T​i​t​l​e​:​ 
+	 * I​n​c​l​u​d​i​n​g​ ​F​i​l​e​ ​N​a​m​e​ ​A​s​ ​T​i​t​l​e
 	 */
 	includingFilename: string
 	/**
-	 * I​m​a​g​e​ ​W​i​d​t​h​:​ 
+	 * I​m​a​g​e​ ​W​i​d​t​h
 	 */
 	imageWidth: string
 	/**
@@ -63,6 +63,10 @@ type RootTranslation = {
 	 * E​x​p​o​r​t​ ​s​e​l​e​c​t​i​o​n​ ​t​o​ ​i​m​a​g​e
 	 */
 	exportSelectionImage: string
+	/**
+	 * E​x​p​o​r​t​ ​a​l​l​ ​n​o​t​e​s​ ​t​o​ ​i​m​a​g​e
+	 */
+	exportFolder: string
 	/**
 	 * P​l​e​a​s​e​ ​s​e​t​ ​w​i​d​t​h​ ​w​i​t​h​ ​a​ ​r​e​a​s​o​n​a​b​l​e​ ​n​u​m​b​e​r​.
 	 */
@@ -83,6 +87,18 @@ type RootTranslation = {
 	 * p​d​f​ ​f​o​r​m​a​t​ ​i​s​ ​n​o​t​ ​s​u​p​p​o​r​t​e​d​ ​f​o​r​ ​c​o​p​y
 	 */
 	copyNotAllowed: string
+	/**
+	 * E​x​p​o​r​t​ ​S​e​l​e​c​t​e​d​ ​N​o​t​e​s
+	 */
+	exportAll: string
+	/**
+	 * N​o​ ​m​a​r​k​d​o​w​n​ ​f​i​l​e​s​ ​i​n​ ​t​h​e​ ​c​u​r​r​e​n​t​ ​d​i​r​e​c​t​o​r​y
+	 */
+	noMarkdownFile: string
+	/**
+	 * S​e​l​e​c​t​ ​A​l​l
+	 */
+	selectAll: string
 	setting: {
 		/**
 		 * E​x​p​o​r​t​ ​I​m​a​g​e
@@ -282,6 +298,10 @@ type RootTranslation = {
 		 * R​e​s​e​t​ ​t​o​ ​d​e​f​a​u​l​t
 		 */
 		reset: string
+		/**
+		 * I​n​c​l​u​d​e​ ​n​o​t​e​s​ ​f​r​o​m​ ​s​u​b​d​i​r​e​c​t​o​r​i​e​s
+		 */
+		recursive: string
 	}
 	imageSelect: {
 		/**
@@ -337,11 +357,11 @@ export type TranslationFunctions = {
 	 */
 	saveVault: () => LocalizedString
 	/**
-	 * Including File Name As Title: 
+	 * Including File Name As Title
 	 */
 	includingFilename: () => LocalizedString
 	/**
-	 * Image Width: 
+	 * Image Width
 	 */
 	imageWidth: () => LocalizedString
 	/**
@@ -352,6 +372,10 @@ export type TranslationFunctions = {
 	 * Export selection to image
 	 */
 	exportSelectionImage: () => LocalizedString
+	/**
+	 * Export all notes to image
+	 */
+	exportFolder: () => LocalizedString
 	/**
 	 * Please set width with a reasonable number.
 	 */
@@ -372,6 +396,18 @@ export type TranslationFunctions = {
 	 * pdf format is not supported for copy
 	 */
 	copyNotAllowed: () => LocalizedString
+	/**
+	 * Export Selected Notes
+	 */
+	exportAll: () => LocalizedString
+	/**
+	 * No markdown files in the current directory
+	 */
+	noMarkdownFile: () => LocalizedString
+	/**
+	 * Select All
+	 */
+	selectAll: () => LocalizedString
 	setting: {
 		/**
 		 * Export Image
@@ -571,6 +607,10 @@ export type TranslationFunctions = {
 		 * Reset to default
 		 */
 		reset: () => LocalizedString
+		/**
+		 * Include notes from subdirectories
+		 */
+		recursive: () => LocalizedString
 	}
 	imageSelect: {
 		/**

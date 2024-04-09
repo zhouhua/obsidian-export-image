@@ -3,8 +3,6 @@ import { App, MarkdownRenderChild, MarkdownRenderer } from "obsidian";
 import { createRoot } from "react-dom/client";
 import { Watermark, WatermarkProps } from "@pansy/react-watermark";
 
-import type { ISettings } from "./type";
-
 const defaultConfig: WatermarkProps = {
   monitor: false,
   mode: "interval",

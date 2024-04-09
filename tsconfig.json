@@ -17,6 +17,6 @@
     "jsx": "preserve",
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts", "main.ts"],
+  "include": ["src/**/*.ts", "main.ts", "src/**/*.tsx"],
   "exclude": ["src/dom-to-image-more.js"]
 }

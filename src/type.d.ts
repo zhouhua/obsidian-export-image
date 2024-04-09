@@ -1,11 +1,12 @@
-export type FileFormat = "jpg" | "png" | "pdf";
+declare type FileFormat = "jpg" | "png" | "pdf";
 
-export interface ISettings {
+declare interface ISettings {
   width?: number;
   showFilename: boolean;
   "2x": boolean;
   format: FileFormat;
   showMetadata: boolean;
+  recursive: boolean;
   authorInfo: {
     show: boolean;
     name?: string;
@@ -34,29 +35,27 @@ export interface ISettings {
   };
 }
 
-type ConditionType =
-  | { flag: any; path: string }
-  | ((data: ISettings) => boolean);
+type ConditionType<T> = { flag: any; path: string } | ((data: T) => boolean);
 
-interface BaseFieldSchema {
+interface BaseFieldSchema<T> {
   label: string;
   path: string;
   type: "number" | "string" | "boolean" | "file";
-  when?: ConditionType;
+  when?: ConditionType<T>;
   desc?: string;
 }
-interface SelectFieldSchema {
+interface SelectFieldSchema<T> {
   label: string;
   path: string;
   type: "select";
   options: { text: string; value: string }[];
-  when?: ConditionType;
+  when?: ConditionType<T>;
   desc?: string;
 }
-export type FieldSchema = BaseFieldSchema | SelectFieldSchema;
-export type FormSchema = FieldSchema[];
+declare type FieldSchema<T> = BaseFieldSchema<T> | SelectFieldSchema<T>;
+declare type FormSchema<T> = FieldSchema<T>[];
 
-export type MetadataType =
+declare type MetadataType =
   | "text"
   | "date"
   | "datetime"

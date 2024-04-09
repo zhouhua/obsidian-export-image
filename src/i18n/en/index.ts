@@ -10,16 +10,20 @@ const en = {
   save: "Save Image",
   saveSuccess: "Export and save the image as {filePath: string}.",
   saveVault: "Save to Vault",
-  includingFilename: "Including File Name As Title: ",
-  imageWidth: "Image Width: ",
+  includingFilename: "Including File Name As Title",
+  imageWidth: "Image Width",
   exportImage: "Export to image",
   exportSelectionImage: "Export selection to image",
+  exportFolder: "Export all notes to image",
   invalidWidth: "Please set width with a reasonable number.",
   "2x": "Enable 2x resolution image",
   moreSetting:
     "More detailed settings can be found in the `Export Image` plugin settings.",
   guide: "Drag to Move, scroll or pinch to zoom in/out, double click to reset.",
   copyNotAllowed: "pdf format is not supported for copy",
+  exportAll: "Export Selected Notes",
+  noMarkdownFile: "No markdown files in the current directory",
+  selectAll: "Select All",
   setting: {
     title: "Export Image",
     imageWidth: {
@@ -95,6 +99,7 @@ const en = {
     },
     preview: "Watermark preview",
     reset: "Reset to default",
+    recursive: "Include notes from subdirectories",
   },
   imageSelect: {
     search: "Search",

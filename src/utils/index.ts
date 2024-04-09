@@ -68,3 +68,11 @@ export async function createHtml(
 export function getMetadata(file: TFile, app: App) {
   return app.metadataCache.getFileCache(file)?.frontmatter;
 }
+
+export function delay(time: number) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+}
