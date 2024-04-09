@@ -39788,7 +39788,7 @@ async function makeHTML(file, settings, app, container) {
       }
     )
   );
-  await delay(20);
+  await delay(100);
   return el.closest(".export-image-root") || el;
 }
 

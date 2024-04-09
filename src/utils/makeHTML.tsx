@@ -52,6 +52,6 @@ export default async function makeHTML(
       metadataMap={metadataMap}
     />
   );
-  await delay(20);
+  await delay(100);
   return (el as HTMLDivElement).closest(".export-image-root") || el;
 }
