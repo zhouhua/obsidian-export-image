@@ -34,6 +34,8 @@ export default async function makeHTML(
       app.workspace.activeLeaf?.view ||
       new MarkdownRenderChild(el)
   );
+
+  // @ts-ignore
   const metadataMap: Record<string, { type: MetadataType }> =
     // @ts-ignore
     app.metadataCache.getAllPropertyInfos();
