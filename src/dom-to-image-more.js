@@ -969,7 +969,8 @@
       return string
         .replace(/%/g, "%25")
         .replace(/#/g, "%23")
-        .replace(/\n/g, "%0A");
+        .replace(/\n/g, "%0A")
+        .replace(/[\x00-\x1F]/g, "");
     }
 
     function width(node) {

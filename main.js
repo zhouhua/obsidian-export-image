@@ -8536,7 +8536,7 @@ var require_dom_to_image_more = __commonJS({
           return array;
         }
         function escapeXhtml(string) {
-          return string.replace(/%/g, "%25").replace(/#/g, "%23").replace(/\n/g, "%0A");
+          return string.replace(/%/g, "%25").replace(/#/g, "%23").replace(/\n/g, "%0A").replace(/[\x00-\x1F]/g, "");
         }
         function width(node2) {
           const width2 = px(node2, "width");
