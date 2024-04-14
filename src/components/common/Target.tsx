@@ -1,5 +1,5 @@
 import { App, FrontMatterCache } from "obsidian";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, forwardRef, useEffect, useRef, useState } from "react";
 import Watermark, { WatermarkProps } from "@pansy/react-watermark";
 import Metadata from "./Metadata";
 
@@ -9,14 +9,17 @@ const alignMap = {
   right: "flex-end",
 };
 
-const Target: FC<{
-  frontmatter: FrontMatterCache | undefined;
-  setting: ISettings;
-  title: string;
-  metadataMap: Record<string, { type: MetadataType }>;
-  markdownEl: Node;
-  app: App;
-}> = ({ frontmatter, setting, title, metadataMap, markdownEl, app }) => {
+const Target = forwardRef<
+  HTMLDivElement,
+  {
+    frontmatter: FrontMatterCache | undefined;
+    setting: ISettings;
+    title: string;
+    metadataMap: Record<string, { type: MetadataType }>;
+    markdownEl: Node;
+    app: App;
+  }
+>(({ frontmatter, setting, title, metadataMap, markdownEl, app }, ref) => {
   const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -51,6 +54,7 @@ const Target: FC<{
       className={`export-image-root ${(frontmatter?.cssclasses || []).join(
         " "
       )}`}
+      ref={ref}
       style={{
         display: "flex",
         flexDirection:
@@ -131,6 +135,6 @@ const Target: FC<{
         )}
     </div>
   );
-};
+});
 
 export default Target;

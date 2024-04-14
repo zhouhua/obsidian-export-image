@@ -134,9 +134,7 @@ const ModalContent: FC<{
   const [isGrabbing, setIsGrabbing] = useState(false);
   const previewOutRef = useRef<HTMLDivElement>(null);
   const mainHeight = Math.min(764, window.innerHeight * 0.85 - 225);
-  const root =
-    (markdownEl as HTMLDivElement).closest(".export-image-root") || markdownEl;
-
+  const root = useRef<HTMLDivElement>(null);
   useEffect(() => {
     setFormData(settings);
   }, [settings]);
@@ -151,7 +149,7 @@ const ModalContent: FC<{
     setProcessing(true);
     await save(
       app,
-      root as HTMLDivElement,
+      root.current!,
       title,
       formData["2x"],
       formData.format,
@@ -166,7 +164,7 @@ const ModalContent: FC<{
       return;
     }
     setProcessing(true);
-    await copy(root as HTMLDivElement, formData["2x"], formData.format);
+    await copy(root.current!, formData["2x"], formData.format);
     setProcessing(false);
   }, [root, formData["2x"], formData.format, title, formData.width]);
 
@@ -195,9 +193,9 @@ const ModalContent: FC<{
               minScale={
                 Math.min(
                   1,
-                  mainHeight / (root as HTMLDivElement).clientHeight,
+                  mainHeight / (root.current?.clientHeight || 100),
                   (previewOutRef.current?.clientWidth || 400) /
-                    ((root as HTMLDivElement).clientWidth + 2)
+                    ((root.current?.clientWidth || 0) + 2)
                 ) / 2
               }
               maxScale={4}
@@ -220,6 +218,7 @@ const ModalContent: FC<{
                 }}
               >
                 <Target
+                  ref={root}
                   frontmatter={frontmatter}
                   markdownEl={markdownEl}
                   setting={formData}

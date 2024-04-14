@@ -8012,6 +8012,7 @@ var require_dom_to_image_more = __commonJS({
         }
         domtoimage2.impl.options.requestUrl = options.requestUrl;
         domtoimage2.impl.options.type = options.type || "image/png";
+        domtoimage2.impl.options.quality = options.quality || 1;
       }
       function draw(domNode, options) {
         options = options || {};
@@ -8338,7 +8339,11 @@ var require_dom_to_image_more = __commonJS({
         function canvasToBlob(canvas) {
           if (canvas.toBlob) {
             return new Promise(function(resolve) {
-              canvas.toBlob(resolve);
+              canvas.toBlob(
+                resolve,
+                domtoimage2.impl.options.type,
+                domtoimage2.impl.options.quality
+              );
             });
           }
           return asBlob(canvas);
@@ -8536,7 +8541,7 @@ var require_dom_to_image_more = __commonJS({
           return array;
         }
         function escapeXhtml(string) {
-          return string.replace(/%/g, "%25").replace(/#/g, "%23").replace(/\n/g, "%0A").replace(/[\x00-\x1F]/g, "");
+          return string.replace(/%/g, "%25").replace(/#/g, "%23").replace(/\n/g, "%0A").replace(/[\x00-\x1F\x7F]/g, "");
         }
         function width(node2) {
           const width2 = px(node2, "width");
@@ -39666,7 +39671,7 @@ var alignMap = {
   center: "center",
   right: "flex-end"
 };
-var Target = ({ frontmatter, setting, title, metadataMap, markdownEl, app }) => {
+var Target = (0, import_react4.forwardRef)(({ frontmatter, setting, title, metadataMap, markdownEl, app }, ref) => {
   const [watermarkProps, setWatermarkProps] = (0, import_react4.useState)({});
   const contentRef = (0, import_react4.useRef)(null);
   (0, import_react4.useEffect)(() => {
@@ -39700,6 +39705,7 @@ var Target = ({ frontmatter, setting, title, metadataMap, markdownEl, app }) => 
       className: `export-image-root ${(frontmatter?.cssclasses || []).join(
         " "
       )}`,
+      ref,
       style: {
         display: "flex",
         flexDirection: setting.authorInfo.position === "bottom" ? "column" : "column-reverse",
@@ -39749,7 +39755,7 @@ var Target = ({ frontmatter, setting, title, metadataMap, markdownEl, app }) => 
       setting.authorInfo.name && /* @__PURE__ */ import_react4.default.createElement("div", null, /* @__PURE__ */ import_react4.default.createElement("div", { className: "user-info-name" }, setting.authorInfo.name), setting.authorInfo.remark && /* @__PURE__ */ import_react4.default.createElement("div", { className: "user-info-remark" }, setting.authorInfo.remark))
     )
   );
-};
+});
 var Target_default = Target;
 
 // src/utils/makeHTML.tsx
@@ -41926,7 +41932,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
   const [isGrabbing, setIsGrabbing] = (0, import_react10.useState)(false);
   const previewOutRef = (0, import_react10.useRef)(null);
   const mainHeight = Math.min(764, window.innerHeight * 0.85 - 225);
-  const root2 = markdownEl.closest(".export-image-root") || markdownEl;
+  const root2 = (0, import_react10.useRef)(null);
   (0, import_react10.useEffect)(() => {
     setFormData(settings);
   }, [settings]);
@@ -41939,7 +41945,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
     setProcessing(true);
     await save(
       app,
-      root2,
+      root2.current,
       title,
       formData["2x"],
       formData.format,
@@ -41954,7 +41960,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
       return;
     }
     setProcessing(true);
-    await copy(root2, formData["2x"], formData.format);
+    await copy(root2.current, formData["2x"], formData.format);
     setProcessing(false);
   }, [root2, formData["2x"], formData.format, title, formData.width]);
   return /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-root" }, /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-main" }, /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-left" }, /* @__PURE__ */ import_react11.default.createElement(
@@ -41980,8 +41986,8 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
       {
         minScale: Math.min(
           1,
-          mainHeight / root2.clientHeight,
-          (previewOutRef.current?.clientWidth || 400) / (root2.clientWidth + 2)
+          mainHeight / (root2.current?.clientHeight || 100),
+          (previewOutRef.current?.clientWidth || 400) / ((root2.current?.clientWidth || 0) + 2)
         ) / 2,
         maxScale: 4,
         pinch: { step: 20 },
@@ -42007,6 +42013,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
         /* @__PURE__ */ import_react11.default.createElement(
           Target_default,
           {
+            ref: root2,
             frontmatter,
             markdownEl,
             setting: formData,

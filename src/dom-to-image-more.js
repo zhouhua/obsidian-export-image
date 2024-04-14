@@ -215,7 +215,6 @@
       return canvas.toDataURL();
     });
   }
-
   /**
    * @param {Node} node - The DOM Node object to render
    * @param {Object} options - Rendering options, @see {@link toSvg}
@@ -295,6 +294,7 @@
     }
     domtoimage.impl.options.requestUrl = options.requestUrl;
     domtoimage.impl.options.type = options.type || "image/png";
+    domtoimage.impl.options.quality = options.quality || 1.0;
   }
 
   function draw(domNode, options) {
@@ -721,7 +721,11 @@
     function canvasToBlob(canvas) {
       if (canvas.toBlob) {
         return new Promise(function (resolve) {
-          canvas.toBlob(resolve);
+          canvas.toBlob(
+            resolve,
+            domtoimage.impl.options.type,
+            domtoimage.impl.options.quality
+          );
         });
       }
 
@@ -970,7 +974,7 @@
         .replace(/%/g, "%25")
         .replace(/#/g, "%23")
         .replace(/\n/g, "%0A")
-        .replace(/[\x00-\x1F]/g, "");
+        .replace(/[\x00-\x1F\x7F]/g, ""); // remove control characters and DEL characters
     }
 
     function width(node) {
