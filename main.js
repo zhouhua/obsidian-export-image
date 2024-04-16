@@ -2210,7 +2210,7 @@ var require_react_dom_production_min = __commonJS({
     var be2 = null;
     ia && "documentMode" in document && (be2 = document.documentMode);
     var ce2 = ia && "TextEvent" in window && !be2;
-    var de2 = ia && (!ae2 || be2 && 8 < be2 && 11 >= be2);
+    var de3 = ia && (!ae2 || be2 && 8 < be2 && 11 >= be2);
     var ee2 = String.fromCharCode(32);
     var fe2 = false;
     function ge2(a3, b2) {
@@ -2262,7 +2262,7 @@ var require_react_dom_production_min = __commonJS({
           }
           return null;
         case "compositionend":
-          return de2 && "ko" !== b2.locale ? null : b2.data;
+          return de3 && "ko" !== b2.locale ? null : b2.data;
         default:
           return null;
       }
@@ -2826,7 +2826,7 @@ var require_react_dom_production_min = __commonJS({
             }
           else
             ie2 ? ge2(a3, c5) && (ba = "onCompositionEnd") : "keydown" === a3 && 229 === c5.keyCode && (ba = "onCompositionStart");
-          ba && (de2 && "ko" !== c5.locale && (ie2 || "onCompositionStart" !== ba ? "onCompositionEnd" === ba && ie2 && ($a = nd()) : (kd = e5, ld = "value" in kd ? kd.value : kd.textContent, ie2 = true)), xa = oe2(d3, ba), 0 < xa.length && (ba = new Ld(ba, a3, null, c5, e5), g3.push({ event: ba, listeners: xa }), $a ? ba.data = $a : ($a = he2(c5), null !== $a && (ba.data = $a))));
+          ba && (de3 && "ko" !== c5.locale && (ie2 || "onCompositionStart" !== ba ? "onCompositionEnd" === ba && ie2 && ($a = nd()) : (kd = e5, ld = "value" in kd ? kd.value : kd.textContent, ie2 = true)), xa = oe2(d3, ba), 0 < xa.length && (ba = new Ld(ba, a3, null, c5, e5), g3.push({ event: ba, listeners: xa }), $a ? ba.data = $a : ($a = he2(c5), null !== $a && (ba.data = $a))));
           if ($a = ce2 ? je(a3, c5) : ke(a3, c5))
             d3 = oe2(d3, "onBeforeInput"), 0 < d3.length && (e5 = new Ld("onBeforeInput", "beforeinput", null, c5, e5), g3.push({ event: e5, listeners: d3 }), e5.data = $a);
         }
@@ -30131,7 +30131,9 @@ var initExtendDictionary = () => (base, part) => objectExtend({}, base, part);
 var extendDictionary = initExtendDictionary();
 
 // src/i18n/i18n-util.ts
+var baseLocale = "en";
 var locales = [
+  "de",
   "en",
   "zh"
 ];
@@ -30147,6 +30149,115 @@ var initFormatters = (locale2) => {
   };
   return formatters;
 };
+
+// src/i18n/de/index.ts
+var de = {
+  // TODO: Ihre Übersetzungen hier eingeben
+  command: "Als Bild exportieren",
+  noActiveFile: "Bitte \xF6ffnen Sie zuerst einen Artikel!",
+  imageExportPreview: "Bildexport-Vorschau",
+  copiedSuccess: "In die Zwischenablage kopiert",
+  copy: "In Zwischenablage kopieren",
+  copyFail: "Kopieren fehlgeschlagen",
+  notAllowCopy: "Direktes Kopieren des {format} Formats nicht m\xF6glich",
+  save: "Bild speichern",
+  saveSuccess: "Das Bild wurde erfolgreich als {filePath: string} gespeichert.",
+  saveFail: "Das Bild konnte nicht gespeichert werden",
+  saveVault: "Im Tresor speichern",
+  includingFilename: "Mit Dateinamen als Titel einschlie\xDFen",
+  imageWidth: "Bildbreite",
+  exportImage: "Zu Bild exportieren",
+  exportSelectionImage: "Auswahl als Bild exportieren",
+  exportFolder: "Alle Notizen als Bilder exportieren",
+  invalidWidth: "Bitte geben Sie eine vern\xFCnftige Nummer f\xFCr die Breite an.",
+  "2x": "Bild mit 2x Aufl\xF6sung aktivieren",
+  moreSetting: "Detailliertere Einstellungen finden Sie in den `Bild exportieren` Plugin-Einstellungen.",
+  guide: "Ziehen zum Bewegen, scrollen oder kneifen zum Zoomen, Doppelklick zum Zur\xFCcksetzen.",
+  copyNotAllowed: "Das pdf-Format wird f\xFCr das Kopieren nicht unterst\xFCtzt",
+  exportAll: "Ausgew\xE4hlte Notizen exportieren",
+  noMarkdownFile: "Keine Markdown-Dateien im aktuellen Verzeichnis",
+  selectAll: "Alles ausw\xE4hlen",
+  setting: {
+    title: "Bild exportieren",
+    imageWidth: {
+      label: "Standardm\xE4\xDFige exportierte Bildbreite",
+      description: "Setzen Sie die Breite des exportierten Bildes in Pixel. Standardm\xE4\xDFig ist 640px."
+    },
+    filename: {
+      label: "Dateinamen als Titel einbeziehen",
+      description: "Stellen Sie ein, ob der Dateiname als Titel einbezogen werden soll. Wenn Obsidian das Dokument anzeigt, wird der Dateiname als h1 Titel angezeigt. Manchmal ist das nicht erw\xFCnscht, und Sie erhalten doppelte Titel."
+    },
+    "2x": {
+      label: "Bild mit 2x Aufl\xF6sung aktivieren",
+      description: "Stellen Sie ein, ob Bilder mit 2x Aufl\xF6sung aktiviert werden sollen. Bilder mit 2x Aufl\xF6sung erscheinen sch\xE4rfer und bieten eine bessere Erfahrung auf Bildschirmen mit hoher PPI, wie z.B. auf Smartphones. Der Nachteil ist jedoch, dass die Dateigr\xF6\xDFe der Bilder gr\xF6\xDFer ist."
+    },
+    metadata: {
+      label: "Metadaten anzeigen"
+    },
+    format: {
+      title: "Ausgabeformat der Datei",
+      description: "Standardm\xE4\xDFige PNG-Formatbilder sollten die Mehrheit der Bed\xFCrfnisse erf\xFCllen, aber um Benutzerszenarien besser zu unterst\xFCtzen: 1. Unterst\xFCtzung f\xFCr den Export von Bildern mit normalem und transparentem Hintergrund; 2. Unterst\xFCtzung f\xFCr den Export von JPG-Bildern zur Erreichung kleinerer Dateigr\xF6\xDFen, obwohl es m\xF6glicherweise nicht m\xF6glich ist, direkt in die Zwischenablage zu kopieren; 3. Unterst\xFCtzung f\xFCr den Export in das Einzelseiten-PDF-Format, das sich von den \xFCblichen PDF-Papierformaten unterscheidet, bitte Vorsicht, um keine Verwechslung zu verursachen.",
+      png0: ".png - Standard",
+      png1: ".png - Bild mit transparentem Hintergrund",
+      jpg: ".jpg - jpg-Format Bild",
+      pdf: ".pdf - Einzelseiten-PDF"
+    },
+    userInfo: {
+      title: "Autoreninfo",
+      show: "Autoreninfo anzeigen",
+      avatar: {
+        title: "Avatar",
+        description: "Es wird empfohlen, quadratische Bilder zu verwenden"
+      },
+      name: "Autorenname",
+      position: "Anzeigeposition",
+      remark: "Zus\xE4tzlicher Text",
+      align: "Ausrichten",
+      removeAvatar: "Avatar entfernen"
+    },
+    watermark: {
+      title: "Wasserzeichen",
+      enable: {
+        label: "Wasserzeichen aktivieren",
+        description: "Wasserzeichen aktivieren, unterst\xFCtzt Text- und Bildwasserzeichen."
+      },
+      type: {
+        label: "Wasserzeichentyp",
+        description: "Legen Sie den Typ des Wasserzeichens fest, Text oder Bild.",
+        text: "Text",
+        image: "Bild"
+      },
+      text: {
+        content: "Textinhalt",
+        fontSize: "Schriftgr\xF6\xDFe des Wasserzeichens",
+        color: "Wasserzeichentextfarbe"
+      },
+      image: {
+        src: {
+          label: "Bild-URL",
+          upload: "Bild hochladen",
+          select: "Aus Tresor w\xE4hlen"
+        }
+      },
+      opacity: "Wasserzeichen-Durchsichtigkeit (0 ist transparent, 1 ist nicht transparent)",
+      rotate: "Wasserzeichen-Drehung (in Grad)",
+      width: "Wasserzeichenbreite",
+      height: "Wasserzeichenh\xF6he",
+      x: "Horizontaler Abstand des Wasserzeichens",
+      y: "Vertikaler Abstand des Wasserzeichens"
+    },
+    preview: "Wasserzeichen-Vorschau",
+    reset: "Auf Standard zur\xFCcksetzen",
+    recursive: "Notizen aus Unterordnern einbeziehen"
+  },
+  imageSelect: {
+    search: "Suchen",
+    select: "Ausw\xE4hlen",
+    cancel: "Abbrechen",
+    empty: "Kein Bild gefunden"
+  }
+};
+var de_default = de;
 
 // src/i18n/en/index.ts
 var en = {
@@ -30367,6 +30478,7 @@ var zh_default = zh;
 
 // src/i18n/i18n-util.sync.ts
 var localeTranslations = {
+  de: de_default,
   en: en_default,
   zh: zh_default
 };
@@ -30383,7 +30495,13 @@ var loadFormatters = (locale2) => void (loadedFormatters[locale2] = initFormatte
 loadAllLocales();
 var locale = "en";
 try {
-  locale = (global?.i18next?.language || "").startsWith("zh") ? "zh" : "en";
+  locale = global?.i18next?.language || "";
+  if (locale.startsWith("zh")) {
+    locale = "zh";
+  }
+  if (!locales.includes(locale)) {
+    locale = baseLocale;
+  }
 } catch {
 }
 var L = i18n2()[locale];
@@ -33463,7 +33581,7 @@ function E(e4) {
     i5.push({ key: "FunctionType", value: "0" }), i5.push({ key: "Domain", value: "[0.0 1.0]" }), i5.push({ key: "Size", value: "[" + e5 + "]" }), i5.push({ key: "BitsPerSample", value: "8" }), i5.push({ key: "Range", value: "[0.0 1.0 0.0 1.0 0.0 1.0]" }), i5.push({ key: "Decode", value: "[0.0 1.0 0.0 1.0 0.0 1.0]" }), ie2({ data: n4, additionalKeyValues: i5, alreadyAppliedFilters: ["/ASCIIHexDecode"], objectId: r6 }), lt2("endobj"), t5.objectNumber = Xt2(), lt2("<< /ShadingType " + t5.type), lt2("/ColorSpace /DeviceRGB");
     var a3 = "/Coords [" + O3(parseFloat(t5.coords[0])) + " " + O3(parseFloat(t5.coords[1])) + " ";
     2 === t5.type ? a3 += O3(parseFloat(t5.coords[2])) + " " + O3(parseFloat(t5.coords[3])) : a3 += O3(parseFloat(t5.coords[2])) + " " + O3(parseFloat(t5.coords[3])) + " " + O3(parseFloat(t5.coords[4])) + " " + O3(parseFloat(t5.coords[5])), lt2(a3 += "]"), t5.matrix && lt2("/Matrix [" + t5.matrix.toString() + "]"), lt2("/Function " + r6 + " 0 R"), lt2("/Extend [true true]"), lt2(">>"), lt2("endobj");
-  }, de2 = function(t5, e5) {
+  }, de3 = function(t5, e5) {
     var r6 = Kt2(), n4 = Xt2();
     e5.push({ resourcesOid: r6, objectOid: n4 }), t5.objectNumber = n4;
     var i5 = [];
@@ -33471,7 +33589,7 @@ function E(e4) {
   }, pe2 = function(t5) {
     var e5;
     for (e5 in Ot2)
-      Ot2.hasOwnProperty(e5) && (Ot2[e5] instanceof B ? fe2(Ot2[e5]) : Ot2[e5] instanceof M && de2(Ot2[e5], t5));
+      Ot2.hasOwnProperty(e5) && (Ot2[e5] instanceof B ? fe2(Ot2[e5]) : Ot2[e5] instanceof M && de3(Ot2[e5], t5));
   }, ge2 = function(t5) {
     for (var e5 in t5.objectNumber = Xt2(), lt2("<<"), t5)
       switch (e5) {
@@ -38326,8 +38444,8 @@ function ee(t5) {
             }
           } else
             m7.ua = 0;
-          var de3 = s4, pe3 = f5, ge3 = p5, me3 = de3.s, ve3 = me3.xc;
-          if (de3.c = pe3, de3.i = ge3, me3.md = q2(pe3, ve3), me3.wc = 0 == ve3 ? -1 : (1 << ve3) - 1, n5) {
+          var de4 = s4, pe3 = f5, ge3 = p5, me3 = de4.s, ve3 = me3.xc;
+          if (de4.c = pe3, de4.i = ge3, me3.md = q2(pe3, ve3), me3.wc = 0 == ve3 ? -1 : (1 << ve3) - 1, n5) {
             s4.xb = pi;
             break t;
           }
@@ -38597,7 +38715,7 @@ function ee(t5) {
                 Fn[255 + s4] = 0 > s4 ? 0 : 255 < s4 ? 255 : s4;
               Cn = 1;
             }
-            an = ue2, on = ae2, cn = oe2, un = se2, hn = ce2, sn = ie2, ln2 = Je, fn = Xe, dn = $e, pn = Qe, gn = Ke, mn = Ze, vn = tr, bn = er, yn = ze, wn = He, Nn = We, Ln = Ve, fi[0] = xe2, fi[1] = le3, fi[2] = Le2, fi[3] = Ae, fi[4] = Se, fi[5] = Pe, fi[6] = _e, fi[7] = ke, fi[8] = Fe, fi[9] = Ie, li[0] = ve2, li[1] = de2, li[2] = pe2, li[3] = ge2, li[4] = be2, li[5] = ye3, li[6] = we2, di[0] = Be, di[1] = fe2, di[2] = Ce, di[3] = je, di[4] = Ee, di[5] = Me, di[6] = qe, s4 = 1;
+            an = ue2, on = ae2, cn = oe2, un = se2, hn = ce2, sn = ie2, ln2 = Je, fn = Xe, dn = $e, pn = Qe, gn = Ke, mn = Ze, vn = tr, bn = er, yn = ze, wn = He, Nn = We, Ln = Ve, fi[0] = xe2, fi[1] = le3, fi[2] = Le2, fi[3] = Ae, fi[4] = Se, fi[5] = Pe, fi[6] = _e, fi[7] = ke, fi[8] = Fe, fi[9] = Ie, li[0] = ve2, li[1] = de3, li[2] = pe2, li[3] = ge2, li[4] = be2, li[5] = ye3, li[6] = we2, di[0] = Be, di[1] = fe2, di[2] = Ce, di[3] = je, di[4] = Ee, di[5] = Me, di[6] = qe, s4 = 1;
           } else
             s4 = 0;
         }
@@ -38759,7 +38877,7 @@ function ee(t5) {
     function fe2(t7, e5) {
       he2(t7, e5, 8);
     }
-    function de2(t7, e5) {
+    function de3(t7, e5) {
       he2(t7, e5, 16);
     }
     function pe2(t7, e5) {
@@ -40797,7 +40915,7 @@ var fe = function(t5) {
     }
   }, e4;
 }();
-var de = function(t5, e4) {
+var de2 = function(t5, e4) {
   this.raw = t5, this.length = t5.length, this.platformID = e4.platformID, this.encodingID = e4.encodingID, this.languageID = e4.languageID;
 };
 var pe = function(t5) {
@@ -40809,7 +40927,7 @@ var pe = function(t5) {
     for (t6.pos = this.offset, t6.readShort(), e5 = t6.readShort(), o4 = t6.readShort(), r5 = [], i4 = 0; 0 <= e5 ? i4 < e5 : i4 > e5; i4 = 0 <= e5 ? ++i4 : --i4)
       r5.push({ platformID: t6.readShort(), encodingID: t6.readShort(), languageID: t6.readShort(), nameID: t6.readShort(), length: t6.readShort(), offset: this.offset + o4 + t6.readShort() });
     for (s3 = {}, i4 = u3 = 0, h3 = r5.length; u3 < h3; i4 = ++u3)
-      n4 = r5[i4], t6.pos = n4.offset, c5 = t6.readString(n4.length), a3 = new de(c5, n4), null == s3[l3 = n4.nameID] && (s3[l3] = []), s3[n4.nameID].push(a3);
+      n4 = r5[i4], t6.pos = n4.offset, c5 = t6.readString(n4.length), a3 = new de2(c5, n4), null == s3[l3 = n4.nameID] && (s3[l3] = []), s3[n4.nameID].push(a3);
     this.strings = s3, this.copyright = s3[0], this.fontFamily = s3[1], this.fontSubfamily = s3[2], this.uniqueSubfamily = s3[3], this.fontName = s3[4], this.version = s3[5];
     try {
       this.postscriptName = s3[6][0].raw.replace(/[\x00-\x19\x80-\xff]/g, "");
@@ -41948,7 +42066,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
         title,
         formData["2x"],
         formData.format,
-        // @ts-expect-error
+        // @ts-ignore
         app.isMobile
       );
     } catch {

@@ -159,7 +159,7 @@ const ModalContent: FC<{
         title,
         formData['2x'],
         formData.format,
-        // @ts-expect-error
+        // @ts-ignore
         app.isMobile as boolean,
       );
     } catch {
@@ -260,7 +260,7 @@ const ModalContent: FC<{
           {allowCopy || <p>{L.notAllowCopy({format: formData.format.replace(/\d$/, '').toUpperCase()})}</p>}
         </div>
         <button onClick={handleSave} disabled={processing}>
-          {/* @ts-expect-error */}
+          {/* @ts-ignore */}
           {app.isMobile ? L.saveVault() : L.save()}
         </button>
       </div>

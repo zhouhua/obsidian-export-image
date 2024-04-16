@@ -1,13 +1,20 @@
 import {type Locales} from './i18n/i18n-types';
-import {i18n} from './i18n/i18n-util';
+import {baseLocale, i18n, locales} from './i18n/i18n-util';
 import {loadAllLocales} from './i18n/i18n-util.sync';
 
 loadAllLocales();
 
 let locale: Locales = 'en';
 try {
-  // @ts-expect-error
-  locale = (global?.i18next?.language as string || '').startsWith('zh') ? 'zh' : 'en';
+  // @ts-ignore
+  locale = (global?.i18next?.language as string || '');
+  if (locale.startsWith('zh')) {
+    locale = 'zh';
+  }
+
+  if (!locales.includes(locale)) {
+    locale = baseLocale;
+  }
 } catch {
   /* empty */
 }

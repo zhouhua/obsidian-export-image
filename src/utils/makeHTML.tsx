@@ -39,7 +39,7 @@ export default async function makeHTML(
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const metadataMap: Record<string, {type: MetadataType}>
-    /* @ts-expect-error */
+    /* @ts-ignore */
     = app.metadataCache.getAllPropertyInfos(); // eslint-disable-line @typescript-eslint/no-unsafe-call
   const frontmatter = getMetadata(file, app);
 

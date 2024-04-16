@@ -60,7 +60,7 @@ export default class ExportImagePlugin extends Plugin {
     this.registerEvent(
       this.app.workspace.on('editor-menu', (menu, editor) => {
         const file: TFile
-        // @ts-expect-error: Obsidian ts defined incomplete.
+        // @ts-ignore: Obsidian ts defined incomplete.
           = editor.editorComponent.file as (TFile | undefined) ?? this.app.workspace.getActiveFile()!;
         const frontmatter = getMetadata(file, this.app);
         if (!file) {

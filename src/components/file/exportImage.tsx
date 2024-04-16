@@ -37,7 +37,7 @@ export default async function (
   const root = createRoot(modal.contentEl);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const metadataMap: Record<string, {type: MetadataType}>
-    /* @ts-expect-error */
+    /* @ts-ignore */
     = app.metadataCache.getAllPropertyInfos(); // eslint-disable-line @typescript-eslint/no-unsafe-call
   root.render(
     <ModalContent

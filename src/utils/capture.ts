@@ -155,7 +155,7 @@ export async function saveMultipleFiles(
     }
 
     const fileName = `${folderName.replaceAll(/\s+/g, '_')}.pdf`;
-    // @ts-expect-error
+    // @ts-ignore
     if (app.isMobile) {
       const filePath = await app.fileManager.getAvailablePathForAttachment(
         fileName,
