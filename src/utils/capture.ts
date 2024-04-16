@@ -6,7 +6,7 @@ import JsPdf from 'jspdf';
 import domtoimage from '../dom-to-image-more';
 import L from '../L';
 import makeHTML from './makeHTML';
-import {fileToBase64, delay} from '.';
+import {fileToBase64, delay, getMime} from '.';
 
 async function getBlob(el: HTMLElement, higtResolution: boolean, type: string): Promise<Blob> {
   return domtoimage.toBlob(el, {
@@ -49,11 +49,12 @@ export async function save(
   const blob: Blob = await getBlob(
     el,
     higtResolution,
-    `image/${format.includes('png') ? 'png' : 'jpeg'}`,
+    getMime(format),
   );
   const filename = `${title.replaceAll(/\s+/g, '_')}.${format.replace(/\d$/, '')}`;
   switch (format) {
     case 'jpg':
+    case 'webp':
     case 'png0':
     case 'png1': {
       if (isMobile) {
@@ -99,7 +100,7 @@ export async function copy(
   const blob = await getBlob(
     el,
     higtResolution,
-    `image/${format.includes('png') ? 'png' : 'jpeg'}`,
+    getMime(format),
   );
   const data: ClipboardItem[] = [];
   data.push(

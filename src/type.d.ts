@@ -1,4 +1,4 @@
-declare type FileFormat = 'png0' | 'png1' | 'jpg' | 'pdf';
+declare type FileFormat = 'png0' | 'png1' | 'jpg' | 'pdf' | 'webp';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 declare type ISettings = {

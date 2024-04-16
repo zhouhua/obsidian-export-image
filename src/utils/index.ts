@@ -79,3 +79,7 @@ export async function delay(time: number) {
     }, time);
   });
 }
+
+export function getMime(format: FileFormat) {
+  return `image/${format.includes('png') ? 'png' : (format === 'jpg' ? 'jpeg' : format)}`;
+}

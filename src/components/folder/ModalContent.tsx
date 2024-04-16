@@ -9,46 +9,8 @@ import {type App, TFile, TFolder} from 'obsidian';
 import L from 'src/L';
 import {delay, isMarkdownFile} from 'src/utils';
 import {saveMultipleFiles} from 'src/utils/capture';
+import {formatAvailable} from 'src/settings';
 import FormItems from '../common/form/FormItems';
-
-const formSchema: FormSchema<ISettings> = [
-  {
-    label: L.setting.recursive(),
-    path: 'recursive',
-    type: 'boolean',
-  },
-  {
-    label: L.includingFilename(),
-    path: 'showFilename',
-    type: 'boolean',
-  },
-  {
-    label: L.imageWidth(),
-    path: 'width',
-    type: 'number',
-  },
-  {
-    label: L.setting.userInfo.show(),
-    path: 'authorInfo.show',
-    type: 'boolean',
-  },
-  {
-    label: L.setting.watermark.enable.label(),
-    path: 'watermark.enable',
-    type: 'boolean',
-  },
-  {
-    label: L.setting.format.title(),
-    path: 'format',
-    type: 'select',
-    options: [
-      {value: 'png0', text: 'png'},
-      {value: 'png1', text: 'png - transparent background'},
-      {value: 'jpg', text: 'jpg'},
-      {value: 'pdf', text: 'pdf'},
-    ],
-  },
-];
 
 const ModalContent: FC<{
   settings: ISettings;
@@ -93,7 +55,45 @@ const ModalContent: FC<{
     close,
     folder.name,
   ]);
-
+  const formSchema: FormSchema<ISettings> = [
+    {
+      label: L.setting.recursive(),
+      path: 'recursive',
+      type: 'boolean',
+    },
+    {
+      label: L.includingFilename(),
+      path: 'showFilename',
+      type: 'boolean',
+    },
+    {
+      label: L.imageWidth(),
+      path: 'width',
+      type: 'number',
+    },
+    {
+      label: L.setting.userInfo.show(),
+      path: 'authorInfo.show',
+      type: 'boolean',
+    },
+    {
+      label: L.setting.watermark.enable.label(),
+      path: 'watermark.enable',
+      type: 'boolean',
+    },
+    {
+      label: L.setting.format.title(),
+      path: 'format',
+      type: 'select',
+      options: [
+        {value: 'png0', text: 'png(normal)'},
+        {value: 'png1', text: 'png(no background)'},
+        {value: 'jpg', text: 'jpg'},
+        {value: 'webp', text: 'webp'},
+        {value: 'pdf', text: 'pdf'},
+      ].filter(({value}) => formatAvailable.contains(value as FileFormat)),
+    },
+  ];
   useEffect(() => {
     const fileList: TFile[] = [];
     if (formData.recursive) {

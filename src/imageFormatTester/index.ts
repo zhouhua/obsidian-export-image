@@ -1,4 +1,5 @@
-import {jpg, png} from './tiny';
+import {getMime} from 'src/utils';
+import {jpg, png, webp} from './tiny';
 
 async function tester(image: string) {
   try {
@@ -17,24 +18,64 @@ async function tester(image: string) {
   }
 }
 
-const cache: Partial<Record<FileFormat, Promise<boolean>>> = {
+const copyCache: Partial<Record<FileFormat, Promise<boolean>>> = {
   pdf: Promise.resolve(false),
 };
+const createCache: Partial<Record<FileFormat, boolean>> = {
+  pdf: true,
+};
 
-async function isCopiable(type: FileFormat) {
-  if (type in cache) {
-    return cache[type];
+export async function isCopiable(type: FileFormat) {
+  if (type in copyCache) {
+    return copyCache[type];
   }
 
   if (type === 'jpg') {
-    cache[type] = tester(jpg);
-    return cache[type];
+    copyCache[type] = tester(jpg);
+    return copyCache[type];
+  }
+
+  if (type === 'webp') {
+    copyCache[type] = tester(webp);
+    return copyCache[type];
   }
 
   const result = tester(png);
-  cache.png0 = result;
-  cache.png1 = result;
+  copyCache.png0 = result;
+  copyCache.png1 = result;
   return result;
 }
 
-export default isCopiable;
+export async function isCreatable(type: FileFormat): Promise<boolean> {
+  if (type in createCache) {
+    return createCache[type]!;
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1;
+  canvas.height = 1;
+  const mime = getMime(type);
+  return new Promise(resolve => {
+    try {
+      canvas.toBlob(() => {
+        if (type.includes('png')) {
+          createCache.png0 = true;
+          createCache.png1 = true;
+        } else {
+          createCache[type] = true;
+        }
+
+        resolve(true);
+      }, mime);
+    } catch {
+      if (type.includes('png')) {
+        createCache.png0 = false;
+        createCache.png1 = false;
+      } else {
+        createCache[type] = false;
+      }
+
+      resolve(false);
+    }
+  });
+}

@@ -3,7 +3,7 @@ import React, {
   useState, useRef, type FC, useEffect, useCallback,
 } from 'react';
 import {TransformWrapper, TransformComponent} from 'react-zoom-pan-pinch';
-import isCopiable from 'src/imageFormatTester';
+import {isCopiable} from 'src/imageFormatTester';
 import {copy, save} from '../../utils/capture';
 import L from '../../L';
 import Target from '../common/Target';

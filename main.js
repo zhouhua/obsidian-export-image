@@ -37,6 +37,1238 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js
+var require_isArray = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js"(exports, module2) {
+    var isArray = Array.isArray;
+    module2.exports = isArray;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js
+var require_freeGlobal = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js"(exports, module2) {
+    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+    module2.exports = freeGlobal;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js
+var require_root = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js"(exports, module2) {
+    var freeGlobal = require_freeGlobal();
+    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+    var root2 = freeGlobal || freeSelf || Function("return this")();
+    module2.exports = root2;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js
+var require_Symbol = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js"(exports, module2) {
+    var root2 = require_root();
+    var Symbol2 = root2.Symbol;
+    module2.exports = Symbol2;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js
+var require_getRawTag = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var nativeObjectToString = objectProto.toString;
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function getRawTag(value) {
+      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
+      try {
+        value[symToStringTag] = void 0;
+        var unmasked = true;
+      } catch (e4) {
+      }
+      var result = nativeObjectToString.call(value);
+      if (unmasked) {
+        if (isOwn) {
+          value[symToStringTag] = tag;
+        } else {
+          delete value[symToStringTag];
+        }
+      }
+      return result;
+    }
+    module2.exports = getRawTag;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js
+var require_objectToString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js"(exports, module2) {
+    var objectProto = Object.prototype;
+    var nativeObjectToString = objectProto.toString;
+    function objectToString(value) {
+      return nativeObjectToString.call(value);
+    }
+    module2.exports = objectToString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js
+var require_baseGetTag = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var getRawTag = require_getRawTag();
+    var objectToString = require_objectToString();
+    var nullTag = "[object Null]";
+    var undefinedTag = "[object Undefined]";
+    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+    function baseGetTag(value) {
+      if (value == null) {
+        return value === void 0 ? undefinedTag : nullTag;
+      }
+      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
+    }
+    module2.exports = baseGetTag;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js
+var require_isObjectLike = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js"(exports, module2) {
+    function isObjectLike(value) {
+      return value != null && typeof value == "object";
+    }
+    module2.exports = isObjectLike;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js
+var require_isSymbol = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isObjectLike = require_isObjectLike();
+    var symbolTag = "[object Symbol]";
+    function isSymbol(value) {
+      return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
+    }
+    module2.exports = isSymbol;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js
+var require_isKey = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js"(exports, module2) {
+    var isArray = require_isArray();
+    var isSymbol = require_isSymbol();
+    var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
+    var reIsPlainProp = /^\w*$/;
+    function isKey(value, object) {
+      if (isArray(value)) {
+        return false;
+      }
+      var type = typeof value;
+      if (type == "number" || type == "symbol" || type == "boolean" || value == null || isSymbol(value)) {
+        return true;
+      }
+      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
+    }
+    module2.exports = isKey;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js
+var require_isObject = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js"(exports, module2) {
+    function isObject(value) {
+      var type = typeof value;
+      return value != null && (type == "object" || type == "function");
+    }
+    module2.exports = isObject;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js
+var require_isFunction = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isObject = require_isObject();
+    var asyncTag = "[object AsyncFunction]";
+    var funcTag = "[object Function]";
+    var genTag = "[object GeneratorFunction]";
+    var proxyTag = "[object Proxy]";
+    function isFunction(value) {
+      if (!isObject(value)) {
+        return false;
+      }
+      var tag = baseGetTag(value);
+      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+    }
+    module2.exports = isFunction;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js
+var require_coreJsData = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js"(exports, module2) {
+    var root2 = require_root();
+    var coreJsData = root2["__core-js_shared__"];
+    module2.exports = coreJsData;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js
+var require_isMasked = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js"(exports, module2) {
+    var coreJsData = require_coreJsData();
+    var maskSrcKey = function() {
+      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+      return uid ? "Symbol(src)_1." + uid : "";
+    }();
+    function isMasked(func) {
+      return !!maskSrcKey && maskSrcKey in func;
+    }
+    module2.exports = isMasked;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js
+var require_toSource = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js"(exports, module2) {
+    var funcProto = Function.prototype;
+    var funcToString = funcProto.toString;
+    function toSource(func) {
+      if (func != null) {
+        try {
+          return funcToString.call(func);
+        } catch (e4) {
+        }
+        try {
+          return func + "";
+        } catch (e4) {
+        }
+      }
+      return "";
+    }
+    module2.exports = toSource;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js
+var require_baseIsNative = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js"(exports, module2) {
+    var isFunction = require_isFunction();
+    var isMasked = require_isMasked();
+    var isObject = require_isObject();
+    var toSource = require_toSource();
+    var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+    var reIsHostCtor = /^\[object .+?Constructor\]$/;
+    var funcProto = Function.prototype;
+    var objectProto = Object.prototype;
+    var funcToString = funcProto.toString;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var reIsNative = RegExp(
+      "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
+    );
+    function baseIsNative(value) {
+      if (!isObject(value) || isMasked(value)) {
+        return false;
+      }
+      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
+      return pattern.test(toSource(value));
+    }
+    module2.exports = baseIsNative;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js
+var require_getValue = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js"(exports, module2) {
+    function getValue(object, key) {
+      return object == null ? void 0 : object[key];
+    }
+    module2.exports = getValue;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js
+var require_getNative = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js"(exports, module2) {
+    var baseIsNative = require_baseIsNative();
+    var getValue = require_getValue();
+    function getNative(object, key) {
+      var value = getValue(object, key);
+      return baseIsNative(value) ? value : void 0;
+    }
+    module2.exports = getNative;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js
+var require_nativeCreate = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js"(exports, module2) {
+    var getNative = require_getNative();
+    var nativeCreate = getNative(Object, "create");
+    module2.exports = nativeCreate;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js
+var require_hashClear = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    function hashClear() {
+      this.__data__ = nativeCreate ? nativeCreate(null) : {};
+      this.size = 0;
+    }
+    module2.exports = hashClear;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js
+var require_hashDelete = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js"(exports, module2) {
+    function hashDelete(key) {
+      var result = this.has(key) && delete this.__data__[key];
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    module2.exports = hashDelete;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js
+var require_hashGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    var HASH_UNDEFINED = "__lodash_hash_undefined__";
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function hashGet(key) {
+      var data = this.__data__;
+      if (nativeCreate) {
+        var result = data[key];
+        return result === HASH_UNDEFINED ? void 0 : result;
+      }
+      return hasOwnProperty.call(data, key) ? data[key] : void 0;
+    }
+    module2.exports = hashGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js
+var require_hashHas = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function hashHas(key) {
+      var data = this.__data__;
+      return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
+    }
+    module2.exports = hashHas;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js
+var require_hashSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js"(exports, module2) {
+    var nativeCreate = require_nativeCreate();
+    var HASH_UNDEFINED = "__lodash_hash_undefined__";
+    function hashSet(key, value) {
+      var data = this.__data__;
+      this.size += this.has(key) ? 0 : 1;
+      data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
+      return this;
+    }
+    module2.exports = hashSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js
+var require_Hash = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js"(exports, module2) {
+    var hashClear = require_hashClear();
+    var hashDelete = require_hashDelete();
+    var hashGet = require_hashGet();
+    var hashHas = require_hashHas();
+    var hashSet = require_hashSet();
+    function Hash(entries) {
+      var index2 = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index2 < length) {
+        var entry = entries[index2];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    Hash.prototype.clear = hashClear;
+    Hash.prototype["delete"] = hashDelete;
+    Hash.prototype.get = hashGet;
+    Hash.prototype.has = hashHas;
+    Hash.prototype.set = hashSet;
+    module2.exports = Hash;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js
+var require_listCacheClear = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js"(exports, module2) {
+    function listCacheClear() {
+      this.__data__ = [];
+      this.size = 0;
+    }
+    module2.exports = listCacheClear;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js
+var require_eq = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js"(exports, module2) {
+    function eq(value, other) {
+      return value === other || value !== value && other !== other;
+    }
+    module2.exports = eq;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js
+var require_assocIndexOf = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js"(exports, module2) {
+    var eq = require_eq();
+    function assocIndexOf(array, key) {
+      var length = array.length;
+      while (length--) {
+        if (eq(array[length][0], key)) {
+          return length;
+        }
+      }
+      return -1;
+    }
+    module2.exports = assocIndexOf;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js
+var require_listCacheDelete = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    var arrayProto = Array.prototype;
+    var splice = arrayProto.splice;
+    function listCacheDelete(key) {
+      var data = this.__data__, index2 = assocIndexOf(data, key);
+      if (index2 < 0) {
+        return false;
+      }
+      var lastIndex = data.length - 1;
+      if (index2 == lastIndex) {
+        data.pop();
+      } else {
+        splice.call(data, index2, 1);
+      }
+      --this.size;
+      return true;
+    }
+    module2.exports = listCacheDelete;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js
+var require_listCacheGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    function listCacheGet(key) {
+      var data = this.__data__, index2 = assocIndexOf(data, key);
+      return index2 < 0 ? void 0 : data[index2][1];
+    }
+    module2.exports = listCacheGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js
+var require_listCacheHas = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    function listCacheHas(key) {
+      return assocIndexOf(this.__data__, key) > -1;
+    }
+    module2.exports = listCacheHas;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js
+var require_listCacheSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js"(exports, module2) {
+    var assocIndexOf = require_assocIndexOf();
+    function listCacheSet(key, value) {
+      var data = this.__data__, index2 = assocIndexOf(data, key);
+      if (index2 < 0) {
+        ++this.size;
+        data.push([key, value]);
+      } else {
+        data[index2][1] = value;
+      }
+      return this;
+    }
+    module2.exports = listCacheSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js
+var require_ListCache = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js"(exports, module2) {
+    var listCacheClear = require_listCacheClear();
+    var listCacheDelete = require_listCacheDelete();
+    var listCacheGet = require_listCacheGet();
+    var listCacheHas = require_listCacheHas();
+    var listCacheSet = require_listCacheSet();
+    function ListCache(entries) {
+      var index2 = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index2 < length) {
+        var entry = entries[index2];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    ListCache.prototype.clear = listCacheClear;
+    ListCache.prototype["delete"] = listCacheDelete;
+    ListCache.prototype.get = listCacheGet;
+    ListCache.prototype.has = listCacheHas;
+    ListCache.prototype.set = listCacheSet;
+    module2.exports = ListCache;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js
+var require_Map = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js"(exports, module2) {
+    var getNative = require_getNative();
+    var root2 = require_root();
+    var Map2 = getNative(root2, "Map");
+    module2.exports = Map2;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js
+var require_mapCacheClear = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js"(exports, module2) {
+    var Hash = require_Hash();
+    var ListCache = require_ListCache();
+    var Map2 = require_Map();
+    function mapCacheClear() {
+      this.size = 0;
+      this.__data__ = {
+        "hash": new Hash(),
+        "map": new (Map2 || ListCache)(),
+        "string": new Hash()
+      };
+    }
+    module2.exports = mapCacheClear;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js
+var require_isKeyable = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js"(exports, module2) {
+    function isKeyable(value) {
+      var type = typeof value;
+      return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
+    }
+    module2.exports = isKeyable;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js
+var require_getMapData = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js"(exports, module2) {
+    var isKeyable = require_isKeyable();
+    function getMapData(map, key) {
+      var data = map.__data__;
+      return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
+    }
+    module2.exports = getMapData;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js
+var require_mapCacheDelete = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheDelete(key) {
+      var result = getMapData(this, key)["delete"](key);
+      this.size -= result ? 1 : 0;
+      return result;
+    }
+    module2.exports = mapCacheDelete;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js
+var require_mapCacheGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheGet(key) {
+      return getMapData(this, key).get(key);
+    }
+    module2.exports = mapCacheGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js
+var require_mapCacheHas = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheHas(key) {
+      return getMapData(this, key).has(key);
+    }
+    module2.exports = mapCacheHas;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js
+var require_mapCacheSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js"(exports, module2) {
+    var getMapData = require_getMapData();
+    function mapCacheSet(key, value) {
+      var data = getMapData(this, key), size = data.size;
+      data.set(key, value);
+      this.size += data.size == size ? 0 : 1;
+      return this;
+    }
+    module2.exports = mapCacheSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js
+var require_MapCache = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js"(exports, module2) {
+    var mapCacheClear = require_mapCacheClear();
+    var mapCacheDelete = require_mapCacheDelete();
+    var mapCacheGet = require_mapCacheGet();
+    var mapCacheHas = require_mapCacheHas();
+    var mapCacheSet = require_mapCacheSet();
+    function MapCache(entries) {
+      var index2 = -1, length = entries == null ? 0 : entries.length;
+      this.clear();
+      while (++index2 < length) {
+        var entry = entries[index2];
+        this.set(entry[0], entry[1]);
+      }
+    }
+    MapCache.prototype.clear = mapCacheClear;
+    MapCache.prototype["delete"] = mapCacheDelete;
+    MapCache.prototype.get = mapCacheGet;
+    MapCache.prototype.has = mapCacheHas;
+    MapCache.prototype.set = mapCacheSet;
+    module2.exports = MapCache;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js
+var require_memoize = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js"(exports, module2) {
+    var MapCache = require_MapCache();
+    var FUNC_ERROR_TEXT = "Expected a function";
+    function memoize(func, resolver) {
+      if (typeof func != "function" || resolver != null && typeof resolver != "function") {
+        throw new TypeError(FUNC_ERROR_TEXT);
+      }
+      var memoized = function() {
+        var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache = memoized.cache;
+        if (cache.has(key)) {
+          return cache.get(key);
+        }
+        var result = func.apply(this, args);
+        memoized.cache = cache.set(key, result) || cache;
+        return result;
+      };
+      memoized.cache = new (memoize.Cache || MapCache)();
+      return memoized;
+    }
+    memoize.Cache = MapCache;
+    module2.exports = memoize;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js
+var require_memoizeCapped = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js"(exports, module2) {
+    var memoize = require_memoize();
+    var MAX_MEMOIZE_SIZE = 500;
+    function memoizeCapped(func) {
+      var result = memoize(func, function(key) {
+        if (cache.size === MAX_MEMOIZE_SIZE) {
+          cache.clear();
+        }
+        return key;
+      });
+      var cache = result.cache;
+      return result;
+    }
+    module2.exports = memoizeCapped;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js
+var require_stringToPath = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js"(exports, module2) {
+    var memoizeCapped = require_memoizeCapped();
+    var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
+    var reEscapeChar = /\\(\\)?/g;
+    var stringToPath = memoizeCapped(function(string) {
+      var result = [];
+      if (string.charCodeAt(0) === 46) {
+        result.push("");
+      }
+      string.replace(rePropName, function(match, number, quote, subString) {
+        result.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
+      });
+      return result;
+    });
+    module2.exports = stringToPath;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js
+var require_arrayMap = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js"(exports, module2) {
+    function arrayMap(array, iteratee) {
+      var index2 = -1, length = array == null ? 0 : array.length, result = Array(length);
+      while (++index2 < length) {
+        result[index2] = iteratee(array[index2], index2, array);
+      }
+      return result;
+    }
+    module2.exports = arrayMap;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js
+var require_baseToString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var arrayMap = require_arrayMap();
+    var isArray = require_isArray();
+    var isSymbol = require_isSymbol();
+    var INFINITY = 1 / 0;
+    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
+    var symbolToString = symbolProto ? symbolProto.toString : void 0;
+    function baseToString(value) {
+      if (typeof value == "string") {
+        return value;
+      }
+      if (isArray(value)) {
+        return arrayMap(value, baseToString) + "";
+      }
+      if (isSymbol(value)) {
+        return symbolToString ? symbolToString.call(value) : "";
+      }
+      var result = value + "";
+      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
+    }
+    module2.exports = baseToString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js
+var require_toString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js"(exports, module2) {
+    var baseToString = require_baseToString();
+    function toString(value) {
+      return value == null ? "" : baseToString(value);
+    }
+    module2.exports = toString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js
+var require_castPath = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js"(exports, module2) {
+    var isArray = require_isArray();
+    var isKey = require_isKey();
+    var stringToPath = require_stringToPath();
+    var toString = require_toString();
+    function castPath(value, object) {
+      if (isArray(value)) {
+        return value;
+      }
+      return isKey(value, object) ? [value] : stringToPath(toString(value));
+    }
+    module2.exports = castPath;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js
+var require_toKey = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js"(exports, module2) {
+    var isSymbol = require_isSymbol();
+    var INFINITY = 1 / 0;
+    function toKey(value) {
+      if (typeof value == "string" || isSymbol(value)) {
+        return value;
+      }
+      var result = value + "";
+      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
+    }
+    module2.exports = toKey;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js
+var require_baseGet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js"(exports, module2) {
+    var castPath = require_castPath();
+    var toKey = require_toKey();
+    function baseGet(object, path) {
+      path = castPath(path, object);
+      var index2 = 0, length = path.length;
+      while (object != null && index2 < length) {
+        object = object[toKey(path[index2++])];
+      }
+      return index2 && index2 == length ? object : void 0;
+    }
+    module2.exports = baseGet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js
+var require_defineProperty = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js"(exports, module2) {
+    var getNative = require_getNative();
+    var defineProperty = function() {
+      try {
+        var func = getNative(Object, "defineProperty");
+        func({}, "", {});
+        return func;
+      } catch (e4) {
+      }
+    }();
+    module2.exports = defineProperty;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js
+var require_baseAssignValue = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js"(exports, module2) {
+    var defineProperty = require_defineProperty();
+    function baseAssignValue(object, key, value) {
+      if (key == "__proto__" && defineProperty) {
+        defineProperty(object, key, {
+          "configurable": true,
+          "enumerable": true,
+          "value": value,
+          "writable": true
+        });
+      } else {
+        object[key] = value;
+      }
+    }
+    module2.exports = baseAssignValue;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js
+var require_assignValue = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js"(exports, module2) {
+    var baseAssignValue = require_baseAssignValue();
+    var eq = require_eq();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    function assignValue(object, key, value) {
+      var objValue = object[key];
+      if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
+        baseAssignValue(object, key, value);
+      }
+    }
+    module2.exports = assignValue;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js
+var require_isIndex = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js"(exports, module2) {
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    var reIsUint = /^(?:0|[1-9]\d*)$/;
+    function isIndex(value, length) {
+      var type = typeof value;
+      length = length == null ? MAX_SAFE_INTEGER : length;
+      return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
+    }
+    module2.exports = isIndex;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js
+var require_baseSet = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js"(exports, module2) {
+    var assignValue = require_assignValue();
+    var castPath = require_castPath();
+    var isIndex = require_isIndex();
+    var isObject = require_isObject();
+    var toKey = require_toKey();
+    function baseSet(object, path, value, customizer) {
+      if (!isObject(object)) {
+        return object;
+      }
+      path = castPath(path, object);
+      var index2 = -1, length = path.length, lastIndex = length - 1, nested = object;
+      while (nested != null && ++index2 < length) {
+        var key = toKey(path[index2]), newValue = value;
+        if (key === "__proto__" || key === "constructor" || key === "prototype") {
+          return object;
+        }
+        if (index2 != lastIndex) {
+          var objValue = nested[key];
+          newValue = customizer ? customizer(objValue, key, nested) : void 0;
+          if (newValue === void 0) {
+            newValue = isObject(objValue) ? objValue : isIndex(path[index2 + 1]) ? [] : {};
+          }
+        }
+        assignValue(nested, key, newValue);
+        nested = nested[key];
+      }
+      return object;
+    }
+    module2.exports = baseSet;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_basePickBy.js
+var require_basePickBy = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_basePickBy.js"(exports, module2) {
+    var baseGet = require_baseGet();
+    var baseSet = require_baseSet();
+    var castPath = require_castPath();
+    function basePickBy(object, paths, predicate) {
+      var index2 = -1, length = paths.length, result = {};
+      while (++index2 < length) {
+        var path = paths[index2], value = baseGet(object, path);
+        if (predicate(value, path)) {
+          baseSet(result, castPath(path, object), value);
+        }
+      }
+      return result;
+    }
+    module2.exports = basePickBy;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseHasIn.js
+var require_baseHasIn = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseHasIn.js"(exports, module2) {
+    function baseHasIn(object, key) {
+      return object != null && key in Object(object);
+    }
+    module2.exports = baseHasIn;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsArguments.js
+var require_baseIsArguments = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsArguments.js"(exports, module2) {
+    var baseGetTag = require_baseGetTag();
+    var isObjectLike = require_isObjectLike();
+    var argsTag = "[object Arguments]";
+    function baseIsArguments(value) {
+      return isObjectLike(value) && baseGetTag(value) == argsTag;
+    }
+    module2.exports = baseIsArguments;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArguments.js
+var require_isArguments = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArguments.js"(exports, module2) {
+    var baseIsArguments = require_baseIsArguments();
+    var isObjectLike = require_isObjectLike();
+    var objectProto = Object.prototype;
+    var hasOwnProperty = objectProto.hasOwnProperty;
+    var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+    var isArguments = baseIsArguments(/* @__PURE__ */ function() {
+      return arguments;
+    }()) ? baseIsArguments : function(value) {
+      return isObjectLike(value) && hasOwnProperty.call(value, "callee") && !propertyIsEnumerable.call(value, "callee");
+    };
+    module2.exports = isArguments;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isLength.js
+var require_isLength = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isLength.js"(exports, module2) {
+    var MAX_SAFE_INTEGER = 9007199254740991;
+    function isLength(value) {
+      return typeof value == "number" && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+    }
+    module2.exports = isLength;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hasPath.js
+var require_hasPath = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hasPath.js"(exports, module2) {
+    var castPath = require_castPath();
+    var isArguments = require_isArguments();
+    var isArray = require_isArray();
+    var isIndex = require_isIndex();
+    var isLength = require_isLength();
+    var toKey = require_toKey();
+    function hasPath(object, path, hasFunc) {
+      path = castPath(path, object);
+      var index2 = -1, length = path.length, result = false;
+      while (++index2 < length) {
+        var key = toKey(path[index2]);
+        if (!(result = object != null && hasFunc(object, key))) {
+          break;
+        }
+        object = object[key];
+      }
+      if (result || ++index2 != length) {
+        return result;
+      }
+      length = object == null ? 0 : object.length;
+      return !!length && isLength(length) && isIndex(key, length) && (isArray(object) || isArguments(object));
+    }
+    module2.exports = hasPath;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/hasIn.js
+var require_hasIn = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/hasIn.js"(exports, module2) {
+    var baseHasIn = require_baseHasIn();
+    var hasPath = require_hasPath();
+    function hasIn(object, path) {
+      return object != null && hasPath(object, path, baseHasIn);
+    }
+    module2.exports = hasIn;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_basePick.js
+var require_basePick = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_basePick.js"(exports, module2) {
+    var basePickBy = require_basePickBy();
+    var hasIn = require_hasIn();
+    function basePick(object, paths) {
+      return basePickBy(object, paths, function(value, path) {
+        return hasIn(object, path);
+      });
+    }
+    module2.exports = basePick;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayPush.js
+var require_arrayPush = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayPush.js"(exports, module2) {
+    function arrayPush(array, values) {
+      var index2 = -1, length = values.length, offset = array.length;
+      while (++index2 < length) {
+        array[offset + index2] = values[index2];
+      }
+      return array;
+    }
+    module2.exports = arrayPush;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isFlattenable.js
+var require_isFlattenable = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isFlattenable.js"(exports, module2) {
+    var Symbol2 = require_Symbol();
+    var isArguments = require_isArguments();
+    var isArray = require_isArray();
+    var spreadableSymbol = Symbol2 ? Symbol2.isConcatSpreadable : void 0;
+    function isFlattenable(value) {
+      return isArray(value) || isArguments(value) || !!(spreadableSymbol && value && value[spreadableSymbol]);
+    }
+    module2.exports = isFlattenable;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseFlatten.js
+var require_baseFlatten = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseFlatten.js"(exports, module2) {
+    var arrayPush = require_arrayPush();
+    var isFlattenable = require_isFlattenable();
+    function baseFlatten(array, depth, predicate, isStrict, result) {
+      var index2 = -1, length = array.length;
+      predicate || (predicate = isFlattenable);
+      result || (result = []);
+      while (++index2 < length) {
+        var value = array[index2];
+        if (depth > 0 && predicate(value)) {
+          if (depth > 1) {
+            baseFlatten(value, depth - 1, predicate, isStrict, result);
+          } else {
+            arrayPush(result, value);
+          }
+        } else if (!isStrict) {
+          result[result.length] = value;
+        }
+      }
+      return result;
+    }
+    module2.exports = baseFlatten;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/flatten.js
+var require_flatten = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/flatten.js"(exports, module2) {
+    var baseFlatten = require_baseFlatten();
+    function flatten(array) {
+      var length = array == null ? 0 : array.length;
+      return length ? baseFlatten(array, 1) : [];
+    }
+    module2.exports = flatten;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_apply.js
+var require_apply = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_apply.js"(exports, module2) {
+    function apply(func, thisArg, args) {
+      switch (args.length) {
+        case 0:
+          return func.call(thisArg);
+        case 1:
+          return func.call(thisArg, args[0]);
+        case 2:
+          return func.call(thisArg, args[0], args[1]);
+        case 3:
+          return func.call(thisArg, args[0], args[1], args[2]);
+      }
+      return func.apply(thisArg, args);
+    }
+    module2.exports = apply;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_overRest.js
+var require_overRest = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_overRest.js"(exports, module2) {
+    var apply = require_apply();
+    var nativeMax = Math.max;
+    function overRest(func, start, transform) {
+      start = nativeMax(start === void 0 ? func.length - 1 : start, 0);
+      return function() {
+        var args = arguments, index2 = -1, length = nativeMax(args.length - start, 0), array = Array(length);
+        while (++index2 < length) {
+          array[index2] = args[start + index2];
+        }
+        index2 = -1;
+        var otherArgs = Array(start + 1);
+        while (++index2 < start) {
+          otherArgs[index2] = args[index2];
+        }
+        otherArgs[start] = transform(array);
+        return apply(func, this, otherArgs);
+      };
+    }
+    module2.exports = overRest;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/constant.js
+var require_constant = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/constant.js"(exports, module2) {
+    function constant(value) {
+      return function() {
+        return value;
+      };
+    }
+    module2.exports = constant;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/identity.js
+var require_identity = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/identity.js"(exports, module2) {
+    function identity(value) {
+      return value;
+    }
+    module2.exports = identity;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSetToString.js
+var require_baseSetToString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSetToString.js"(exports, module2) {
+    var constant = require_constant();
+    var defineProperty = require_defineProperty();
+    var identity = require_identity();
+    var baseSetToString = !defineProperty ? identity : function(func, string) {
+      return defineProperty(func, "toString", {
+        "configurable": true,
+        "enumerable": false,
+        "value": constant(string),
+        "writable": true
+      });
+    };
+    module2.exports = baseSetToString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_shortOut.js
+var require_shortOut = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_shortOut.js"(exports, module2) {
+    var HOT_COUNT = 800;
+    var HOT_SPAN = 16;
+    var nativeNow = Date.now;
+    function shortOut(func) {
+      var count = 0, lastCalled = 0;
+      return function() {
+        var stamp = nativeNow(), remaining = HOT_SPAN - (stamp - lastCalled);
+        lastCalled = stamp;
+        if (remaining > 0) {
+          if (++count >= HOT_COUNT) {
+            return arguments[0];
+          }
+        } else {
+          count = 0;
+        }
+        return func.apply(void 0, arguments);
+      };
+    }
+    module2.exports = shortOut;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_setToString.js
+var require_setToString = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_setToString.js"(exports, module2) {
+    var baseSetToString = require_baseSetToString();
+    var shortOut = require_shortOut();
+    var setToString = shortOut(baseSetToString);
+    module2.exports = setToString;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_flatRest.js
+var require_flatRest = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_flatRest.js"(exports, module2) {
+    var flatten = require_flatten();
+    var overRest = require_overRest();
+    var setToString = require_setToString();
+    function flatRest(func) {
+      return setToString(overRest(func, void 0, flatten), func + "");
+    }
+    module2.exports = flatRest;
+  }
+});
+
+// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/pick.js
+var require_pick = __commonJS({
+  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/pick.js"(exports, module2) {
+    var basePick = require_basePick();
+    var flatRest = require_flatRest();
+    var pick2 = flatRest(function(object, paths) {
+      return object == null ? {} : basePick(object, paths);
+    });
+    module2.exports = pick2;
+  }
+});
+
 // node_modules/.pnpm/react@18.2.0/node_modules/react/cjs/react.production.min.js
 var require_react_production_min = __commonJS({
   "node_modules/.pnpm/react@18.2.0/node_modules/react/cjs/react.production.min.js"(exports) {
@@ -640,7 +1872,7 @@ var require_react_dom_production_min = __commonJS({
         b2 += "&args[]=" + encodeURIComponent(arguments[c5]);
       return "Minified React error #" + a3 + "; visit " + b2 + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
     }
-    var da = /* @__PURE__ */ new Set();
+    var da2 = /* @__PURE__ */ new Set();
     var ea = {};
     function fa(a3, b2) {
       ha(a3, b2);
@@ -649,17 +1881,17 @@ var require_react_dom_production_min = __commonJS({
     function ha(a3, b2) {
       ea[a3] = b2;
       for (a3 = 0; a3 < b2.length; a3++)
-        da.add(b2[a3]);
+        da2.add(b2[a3]);
     }
     var ia = !("undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement);
-    var ja = Object.prototype.hasOwnProperty;
+    var ja2 = Object.prototype.hasOwnProperty;
     var ka = /^[:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD][:A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\-.0-9\u00B7\u0300-\u036F\u203F-\u2040]*$/;
     var la = {};
     var ma = {};
     function oa(a3) {
-      if (ja.call(ma, a3))
+      if (ja2.call(ma, a3))
         return true;
-      if (ja.call(la, a3))
+      if (ja2.call(la, a3))
         return false;
       if (ka.test(a3))
         return ma[a3] = true;
@@ -1898,7 +3130,7 @@ var require_react_dom_production_min = __commonJS({
       if (dd) {
         var e4 = Yc(a3, b2, c5, d2);
         if (null === e4)
-          hd(a3, b2, d2, id, c5), Sc(a3, d2);
+          hd(a3, b2, d2, id2, c5), Sc(a3, d2);
         else if (Uc(e4, a3, b2, c5, d2))
           d2.stopPropagation();
         else if (Sc(a3, d2), b2 & 4 && -1 < Rc.indexOf(a3)) {
@@ -1906,7 +3138,7 @@ var require_react_dom_production_min = __commonJS({
             var f3 = Cb(e4);
             null !== f3 && Ec(f3);
             f3 = Yc(a3, b2, c5, d2);
-            null === f3 && hd(a3, b2, d2, id, c5);
+            null === f3 && hd(a3, b2, d2, id2, c5);
             if (f3 === e4)
               break;
             e4 = f3;
@@ -1916,9 +3148,9 @@ var require_react_dom_production_min = __commonJS({
           hd(a3, b2, d2, null, c5);
       }
     }
-    var id = null;
+    var id2 = null;
     function Yc(a3, b2, c5, d2) {
-      id = null;
+      id2 = null;
       a3 = xb(d2);
       a3 = Wc(a3);
       if (null !== a3)
@@ -1935,7 +3167,7 @@ var require_react_dom_production_min = __commonJS({
           a3 = null;
         } else
           b2 !== a3 && (a3 = null);
-      id = a3;
+      id2 = a3;
       return null;
     }
     function jd(a3) {
@@ -2347,7 +3579,7 @@ var require_react_dom_production_min = __commonJS({
         return false;
       for (d2 = 0; d2 < c5.length; d2++) {
         var e4 = c5[d2];
-        if (!ja.call(b2, e4) || !He(a3[e4], b2[e4]))
+        if (!ja2.call(b2, e4) || !He(a3[e4], b2[e4]))
           return false;
       }
       return true;
@@ -2550,7 +3782,7 @@ var require_react_dom_production_min = __commonJS({
     function sf(a3) {
       if (!a3[rf]) {
         a3[rf] = true;
-        da.forEach(function(b3) {
+        da2.forEach(function(b3) {
           "selectionchange" !== b3 && (mf.has(b3) || qf(b3, false, a3), qf(b3, true, a3));
         });
         var b2 = 9 === a3.nodeType ? a3 : a3.ownerDocument;
@@ -7504,13 +8736,13 @@ var require_react_dom_production_min = __commonJS({
     function ml(a3) {
       this._internalRoot = a3;
     }
-    nl.prototype.render = ml.prototype.render = function(a3) {
+    nl2.prototype.render = ml.prototype.render = function(a3) {
       var b2 = this._internalRoot;
       if (null === b2)
         throw Error(p3(409));
       gl(a3, b2, null, null);
     };
-    nl.prototype.unmount = ml.prototype.unmount = function() {
+    nl2.prototype.unmount = ml.prototype.unmount = function() {
       var a3 = this._internalRoot;
       if (null !== a3) {
         this._internalRoot = null;
@@ -7521,10 +8753,10 @@ var require_react_dom_production_min = __commonJS({
         b2[uf] = null;
       }
     };
-    function nl(a3) {
+    function nl2(a3) {
       this._internalRoot = a3;
     }
-    nl.prototype.unstable_scheduleHydration = function(a3) {
+    nl2.prototype.unstable_scheduleHydration = function(a3) {
       if (a3) {
         var b2 = Hc();
         a3 = { blockedOn: null, target: a3, priority: b2 };
@@ -7537,7 +8769,7 @@ var require_react_dom_production_min = __commonJS({
     function ol(a3) {
       return !(!a3 || 1 !== a3.nodeType && 9 !== a3.nodeType && 11 !== a3.nodeType);
     }
-    function pl(a3) {
+    function pl2(a3) {
       return !(!a3 || 1 !== a3.nodeType && 9 !== a3.nodeType && 11 !== a3.nodeType && (8 !== a3.nodeType || " react-mount-point-unstable " !== a3.nodeValue));
     }
     function ql() {
@@ -7724,7 +8956,7 @@ var require_react_dom_production_min = __commonJS({
       return Sk(a3);
     };
     exports.hydrate = function(a3, b2, c5) {
-      if (!pl(b2))
+      if (!pl2(b2))
         throw Error(p3(200));
       return sl(null, a3, b2, true, c5);
     };
@@ -7742,15 +8974,15 @@ var require_react_dom_production_min = __commonJS({
             c5,
             e4
           );
-      return new nl(b2);
+      return new nl2(b2);
     };
     exports.render = function(a3, b2, c5) {
-      if (!pl(b2))
+      if (!pl2(b2))
         throw Error(p3(200));
       return sl(null, a3, b2, false, c5);
     };
     exports.unmountComponentAtNode = function(a3) {
-      if (!pl(a3))
+      if (!pl2(a3))
         throw Error(p3(40));
       return a3._reactRootContainer ? (Sk(function() {
         sl(null, null, a3, false, function() {
@@ -7761,7 +8993,7 @@ var require_react_dom_production_min = __commonJS({
     };
     exports.unstable_batchedUpdates = Rk;
     exports.unstable_renderSubtreeIntoContainer = function(a3, b2, c5, d2) {
-      if (!pl(c5))
+      if (!pl2(c5))
         throw Error(p3(200));
       if (null == a3 || void 0 === a3._reactInternals)
         throw Error(p3(38));
@@ -15560,8 +16792,8 @@ var require_html2canvas = __commonJS({
         /** @class */
         function() {
           function Logger2(_a2) {
-            var id = _a2.id, enabled = _a2.enabled;
-            this.id = id;
+            var id2 = _a2.id, enabled = _a2.enabled;
+            this.id = id2;
             this.enabled = enabled;
             this.start = Date.now();
           }
@@ -17196,11 +18428,11 @@ var require_uid = __commonJS({
   "node_modules/.pnpm/core-js@3.36.1/node_modules/core-js/internals/uid.js"(exports, module2) {
     "use strict";
     var uncurryThis = require_function_uncurry_this();
-    var id = 0;
+    var id2 = 0;
     var postfix = Math.random();
     var toString = uncurryThis(1 .toString);
     module2.exports = function(key) {
-      return "Symbol(" + (key === void 0 ? "" : key) + ")_" + toString(++id + postfix, 36);
+      return "Symbol(" + (key === void 0 ? "" : key) + ")_" + toString(++id2 + postfix, 36);
     };
   }
 });
@@ -18342,23 +19574,23 @@ var require_task = __commonJS({
     fails(function() {
       $location = global2.location;
     });
-    var run = function(id) {
-      if (hasOwn(queue, id)) {
-        var fn = queue[id];
-        delete queue[id];
+    var run = function(id2) {
+      if (hasOwn(queue, id2)) {
+        var fn = queue[id2];
+        delete queue[id2];
         fn();
       }
     };
-    var runner = function(id) {
+    var runner = function(id2) {
       return function() {
-        run(id);
+        run(id2);
       };
     };
     var eventListener = function(event) {
       run(event.data);
     };
-    var globalPostMessageDefer = function(id) {
-      global2.postMessage(String2(id), $location.protocol + "//" + $location.host);
+    var globalPostMessageDefer = function(id2) {
+      global2.postMessage(String2(id2), $location.protocol + "//" + $location.host);
     };
     if (!set2 || !clear) {
       set2 = function setImmediate2(handler) {
@@ -18371,16 +19603,16 @@ var require_task = __commonJS({
         defer(counter);
         return counter;
       };
-      clear = function clearImmediate(id) {
-        delete queue[id];
+      clear = function clearImmediate(id2) {
+        delete queue[id2];
       };
       if (IS_NODE) {
-        defer = function(id) {
-          process2.nextTick(runner(id));
+        defer = function(id2) {
+          process2.nextTick(runner(id2));
         };
       } else if (Dispatch && Dispatch.now) {
-        defer = function(id) {
-          Dispatch.now(runner(id));
+        defer = function(id2) {
+          Dispatch.now(runner(id2));
         };
       } else if (MessageChannel2 && !IS_IOS) {
         channel = new MessageChannel2();
@@ -18391,15 +19623,15 @@ var require_task = __commonJS({
         defer = globalPostMessageDefer;
         global2.addEventListener("message", eventListener, false);
       } else if (ONREADYSTATECHANGE in createElement("script")) {
-        defer = function(id) {
+        defer = function(id2) {
           html.appendChild(createElement("script"))[ONREADYSTATECHANGE] = function() {
             html.removeChild(this);
-            run(id);
+            run(id2);
           };
         };
       } else {
-        defer = function(id) {
-          setTimeout(runner(id), 0);
+        defer = function(id2) {
+          setTimeout(runner(id2), 0);
         };
       }
     }
@@ -20876,7 +22108,7 @@ var require_raf = __commonJS({
     }
     var i4;
     if (!raf || !caf) {
-      last = 0, id = 0, queue = [], frameDuration = 1e3 / 60;
+      last = 0, id2 = 0, queue = [], frameDuration = 1e3 / 60;
       raf = function(callback) {
         if (queue.length === 0) {
           var _now = now(), next = Math.max(0, frameDuration - (_now - last));
@@ -20898,11 +22130,11 @@ var require_raf = __commonJS({
           }, Math.round(next));
         }
         queue.push({
-          handle: ++id,
+          handle: ++id2,
           callback,
           cancelled: false
         });
-        return id;
+        return id2;
       };
       caf = function(handle) {
         for (var i5 = 0; i5 < queue.length; i5++) {
@@ -20913,7 +22145,7 @@ var require_raf = __commonJS({
       };
     }
     var last;
-    var id;
+    var id2;
     var queue;
     var frameDuration;
     module2.exports = function(fn) {
@@ -23650,10 +24882,10 @@ var init_index_es = __esm({
         var {
           definitions
         } = document2;
-        var id = this.getAttribute("id");
-        if (id.hasValue()) {
-          if (!definitions[id.getString()]) {
-            definitions[id.getString()] = this;
+        var id2 = this.getAttribute("id");
+        if (id2.hasValue()) {
+          if (!definitions[id2.getString()]) {
+            definitions[id2.getString()] = this;
           }
         }
         Array.from(node2.childNodes).forEach((childNode) => {
@@ -25688,8 +26920,8 @@ var init_index_es = __esm({
           fy = isBoundingBoxUnits ? boundingBox.y + boundingBox.height * this.getAttribute("fy").getNumber() : this.getAttribute("fy").getPixels("y");
         }
         var r5 = isBoundingBoxUnits ? (boundingBox.width + boundingBox.height) / 2 * this.getAttribute("r").getNumber() : this.getAttribute("r").getPixels();
-        var fr = this.getAttribute("fr").getPixels();
-        return ctx.createRadialGradient(fx, fy, fr, cx, cy, r5);
+        var fr2 = this.getAttribute("fr").getPixels();
+        return ctx.createRadialGradient(fx, fy, fr2, cx, cy, r5);
       }
     };
     StopElement = class extends Element2 {
@@ -26433,14 +27665,14 @@ var init_index_es = __esm({
           run *= -1;
         }
         var rise = m5 * run;
-        var pt2 = null;
+        var pt3 = null;
         if (p2x === p1x) {
-          pt2 = {
+          pt3 = {
             x: fromX,
             y: fromY + rise
           };
         } else if ((fromY - p1y) / (fromX - p1x + PSEUDO_ZERO) === m5) {
-          pt2 = {
+          pt3 = {
             x: fromX + run,
             y: fromY + rise
           };
@@ -26462,12 +27694,12 @@ var init_index_es = __esm({
             run *= -1;
           }
           rise = m5 * run;
-          pt2 = {
+          pt3 = {
             x: ix + run,
             y: iy + rise
           };
         }
-        return pt2;
+        return pt3;
       }
       getPointOnPath(distance) {
         var fullLen = this.getPathLength();
@@ -26551,13 +27783,13 @@ var init_index_es = __esm({
       getPointOnEllipticalArc(cx, cy, rx, ry, theta, psi) {
         var cosPsi = Math.cos(psi);
         var sinPsi = Math.sin(psi);
-        var pt2 = {
+        var pt3 = {
           x: rx * Math.cos(theta),
           y: ry * Math.sin(theta)
         };
         return {
-          x: cx + (pt2.x * cosPsi - pt2.y * sinPsi),
-          y: cy + (pt2.x * sinPsi + pt2.y * cosPsi)
+          x: cx + (pt3.x * cosPsi - pt3.y * sinPsi),
+          y: cy + (pt3.x * sinPsi + pt3.y * cosPsi)
         };
       }
       // TODO need some optimisations. possibly build cache only for curved segments?
@@ -28057,12 +29289,12 @@ var require_dom_to_image_more = __commonJS({
         function escapeRegEx(string) {
           return string.replaceAll(/([.*+?^${}()|[]\/\\])/g, "\\$1");
         }
-        function delay2(ms) {
+        function delay2(ms2) {
           return function(argument) {
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve(argument);
-              }, ms);
+              }, ms2);
             });
           };
         }
@@ -28458,798 +29690,6 @@ var require_dom_to_image_more = __commonJS({
   }
 });
 
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js
-var require_isArray = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js"(exports, module2) {
-    var isArray = Array.isArray;
-    module2.exports = isArray;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js
-var require_freeGlobal = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_freeGlobal.js"(exports, module2) {
-    var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
-    module2.exports = freeGlobal;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js
-var require_root = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_root.js"(exports, module2) {
-    var freeGlobal = require_freeGlobal();
-    var freeSelf = typeof self == "object" && self && self.Object === Object && self;
-    var root2 = freeGlobal || freeSelf || Function("return this")();
-    module2.exports = root2;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js
-var require_Symbol = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Symbol.js"(exports, module2) {
-    var root2 = require_root();
-    var Symbol2 = root2.Symbol;
-    module2.exports = Symbol2;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js
-var require_getRawTag = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getRawTag.js"(exports, module2) {
-    var Symbol2 = require_Symbol();
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    var nativeObjectToString = objectProto.toString;
-    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-    function getRawTag(value) {
-      var isOwn = hasOwnProperty.call(value, symToStringTag), tag = value[symToStringTag];
-      try {
-        value[symToStringTag] = void 0;
-        var unmasked = true;
-      } catch (e4) {
-      }
-      var result = nativeObjectToString.call(value);
-      if (unmasked) {
-        if (isOwn) {
-          value[symToStringTag] = tag;
-        } else {
-          delete value[symToStringTag];
-        }
-      }
-      return result;
-    }
-    module2.exports = getRawTag;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js
-var require_objectToString = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_objectToString.js"(exports, module2) {
-    var objectProto = Object.prototype;
-    var nativeObjectToString = objectProto.toString;
-    function objectToString(value) {
-      return nativeObjectToString.call(value);
-    }
-    module2.exports = objectToString;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js
-var require_baseGetTag = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGetTag.js"(exports, module2) {
-    var Symbol2 = require_Symbol();
-    var getRawTag = require_getRawTag();
-    var objectToString = require_objectToString();
-    var nullTag = "[object Null]";
-    var undefinedTag = "[object Undefined]";
-    var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
-    function baseGetTag(value) {
-      if (value == null) {
-        return value === void 0 ? undefinedTag : nullTag;
-      }
-      return symToStringTag && symToStringTag in Object(value) ? getRawTag(value) : objectToString(value);
-    }
-    module2.exports = baseGetTag;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js
-var require_isObjectLike = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObjectLike.js"(exports, module2) {
-    function isObjectLike(value) {
-      return value != null && typeof value == "object";
-    }
-    module2.exports = isObjectLike;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js
-var require_isSymbol = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isSymbol.js"(exports, module2) {
-    var baseGetTag = require_baseGetTag();
-    var isObjectLike = require_isObjectLike();
-    var symbolTag = "[object Symbol]";
-    function isSymbol(value) {
-      return typeof value == "symbol" || isObjectLike(value) && baseGetTag(value) == symbolTag;
-    }
-    module2.exports = isSymbol;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js
-var require_isKey = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKey.js"(exports, module2) {
-    var isArray = require_isArray();
-    var isSymbol = require_isSymbol();
-    var reIsDeepProp = /\.|\[(?:[^[\]]*|(["'])(?:(?!\1)[^\\]|\\.)*?\1)\]/;
-    var reIsPlainProp = /^\w*$/;
-    function isKey(value, object) {
-      if (isArray(value)) {
-        return false;
-      }
-      var type = typeof value;
-      if (type == "number" || type == "symbol" || type == "boolean" || value == null || isSymbol(value)) {
-        return true;
-      }
-      return reIsPlainProp.test(value) || !reIsDeepProp.test(value) || object != null && value in Object(object);
-    }
-    module2.exports = isKey;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js
-var require_isObject = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isObject.js"(exports, module2) {
-    function isObject(value) {
-      var type = typeof value;
-      return value != null && (type == "object" || type == "function");
-    }
-    module2.exports = isObject;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js
-var require_isFunction = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isFunction.js"(exports, module2) {
-    var baseGetTag = require_baseGetTag();
-    var isObject = require_isObject();
-    var asyncTag = "[object AsyncFunction]";
-    var funcTag = "[object Function]";
-    var genTag = "[object GeneratorFunction]";
-    var proxyTag = "[object Proxy]";
-    function isFunction(value) {
-      if (!isObject(value)) {
-        return false;
-      }
-      var tag = baseGetTag(value);
-      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
-    }
-    module2.exports = isFunction;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js
-var require_coreJsData = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_coreJsData.js"(exports, module2) {
-    var root2 = require_root();
-    var coreJsData = root2["__core-js_shared__"];
-    module2.exports = coreJsData;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js
-var require_isMasked = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isMasked.js"(exports, module2) {
-    var coreJsData = require_coreJsData();
-    var maskSrcKey = function() {
-      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
-      return uid ? "Symbol(src)_1." + uid : "";
-    }();
-    function isMasked(func) {
-      return !!maskSrcKey && maskSrcKey in func;
-    }
-    module2.exports = isMasked;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js
-var require_toSource = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toSource.js"(exports, module2) {
-    var funcProto = Function.prototype;
-    var funcToString = funcProto.toString;
-    function toSource(func) {
-      if (func != null) {
-        try {
-          return funcToString.call(func);
-        } catch (e4) {
-        }
-        try {
-          return func + "";
-        } catch (e4) {
-        }
-      }
-      return "";
-    }
-    module2.exports = toSource;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js
-var require_baseIsNative = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseIsNative.js"(exports, module2) {
-    var isFunction = require_isFunction();
-    var isMasked = require_isMasked();
-    var isObject = require_isObject();
-    var toSource = require_toSource();
-    var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
-    var reIsHostCtor = /^\[object .+?Constructor\]$/;
-    var funcProto = Function.prototype;
-    var objectProto = Object.prototype;
-    var funcToString = funcProto.toString;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    var reIsNative = RegExp(
-      "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
-    );
-    function baseIsNative(value) {
-      if (!isObject(value) || isMasked(value)) {
-        return false;
-      }
-      var pattern = isFunction(value) ? reIsNative : reIsHostCtor;
-      return pattern.test(toSource(value));
-    }
-    module2.exports = baseIsNative;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js
-var require_getValue = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getValue.js"(exports, module2) {
-    function getValue(object, key) {
-      return object == null ? void 0 : object[key];
-    }
-    module2.exports = getValue;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js
-var require_getNative = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getNative.js"(exports, module2) {
-    var baseIsNative = require_baseIsNative();
-    var getValue = require_getValue();
-    function getNative(object, key) {
-      var value = getValue(object, key);
-      return baseIsNative(value) ? value : void 0;
-    }
-    module2.exports = getNative;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js
-var require_nativeCreate = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_nativeCreate.js"(exports, module2) {
-    var getNative = require_getNative();
-    var nativeCreate = getNative(Object, "create");
-    module2.exports = nativeCreate;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js
-var require_hashClear = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashClear.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    function hashClear() {
-      this.__data__ = nativeCreate ? nativeCreate(null) : {};
-      this.size = 0;
-    }
-    module2.exports = hashClear;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js
-var require_hashDelete = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashDelete.js"(exports, module2) {
-    function hashDelete(key) {
-      var result = this.has(key) && delete this.__data__[key];
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-    module2.exports = hashDelete;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js
-var require_hashGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashGet.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    var HASH_UNDEFINED = "__lodash_hash_undefined__";
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    function hashGet(key) {
-      var data = this.__data__;
-      if (nativeCreate) {
-        var result = data[key];
-        return result === HASH_UNDEFINED ? void 0 : result;
-      }
-      return hasOwnProperty.call(data, key) ? data[key] : void 0;
-    }
-    module2.exports = hashGet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js
-var require_hashHas = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashHas.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    function hashHas(key) {
-      var data = this.__data__;
-      return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
-    }
-    module2.exports = hashHas;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js
-var require_hashSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_hashSet.js"(exports, module2) {
-    var nativeCreate = require_nativeCreate();
-    var HASH_UNDEFINED = "__lodash_hash_undefined__";
-    function hashSet(key, value) {
-      var data = this.__data__;
-      this.size += this.has(key) ? 0 : 1;
-      data[key] = nativeCreate && value === void 0 ? HASH_UNDEFINED : value;
-      return this;
-    }
-    module2.exports = hashSet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js
-var require_Hash = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Hash.js"(exports, module2) {
-    var hashClear = require_hashClear();
-    var hashDelete = require_hashDelete();
-    var hashGet = require_hashGet();
-    var hashHas = require_hashHas();
-    var hashSet = require_hashSet();
-    function Hash(entries) {
-      var index2 = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index2 < length) {
-        var entry = entries[index2];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    Hash.prototype.clear = hashClear;
-    Hash.prototype["delete"] = hashDelete;
-    Hash.prototype.get = hashGet;
-    Hash.prototype.has = hashHas;
-    Hash.prototype.set = hashSet;
-    module2.exports = Hash;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js
-var require_listCacheClear = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheClear.js"(exports, module2) {
-    function listCacheClear() {
-      this.__data__ = [];
-      this.size = 0;
-    }
-    module2.exports = listCacheClear;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js
-var require_eq = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/eq.js"(exports, module2) {
-    function eq(value, other) {
-      return value === other || value !== value && other !== other;
-    }
-    module2.exports = eq;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js
-var require_assocIndexOf = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assocIndexOf.js"(exports, module2) {
-    var eq = require_eq();
-    function assocIndexOf(array, key) {
-      var length = array.length;
-      while (length--) {
-        if (eq(array[length][0], key)) {
-          return length;
-        }
-      }
-      return -1;
-    }
-    module2.exports = assocIndexOf;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js
-var require_listCacheDelete = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheDelete.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    var arrayProto = Array.prototype;
-    var splice = arrayProto.splice;
-    function listCacheDelete(key) {
-      var data = this.__data__, index2 = assocIndexOf(data, key);
-      if (index2 < 0) {
-        return false;
-      }
-      var lastIndex = data.length - 1;
-      if (index2 == lastIndex) {
-        data.pop();
-      } else {
-        splice.call(data, index2, 1);
-      }
-      --this.size;
-      return true;
-    }
-    module2.exports = listCacheDelete;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js
-var require_listCacheGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheGet.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    function listCacheGet(key) {
-      var data = this.__data__, index2 = assocIndexOf(data, key);
-      return index2 < 0 ? void 0 : data[index2][1];
-    }
-    module2.exports = listCacheGet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js
-var require_listCacheHas = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheHas.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    function listCacheHas(key) {
-      return assocIndexOf(this.__data__, key) > -1;
-    }
-    module2.exports = listCacheHas;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js
-var require_listCacheSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_listCacheSet.js"(exports, module2) {
-    var assocIndexOf = require_assocIndexOf();
-    function listCacheSet(key, value) {
-      var data = this.__data__, index2 = assocIndexOf(data, key);
-      if (index2 < 0) {
-        ++this.size;
-        data.push([key, value]);
-      } else {
-        data[index2][1] = value;
-      }
-      return this;
-    }
-    module2.exports = listCacheSet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js
-var require_ListCache = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_ListCache.js"(exports, module2) {
-    var listCacheClear = require_listCacheClear();
-    var listCacheDelete = require_listCacheDelete();
-    var listCacheGet = require_listCacheGet();
-    var listCacheHas = require_listCacheHas();
-    var listCacheSet = require_listCacheSet();
-    function ListCache(entries) {
-      var index2 = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index2 < length) {
-        var entry = entries[index2];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    ListCache.prototype.clear = listCacheClear;
-    ListCache.prototype["delete"] = listCacheDelete;
-    ListCache.prototype.get = listCacheGet;
-    ListCache.prototype.has = listCacheHas;
-    ListCache.prototype.set = listCacheSet;
-    module2.exports = ListCache;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js
-var require_Map = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_Map.js"(exports, module2) {
-    var getNative = require_getNative();
-    var root2 = require_root();
-    var Map2 = getNative(root2, "Map");
-    module2.exports = Map2;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js
-var require_mapCacheClear = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheClear.js"(exports, module2) {
-    var Hash = require_Hash();
-    var ListCache = require_ListCache();
-    var Map2 = require_Map();
-    function mapCacheClear() {
-      this.size = 0;
-      this.__data__ = {
-        "hash": new Hash(),
-        "map": new (Map2 || ListCache)(),
-        "string": new Hash()
-      };
-    }
-    module2.exports = mapCacheClear;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js
-var require_isKeyable = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isKeyable.js"(exports, module2) {
-    function isKeyable(value) {
-      var type = typeof value;
-      return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value !== "__proto__" : value === null;
-    }
-    module2.exports = isKeyable;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js
-var require_getMapData = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_getMapData.js"(exports, module2) {
-    var isKeyable = require_isKeyable();
-    function getMapData(map, key) {
-      var data = map.__data__;
-      return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
-    }
-    module2.exports = getMapData;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js
-var require_mapCacheDelete = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheDelete.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheDelete(key) {
-      var result = getMapData(this, key)["delete"](key);
-      this.size -= result ? 1 : 0;
-      return result;
-    }
-    module2.exports = mapCacheDelete;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js
-var require_mapCacheGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheGet.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheGet(key) {
-      return getMapData(this, key).get(key);
-    }
-    module2.exports = mapCacheGet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js
-var require_mapCacheHas = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheHas.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheHas(key) {
-      return getMapData(this, key).has(key);
-    }
-    module2.exports = mapCacheHas;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js
-var require_mapCacheSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_mapCacheSet.js"(exports, module2) {
-    var getMapData = require_getMapData();
-    function mapCacheSet(key, value) {
-      var data = getMapData(this, key), size = data.size;
-      data.set(key, value);
-      this.size += data.size == size ? 0 : 1;
-      return this;
-    }
-    module2.exports = mapCacheSet;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js
-var require_MapCache = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_MapCache.js"(exports, module2) {
-    var mapCacheClear = require_mapCacheClear();
-    var mapCacheDelete = require_mapCacheDelete();
-    var mapCacheGet = require_mapCacheGet();
-    var mapCacheHas = require_mapCacheHas();
-    var mapCacheSet = require_mapCacheSet();
-    function MapCache(entries) {
-      var index2 = -1, length = entries == null ? 0 : entries.length;
-      this.clear();
-      while (++index2 < length) {
-        var entry = entries[index2];
-        this.set(entry[0], entry[1]);
-      }
-    }
-    MapCache.prototype.clear = mapCacheClear;
-    MapCache.prototype["delete"] = mapCacheDelete;
-    MapCache.prototype.get = mapCacheGet;
-    MapCache.prototype.has = mapCacheHas;
-    MapCache.prototype.set = mapCacheSet;
-    module2.exports = MapCache;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js
-var require_memoize = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/memoize.js"(exports, module2) {
-    var MapCache = require_MapCache();
-    var FUNC_ERROR_TEXT = "Expected a function";
-    function memoize(func, resolver) {
-      if (typeof func != "function" || resolver != null && typeof resolver != "function") {
-        throw new TypeError(FUNC_ERROR_TEXT);
-      }
-      var memoized = function() {
-        var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache2 = memoized.cache;
-        if (cache2.has(key)) {
-          return cache2.get(key);
-        }
-        var result = func.apply(this, args);
-        memoized.cache = cache2.set(key, result) || cache2;
-        return result;
-      };
-      memoized.cache = new (memoize.Cache || MapCache)();
-      return memoized;
-    }
-    memoize.Cache = MapCache;
-    module2.exports = memoize;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js
-var require_memoizeCapped = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_memoizeCapped.js"(exports, module2) {
-    var memoize = require_memoize();
-    var MAX_MEMOIZE_SIZE = 500;
-    function memoizeCapped(func) {
-      var result = memoize(func, function(key) {
-        if (cache2.size === MAX_MEMOIZE_SIZE) {
-          cache2.clear();
-        }
-        return key;
-      });
-      var cache2 = result.cache;
-      return result;
-    }
-    module2.exports = memoizeCapped;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js
-var require_stringToPath = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_stringToPath.js"(exports, module2) {
-    var memoizeCapped = require_memoizeCapped();
-    var rePropName = /[^.[\]]+|\[(?:(-?\d+(?:\.\d+)?)|(["'])((?:(?!\2)[^\\]|\\.)*?)\2)\]|(?=(?:\.|\[\])(?:\.|\[\]|$))/g;
-    var reEscapeChar = /\\(\\)?/g;
-    var stringToPath = memoizeCapped(function(string) {
-      var result = [];
-      if (string.charCodeAt(0) === 46) {
-        result.push("");
-      }
-      string.replace(rePropName, function(match, number, quote, subString) {
-        result.push(quote ? subString.replace(reEscapeChar, "$1") : number || match);
-      });
-      return result;
-    });
-    module2.exports = stringToPath;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js
-var require_arrayMap = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_arrayMap.js"(exports, module2) {
-    function arrayMap(array, iteratee) {
-      var index2 = -1, length = array == null ? 0 : array.length, result = Array(length);
-      while (++index2 < length) {
-        result[index2] = iteratee(array[index2], index2, array);
-      }
-      return result;
-    }
-    module2.exports = arrayMap;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js
-var require_baseToString = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseToString.js"(exports, module2) {
-    var Symbol2 = require_Symbol();
-    var arrayMap = require_arrayMap();
-    var isArray = require_isArray();
-    var isSymbol = require_isSymbol();
-    var INFINITY = 1 / 0;
-    var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
-    var symbolToString = symbolProto ? symbolProto.toString : void 0;
-    function baseToString(value) {
-      if (typeof value == "string") {
-        return value;
-      }
-      if (isArray(value)) {
-        return arrayMap(value, baseToString) + "";
-      }
-      if (isSymbol(value)) {
-        return symbolToString ? symbolToString.call(value) : "";
-      }
-      var result = value + "";
-      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
-    }
-    module2.exports = baseToString;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js
-var require_toString = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/toString.js"(exports, module2) {
-    var baseToString = require_baseToString();
-    function toString(value) {
-      return value == null ? "" : baseToString(value);
-    }
-    module2.exports = toString;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js
-var require_castPath = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_castPath.js"(exports, module2) {
-    var isArray = require_isArray();
-    var isKey = require_isKey();
-    var stringToPath = require_stringToPath();
-    var toString = require_toString();
-    function castPath(value, object) {
-      if (isArray(value)) {
-        return value;
-      }
-      return isKey(value, object) ? [value] : stringToPath(toString(value));
-    }
-    module2.exports = castPath;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js
-var require_toKey = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_toKey.js"(exports, module2) {
-    var isSymbol = require_isSymbol();
-    var INFINITY = 1 / 0;
-    function toKey(value) {
-      if (typeof value == "string" || isSymbol(value)) {
-        return value;
-      }
-      var result = value + "";
-      return result == "0" && 1 / value == -INFINITY ? "-0" : result;
-    }
-    module2.exports = toKey;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js
-var require_baseGet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseGet.js"(exports, module2) {
-    var castPath = require_castPath();
-    var toKey = require_toKey();
-    function baseGet(object, path) {
-      path = castPath(path, object);
-      var index2 = 0, length = path.length;
-      while (object != null && index2 < length) {
-        object = object[toKey(path[index2++])];
-      }
-      return index2 && index2 == length ? object : void 0;
-    }
-    module2.exports = baseGet;
-  }
-});
-
 // node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/get.js
 var require_get = __commonJS({
   "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/get.js"(exports, module2) {
@@ -29259,108 +29699,6 @@ var require_get = __commonJS({
       return result === void 0 ? defaultValue : result;
     }
     module2.exports = get3;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js
-var require_defineProperty = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_defineProperty.js"(exports, module2) {
-    var getNative = require_getNative();
-    var defineProperty = function() {
-      try {
-        var func = getNative(Object, "defineProperty");
-        func({}, "", {});
-        return func;
-      } catch (e4) {
-      }
-    }();
-    module2.exports = defineProperty;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js
-var require_baseAssignValue = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseAssignValue.js"(exports, module2) {
-    var defineProperty = require_defineProperty();
-    function baseAssignValue(object, key, value) {
-      if (key == "__proto__" && defineProperty) {
-        defineProperty(object, key, {
-          "configurable": true,
-          "enumerable": true,
-          "value": value,
-          "writable": true
-        });
-      } else {
-        object[key] = value;
-      }
-    }
-    module2.exports = baseAssignValue;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js
-var require_assignValue = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_assignValue.js"(exports, module2) {
-    var baseAssignValue = require_baseAssignValue();
-    var eq = require_eq();
-    var objectProto = Object.prototype;
-    var hasOwnProperty = objectProto.hasOwnProperty;
-    function assignValue(object, key, value) {
-      var objValue = object[key];
-      if (!(hasOwnProperty.call(object, key) && eq(objValue, value)) || value === void 0 && !(key in object)) {
-        baseAssignValue(object, key, value);
-      }
-    }
-    module2.exports = assignValue;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js
-var require_isIndex = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_isIndex.js"(exports, module2) {
-    var MAX_SAFE_INTEGER = 9007199254740991;
-    var reIsUint = /^(?:0|[1-9]\d*)$/;
-    function isIndex(value, length) {
-      var type = typeof value;
-      length = length == null ? MAX_SAFE_INTEGER : length;
-      return !!length && (type == "number" || type != "symbol" && reIsUint.test(value)) && (value > -1 && value % 1 == 0 && value < length);
-    }
-    module2.exports = isIndex;
-  }
-});
-
-// node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js
-var require_baseSet = __commonJS({
-  "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/_baseSet.js"(exports, module2) {
-    var assignValue = require_assignValue();
-    var castPath = require_castPath();
-    var isIndex = require_isIndex();
-    var isObject = require_isObject();
-    var toKey = require_toKey();
-    function baseSet(object, path, value, customizer) {
-      if (!isObject(object)) {
-        return object;
-      }
-      path = castPath(path, object);
-      var index2 = -1, length = path.length, lastIndex = length - 1, nested = object;
-      while (nested != null && ++index2 < length) {
-        var key = toKey(path[index2]), newValue = value;
-        if (key === "__proto__" || key === "constructor" || key === "prototype") {
-          return object;
-        }
-        if (index2 != lastIndex) {
-          var objValue = nested[key];
-          newValue = customizer ? customizer(objValue, key, nested) : void 0;
-          if (newValue === void 0) {
-            newValue = isObject(objValue) ? objValue : isIndex(path[index2 + 1]) ? [] : {};
-          }
-        }
-        assignValue(nested, key, newValue);
-        nested = nested[key];
-      }
-      return object;
-    }
-    module2.exports = baseSet;
   }
 });
 
@@ -29384,6 +29722,7 @@ module.exports = __toCommonJS(main_exports);
 
 // src/ExportImagePlugin.ts
 var import_obsidian10 = require("obsidian");
+var import_pick = __toESM(require_pick());
 
 // src/settingPreview.tsx
 var import_react2 = __toESM(require_react());
@@ -30034,13 +30373,13 @@ var translate = (textParts, pluralRules, formatters, args) => {
 };
 
 // node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.string.mjs
-var getPartsFromString = (cache2, text) => cache2[text] || (cache2[text] = parseRawText(text));
+var getPartsFromString = (cache, text) => cache[text] || (cache[text] = parseRawText(text));
 
 // node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.object.mjs
 var getTranslateInstance = (locale2, formatters) => {
-  const cache2 = {};
+  const cache = {};
   const pluralRules = new Intl.PluralRules(locale2);
-  return (text, ...args) => translate(getPartsFromString(cache2, text), pluralRules, formatters, args);
+  return (text, ...args) => translate(getPartsFromString(cache, text), pluralRules, formatters, args);
 };
 function i18nObject(locale2, translations, formatters = {}) {
   return createProxy(translations, getTranslateInstance(locale2, formatters));
@@ -30056,9 +30395,9 @@ var createProxy = (proxyObject, translateFn) => new Proxy(wrap(proxyObject, tran
 
 // node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.instance.mjs
 var i18n = (translations, formatters) => {
-  const cache2 = {};
+  const cache = {};
   return new Proxy({}, {
-    get: (_target, locale2) => cache2[locale2] || (cache2[locale2] = i18nObject(locale2, translations[locale2], formatters[locale2]))
+    get: (_target, locale2) => cache[locale2] || (cache[locale2] = i18nObject(locale2, translations[locale2], formatters[locale2]))
   });
 };
 
@@ -30133,8 +30472,23 @@ var extendDictionary = initExtendDictionary();
 // src/i18n/i18n-util.ts
 var baseLocale = "en";
 var locales = [
+  "cs",
+  "da",
   "de",
   "en",
+  "es",
+  "fr",
+  "hu",
+  "id",
+  "ja",
+  "ko",
+  "ms",
+  "nl",
+  "no",
+  "pl",
+  "pt",
+  "ro",
+  "ru",
   "zh"
 ];
 var loadedLocales = {};
@@ -30149,6 +30503,223 @@ var initFormatters = (locale2) => {
   };
   return formatters;
 };
+
+// src/i18n/cs/index.ts
+var cs = {
+  command: "Exportovat jako obr\xE1zek",
+  noActiveFile: "Nejd\u0159\xEDve pros\xEDm otev\u0159ete \u010Dl\xE1nek!",
+  imageExportPreview: "N\xE1hled exportu obr\xE1zku",
+  copiedSuccess: "Zkop\xEDrov\xE1no do schr\xE1nky",
+  copy: "Kop\xEDrovat do schr\xE1nky",
+  copyFail: "Kop\xEDrov\xE1n\xED selhalo",
+  notAllowCopy: "Nen\xED mo\u017En\xE9 p\u0159\xEDmo kop\xEDrovat form\xE1t {format}",
+  save: "Ulo\u017Eit obr\xE1zek",
+  saveSuccess: "Obr\xE1zek byl exportov\xE1n a ulo\u017Een jako {filePath: string}.",
+  saveFail: "Ulo\u017Een\xED obr\xE1zku selhalo",
+  saveVault: "Ulo\u017Eit do trezoru",
+  includingFilename: "V\u010Detn\u011B n\xE1zvu souboru jako titulku",
+  imageWidth: "\u0160\xED\u0159ka obr\xE1zku",
+  exportImage: "Exportovat do obr\xE1zku",
+  exportSelectionImage: "Exportovat v\xFDb\u011Br do obr\xE1zku",
+  exportFolder: "Exportovat v\u0161echny pozn\xE1mky do obr\xE1zku",
+  invalidWidth: "Pros\xEDm, nastavte \u0161\xED\u0159ku na rozumn\xE9 \u010D\xEDslo.",
+  "2x": "Povolit obr\xE1zek s dvojn\xE1sobn\xFDm rozli\u0161en\xEDm",
+  moreSetting: "Podrobn\u011Bj\u0161\xED nastaven\xED naleznete v nastaven\xED pluginu `Exportovat obr\xE1zek`.",
+  guide: "Ta\u017Een\xEDm p\u0159esu\u0148te, posouv\xE1n\xEDm nebo \u0161petkou zv\u011Bt\u0161te/zmen\u0161te, dvoj\xEDm kliknut\xEDm resetujte.",
+  copyNotAllowed: "Form\xE1t pdf nen\xED podporov\xE1n pro kop\xEDrov\xE1n\xED",
+  exportAll: "Exportovat vybran\xE9 pozn\xE1mky",
+  noMarkdownFile: "V aktu\xE1ln\xEDm adres\xE1\u0159i nejsou \u017E\xE1dn\xE9 soubory markdown",
+  selectAll: "Vybrat v\u0161e",
+  setting: {
+    title: "Exportovat obr\xE1zek",
+    imageWidth: {
+      label: "V\xFDchoz\xED \u0161\xED\u0159ka exportovan\xE9ho obr\xE1zku",
+      description: "Nastavte \u0161\xED\u0159ku exportovan\xE9ho obr\xE1zku v pixelech. V\xFDchoz\xED je 640px."
+    },
+    filename: {
+      label: "Zahrnout n\xE1zev souboru jako titulek",
+      description: "Nastavte, zda zahrnout n\xE1zev souboru jako titulek. Kdy\u017E Obsidian zobrazuje dokument, zobraz\xED n\xE1zev souboru jako nadpis h1. N\u011Bkdy to nen\xED \u017E\xE1douc\xED a m\u016F\u017Ee doj\xEDt ke zdvojen\xED titulk\u016F."
+    },
+    "2x": {
+      label: "Povolit obr\xE1zek s dvojn\xE1sobn\xFDm rozli\u0161en\xEDm",
+      description: "Nastavte, zda povolit obr\xE1zek s dvojn\xE1sobn\xFDm rozli\u0161en\xEDm. Obr\xE1zky s dvojn\xE1sobn\xFDm rozli\u0161en\xEDm budou vypadat ost\u0159eji a poskytnou lep\u0161\xED z\xE1\u017Eitek na obrazovk\xE1ch s vysok\xFDm PPI, jako jsou smartphony. Nev\xFDhodou je v\u0161ak v\u011Bt\u0161\xED velikost souboru obr\xE1zk\u016F."
+    },
+    metadata: {
+      label: "Zobrazit metadata"
+    },
+    format: {
+      title: "Form\xE1t v\xFDstupn\xEDho souboru",
+      description: "Obr\xE1zky ve form\xE1tu PNG by m\u011Bly vyhovovat v\u011Bt\u0161in\u011B pot\u0159eb, ale pro lep\u0161\xED podporu sc\xE9n\xE1\u0159\u016F u\u017Eivatel\u016F: 1. Podpora pro export obr\xE1zk\u016F s norm\xE1ln\xEDm i pr\u016Fhledn\xFDm pozad\xEDm; 2. Podpora pro export obr\xE1zk\u016F ve form\xE1tu JPG pro dosa\u017Een\xED men\u0161\xEDch velikost\xED soubor\u016F, i kdy\u017E nemus\xED b\xFDt mo\u017En\xE9 je p\u0159\xEDmo kop\xEDrovat do schr\xE1nky; 3. Podpora pro export do form\xE1tu jednostr\xE1nkov\xE9ho PDF, kter\xFD se li\u0161\xED od b\u011B\u017En\xFDch form\xE1t\u016F pap\xEDru PDF, d\xE1vejte pozor, abyste jej nespr\xE1vn\u011B nepou\u017Eili.",
+      png0: ".png - v\xFDchoz\xED",
+      png1: ".png - obr\xE1zek s pr\u016Fhledn\xFDm pozad\xEDm",
+      jpg: ".jpg - obr\xE1zek ve form\xE1tu jpg",
+      pdf: ".pdf - jednostr\xE1nkov\xFD PDF"
+    },
+    userInfo: {
+      title: "Informace o autorovi",
+      show: "Zobrazit informace o autorovi",
+      avatar: {
+        title: "Avatar",
+        description: "Doporu\u010Duje se pou\u017Eit\xED \u010Dtvercov\xFDch obr\xE1zk\u016F"
+      },
+      name: "Jm\xE9no autora",
+      position: "Kde zobrazit",
+      remark: "Dodate\u010Dn\xFD text",
+      align: "Zarovnat",
+      removeAvatar: "Odstranit avatar"
+    },
+    watermark: {
+      title: "Vodoznak",
+      enable: {
+        label: "Povolit vodoznak",
+        description: "Povolit vodoznak, podporuje textov\xFD a obrazov\xFD vodoznak."
+      },
+      type: {
+        label: "Typ vodoznaku",
+        description: "Nastavte typ vodoznaku, text nebo obr\xE1zek.",
+        text: "Text",
+        image: "Obr\xE1zek"
+      },
+      text: {
+        content: "Obsah textu",
+        fontSize: "Velikost p\xEDsma vodoznaku",
+        color: "Barva textu vodoznaku"
+      },
+      image: {
+        src: {
+          label: "URL obr\xE1zku",
+          upload: "Nahr\xE1t obr\xE1zek",
+          select: "Vybrat ze trezoru"
+        }
+      },
+      opacity: "Pr\u016Fhlednost vodoznaku (0 je pr\u016Fhledn\xFD, 1 je nepr\u016Fhledn\xFD)",
+      rotate: "Rotace vodoznaku (ve stupn\xEDch)",
+      width: "\u0160\xED\u0159ka vodoznaku",
+      height: "V\xFD\u0161ka vodoznaku",
+      x: "Horizont\xE1ln\xED mezera vodoznaku",
+      y: "Vertik\xE1ln\xED mezera vodoznaku"
+    },
+    preview: "N\xE1hled vodoznaku",
+    reset: "Obnovit v\xFDchoz\xED",
+    recursive: "Zahrnout pozn\xE1mky z podadres\xE1\u0159\u016F"
+  },
+  imageSelect: {
+    search: "Hledat",
+    select: "Vybrat",
+    cancel: "Zru\u0161it",
+    empty: "Nenalezeny \u017E\xE1dn\xE9 obr\xE1zky"
+  }
+};
+var cs_default = cs;
+
+// src/i18n/da/index.ts
+var da = {
+  // TODO: Indsæt dine oversættelser her
+  command: "Eksporter som billede",
+  noActiveFile: "\xC5bn venligst en artikel f\xF8rst!",
+  imageExportPreview: "Forh\xE5ndsvisning af billedexport",
+  copiedSuccess: "Kopieret til udklipsholderen",
+  copy: "Kopier til udklipsholderen",
+  copyFail: "Kunne ikke kopiere",
+  notAllowCopy: "Kan ikke kopiere {format} formatet direkte",
+  save: "Gem billede",
+  saveSuccess: "Billedet er eksporteret og gemt som {filePath: string}.",
+  saveFail: "Kunne ikke gemme billedet",
+  saveVault: "Gem i boksen",
+  includingFilename: "Inkluder filnavn som titel",
+  imageWidth: "Billedbredde",
+  exportImage: "Eksport\xE9r til billede",
+  exportSelectionImage: "Eksport\xE9r valg til billede",
+  exportFolder: "Eksport\xE9r alle noter til billeder",
+  invalidWidth: "Angiv venligst en bredde som et rimeligt tal.",
+  "2x": "Aktiver billede med 2x opl\xF8sning",
+  moreSetting: "Flere detaljerede indstillinger kan findes i `Eksport\xE9r billede` plugin-indstillingerne.",
+  guide: "Tr\xE6k for at flytte, scroll eller knib for at zoome ind/ud, dobbeltklik for at nulstille.",
+  copyNotAllowed: "pdf formatet underst\xF8ttes ikke til kopiering",
+  exportAll: "Eksport\xE9r udvalgte noter",
+  noMarkdownFile: "Ingen markdown filer i den aktuelle mappe",
+  selectAll: "V\xE6lg alle",
+  setting: {
+    title: "Eksport\xE9r billede",
+    imageWidth: {
+      label: "Standard eksportbilledbredde",
+      description: "Indstil bredden af det eksporterede billede i pixels. Standarden er 640px."
+    },
+    filename: {
+      label: "Inkluder filnavn som titel",
+      description: "Indstil om filnavnet skal inkluderes som titel. N\xE5r Obsidian viser dokumentet, vises filnavnet som en h1 titel. Nogle gange er dette ikke \xF8nsket, og du vil f\xE5 dobbelte titler."
+    },
+    "2x": {
+      label: "Aktiver billede med 2x opl\xF8sning",
+      description: "Indstil om billede med 2x opl\xF8sning skal aktiveres. Billeder med 2x opl\xF8sning vil se skarpere ud og giver en bedre oplevelse p\xE5 sk\xE6rme med h\xF8j PPI, s\xE5som smartphones. Ulempen er dog, at filst\xF8rrelsen p\xE5 billederne er st\xF8rre."
+    },
+    metadata: {
+      label: "Vis metadata"
+    },
+    format: {
+      title: "Output filformat",
+      description: "Standard PNG format billeder b\xF8r opfylde de fleste behov, men for bedre at underst\xF8tte brugerscenarier: 1. Support for eksport af billeder med b\xE5de normal og gennemsigtig baggrund; 2. Support for eksport af JPG billeder for at opn\xE5 mindre filst\xF8rrelser, selvom det muligvis ikke kan kopieres direkte til udklipsholderen; 3. Support for eksport til enkeltside PDF format, som adskiller sig fra de s\xE6dvanlige PDF-papirformater, v\xE6r venlig ikke at misbruge.",
+      png0: ".png - standard",
+      png1: ".png - billede med gennemsigtig baggrund",
+      jpg: ".jpg - JPG format billede",
+      pdf: ".pdf - enkeltside PDF"
+    },
+    userInfo: {
+      title: "Forfatterinfo",
+      show: "Vis forfatterinfo",
+      avatar: {
+        title: "Avatar",
+        description: "Anbefales at bruge kvadratiske billeder"
+      },
+      name: "Forfatternavn",
+      position: "Hvor skal det vises",
+      remark: "Ekstra tekst",
+      align: "Just\xE9r",
+      removeAvatar: "Fjern avatar"
+    },
+    watermark: {
+      title: "Vandm\xE6rke",
+      enable: {
+        label: "Aktiv\xE9r vandm\xE6rke",
+        description: "Aktiver vandm\xE6rke, underst\xF8tter tekst og billede vandm\xE6rker."
+      },
+      type: {
+        label: "Vandm\xE6rke type",
+        description: "Indstil typen af vandm\xE6rke, tekst eller billede.",
+        text: "Tekst",
+        image: "Billede"
+      },
+      text: {
+        content: "Tekstindhold",
+        fontSize: "Vandm\xE6rke fontst\xF8rrelse",
+        color: "Vandm\xE6rketekstfarve"
+      },
+      image: {
+        src: {
+          label: "Billed-URL",
+          upload: "Upload billede",
+          select: "V\xE6lg fra boks"
+        }
+      },
+      opacity: "Vandm\xE6rke opacitet (0 er gennemsigtig, 1 er ikke gennemsigtig)",
+      rotate: "Vandm\xE6rke rotation (i grader)",
+      width: "Vandm\xE6rke bredde",
+      height: "Vandm\xE6rke h\xF8jde",
+      x: "Vandm\xE6rke horisontal afstand",
+      y: "Vandm\xE6rke vertikal afstand"
+    },
+    preview: "Vandm\xE6rke forh\xE5ndsvisning",
+    reset: "Nulstil til standard",
+    recursive: "Inkluder noter fra undermapper"
+  },
+  imageSelect: {
+    search: "S\xF8g",
+    select: "V\xE6lg",
+    cancel: "Annuller",
+    empty: "Ingen billeder fundet"
+  }
+};
+var da_default = da;
 
 // src/i18n/de/index.ts
 var de = {
@@ -30368,6 +30939,1416 @@ var en = {
 };
 var en_default = en;
 
+// src/i18n/es/index.ts
+var es = {
+  command: "Exportar como imagen",
+  noActiveFile: "\xA1Por favor, abre un art\xEDculo primero!",
+  imageExportPreview: "Vista previa de exportaci\xF3n de imagen",
+  copiedSuccess: "Copiado al portapapeles",
+  copy: "Copiar al portapapeles",
+  copyFail: "Fallo al copiar",
+  notAllowCopy: "No se permite copiar directamente el formato {format}",
+  save: "Guardar imagen",
+  saveSuccess: "Imagen exportada y guardada como {filePath: string}.",
+  saveFail: "Fallo al guardar la imagen",
+  saveVault: "Guardar en la b\xF3veda",
+  includingFilename: "Incluir nombre de archivo como t\xEDtulo",
+  imageWidth: "Ancho de la imagen",
+  exportImage: "Exportar a imagen",
+  exportSelectionImage: "Exportar selecci\xF3n a imagen",
+  exportFolder: "Exportar todas las notas a imagen",
+  invalidWidth: "Por favor, establece un ancho en un n\xFAmero razonable.",
+  "2x": "Activar imagen con resoluci\xF3n 2x",
+  moreSetting: "Puedes encontrar configuraciones m\xE1s detalladas en los ajustes del plugin `Exportar como imagen`.",
+  guide: "Arrastra para mover, desplaza o pellizca para acercar/alejar, doble clic para restablecer.",
+  copyNotAllowed: "El formato pdf no es compatible para copiar",
+  exportAll: "Exportar notas seleccionadas",
+  noMarkdownFile: "No hay archivos markdown en el directorio actual",
+  selectAll: "Seleccionar todo",
+  setting: {
+    title: "Exportar como imagen",
+    imageWidth: {
+      label: "Ancho de imagen exportada por defecto",
+      description: "Establece el ancho de la imagen exportada en p\xEDxeles. El predeterminado es 640px."
+    },
+    filename: {
+      label: "Incluir nombre de archivo como t\xEDtulo",
+      description: "Establece si incluir el nombre del archivo como t\xEDtulo. Cuando Obsidian muestra el documento, muestra el nombre del archivo como un t\xEDtulo h1. A veces esto no es lo que quieres y terminar\xE1s con t\xEDtulos duplicados."
+    },
+    "2x": {
+      label: "Activar imagen con resoluci\xF3n 2x",
+      description: "Establece si activar la imagen con resoluci\xF3n 2x. Las im\xE1genes con resoluci\xF3n 2x aparecer\xE1n m\xE1s n\xEDtidas y proporcionar\xE1n una mejor experiencia en pantallas de alta PPI, como las de los smartphones. Sin embargo, el lado negativo es que el tama\xF1o del archivo de las im\xE1genes es mayor."
+    },
+    metadata: {
+      label: "Mostrar metadatos"
+    },
+    format: {
+      title: "Formato del archivo de salida",
+      description: "Las im\xE1genes en formato PNG por defecto deber\xEDan satisfacer la mayor\xEDa de necesidades, pero para soportar mejor los escenarios de uso: 1. Soporte para exportar im\xE1genes con fondos normales y transparentes; 2. Soporte para exportar im\xE1genes en formato JPG para lograr tama\xF1os de archivo m\xE1s peque\xF1os, aunque puede que no sea posible copiar directamente al portapapeles; 3. Soporte para exportar al formato de PDF de una sola p\xE1gina, que difiere de los formatos de papel PDF habituales, por favor, ten cuidado de no usarlo incorrectamente.",
+      png0: ".png - por defecto",
+      png1: ".png - imagen con fondo transparente",
+      jpg: ".jpg - imagen en formato jpg",
+      pdf: ".pdf - PDF de una sola p\xE1gina"
+    },
+    userInfo: {
+      title: "Informaci\xF3n del autor",
+      show: "Mostrar informaci\xF3n del autor",
+      avatar: {
+        title: "Avatar",
+        description: "Se recomienda usar im\xE1genes cuadradas"
+      },
+      name: "Nombre del autor",
+      position: "D\xF3nde mostrar",
+      remark: "Texto extra",
+      align: "Alinear",
+      removeAvatar: "Eliminar avatar"
+    },
+    watermark: {
+      title: "Marca de agua",
+      enable: {
+        label: "Activar marca de agua",
+        description: "Activar la marca de agua, admite marcas de agua de texto e imagen."
+      },
+      type: {
+        label: "Tipo de marca de agua",
+        description: "Establece el tipo de marca de agua, texto o imagen.",
+        text: "Texto",
+        image: "Imagen"
+      },
+      text: {
+        content: "Contenido del texto",
+        fontSize: "Tama\xF1o de fuente de la marca de agua",
+        color: "Color del texto de la marca de agua"
+      },
+      image: {
+        src: {
+          label: "URL de la imagen",
+          upload: "Subir imagen",
+          select: "Seleccionar de la b\xF3veda"
+        }
+      },
+      opacity: "Opacidad de la marca de agua (0 es transparente, 1 es opaco)",
+      rotate: "Rotaci\xF3n de la marca de agua (en grados)",
+      width: "Ancho de la marca de agua",
+      height: "Altura de la marca de agua",
+      x: "Distancia horizontal de la marca de agua",
+      y: "Distancia vertical de la marca de agua"
+    },
+    preview: "Vista previa de la marca de agua",
+    reset: "Restablecer a los valores por defecto",
+    recursive: "Incluir notas de subdirectorios"
+  },
+  imageSelect: {
+    search: "Buscar",
+    select: "Seleccionar",
+    cancel: "Cancelar",
+    empty: "No se encontraron im\xE1genes"
+  }
+};
+var es_default = es;
+
+// src/i18n/fr/index.ts
+var fr = {
+  // TODO: Insérez vos traductions ici
+  command: "Exporter en image",
+  noActiveFile: "Veuillez d'abord ouvrir un article !",
+  imageExportPreview: "Aper\xE7u de l'exportation d'image",
+  copiedSuccess: "Copi\xE9 dans le presse-papiers",
+  copy: "Copier dans le presse-papiers",
+  copyFail: "\xC9chec de la copie",
+  notAllowCopy: "Impossible de copier directement le format {format}",
+  save: "Enregistrer l'image",
+  saveSuccess: "L'image a \xE9t\xE9 export\xE9e et enregistr\xE9e sous {filePath: string}.",
+  saveFail: "\xC9chec de l'enregistrement de l'image",
+  saveVault: "Enregistrer dans le coffre",
+  includingFilename: "Incluant le nom du fichier comme titre",
+  imageWidth: "Largeur de l'image",
+  exportImage: "Exporter en image",
+  exportSelectionImage: "Exporter la s\xE9lection en image",
+  exportFolder: "Exporter toutes les notes en image",
+  invalidWidth: "Veuillez d\xE9finir une largeur avec un nombre raisonnable.",
+  "2x": "Activer l'image en r\xE9solution 2x",
+  moreSetting: "Des param\xE8tres plus d\xE9taill\xE9s peuvent \xEAtre trouv\xE9s dans les r\xE9glages du plugin `Exporter en image`.",
+  guide: "Faites glisser pour d\xE9placer, faites d\xE9filer ou pincez pour zoomer, double-cliquez pour r\xE9initialiser.",
+  copyNotAllowed: "Le format pdf n'est pas pris en charge pour la copie",
+  exportAll: "Exporter les notes s\xE9lectionn\xE9es",
+  noMarkdownFile: "Aucun fichier markdown dans le r\xE9pertoire actuel",
+  selectAll: "Tout s\xE9lectionner",
+  setting: {
+    title: "Exporter en image",
+    imageWidth: {
+      label: "Largeur d'image export\xE9e par d\xE9faut",
+      description: "D\xE9finissez la largeur de l'image export\xE9e en pixels. La valeur par d\xE9faut est 640px."
+    },
+    filename: {
+      label: "Inclure le nom du fichier comme titre",
+      description: "D\xE9finissez si le nom du fichier doit \xEAtre inclus comme titre. Lorsqu'Obsidian affiche le document, il affiche le nom du fichier comme un titre h1. Parfois, ce n'est pas ce que vous souhaitez, et vous obtiendrez des titres en double."
+    },
+    "2x": {
+      label: "Activer l'image en r\xE9solution 2x",
+      description: "D\xE9finissez si l'image en r\xE9solution 2x doit \xEAtre activ\xE9e. Les images en r\xE9solution 2x appara\xEEtront plus nettes et offriront une meilleure exp\xE9rience sur les \xE9crans \xE0 haute PPI, tels que ceux des smartphones. Cependant, l'inconv\xE9nient est que la taille du fichier des images est plus grande."
+    },
+    metadata: {
+      label: "Afficher les m\xE9tadonn\xE9es"
+    },
+    format: {
+      title: "Format de fichier de sortie",
+      description: "Les images au format PNG par d\xE9faut devraient satisfaire la majorit\xE9 des besoins, mais pour mieux soutenir les sc\xE9narios utilisateurs : 1. Support pour l'exportation d'images avec des arri\xE8re-plans normaux et transparents ; 2. Support pour l'exportation d'images JPG pour obtenir des tailles de fichier plus petites, bien qu'il ne soit peut-\xEAtre pas possible de copier directement dans le presse-papiers ; 3. Support pour l'exportation au format PDF d'une seule page, ce qui diff\xE8re des formats de papier PDF habituels, veillez \xE0 ne pas faire d'erreur.",
+      png0: ".png - par d\xE9faut",
+      png1: ".png - image avec fond transparent",
+      jpg: ".jpg - image au format jpg",
+      pdf: ".pdf - PDF d'une seule page"
+    },
+    userInfo: {
+      title: "Info auteur",
+      show: "Afficher les infos de l'auteur",
+      avatar: {
+        title: "Avatar",
+        description: "L'utilisation d'images carr\xE9es est recommand\xE9e"
+      },
+      name: "Nom de l'auteur",
+      position: "O\xF9 afficher",
+      remark: "Texte suppl\xE9mentaire",
+      align: "Aligner",
+      removeAvatar: "Supprimer l'avatar"
+    },
+    watermark: {
+      title: "Filigrane",
+      enable: {
+        label: "Activer le filigrane",
+        description: "Activer le filigrane, supporte le filigrane texte et image."
+      },
+      type: {
+        label: "Type de filigrane",
+        description: "D\xE9finissez le type de filigrane, texte ou image.",
+        text: "Texte",
+        image: "Image"
+      },
+      text: {
+        content: "Contenu du texte",
+        fontSize: "Taille de la police du filigrane",
+        color: "Couleur du texte du filigrane"
+      },
+      image: {
+        src: {
+          label: "URL de l'image",
+          upload: "T\xE9l\xE9charger l'image",
+          select: "S\xE9lectionner depuis le coffre"
+        }
+      },
+      opacity: "Opacit\xE9 du filigrane (0 est transparent, 1 n'est pas transparent)",
+      rotate: "Rotation du filigrane (en degr\xE9s)",
+      width: "Largeur du filigrane",
+      height: "Hauteur du filigrane",
+      x: "Espacement horizontal du filigrane",
+      y: "Espacement vertical du filigrane"
+    },
+    preview: "Aper\xE7u du filigrane",
+    reset: "R\xE9initialiser par d\xE9faut",
+    recursive: "Inclure les notes des sous-r\xE9pertoires"
+  },
+  imageSelect: {
+    search: "Rechercher",
+    select: "S\xE9lectionner",
+    cancel: "Annuler",
+    empty: "Aucune image trouv\xE9e"
+  }
+};
+var fr_default = fr;
+
+// src/i18n/hu/index.ts
+var hu = {
+  command: "Export\xE1l\xE1s k\xE9pk\xE9nt",
+  noActiveFile: "K\xE9rlek, el\u0151sz\xF6r nyiss meg egy cikket!",
+  imageExportPreview: "K\xE9p export el\u0151n\xE9zet",
+  copiedSuccess: "V\xE1g\xF3lapra m\xE1solva",
+  copy: "M\xE1sol\xE1s v\xE1g\xF3lapra",
+  copyFail: "A m\xE1sol\xE1s sikertelen",
+  notAllowCopy: "A {format} form\xE1tum k\xF6zvetlen m\xE1sol\xE1sa nem enged\xE9lyezett",
+  save: "K\xE9p ment\xE9se",
+  saveSuccess: "A k\xE9p export\xE1lva \xE9s mentve mint {filePath: string}.",
+  saveFail: "A k\xE9p ment\xE9se sikertelen",
+  saveVault: "Ment\xE9s a Vaultba",
+  includingFilename: "F\xE1jln\xE9v hozz\xE1ad\xE1sa c\xEDmk\xE9nt",
+  imageWidth: "K\xE9psz\xE9less\xE9g",
+  exportImage: "Export\xE1l\xE1s k\xE9pk\xE9nt",
+  exportSelectionImage: "Kijel\xF6l\xE9s export\xE1l\xE1sa k\xE9pk\xE9nt",
+  exportFolder: "Az \xF6sszes jegyzet export\xE1l\xE1sa k\xE9pk\xE9nt",
+  invalidWidth: "K\xE9rlek, adj meg egy \xE9sszer\u0171 sz\xE9less\xE9gi \xE9rt\xE9ket.",
+  "2x": "2x felbont\xE1s\xFA k\xE9p enged\xE9lyez\xE9se",
+  moreSetting: "Tov\xE1bbi r\xE9szletes be\xE1ll\xEDt\xE1sok a `K\xE9pk\xE9nt export\xE1l\xE1s` b\u0151v\xEDtm\xE9ny be\xE1ll\xEDt\xE1saiban tal\xE1lhat\xF3ak.",
+  guide: "H\xFAz\xE1ssal mozgathat\xF3, g\xF6rget\xE9ssel vagy csipetmozdulattal zoomolhat\xF3, dupla kattint\xE1ssal vissza\xE1ll\xEDthat\xF3.",
+  copyNotAllowed: "A pdf form\xE1tum m\xE1sol\xE1sa nem t\xE1mogatott",
+  exportAll: "Kiv\xE1lasztott jegyzetek export\xE1l\xE1sa",
+  noMarkdownFile: "Nincsenek markdown f\xE1jlok az aktu\xE1lis k\xF6nyvt\xE1rban",
+  selectAll: "\xD6sszes kiv\xE1laszt\xE1sa",
+  setting: {
+    title: "K\xE9pk\xE9nt export\xE1l\xE1s",
+    imageWidth: {
+      label: "Alap\xE9rtelmezett export\xE1lt k\xE9pszeless\xE9g",
+      description: "\xC1ll\xEDtsd be az export\xE1lt k\xE9p sz\xE9less\xE9g\xE9t pixelben. Az alap\xE9rtelmezett \xE9rt\xE9k 640px."
+    },
+    filename: {
+      label: "F\xE1jln\xE9v hozz\xE1ad\xE1sa c\xEDmk\xE9nt",
+      description: "\xC1ll\xEDtsd be, hogy a f\xE1jln\xE9v hozz\xE1 legyen-e adva c\xEDmk\xE9nt. Amikor az Obsidian megjelen\xEDti a dokumentumot, a f\xE1jln\xE9v h1 c\xEDmk\xE9nt jelenik meg. N\xE9ha ez nem k\xEDv\xE1natos, \xE9s \xEDgy dupla c\xEDmeket kaphatsz."
+    },
+    "2x": {
+      label: "2x felbont\xE1s\xFA k\xE9p enged\xE9lyez\xE9se",
+      description: "\xC1ll\xEDtsd be, hogy enged\xE9lyezve legyen-e a 2x felbont\xE1s\xFA k\xE9p. A 2x felbont\xE1s\xFA k\xE9pek \xE9lesebbnek t\u0171nnek, \xE9s jobb felhaszn\xE1l\xF3i \xE9lm\xE9nyt ny\xFAjtanak magas PPI-j\u0171 kijelz\u0151k\xF6n, mint amilyenek a smartphone-ok. Azonban a h\xE1tr\xE1nya, hogy a k\xE9pf\xE1jlok m\xE9rete nagyobb lesz."
+    },
+    metadata: {
+      label: "Metaadatok megjelen\xEDt\xE9se"
+    },
+    format: {
+      title: "Kimeneti f\xE1jl form\xE1tum",
+      description: "Az alap\xE9rtelmezett PNG form\xE1tum\xFA k\xE9peknek meg kell felelni\xFCk a legt\xF6bb ig\xE9nynek, de a felhaszn\xE1l\xF3i forgat\xF3k\xF6nyvek jobb t\xE1mogat\xE1sa \xE9rdek\xE9ben: 1. T\xE1mogat\xE1s norm\xE1l \xE9s \xE1tl\xE1tsz\xF3 h\xE1tt\xE9rrel rendelkez\u0151 k\xE9pek export\xE1l\xE1s\xE1ra; 2. JPG k\xE9pek export\xE1l\xE1s\xE1nak t\xE1mogat\xE1sa a kisebb f\xE1jlm\xE9ret el\xE9r\xE9se \xE9rdek\xE9ben, b\xE1r lehet, hogy k\xF6zvetlen\xFCl nem m\xE1solhat\xF3 a v\xE1g\xF3lapra; 3. Egyoldalas PDF form\xE1tumra val\xF3 export\xE1l\xE1s t\xE1mogat\xE1sa, amely elt\xE9r a szok\xE1sos PDF pap\xEDrform\xE1tumokt\xF3l, k\xE9rlek, l\xE9gy \xF3vatos a haszn\xE1latakor.",
+      png0: ".png - alap\xE9rtelmezett",
+      png1: ".png - \xE1tl\xE1tsz\xF3 h\xE1tt\xE9rrel",
+      jpg: ".jpg - JPG form\xE1tum\xFA k\xE9p",
+      pdf: ".pdf - egyoldalas PDF"
+    },
+    userInfo: {
+      title: "Szerz\u0151i inform\xE1ci\xF3",
+      show: "Szerz\u0151i inform\xE1ci\xF3 megjelen\xEDt\xE9se",
+      avatar: {
+        title: "Avatar",
+        description: "N\xE9gyzetes k\xE9pek haszn\xE1lata aj\xE1nlott"
+      },
+      name: "Szerz\u0151 neve",
+      position: "Megjelen\xEDt\xE9s helye",
+      remark: "Tov\xE1bbi sz\xF6veg",
+      align: "Igaz\xEDt\xE1s",
+      removeAvatar: "Avatar elt\xE1vol\xEDt\xE1sa"
+    },
+    watermark: {
+      title: "V\xEDzjel",
+      enable: {
+        label: "V\xEDzjel enged\xE9lyez\xE9se",
+        description: "V\xEDzjel enged\xE9lyez\xE9se, t\xE1mogat sz\xF6veges \xE9s k\xE9pes v\xEDzjeleket."
+      },
+      type: {
+        label: "V\xEDzjel t\xEDpusa",
+        description: "\xC1ll\xEDtsd be a v\xEDzjel t\xEDpus\xE1t, sz\xF6veg vagy k\xE9p.",
+        text: "Sz\xF6veg",
+        image: "K\xE9p"
+      },
+      text: {
+        content: "Sz\xF6veg tartalma",
+        fontSize: "V\xEDzjel bet\u0171m\xE9rete",
+        color: "V\xEDzjel sz\xF6veg\xE9nek sz\xEDne"
+      },
+      image: {
+        src: {
+          label: "K\xE9p URL",
+          upload: "K\xE9p felt\xF6lt\xE9se",
+          select: "Kiv\xE1laszt\xE1s a Vaultb\xF3l"
+        }
+      },
+      opacity: "V\xEDzjel \xE1tl\xE1tsz\xF3s\xE1ga (0 \xE1tl\xE1tsz\xF3, 1 nem \xE1tl\xE1tsz\xF3)",
+      rotate: "V\xEDzjel forgat\xE1sa (fokban)",
+      width: "V\xEDzjel sz\xE9less\xE9ge",
+      height: "V\xEDzjel magass\xE1ga",
+      x: "V\xEDzjel v\xEDzszintes t\xE1vols\xE1ga",
+      y: "V\xEDzjel f\xFCgg\u0151leges t\xE1vols\xE1ga"
+    },
+    preview: "V\xEDzjel el\u0151n\xE9zet",
+    reset: "Alap\xE9rtelmezettek vissza\xE1ll\xEDt\xE1sa",
+    recursive: "Jegyzetek bevon\xE1sa az almapp\xE1kb\xF3l"
+  },
+  imageSelect: {
+    search: "Keres\xE9s",
+    select: "Kiv\xE1laszt\xE1s",
+    cancel: "M\xE9gse",
+    empty: "Nem tal\xE1lhat\xF3 k\xE9p"
+  }
+};
+var hu_default = hu;
+
+// src/i18n/id/index.ts
+var id = {
+  command: "Ekspor sebagai gambar",
+  noActiveFile: "Silakan buka artikel terlebih dahulu!",
+  imageExportPreview: "Pratinjau Ekspor Gambar",
+  copiedSuccess: "Disalin ke clipboard",
+  copy: "Salin ke Clipboard",
+  copyFail: "Gagal menyalin",
+  notAllowCopy: "Tidak dapat langsung menyalin format {format}",
+  save: "Simpan Gambar",
+  saveSuccess: "Gambar berhasil diekspor dan disimpan sebagai {filePath: string}.",
+  saveFail: "Gagal menyimpan gambar",
+  saveVault: "Simpan ke Vault",
+  includingFilename: "Termasuk Nama File Sebagai Judul",
+  imageWidth: "Lebar Gambar",
+  exportImage: "Ekspor ke gambar",
+  exportSelectionImage: "Ekspor seleksi ke gambar",
+  exportFolder: "Ekspor semua catatan ke gambar",
+  invalidWidth: "Please set width with a reasonable number.",
+  // Opsional: "Silakan atur lebar dengan angka yang wajar."
+  "2x": "Aktifkan gambar resolusi 2x",
+  moreSetting: "Pengaturan lebih rinci dapat ditemukan di pengaturan plugin `Ekspor Gambar`.",
+  guide: "Seret untuk Bergerak, gulir atau cubit untuk memperbesar/memperkecil, klik dua kali untuk mereset.",
+  copyNotAllowed: "format pdf tidak didukung untuk disalin",
+  exportAll: "Ekspor Catatan yang Dipilih",
+  noMarkdownFile: "Tidak ada berkas markdown di direktori saat ini",
+  selectAll: "Pilih Semua",
+  setting: {
+    title: "Ekspor Gambar",
+    imageWidth: {
+      label: "Lebar gambar ekspor default",
+      description: "Atur lebar gambar yang diekspor dalam piksel. Default adalah 640px."
+    },
+    filename: {
+      label: "Termasuk nama file sebagai judul",
+      description: "Atur apakah nama file akan disertakan sebagai judul. Ketika Obsidian menampilkan dokumen, itu akan menampilkan nama file sebagai judul h1. Kadang ini tidak diinginkan, dan Anda akan mendapat judul ganda."
+    },
+    "2x": {
+      label: "Aktifkan gambar resolusi 2x",
+      description: "Atur apakah gambar resolusi 2x akan diaktifkan. Gambar dengan resolusi 2x akan terlihat lebih tajam dan memberikan pengalaman yang lebih baik pada layar DPI tinggi, seperti pada smartphone. Namun, kekurangannya adalah ukuran file gambar lebih besar."
+    },
+    metadata: {
+      label: "Tampilkan metadata"
+    },
+    format: {
+      title: "Format file keluaran",
+      description: "Gambar format PNG default harus memenuhi kebutuhan sebagian besar, tapi untuk lebih mendukung skenario pengguna: 1. Dukungan untuk mengekspor gambar dengan latar belakang normal dan transparan; 2. Dukungan untuk mengekspor gambar JPG untuk mencapai ukuran file yang lebih kecil, walaupun mungkin tidak bisa langsung disalin ke clipboard; 3. Dukungan untuk mengekspor ke format PDF satu halaman, yang berbeda dari format kertas PDF biasa, harap berhati-hati untuk tidak salah gunakan.",
+      png0: ".png - default",
+      png1: ".png - gambar latar belakang transparan",
+      jpg: ".jpg - gambar format jpg",
+      pdf: ".pdf - PDF satu halaman"
+    },
+    userInfo: {
+      title: "Info Penulis",
+      show: "Tampilkan info penulis",
+      avatar: {
+        title: "Avatar",
+        description: "Disarankan menggunakan gambar persegi"
+      },
+      name: "Nama penulis",
+      position: "Dimana ditampilkan",
+      remark: "Teks tambahan",
+      align: "Menyelaraskan",
+      removeAvatar: "Hapus avatar"
+    },
+    watermark: {
+      title: "Watermark",
+      enable: {
+        label: "Aktifkan watermark",
+        description: "Mengaktifkan watermark, mendukung watermark teks dan gambar."
+      },
+      type: {
+        label: "Tipe watermark",
+        description: "Atur tipe watermark, teks atau gambar.",
+        text: "Teks",
+        image: "Gambar"
+      },
+      text: {
+        content: "Konten teks",
+        fontSize: "Ukuran font watermark",
+        color: "Warna teks watermark"
+      },
+      image: {
+        src: {
+          label: "URL gambar",
+          upload: "Unggah gambar",
+          select: "Pilih dari Vault"
+        }
+      },
+      opacity: "Ketebalan watermark (0 transparan, 1 tidak transparan)",
+      rotate: "Rotasi watermark (dalam derajat)",
+      width: "Lebar watermark",
+      height: "Tinggi watermark",
+      x: "Jarak horizontal watermark",
+      y: "Jarak vertikal watermark"
+    },
+    preview: "Pratinjau watermark",
+    reset: "Reset ke default",
+    recursive: "Termasuk catatan dari subdirektori"
+  },
+  imageSelect: {
+    search: "Cari",
+    select: "Pilih",
+    cancel: "Batal",
+    empty: "Tidak ada gambar yang ditemukan"
+  }
+};
+var id_default = id;
+
+// src/i18n/ja/index.ts
+var ja = {
+  command: "\u753B\u50CF\u3068\u3057\u3066\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+  noActiveFile: "\u5148\u306B\u8A18\u4E8B\u3092\u958B\u3044\u3066\u304F\u3060\u3055\u3044\uFF01",
+  imageExportPreview: "\u753B\u50CF\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u30D7\u30EC\u30D3\u30E5\u30FC",
+  copiedSuccess: "\u30AF\u30EA\u30C3\u30D7\u30DC\u30FC\u30C9\u306B\u30B3\u30D4\u30FC\u3055\u308C\u307E\u3057\u305F",
+  copy: "\u30AF\u30EA\u30C3\u30D7\u30DC\u30FC\u30C9\u306B\u30B3\u30D4\u30FC",
+  copyFail: "\u30B3\u30D4\u30FC\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
+  notAllowCopy: "{format}\u30D5\u30A9\u30FC\u30DE\u30C3\u30C8\u306E\u76F4\u63A5\u30B3\u30D4\u30FC\u306F\u3067\u304D\u307E\u305B\u3093",
+  save: "\u753B\u50CF\u3092\u4FDD\u5B58",
+  saveSuccess: "\u753B\u50CF\u3092{filePath: string}\u3068\u3057\u3066\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u3066\u4FDD\u5B58\u3057\u307E\u3057\u305F\u3002",
+  saveFail: "\u753B\u50CF\u306E\u4FDD\u5B58\u306B\u5931\u6557\u3057\u307E\u3057\u305F",
+  saveVault: "\u30DC\u30FC\u30EB\u30C8\u306B\u4FDD\u5B58",
+  includingFilename: "\u30D5\u30A1\u30A4\u30EB\u540D\u3092\u30BF\u30A4\u30C8\u30EB\u3068\u3057\u3066\u542B\u3080",
+  imageWidth: "\u753B\u50CF\u306E\u5E45",
+  exportImage: "\u753B\u50CF\u3068\u3057\u3066\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+  exportSelectionImage: "\u9078\u629E\u7BC4\u56F2\u3092\u753B\u50CF\u3068\u3057\u3066\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+  exportFolder: "\u3059\u3079\u3066\u306E\u30CE\u30FC\u30C8\u3092\u753B\u50CF\u3068\u3057\u3066\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+  invalidWidth: "\u9069\u5207\u306A\u6570\u5024\u3067\u5E45\u3092\u8A2D\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+  "2x": "2\u500D\u306E\u89E3\u50CF\u5EA6\u306E\u753B\u50CF\u3092\u6709\u52B9\u306B\u3059\u308B",
+  moreSetting: "`\u753B\u50CF\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8`\u30D7\u30E9\u30B0\u30A4\u30F3\u306E\u8A2D\u5B9A\u3067\u3001\u3088\u308A\u8A73\u7D30\u306A\u8A2D\u5B9A\u304C\u3067\u304D\u307E\u3059\u3002",
+  guide: "\u30C9\u30E9\u30C3\u30B0\u3057\u3066\u79FB\u52D5\u3001\u30B9\u30AF\u30ED\u30FC\u30EB\u307E\u305F\u306F\u30D4\u30F3\u30C1\u3067\u30BA\u30FC\u30E0\u30A4\u30F3/\u30A2\u30A6\u30C8\u3001\u30C0\u30D6\u30EB\u30AF\u30EA\u30C3\u30AF\u3067\u30EA\u30BB\u30C3\u30C8\u3002",
+  copyNotAllowed: "pdf\u5F62\u5F0F\u306F\u30B3\u30D4\u30FC\u3092\u30B5\u30DD\u30FC\u30C8\u3057\u3066\u3044\u307E\u305B\u3093",
+  exportAll: "\u9078\u629E\u3057\u305F\u30CE\u30FC\u30C8\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+  noMarkdownFile: "\u73FE\u5728\u306E\u30C7\u30A3\u30EC\u30AF\u30C8\u30EA\u306B\u30DE\u30FC\u30AF\u30C0\u30A6\u30F3\u30D5\u30A1\u30A4\u30EB\u304C\u3042\u308A\u307E\u305B\u3093",
+  selectAll: "\u3059\u3079\u3066\u9078\u629E",
+  setting: {
+    title: "\u753B\u50CF\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8",
+    imageWidth: {
+      label: "\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3055\u308C\u308B\u753B\u50CF\u306E\u30C7\u30D5\u30A9\u30EB\u30C8\u5E45",
+      description: "\u30D4\u30AF\u30BB\u30EB\u5358\u4F4D\u3067\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3055\u308C\u308B\u753B\u50CF\u306E\u5E45\u3092\u8A2D\u5B9A\u3057\u307E\u3059\u3002\u30C7\u30D5\u30A9\u30EB\u30C8\u306F640px\u3067\u3059\u3002"
+    },
+    filename: {
+      label: "\u30D5\u30A1\u30A4\u30EB\u540D\u3092\u30BF\u30A4\u30C8\u30EB\u3068\u3057\u3066\u542B\u3080",
+      description: "\u30D5\u30A1\u30A4\u30EB\u540D\u3092\u30BF\u30A4\u30C8\u30EB\u3068\u3057\u3066\u542B\u3080\u304B\u3069\u3046\u304B\u3092\u8A2D\u5B9A\u3057\u307E\u3059\u3002Obsidian\u304C\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8\u3092\u8868\u793A\u3059\u308B\u6642\u3001\u30D5\u30A1\u30A4\u30EB\u540D\u3092h1\u30BF\u30A4\u30C8\u30EB\u3068\u3057\u3066\u8868\u793A\u3057\u307E\u3059\u3002\u3053\u308C\u306F\u671B\u307E\u3057\u304F\u306A\u3044\u5834\u5408\u3082\u3042\u308A\u3001\u30BF\u30A4\u30C8\u30EB\u304C\u91CD\u8907\u3059\u308B\u3053\u3068\u304C\u3042\u308A\u307E\u3059\u3002"
+    },
+    "2x": {
+      label: "2\u500D\u306E\u89E3\u50CF\u5EA6\u306E\u753B\u50CF\u3092\u6709\u52B9\u306B\u3059\u308B",
+      description: "2\u500D\u306E\u89E3\u50CF\u5EA6\u306E\u753B\u50CF\u3092\u6709\u52B9\u306B\u3059\u308B\u304B\u3069\u3046\u304B\u3092\u8A2D\u5B9A\u3057\u307E\u3059\u30022\u500D\u306E\u89E3\u50CF\u5EA6\u306E\u753B\u50CF\u306F\u3088\u308A\u9BAE\u660E\u306B\u898B\u3048\u3001\u9AD8PPI\u306E\u753B\u9762\uFF08\u30B9\u30DE\u30FC\u30C8\u30D5\u30A9\u30F3\u306A\u3069\uFF09\u3067\u3088\u308A\u826F\u3044\u4F53\u9A13\u3092\u63D0\u4F9B\u3057\u307E\u3059\u3002\u305F\u3060\u3057\u3001\u753B\u50CF\u306E\u30D5\u30A1\u30A4\u30EB\u30B5\u30A4\u30BA\u304C\u5927\u304D\u304F\u306A\u308B\u3068\u3044\u3046\u30C7\u30E1\u30EA\u30C3\u30C8\u304C\u3042\u308A\u307E\u3059\u3002"
+    },
+    metadata: {
+      label: "\u30E1\u30BF\u30C7\u30FC\u30BF\u3092\u8868\u793A"
+    },
+    format: {
+      title: "\u51FA\u529B\u30D5\u30A1\u30A4\u30EB\u5F62\u5F0F",
+      description: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306EPNG\u5F62\u5F0F\u306E\u753B\u50CF\u3067\u307B\u3068\u3093\u3069\u306E\u30CB\u30FC\u30BA\u3092\u6E80\u305F\u3059\u306F\u305A\u3067\u3059\u304C\u3001\u30E6\u30FC\u30B6\u30FC\u30B7\u30CA\u30EA\u30AA\u3092\u3088\u308A\u826F\u304F\u30B5\u30DD\u30FC\u30C8\u3059\u308B\u305F\u3081\u306B\uFF1A1. \u901A\u5E38\u306E\u80CC\u666F\u304A\u3088\u3073\u900F\u660E\u80CC\u666F\u306E\u753B\u50CF\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3059\u308B\u30B5\u30DD\u30FC\u30C8\uFF1B2. JPG\u753B\u50CF\u3092\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3057\u3066\u30D5\u30A1\u30A4\u30EB\u30B5\u30A4\u30BA\u3092\u5C0F\u3055\u304F\u3059\u308B\u30B5\u30DD\u30FC\u30C8\u3001\u305F\u3060\u3057\u30AF\u30EA\u30C3\u30D7\u30DC\u30FC\u30C9\u306B\u76F4\u63A5\u30B3\u30D4\u30FC\u3059\u308B\u3053\u3068\u306F\u3067\u304D\u306A\u3044\u304B\u3082\u3057\u308C\u307E\u305B\u3093\uFF1B3. \u5358\u4E00\u30DA\u30FC\u30B8\u306EPDF\u5F62\u5F0F\u306B\u30A8\u30AF\u30B9\u30DD\u30FC\u30C8\u3059\u308B\u30B5\u30DD\u30FC\u30C8\u3001\u901A\u5E38\u306EPDF\u7D19\u306E\u5F62\u5F0F\u3068\u306F\u7570\u306A\u308A\u307E\u3059\u306E\u3067\u3001\u8AA4\u7528\u3057\u306A\u3044\u3088\u3046\u306B\u6CE8\u610F\u3057\u3066\u304F\u3060\u3055\u3044\u3002",
+      png0: ".png - \u30C7\u30D5\u30A9\u30EB\u30C8",
+      png1: ".png - \u900F\u660E\u306A\u80CC\u666F\u306E\u753B\u50CF",
+      jpg: ".jpg - jpg\u5F62\u5F0F\u306E\u753B\u50CF",
+      pdf: ".pdf - \u5358\u4E00\u30DA\u30FC\u30B8\u306EPDF"
+    },
+    userInfo: {
+      title: "\u8457\u8005\u60C5\u5831",
+      show: "\u8457\u8005\u60C5\u5831\u3092\u8868\u793A",
+      avatar: {
+        title: "\u30A2\u30D0\u30BF\u30FC",
+        description: "\u6B63\u65B9\u5F62\u306E\u753B\u50CF\u306E\u4F7F\u7528\u3092\u63A8\u5968"
+      },
+      name: "\u8457\u8005\u540D",
+      position: "\u8868\u793A\u4F4D\u7F6E",
+      remark: "\u8FFD\u52A0\u30C6\u30AD\u30B9\u30C8",
+      align: "\u914D\u7F6E",
+      removeAvatar: "\u30A2\u30D0\u30BF\u30FC\u3092\u524A\u9664"
+    },
+    watermark: {
+      title: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF",
+      enable: {
+        label: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u3092\u6709\u52B9\u306B\u3059\u308B",
+        description: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u3092\u6709\u52B9\u306B\u3059\u308B\u3001\u30C6\u30AD\u30B9\u30C8\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u3068\u753B\u50CF\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u3092\u30B5\u30DD\u30FC\u30C8\u3002"
+      },
+      type: {
+        label: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u30BF\u30A4\u30D7",
+        description: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u30BF\u30A4\u30D7\u3092\u8A2D\u5B9A\u3057\u307E\u3059\u3001\u30C6\u30AD\u30B9\u30C8\u307E\u305F\u306F\u753B\u50CF\u3002",
+        text: "\u30C6\u30AD\u30B9\u30C8",
+        image: "\u753B\u50CF"
+      },
+      text: {
+        content: "\u30C6\u30AD\u30B9\u30C8\u306E\u5185\u5BB9",
+        fontSize: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u30D5\u30A9\u30F3\u30C8\u30B5\u30A4\u30BA",
+        color: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u30C6\u30AD\u30B9\u30C8\u8272"
+      },
+      image: {
+        src: {
+          label: "\u753B\u50CFURL",
+          upload: "\u753B\u50CF\u3092\u30A2\u30C3\u30D7\u30ED\u30FC\u30C9",
+          select: "\u30DC\u30FC\u30EB\u30C8\u304B\u3089\u9078\u629E"
+        }
+      },
+      opacity: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u4E0D\u900F\u660E\u5EA6\uFF080\u306F\u900F\u660E\u30011\u306F\u4E0D\u900F\u660E\uFF09",
+      rotate: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u56DE\u8EE2\uFF08\u5EA6\u5358\u4F4D\uFF09",
+      width: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u5E45",
+      height: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u9AD8\u3055",
+      x: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u6C34\u5E73\u65B9\u5411\u306E\u9593\u9694",
+      y: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u306E\u5782\u76F4\u65B9\u5411\u306E\u9593\u9694"
+    },
+    preview: "\u30A6\u30A9\u30FC\u30BF\u30FC\u30DE\u30FC\u30AF\u30D7\u30EC\u30D3\u30E5\u30FC",
+    reset: "\u30C7\u30D5\u30A9\u30EB\u30C8\u306B\u30EA\u30BB\u30C3\u30C8",
+    recursive: "\u30B5\u30D6\u30C7\u30A3\u30EC\u30AF\u30C8\u30EA\u306E\u30CE\u30FC\u30C8\u3092\u542B\u3080"
+  },
+  imageSelect: {
+    search: "\u691C\u7D22",
+    select: "\u9078\u629E",
+    cancel: "\u30AD\u30E3\u30F3\u30BB\u30EB",
+    empty: "\u753B\u50CF\u304C\u898B\u3064\u304B\u308A\u307E\u305B\u3093"
+  }
+};
+var ja_default = ja;
+
+// src/i18n/ko/index.ts
+var ko = {
+  // TODO: 여기에 번역을 삽입하세요
+  command: "\uC774\uBBF8\uC9C0\uB85C \uB0B4\uBCF4\uB0B4\uAE30",
+  noActiveFile: "\uBA3C\uC800 \uBB38\uC11C\uB97C \uC5F4\uC5B4\uC8FC\uC138\uC694!",
+  imageExportPreview: "\uC774\uBBF8\uC9C0 \uB0B4\uBCF4\uB0B4\uAE30 \uBBF8\uB9AC\uBCF4\uAE30",
+  copiedSuccess: "\uD074\uB9BD\uBCF4\uB4DC\uC5D0 \uBCF5\uC0AC\uB428",
+  copy: "\uD074\uB9BD\uBCF4\uB4DC\uC5D0 \uBCF5\uC0AC\uD558\uAE30",
+  copyFail: "\uBCF5\uC0AC \uC2E4\uD328",
+  notAllowCopy: "{format} \uD615\uC2DD\uC744 \uC9C1\uC811 \uBCF5\uC0AC\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4",
+  save: "\uC774\uBBF8\uC9C0 \uC800\uC7A5\uD558\uAE30",
+  saveSuccess: "\uC774\uBBF8\uC9C0\uAC00 {filePath: string} \uC73C\uB85C \uB0B4\uBCF4\uB0B4\uACE0 \uC800\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4.",
+  saveFail: "\uC774\uBBF8\uC9C0 \uC800\uC7A5 \uC2E4\uD328",
+  saveVault: "\uBCFC\uD2B8\uC5D0 \uC800\uC7A5\uD558\uAE30",
+  includingFilename: "\uD30C\uC77C \uC774\uB984\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568\uC2DC\uD0A4\uAE30",
+  imageWidth: "\uC774\uBBF8\uC9C0 \uB108\uBE44",
+  exportImage: "\uC774\uBBF8\uC9C0\uB85C \uB0B4\uBCF4\uB0B4\uAE30",
+  exportSelectionImage: "\uC120\uD0DD \uC601\uC5ED\uC744 \uC774\uBBF8\uC9C0\uB85C \uB0B4\uBCF4\uB0B4\uAE30",
+  exportFolder: "\uBAA8\uB4E0 \uB178\uD2B8\uB97C \uC774\uBBF8\uC9C0\uB85C \uB0B4\uBCF4\uB0B4\uAE30",
+  invalidWidth: "\uC801\uC808\uD55C \uC22B\uC790\uB85C \uB108\uBE44\uB97C \uC124\uC815\uD574 \uC8FC\uC138\uC694.",
+  "2x": "2\uBC30 \uD574\uC0C1\uB3C4 \uC774\uBBF8\uC9C0 \uD65C\uC131\uD654",
+  moreSetting: "`\uC774\uBBF8\uC9C0\uB85C \uB0B4\uBCF4\uB0B4\uAE30` \uD50C\uB7EC\uADF8\uC778 \uC124\uC815\uC5D0\uC11C \uB354 \uC790\uC138\uD55C \uC124\uC815\uC744 \uCC3E\uC744 \uC218 \uC788\uC2B5\uB2C8\uB2E4.",
+  guide: "\uC774\uB3D9\uD558\uB824\uBA74 \uB4DC\uB798\uADF8\uD558\uACE0, \uD655\uB300/\uCD95\uC18C\uD558\uB824\uBA74 \uC2A4\uD06C\uB864\uD558\uAC70\uB098 \uD540\uCE58\uD558\uC138\uC694, \uB354\uBE14 \uD074\uB9AD\uC73C\uB85C \uCD08\uAE30\uD654\uD569\uB2C8\uB2E4.",
+  copyNotAllowed: "pdf \uD615\uC2DD\uC740 \uBCF5\uC0AC\uB97C \uC9C0\uC6D0\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4",
+  exportAll: "\uC120\uD0DD\uB41C \uB178\uD2B8 \uB0B4\uBCF4\uB0B4\uAE30",
+  noMarkdownFile: "\uD604\uC7AC \uB514\uB809\uD1A0\uB9AC\uC5D0 \uB9C8\uD06C\uB2E4\uC6B4 \uD30C\uC77C\uC774 \uC5C6\uC2B5\uB2C8\uB2E4",
+  selectAll: "\uC804\uCCB4 \uC120\uD0DD",
+  setting: {
+    title: "\uC774\uBBF8\uC9C0\uB85C \uB0B4\uBCF4\uB0B4\uAE30",
+    imageWidth: {
+      label: "\uB0B4\uBCF4\uB0BC \uC774\uBBF8\uC9C0\uC758 \uAE30\uBCF8 \uB108\uBE44",
+      description: "\uD53D\uC140 \uB2E8\uC704\uB85C \uB0B4\uBCF4\uB0BC \uC774\uBBF8\uC9C0\uC758 \uB108\uBE44\uB97C \uC124\uC815\uD558\uC2ED\uC2DC\uC624. \uAE30\uBCF8\uAC12\uC740 640px\uC785\uB2C8\uB2E4."
+    },
+    filename: {
+      label: "\uD30C\uC77C \uC774\uB984\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568",
+      description: "\uD30C\uC77C \uC774\uB984\uC744 \uC81C\uBAA9\uC73C\uB85C \uD3EC\uD568\uD560\uC9C0 \uC5EC\uBD80\uB97C \uC124\uC815\uD569\uB2C8\uB2E4. Obsidian\uC774 \uBB38\uC11C\uB97C \uD45C\uC2DC\uD560 \uB54C \uD30C\uC77C \uC774\uB984\uC744 h1 \uC81C\uBAA9\uC73C\uB85C \uD45C\uC2DC\uD569\uB2C8\uB2E4. \uB54C\uB54C\uB85C \uC774\uAC83\uC740 \uC6D0\uD558\uC9C0 \uC54A\uB294 \uAC83\uC77C \uC218 \uC788\uC73C\uBA70 \uC81C\uBAA9\uC774 \uC911\uBCF5\uB420 \uC218 \uC788\uC2B5\uB2C8\uB2E4."
+    },
+    "2x": {
+      label: "2\uBC30 \uD574\uC0C1\uB3C4 \uC774\uBBF8\uC9C0 \uD65C\uC131\uD654",
+      description: "2\uBC30 \uD574\uC0C1\uB3C4 \uC774\uBBF8\uC9C0\uB97C \uD65C\uC131\uD654\uD560\uC9C0 \uC5EC\uBD80\uB97C \uC124\uC815\uD569\uB2C8\uB2E4. 2\uBC30 \uD574\uC0C1\uB3C4\uC758 \uC774\uBBF8\uC9C0\uB294 \uB354 \uC120\uBA85\uD574 \uBCF4\uC774\uACE0, \uC608\uB97C \uB4E4\uC5B4 \uC2A4\uB9C8\uD2B8\uD3F0\uACFC \uAC19\uC740 \uACE0PPI \uD654\uBA74\uC5D0\uC11C \uB354 \uB098\uC740 \uACBD\uD5D8\uC744 \uC81C\uACF5\uD569\uB2C8\uB2E4. \uADF8\uB7EC\uB098 \uB2E8\uC810\uC740 \uC774\uBBF8\uC9C0 \uD30C\uC77C \uD06C\uAE30\uAC00 \uB354 \uD06C\uB2E4\uB294 \uAC83\uC785\uB2C8\uB2E4."
+    },
+    metadata: {
+      label: "\uBA54\uD0C0\uB370\uC774\uD130 \uD45C\uC2DC"
+    },
+    format: {
+      title: "\uCD9C\uB825 \uD30C\uC77C \uD615\uC2DD",
+      description: "\uAE30\uBCF8 PNG \uD615\uC2DD \uC774\uBBF8\uC9C0\uB294 \uB300\uBD80\uBD84\uC758 \uC694\uAD6C\uB97C \uCDA9\uC871\uD574\uC57C \uD558\uC9C0\uB9CC \uC0AC\uC6A9\uC790 \uC2DC\uB098\uB9AC\uC624\uB97C \uB354 \uC798 \uC9C0\uC6D0\uD558\uAE30 \uC704\uD574: 1. \uC77C\uBC18 \uBC0F \uD22C\uBA85 \uBC30\uACBD\uC758 \uC774\uBBF8\uC9C0 \uB0B4\uBCF4\uB0B4\uAE30 \uC9C0\uC6D0; 2. JPG \uC774\uBBF8\uC9C0\uB97C \uB0B4\uBCF4\uB0B4\uC5B4 \uD30C\uC77C \uD06C\uAE30\uB97C \uC904\uC774\uB294 \uC9C0\uC6D0, \uD074\uB9BD\uBCF4\uB4DC\uC5D0 \uC9C1\uC811 \uBCF5\uC0AC\uD560 \uC218\uB294 \uC5C6\uC744 \uC218\uB3C4 \uC788\uC74C; 3. \uC77C\uBC18\uC801\uC778 PDF \uC6A9\uC9C0 \uD615\uC2DD\uACFC \uB2E4\uB978 \uB2E8\uC77C \uD398\uC774\uC9C0 PDF \uD615\uC2DD\uC73C\uB85C \uB0B4\uBCF4\uB0B4\uAE30 \uC9C0\uC6D0, \uC798\uBABB \uC0AC\uC6A9\uD558\uC9C0 \uC54A\uB3C4\uB85D \uC8FC\uC758\uD574 \uC8FC\uC2ED\uC2DC\uC624.",
+      png0: ".png - \uAE30\uBCF8",
+      png1: ".png - \uD22C\uBA85 \uBC30\uACBD \uC774\uBBF8\uC9C0",
+      jpg: ".jpg - jpg \uD615\uC2DD \uC774\uBBF8\uC9C0",
+      pdf: ".pdf - \uB2E8\uC77C \uD398\uC774\uC9C0 PDF"
+    },
+    userInfo: {
+      title: "\uC791\uC131\uC790 \uC815\uBCF4",
+      show: "\uC791\uC131\uC790 \uC815\uBCF4 \uD45C\uC2DC",
+      avatar: {
+        title: "\uC544\uBC14\uD0C0",
+        description: "\uC815\uC0AC\uAC01\uD615 \uC774\uBBF8\uC9C0 \uC0AC\uC6A9\uC744 \uAD8C\uC7A5\uD569\uB2C8\uB2E4"
+      },
+      name: "\uC791\uC131\uC790 \uC774\uB984",
+      position: "\uD45C\uC2DC \uC704\uCE58",
+      remark: "\uCD94\uAC00 \uD14D\uC2A4\uD2B8",
+      align: "\uC815\uB82C",
+      removeAvatar: "\uC544\uBC14\uD0C0 \uC81C\uAC70"
+    },
+    watermark: {
+      title: "\uC6CC\uD130\uB9C8\uD06C",
+      enable: {
+        label: "\uC6CC\uD130\uB9C8\uD06C \uD65C\uC131\uD654",
+        description: "\uC6CC\uD130\uB9C8\uD06C\uB97C \uD65C\uC131\uD654\uD558\uBA70, \uD14D\uC2A4\uD2B8 \uBC0F \uC774\uBBF8\uC9C0 \uC6CC\uD130\uB9C8\uD06C\uB97C \uC9C0\uC6D0\uD569\uB2C8\uB2E4."
+      },
+      type: {
+        label: "\uC6CC\uD130\uB9C8\uD06C \uC720\uD615",
+        description: "\uC6CC\uD130\uB9C8\uD06C \uC720\uD615\uC744 \uC124\uC815\uD569\uB2C8\uB2E4, \uD14D\uC2A4\uD2B8 \uB610\uB294 \uC774\uBBF8\uC9C0.",
+        text: "\uD14D\uC2A4\uD2B8",
+        image: "\uC774\uBBF8\uC9C0"
+      },
+      text: {
+        content: "\uD14D\uC2A4\uD2B8 \uB0B4\uC6A9",
+        fontSize: "\uC6CC\uD130\uB9C8\uD06C \uAE00\uAF34 \uD06C\uAE30",
+        color: "\uC6CC\uD130\uB9C8\uD06C \uD14D\uC2A4\uD2B8 \uC0C9\uC0C1"
+      },
+      image: {
+        src: {
+          label: "\uC774\uBBF8\uC9C0 URL",
+          upload: "\uC774\uBBF8\uC9C0 \uC5C5\uB85C\uB4DC",
+          select: "\uBCFC\uD2B8\uC5D0\uC11C \uC120\uD0DD"
+        }
+      },
+      opacity: "\uC6CC\uD130\uB9C8\uD06C \uD22C\uBA85\uB3C4 (0\uC740 \uD22C\uBA85, 1\uC740 \uBD88\uD22C\uBA85)",
+      rotate: "\uC6CC\uD130\uB9C8\uD06C \uD68C\uC804 (\uB3C4 \uB2E8\uC704)",
+      width: "\uC6CC\uD130\uB9C8\uD06C \uB108\uBE44",
+      height: "\uC6CC\uD130\uB9C8\uD06C \uB192\uC774",
+      x: "\uC6CC\uD130\uB9C8\uD06C\uC758 \uC218\uD3C9 \uAC04\uACA9",
+      y: "\uC6CC\uD130\uB9C8\uD06C\uC758 \uC218\uC9C1 \uAC04\uACA9"
+    },
+    preview: "\uC6CC\uD130\uB9C8\uD06C \uBBF8\uB9AC\uBCF4\uAE30",
+    reset: "\uAE30\uBCF8\uAC12\uC73C\uB85C \uC7AC\uC124\uC815",
+    recursive: "\uD558\uC704 \uB514\uB809\uD1A0\uB9AC\uC758 \uB178\uD2B8 \uD3EC\uD568"
+  },
+  imageSelect: {
+    search: "\uAC80\uC0C9",
+    select: "\uC120\uD0DD",
+    cancel: "\uCDE8\uC18C",
+    empty: "\uC774\uBBF8\uC9C0\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC74C"
+  }
+};
+var ko_default = ko;
+
+// src/i18n/ms/index.ts
+var ms = {
+  command: "Eksport sebagai imej",
+  noActiveFile: "Sila buka artikel terlebih dahulu!",
+  imageExportPreview: "Pratonton Eksport Imej",
+  copiedSuccess: "Disalin ke papan keratan",
+  copy: "Salin ke Papan Keratan",
+  copyFail: "Gagal menyalin",
+  notAllowCopy: "Tidak boleh menyalin format {format} secara langsung",
+  save: "Simpan Imej",
+  saveSuccess: "Imej telah dieksport dan disimpan sebagai {filePath: string}.",
+  saveFail: "Gagal menyimpan imej",
+  saveVault: "Simpan ke Vault",
+  includingFilename: "Termasuk Nama Fail Sebagai Tajuk",
+  imageWidth: "Lebar Imej",
+  exportImage: "Eksport sebagai imej",
+  exportSelectionImage: "Eksport pilihan sebagai imej",
+  exportFolder: "Eksport semua nota sebagai imej",
+  invalidWidth: "Sila tetapkan lebar dengan angka yang munasabah.",
+  "2x": "Aktifkan imej resolusi 2x",
+  moreSetting: "Seting lebih terperinci boleh didapati dalam tetapan plugin `Eksport Imej`.",
+  guide: "Seret untuk Bergerak, gulir atau cubit untuk zoom masuk/keluar, klik dua kali untuk menetapkan semula.",
+  copyNotAllowed: "format pdf tidak disokong untuk disalin",
+  exportAll: "Eksport Nota Terpilih",
+  noMarkdownFile: "Tiada fail markdown dalam direktori semasa",
+  selectAll: "Pilih Semua",
+  setting: {
+    title: "Eksport Imej",
+    imageWidth: {
+      label: "Lebar Imej Eksport Lalai",
+      description: "Tetapkan lebar imej yang dieksport dalam piksel. Lalai adalah 640px."
+    },
+    filename: {
+      label: "Termasuk Nama Fail Sebagai Tajuk",
+      description: "Tetapkan sama ada untuk menyertakan nama fail sebagai tajuk. Apabila Obsidian memaparkan dokumen, ia akan menunjukkan nama fail sebagai tajuk h1. Kadangkala ini bukan apa yang anda mahu, dan anda akan mendapatkan tajuk berganda."
+    },
+    "2x": {
+      label: "Aktifkan imej resolusi 2x",
+      description: "Tetapkan sama ada untuk mengaktifkan imej resolusi 2x. Imej dengan resolusi 2x akan kelihatan lebih tajam dan menyediakan pengalaman yang lebih baik pada skrin PPI tinggi, seperti pada telefon pintar. Walau bagaimanapun, kelemahannya adalah saiz fail imej lebih besar."
+    },
+    metadata: {
+      label: "Papar Metadata"
+    },
+    format: {
+      title: "Format Fail Output",
+      description: "Imej format PNG lalai seharusnya memenuhi kebanyakan keperluan, tetapi untuk menyokong skenario pengguna lebih baik: 1. Sokongan untuk mengeksport imej dengan latar belakang normal dan telus; 2. Sokongan untuk mengeksport imej JPG untuk mencapai saiz fail yang lebih kecil, walaupun mungkin tidak dapat disalin langsung ke papan keratan; 3. Sokongan untuk mengeksport ke format PDF satu halaman, yang berbeza dari format kertas PDF biasa, sila berhati-hati untuk tidak salah guna.",
+      png0: ".png - lalai",
+      png1: ".png - imej dengan latar belakang telus",
+      jpg: ".jpg - imej format jpg",
+      pdf: ".pdf - PDF satu halaman"
+    },
+    userInfo: {
+      title: "Info Penulis",
+      show: "Papar Info Penulis",
+      avatar: {
+        title: "Avatar",
+        description: "Menggunakan gambar persegi disarankan"
+      },
+      name: "Nama Penulis",
+      position: "Di mana untuk dipaparkan",
+      remark: "Teks tambahan",
+      align: "Menyelaraskan",
+      removeAvatar: "Buang Avatar"
+    },
+    watermark: {
+      title: "Watermark",
+      enable: {
+        label: "Aktifkan watermark",
+        description: "Aktifkan watermark, menyokong watermark teks dan imej."
+      },
+      type: {
+        label: "Jenis Watermark",
+        description: "Tetapkan jenis watermark, teks atau imej.",
+        text: "Teks",
+        image: "Imej"
+      },
+      text: {
+        content: "Kandungan Teks",
+        fontSize: "Saiz Fon Watermark",
+        color: "Warna Teks Watermark"
+      },
+      image: {
+        src: {
+          label: "URL Imej",
+          upload: "Muat Naik Imej",
+          select: "Pilih dari Vault"
+        }
+      },
+      opacity: "Ketelapan Watermark (0 telus, 1 tidak telus)",
+      rotate: "Putaran Watermark (dalam darjah)",
+      width: "Lebar Watermark",
+      height: "Tinggi Watermark",
+      x: "Jarak mendatar Watermark",
+      y: "Jarak menegak Watermark"
+    },
+    preview: "Pratonton Watermark",
+    reset: "Tetapkan Semula ke Lalai",
+    recursive: "Masukkan nota dari subdirektori"
+  },
+  imageSelect: {
+    search: "Cari",
+    select: "Pilih",
+    cancel: "Batal",
+    empty: "Tiada imej ditemui"
+  }
+};
+var ms_default = ms;
+
+// src/i18n/nl/index.ts
+var nl = {
+  // TODO: Voeg hier je vertalingen toe
+  command: "Exporteren als afbeelding",
+  noActiveFile: "Open eerst een artikel!",
+  imageExportPreview: "Voorbeeld van afbeeldingsexport",
+  copiedSuccess: "Gekopieerd naar klembord",
+  copy: "Kopieer naar klembord",
+  copyFail: "Kopi\xEBren mislukt",
+  notAllowCopy: "Kan {format} formaat niet direct kopi\xEBren",
+  save: "Afbeelding Opslaan",
+  saveSuccess: "Afbeelding ge\xEBxporteerd en opgeslagen als {filePath: string}.",
+  saveFail: "Afbeelding opslaan mislukt",
+  saveVault: "Opslaan in kluis",
+  includingFilename: "Inclusief bestandsnaam als titel",
+  imageWidth: "Afbeelding breedte",
+  exportImage: "Exporteren als afbeelding",
+  exportSelectionImage: "Selectie exporteren als afbeelding",
+  exportFolder: "Alle notities exporteren als afbeelding",
+  invalidWidth: "Stel de breedte in met een redelijk nummer.",
+  "2x": "Activeer afbeelding met 2x resolutie",
+  moreSetting: "Meer gedetailleerde instellingen zijn te vinden in de `Exporteer afbeelding` plugin-instellingen.",
+  guide: "Sleep om te bewegen, scroll of knijp om in/uit te zoomen, dubbelklik om te resetten.",
+  copyNotAllowed: "pdf formaat wordt niet ondersteund voor kopi\xEBren",
+  exportAll: "Geselecteerde notities exporteren",
+  noMarkdownFile: "Geen markdown bestanden in de huidige map",
+  selectAll: "Alles selecteren",
+  setting: {
+    title: "Afbeelding exporteren",
+    imageWidth: {
+      label: "Standaard ge\xEBxporteerde afbeeldingsbreedte",
+      description: "Stel de breedte van de ge\xEBxporteerde afbeelding in pixels in. De standaard is 640px."
+    },
+    filename: {
+      label: "Bestandsnaam als titel opnemen",
+      description: "Stel in of de bestandsnaam moet worden opgenomen als titel. Wanneer Obsidian het document weergeeft, wordt de bestandsnaam weergegeven als een h1 titel. Soms is dit niet wat je wilt, en krijg je dubbele titels."
+    },
+    "2x": {
+      label: "Activeer afbeelding met 2x resolutie",
+      description: "Stel in of de afbeelding met 2x resolutie moet worden ingeschakeld. Afbeeldingen met 2x resolutie zien er scherper uit en bieden een betere ervaring op schermen met hoge PPI, zoals die van smartphones. Het nadeel is echter dat de bestandsgrootte van de afbeeldingen groter is."
+    },
+    metadata: {
+      label: "Metadata weergeven"
+    },
+    format: {
+      title: "Uitvoerbestandsformaat",
+      description: "Standaard PNG-formaatafbeeldingen zouden aan de meeste behoeften moeten voldoen, maar om beter gebruikersscenario's te ondersteunen: 1. Ondersteuning voor het exporteren van afbeeldingen met zowel normale als transparante achtergronden; 2. Ondersteuning voor het exporteren van JPG-afbeeldingen om kleinere bestandsgroottes te bereiken, hoewel het misschien niet mogelijk is om direct naar het klembord te kopi\xEBren; 3. Ondersteuning voor het exporteren naar PDF-formaat met \xE9\xE9n pagina, wat verschilt van de gebruikelijke PDF-papierformaten, let op dat u het niet verkeerd gebruikt.",
+      png0: ".png - standaard",
+      png1: ".png - afbeelding met transparante achtergrond",
+      jpg: ".jpg - JPG-formaat afbeelding",
+      pdf: ".pdf - enkele pagina PDF"
+    },
+    userInfo: {
+      title: "Auteursinformatie",
+      show: "Auteursinformatie weergeven",
+      avatar: {
+        title: "Avatar",
+        description: "Het gebruik van vierkante afbeeldingen wordt aanbevolen"
+      },
+      name: "Auteursnaam",
+      position: "Waar te tonen",
+      remark: "Extra tekst",
+      align: "Uitlijnen",
+      removeAvatar: "Avatar verwijderen"
+    },
+    watermark: {
+      title: "Watermerk",
+      enable: {
+        label: "Watermerk inschakelen",
+        description: "Schakel watermerk in, ondersteunt tekst- en afbeeldingwatermerken."
+      },
+      type: {
+        label: "Type watermerk",
+        description: "Stel het type watermerk in, tekst of afbeelding.",
+        text: "Tekst",
+        image: "Afbeelding"
+      },
+      text: {
+        content: "Tekstinhoud",
+        fontSize: "Lettergrootte van watermerk",
+        color: "Tekstkleur van watermerk"
+      },
+      image: {
+        src: {
+          label: "Afbeeldings-URL",
+          upload: "Afbeelding uploaden",
+          select: "Selecteer uit kluis"
+        }
+      },
+      opacity: "Doorzichtigheid van watermerk (0 is transparant, 1 is niet transparant)",
+      rotate: "Rotatie van watermerk (in graden)",
+      width: "Breedte van watermerk",
+      height: "Hoogte van watermerk",
+      x: "Horizontale afstand van watermerk",
+      y: "Verticale afstand van watermerk"
+    },
+    preview: "Voorbeeld van watermerk",
+    reset: "Reset naar standaard",
+    recursive: "Notities uit submappen insluiten"
+  },
+  imageSelect: {
+    search: "Zoeken",
+    select: "Selecteren",
+    cancel: "Annuleren",
+    empty: "Geen afbeeldingen gevonden"
+  }
+};
+var nl_default = nl;
+
+// src/i18n/no/index.ts
+var no = {
+  command: "Eksporter som bilde",
+  noActiveFile: "Vennligst \xE5pne en artikkel f\xF8rst!",
+  imageExportPreview: "Forh\xE5ndsvisning av bildeeksport",
+  copiedSuccess: "Kopiert til utklippstavlen",
+  copy: "Kopier til utklippstavlen",
+  copyFail: "Klarte ikke \xE5 kopiere",
+  notAllowCopy: "Kan ikke kopiere {format} formatet direkte",
+  save: "Lagre bilde",
+  saveSuccess: "Bildet er eksportert og lagret som {filePath: string}.",
+  saveFail: "Kunne ikke lagre bildet",
+  saveVault: "Lagre i hvelv",
+  includingFilename: "Inkluderer filnavn som tittel",
+  imageWidth: "Bildebredde",
+  exportImage: "Eksporter til bilde",
+  exportSelectionImage: "Eksporter utvalg til bilde",
+  exportFolder: "Eksporter alle notater til bilde",
+  invalidWidth: "Vennligst sett bredden til et rimelig tall.",
+  "2x": "Aktiver bilde med 2x oppl\xF8sning",
+  moreSetting: "Mer detaljerte innstillinger finnes i `Eksporter bilde` plugin-innstillinger.",
+  guide: "Dra for \xE5 flytte, rull eller knip for \xE5 zoome inn/ut, dobbeltklikk for \xE5 tilbakestille.",
+  copyNotAllowed: "pdf formatet st\xF8ttes ikke for kopiering",
+  exportAll: "Eksporter valgte notater",
+  noMarkdownFile: "Ingen markdown-filer i gjeldende katalog",
+  selectAll: "Velg alle",
+  setting: {
+    title: "Eksporter bilde",
+    imageWidth: {
+      label: "Standard eksportbredde for bilde",
+      description: "Angi bredden p\xE5 det eksporterte bildet i piksler. Standarden er 640px."
+    },
+    filename: {
+      label: "Inkluder filnavn som tittel",
+      description: "Angi om filnavnet skal inkluderes som tittel. N\xE5r Obsidian viser dokumentet, vises filnavnet som en h1 tittel. Noen ganger er dette ikke \xF8nsket, og du vil f\xE5 dupliserte titler."
+    },
+    "2x": {
+      label: "Aktiver bilde med 2x oppl\xF8sning",
+      description: "Angi om bildet med 2x oppl\xF8sning skal aktiveres. Bilder med 2x oppl\xF8sning vil se skarpere ut og gi en bedre opplevelse p\xE5 h\xF8y PPI-skjermer, som de p\xE5 smarttelefoner. Ulempen er imidlertid at filst\xF8rrelsen p\xE5 bildene er st\xF8rre."
+    },
+    metadata: {
+      label: "Vis metadata"
+    },
+    format: {
+      title: "Utg\xE5ende filformat",
+      description: "Standard PNG-formatbilder b\xF8r tilfredsstille de fleste behov, men for bedre \xE5 st\xF8tte brukerscenarier: 1. St\xF8tte for \xE5 eksportere bilder med b\xE5de normal og gjennomsiktig bakgrunn; 2. St\xF8tte for \xE5 eksportere JPG-bilder for \xE5 oppn\xE5 mindre filst\xF8rrelser, selv om det kanskje ikke er mulig \xE5 kopiere direkte til utklippstavlen; 3. St\xF8tte for eksport til enkelt-side PDF-format, som er forskjellig fra de vanlige PDF-papirformatene, v\xE6r forsiktig s\xE5 du ikke misbruker.",
+      png0: ".png - standard",
+      png1: ".png - bilde med gjennomsiktig bakgrunn",
+      jpg: ".jpg - JPG-formatbilde",
+      pdf: ".pdf - enkeltside PDF"
+    },
+    userInfo: {
+      title: "Forfatterinformasjon",
+      show: "Vis forfatterinformasjon",
+      avatar: {
+        title: "Avatar",
+        description: "Det anbefales \xE5 bruke kvadratiske bilder"
+      },
+      name: "Forfatternavn",
+      position: "Hvor det skal vises",
+      remark: "Ekstra tekst",
+      align: "Justering",
+      removeAvatar: "Fjern avatar"
+    },
+    watermark: {
+      title: "Vannmerke",
+      enable: {
+        label: "Aktiver vannmerke",
+        description: "Aktiver vannmerke, st\xF8tter tekst- og bildevannmerker."
+      },
+      type: {
+        label: "Type vannmerke",
+        description: "Sett typen av vannmerke, tekst eller bilde.",
+        text: "Tekst",
+        image: "Bilde"
+      },
+      text: {
+        content: "Tekstinnhold",
+        fontSize: "Vannmerke fontst\xF8rrelse",
+        color: "Vannmerketekstfarge"
+      },
+      image: {
+        src: {
+          label: "Bilde URL",
+          upload: "Last opp bilde",
+          select: "Velg fra hvelv"
+        }
+      },
+      opacity: "Vannmerkets opasitet (0 er gjennomsiktig, 1 er ikke gjennomsiktig)",
+      rotate: "Vannmerkerotasjon (i grader)",
+      width: "Vannmerkebredde",
+      height: "Vannmerkeh\xF8yde",
+      x: "Vannmerkets horisontale avstand",
+      y: "Vannmerkets vertikale avstand"
+    },
+    preview: "Forh\xE5ndsvisning av vannmerke",
+    reset: "Tilbakestill til standard",
+    recursive: "Inkluder notater fra undermapper"
+  },
+  imageSelect: {
+    search: "S\xF8k",
+    select: "Velg",
+    cancel: "Avbryt",
+    empty: "Ingen bilder funnet"
+  }
+};
+var no_default = no;
+
+// src/i18n/pl/index.ts
+var pl = {
+  command: "Eksportuj jako obraz",
+  noActiveFile: "Najpierw otw\xF3rz artyku\u0142!",
+  imageExportPreview: "Podgl\u0105d eksportu obrazu",
+  copiedSuccess: "Skopiowano do schowka",
+  copy: "Kopiuj do schowka",
+  copyFail: "Nie uda\u0142o si\u0119 skopiowa\u0107",
+  notAllowCopy: "Nie mo\u017Cna bezpo\u015Brednio skopiowa\u0107 formatu {format}",
+  save: "Zapisz obraz",
+  saveSuccess: "Obraz zosta\u0142 wyeksportowany i zapisany jako {filePath: string}.",
+  saveFail: "Nie uda\u0142o si\u0119 zapisa\u0107 obrazu",
+  saveVault: "Zapisz w sejfie",
+  includingFilename: "W\u0142\u0105cznie z nazw\u0105 pliku jako tytu\u0142em",
+  imageWidth: "Szeroko\u015B\u0107 obrazu",
+  exportImage: "Eksportuj do obrazu",
+  exportSelectionImage: "Eksportuj wyb\xF3r do obrazu",
+  exportFolder: "Eksportuj wszystkie notatki do obrazu",
+  invalidWidth: "Prosz\u0119 ustawi\u0107 szeroko\u015B\u0107 na rozs\u0105dn\u0105 liczb\u0119.",
+  "2x": "W\u0142\u0105cz obraz o rozdzielczo\u015Bci 2x",
+  moreSetting: "Wi\u0119cej szczeg\xF3\u0142owych ustawie\u0144 mo\u017Cna znale\u017A\u0107 w ustawieniach wtyczki \u201EEksport obrazu\u201D.",
+  guide: "Przeci\u0105gnij, aby przesun\u0105\u0107, przewi\u0144 lub zaci\u015Bnij, aby przybli\u017Cy\u0107/oddali\u0107, podw\xF3jne klikni\u0119cie, aby zresetowa\u0107.",
+  copyNotAllowed: "format pdf nie jest obs\u0142ugiwany do kopiowania",
+  exportAll: "Eksportuj wybrane notatki",
+  noMarkdownFile: "Brak plik\xF3w markdown w bie\u017C\u0105cym katalogu",
+  selectAll: "Zaznacz wszystko",
+  setting: {
+    title: "Eksport obrazu",
+    imageWidth: {
+      label: "Domy\u015Blna szeroko\u015B\u0107 eksportowanego obrazu",
+      description: "Ustaw szeroko\u015B\u0107 eksportowanego obrazu w pikselach. Domy\u015Blnie jest 640px."
+    },
+    filename: {
+      label: "Do\u0142\u0105cz nazw\u0119 pliku jako tytu\u0142",
+      description: "Ustaw, czy nazwa pliku powinna by\u0107 uwzgl\u0119dniona jako tytu\u0142. Gdy Obsidian wy\u015Bwietla dokument, wy\u015Bwietla nazw\u0119 pliku jako tytu\u0142 h1. Czasami nie jest to po\u017C\u0105dane i mo\u017Cesz otrzyma\u0107 zduplikowane tytu\u0142y."
+    },
+    "2x": {
+      label: "W\u0142\u0105cz obraz o rozdzielczo\u015Bci 2x",
+      description: "Ustaw, czy obraz o rozdzielczo\u015Bci 2x ma by\u0107 w\u0142\u0105czony. Obrazy o rozdzielczo\u015Bci 2x wygl\u0105daj\u0105 ostrzej i zapewniaj\u0105 lepsze do\u015Bwiadczenie na ekranach o wysokiej PPI, takich jak te w smartfonach. Jednak wad\u0105 jest wi\u0119kszy rozmiar pliku obraz\xF3w."
+    },
+    metadata: {
+      label: "Poka\u017C metadane"
+    },
+    format: {
+      title: "Format pliku wyj\u015Bciowego",
+      description: "Domy\u015Blne obrazy w formacie PNG powinny zaspokoi\u0107 wi\u0119kszo\u015B\u0107 potrzeb, ale aby lepiej wspiera\u0107 scenariusze u\u017Cytkownik\xF3w: 1. Wsparcie dla eksportowania obraz\xF3w z normalnym i przezroczystym t\u0142em; 2. Wsparcie dla eksportowania obraz\xF3w JPG, aby osi\u0105gn\u0105\u0107 mniejsze rozmiary plik\xF3w, cho\u0107 mo\u017Ce nie by\u0107 mo\u017Cliwe bezpo\u015Brednie kopiowanie do schowka; 3. Wsparcie dla eksportowania do formatu PDF jednostronicowego, kt\xF3ry r\xF3\u017Cni si\u0119 od zwyk\u0142ych format\xF3w papierowych PDF, prosz\u0119 uwa\u017Ca\u0107, aby nie nadu\u017Cywa\u0107.",
+      png0: ".png - domy\u015Blny",
+      png1: ".png - obraz z przezroczystym t\u0142em",
+      jpg: ".jpg - obraz w formacie jpg",
+      pdf: ".pdf - jednostronicowy PDF"
+    },
+    userInfo: {
+      title: "Informacje o autorze",
+      show: "Poka\u017C informacje o autorze",
+      avatar: {
+        title: "Awatar",
+        description: "Zaleca si\u0119 u\u017Cywanie zdj\u0119\u0107 kwadratowych"
+      },
+      name: "Nazwa autora",
+      position: "Gdzie wy\u015Bwietli\u0107",
+      remark: "Dodatkowy tekst",
+      align: "Wyr\xF3wnaj",
+      removeAvatar: "Usu\u0144 awatar"
+    },
+    watermark: {
+      title: "Znak wodny",
+      enable: {
+        label: "W\u0142\u0105cz znak wodny",
+        description: "W\u0142\u0105cz znak wodny, obs\u0142uguje znaki wodne tekstowe i obrazkowe."
+      },
+      type: {
+        label: "Typ znaku wodnego",
+        description: "Ustaw typ znaku wodnego, tekst lub obraz.",
+        text: "Tekst",
+        image: "Obraz"
+      },
+      text: {
+        content: "Tre\u015B\u0107 tekstu",
+        fontSize: "Rozmiar czcionki znaku wodnego",
+        color: "Kolor tekstu znaku wodnego"
+      },
+      image: {
+        src: {
+          label: "URL obrazu",
+          upload: "Prze\u015Blij obraz",
+          select: "Wybierz z sejfu"
+        }
+      },
+      opacity: "Przezroczysto\u015B\u0107 znaku wodnego (0 jest przezroczysty, 1 nieprzezroczysty)",
+      rotate: "Obr\xF3t znaku wodnego (w stopniach)",
+      width: "Szeroko\u015B\u0107 znaku wodnego",
+      height: "Wysoko\u015B\u0107 znaku wodnego",
+      x: "Poziome odst\u0119py znaku wodnego",
+      y: "Pionowe odst\u0119py znaku wodnego"
+    },
+    preview: "Podgl\u0105d znaku wodnego",
+    reset: "Resetuj do domy\u015Blnych",
+    recursive: "Do\u0142\u0105cz notatki z podkatalog\xF3w"
+  },
+  imageSelect: {
+    search: "Szukaj",
+    select: "Wybierz",
+    cancel: "Anuluj",
+    empty: "Nie znaleziono obraz\xF3w"
+  }
+};
+var pl_default = pl;
+
+// src/i18n/pt/index.ts
+var pt = {
+  // TODO: Insira suas traduções aqui
+  command: "Exportar como imagem",
+  noActiveFile: "Por favor, abra um artigo primeiro!",
+  imageExportPreview: "Pr\xE9-visualiza\xE7\xE3o da Exporta\xE7\xE3o de Imagem",
+  copiedSuccess: "Copiado para a \xE1rea de transfer\xEAncia",
+  copy: "Copiar para a \xE1rea de transfer\xEAncia",
+  copyFail: "Falha ao copiar",
+  notAllowCopy: "N\xE3o \xE9 poss\xEDvel copiar diretamente o formato {format}",
+  save: "Salvar Imagem",
+  saveSuccess: "Imagem exportada e salva como {filePath: string}.",
+  saveFail: "Falha ao salvar a imagem",
+  saveVault: "Salvar no Cofre",
+  includingFilename: "Incluindo o Nome do Arquivo Como T\xEDtulo",
+  imageWidth: "Largura da Imagem",
+  exportImage: "Exportar para imagem",
+  exportSelectionImage: "Exportar sele\xE7\xE3o para imagem",
+  exportFolder: "Exportar todas as notas para imagem",
+  invalidWidth: "Por favor, defina a largura com um n\xFAmero razo\xE1vel.",
+  "2x": "Ativar imagem com resolu\xE7\xE3o 2x",
+  moreSetting: "Configura\xE7\xF5es mais detalhadas podem ser encontradas nas configura\xE7\xF5es do plugin `Exportar Imagem`.",
+  guide: "Arraste para mover, role ou belisque para ampliar/reduzir, clique duas vezes para redefinir.",
+  copyNotAllowed: "formato pdf n\xE3o \xE9 suportado para c\xF3pia",
+  exportAll: "Exportar Notas Selecionadas",
+  noMarkdownFile: "Nenhum arquivo markdown no diret\xF3rio atual",
+  selectAll: "Selecionar Tudo",
+  setting: {
+    title: "Exportar Imagem",
+    imageWidth: {
+      label: "Largura padr\xE3o da imagem exportada",
+      description: "Defina a largura da imagem exportada em pixels. O padr\xE3o \xE9 640px."
+    },
+    filename: {
+      label: "Incluir nome do arquivo como t\xEDtulo",
+      description: "Defina se o nome do arquivo deve ser inclu\xEDdo como t\xEDtulo. Quando o Obsidian exibe o documento, ele mostra o nome do arquivo como um t\xEDtulo h1. \xC0s vezes, isso n\xE3o \xE9 desejado e voc\xEA ter\xE1 t\xEDtulos duplicados."
+    },
+    "2x": {
+      label: "Ativar imagem com resolu\xE7\xE3o 2x",
+      description: "Defina se a imagem com resolu\xE7\xE3o 2x deve ser ativada. Imagens com resolu\xE7\xE3o 2x parecer\xE3o mais n\xEDtidas e fornecer\xE3o uma melhor experi\xEAncia em telas de alta PPI, como as de smartphones. No entanto, o lado negativo \xE9 que o tamanho do arquivo das imagens \xE9 maior."
+    },
+    metadata: {
+      label: "Mostrar metadados"
+    },
+    format: {
+      title: "Formato do arquivo de sa\xEDda",
+      description: "Imagens no formato PNG padr\xE3o devem satisfazer a maioria das necessidades, mas para apoiar melhor os cen\xE1rios dos usu\xE1rios: 1. Suporte para exporta\xE7\xE3o de imagens com fundos normais e transparentes; 2. Suporte para exportar imagens em formato JPG para alcan\xE7ar tamanhos de arquivo menores, embora possa n\xE3o ser poss\xEDvel copi\xE1-las diretamente para a \xE1rea de transfer\xEAncia; 3. Suporte para exportar para formato PDF de uma \xFAnica p\xE1gina, que difere dos formatos de papel PDF usuais, por favor, tenha cuidado para n\xE3o usar de maneira errada.",
+      png0: ".png - padr\xE3o",
+      png1: ".png - imagem com fundo transparente",
+      jpg: ".jpg - imagem em formato jpg",
+      pdf: ".pdf - PDF de uma \xFAnica p\xE1gina"
+    },
+    userInfo: {
+      title: "Informa\xE7\xE3o do Autor",
+      show: "Mostrar informa\xE7\xE3o do autor",
+      avatar: {
+        title: "Avatar",
+        description: "Recomenda-se usar imagens quadradas"
+      },
+      name: "Nome do autor",
+      position: "Onde exibir",
+      remark: "Texto extra",
+      align: "Alinhar",
+      removeAvatar: "Remover avatar"
+    },
+    watermark: {
+      title: "Marca d'\xE1gua",
+      enable: {
+        label: "Ativar marca d'\xE1gua",
+        description: "Ativar marca d'\xE1gua, suporta marcas d'\xE1gua de texto e imagem."
+      },
+      type: {
+        label: "Tipo de marca d'\xE1gua",
+        description: "Defina o tipo de marca d'\xE1gua, texto ou imagem.",
+        text: "Texto",
+        image: "Imagem"
+      },
+      text: {
+        content: "Conte\xFAdo do texto",
+        fontSize: "Tamanho da fonte da marca d'\xE1gua",
+        color: "Cor do texto da marca d'\xE1gua"
+      },
+      image: {
+        src: {
+          label: "URL da imagem",
+          upload: "Carregar imagem",
+          select: "Selecionar do Cofre"
+        }
+      },
+      opacity: "Opacidade da marca d'\xE1gua (0 \xE9 transparente, 1 \xE9 opaco)",
+      rotate: "Rota\xE7\xE3o da marca d'\xE1gua (em graus)",
+      width: "Largura da marca d'\xE1gua",
+      height: "Altura da marca d'\xE1gua",
+      x: "Espa\xE7amento horizontal da marca d'\xE1gua",
+      y: "Espa\xE7amento vertical da marca d'\xE1gua"
+    },
+    preview: "Pr\xE9-visualiza\xE7\xE3o da marca d'\xE1gua",
+    reset: "Redefinir para o padr\xE3o",
+    recursive: "Incluir notas de subdiret\xF3rios"
+  },
+  imageSelect: {
+    search: "Pesquisar",
+    select: "Selecionar",
+    cancel: "Cancelar",
+    empty: "Nenhuma imagem encontrada"
+  }
+};
+var pt_default = pt;
+
+// src/i18n/ro/index.ts
+var ro = {
+  // TODO: Introduceți traducerile dvs. aici
+  command: "Export\u0103 ca imagine",
+  noActiveFile: "V\u0103 rug\u0103m s\u0103 deschide\u021Bi mai \xEEnt\xE2i un articol!",
+  imageExportPreview: "Previzualizare export imagine",
+  copiedSuccess: "Copiat \xEEn clipboard",
+  copy: "Copiaz\u0103 \xEEn clipboard",
+  copyFail: "Copiere e\u0219uat\u0103",
+  notAllowCopy: "Nu se poate copia direct formatul {format}",
+  save: "Salveaz\u0103 imaginea",
+  saveSuccess: "Imaginea a fost exportat\u0103 \u0219i salvat\u0103 ca {filePath: string}.",
+  saveFail: "Salvare imagine e\u0219uat\u0103",
+  saveVault: "Salveaz\u0103 \xEEn Vault",
+  includingFilename: "Includere nume fi\u0219ier ca titlu",
+  imageWidth: "L\u0103\u021Bime imagine",
+  exportImage: "Export\u0103 ca imagine",
+  exportSelectionImage: "Export\u0103 selec\u021Bia ca imagine",
+  exportFolder: "Export\u0103 toate notele ca imagine",
+  invalidWidth: "V\u0103 rug\u0103m s\u0103 seta\u021Bi l\u0103\u021Bimea la un num\u0103r rezonabil.",
+  "2x": "Activeaz\u0103 imaginea cu rezolu\u021Bie 2x",
+  moreSetting: "Set\u0103ri mai detaliate pot fi g\u0103site \xEEn set\u0103rile pluginului `Export\u0103 imagine`.",
+  guide: "Trage\u021Bi pentru a muta, derula\u021Bi sau ciupi\u021Bi pentru zoom, face\u021Bi dublu clic pentru a reseta.",
+  copyNotAllowed: "formatul pdf nu este suportat pentru copiere",
+  exportAll: "Export\u0103 notele selectate",
+  noMarkdownFile: "Niciun fi\u0219ier markdown \xEEn directorul curent",
+  selectAll: "Selecteaz\u0103 tot",
+  setting: {
+    title: "Export\u0103 imagine",
+    imageWidth: {
+      label: "L\u0103\u021Bimea implicit\u0103 a imaginii exportate",
+      description: "Seteaz\u0103 l\u0103\u021Bimea imaginii exportate \xEEn pixeli. Implicit este 640px."
+    },
+    filename: {
+      label: "Include numele de fi\u0219ier ca titlu",
+      description: "Seteaz\u0103 dac\u0103 numele fi\u0219ierului trebuie inclus ca titlu. C\xE2nd Obsidian afi\u0219eaz\u0103 documentul, afi\u0219eaz\u0103 numele fi\u0219ierului ca un titlu h1. Uneori acest lucru nu este dorit \u0219i ve\u021Bi ob\u021Bine titluri duplicate."
+    },
+    "2x": {
+      label: "Activeaz\u0103 imaginea cu rezolu\u021Bie 2x",
+      description: "Seteaz\u0103 dac\u0103 imaginea cu rezolu\u021Bie 2x trebuie activat\u0103. Imaginile cu rezolu\u021Bie 2x vor ap\u0103rea mai clare \u0219i ofer\u0103 o experien\u021B\u0103 mai bun\u0103 pe ecranele cu PPI ridicat, cum ar fi cele de pe smartphone-uri. Cu toate acestea, dezavantajul este c\u0103 m\u0103rimea fi\u0219ierului de imagine este mai mare."
+    },
+    metadata: {
+      label: "Afi\u0219eaz\u0103 metadatele"
+    },
+    format: {
+      title: "Formatul fi\u0219ierului de ie\u0219ire",
+      description: "Imaginile \xEEn format PNG implicit ar trebui s\u0103 satisfac\u0103 majoritatea nevoilor, dar pentru a sus\u021Bine mai bine scenariile utilizatorilor: 1. Suport pentru exportul imaginilor cu fundaluri normale \u0219i transparente; 2. Suport pentru exportul imaginilor JPG pentru a ob\u021Bine dimensiuni mai mici ale fi\u0219ierului, de\u0219i s-ar putea s\u0103 nu fie posibil\u0103 copierea direct\u0103 \xEEn clipboard; 3. Suport pentru exportul \xEEn format PDF de o singur\u0103 pagin\u0103, care difer\u0103 de formatele de h\xE2rtie PDF obi\u0219nuite, v\u0103 rug\u0103m s\u0103 fi\u021Bi aten\u021Bi s\u0103 nu-l utiliza\u021Bi incorect.",
+      png0: ".png - implicit",
+      png1: ".png - imagine cu fundal transparent",
+      jpg: ".jpg - imagine \xEEn format jpg",
+      pdf: ".pdf - PDF de o singur\u0103 pagin\u0103"
+    },
+    userInfo: {
+      title: "Informa\u021Bii autor",
+      show: "Arat\u0103 informa\u021Biile autorului",
+      avatar: {
+        title: "Avatar",
+        description: "Se recomand\u0103 utilizarea imaginilor p\u0103trate"
+      },
+      name: "Numele autorului",
+      position: "Unde s\u0103 afi\u0219eze",
+      remark: "Text suplimentar",
+      align: "Alinia\u021Bi",
+      removeAvatar: "Elimin\u0103 avatarul"
+    },
+    watermark: {
+      title: "Filigran",
+      enable: {
+        label: "Activeaz\u0103 filigranul",
+        description: "Activeaz\u0103 filigranul, suport\u0103 filigrane text \u0219i imagine."
+      },
+      type: {
+        label: "Tipul de filigran",
+        description: "Seteaz\u0103 tipul de filigran, text sau imagine.",
+        text: "Text",
+        image: "Imagine"
+      },
+      text: {
+        content: "Con\u021Binutul textului",
+        fontSize: "Dimensiunea fontului filigranului",
+        color: "Culoarea textului filigranului"
+      },
+      image: {
+        src: {
+          label: "URL imagine",
+          upload: "\xCEncarc\u0103 imagine",
+          select: "Selecteaz\u0103 din Vault"
+        }
+      },
+      opacity: "Opacitatea filigranului (0 este transparent, 1 nu este transparent)",
+      rotate: "Rota\u021Bia filigranului (\xEEn grade)",
+      width: "L\u0103\u021Bimea filigranului",
+      height: "\xCEn\u0103l\u021Bimea filigranului",
+      x: "Distan\u021Ba orizontal\u0103 a filigranului",
+      y: "Distan\u021Ba vertical\u0103 a filigranului"
+    },
+    preview: "Previzualizare filigran",
+    reset: "Resetare la implicit",
+    recursive: "Include note din subdirectoare"
+  },
+  imageSelect: {
+    search: "Caut\u0103",
+    select: "Selecteaz\u0103",
+    cancel: "Anuleaz\u0103",
+    empty: "Nicio imagine g\u0103sit\u0103"
+  }
+};
+var ro_default = ro;
+
+// src/i18n/ru/index.ts
+var ru = {
+  command: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043A\u0430\u043A \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435",
+  noActiveFile: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u0441\u043D\u0430\u0447\u0430\u043B\u0430 \u043E\u0442\u043A\u0440\u043E\u0439\u0442\u0435 \u0441\u0442\u0430\u0442\u044C\u044E!",
+  imageExportPreview: "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F",
+  copiedSuccess: "\u0421\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u0432 \u0431\u0443\u0444\u0435\u0440 \u043E\u0431\u043C\u0435\u043D\u0430",
+  copy: "\u041A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432 \u0431\u0443\u0444\u0435\u0440 \u043E\u0431\u043C\u0435\u043D\u0430",
+  copyFail: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C",
+  notAllowCopy: "\u041D\u0435\u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E \u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0444\u043E\u0440\u043C\u0430\u0442 {format}",
+  save: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435",
+  saveSuccess: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043E \u0438 \u0441\u043E\u0445\u0440\u0430\u043D\u0435\u043D\u043E \u043A\u0430\u043A {filePath: string}.",
+  saveFail: "\u041D\u0435 \u0443\u0434\u0430\u043B\u043E\u0441\u044C \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435",
+  saveVault: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0432 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0435",
+  includingFilename: "\u0412\u043A\u043B\u044E\u0447\u0430\u044F \u0438\u043C\u044F \u0444\u0430\u0439\u043B\u0430 \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430",
+  imageWidth: "\u0428\u0438\u0440\u0438\u043D\u0430 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F",
+  exportImage: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435",
+  exportSelectionImage: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0435 \u0432 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435",
+  exportFolder: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u0441\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0432 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F",
+  invalidWidth: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u0443\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u0448\u0438\u0440\u0438\u043D\u0443 \u0432 \u0440\u0430\u0437\u0443\u043C\u043D\u043E\u043C \u0447\u0438\u0441\u043B\u0435.",
+  "2x": "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441 \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C 2x",
+  moreSetting: "\u0411\u043E\u043B\u0435\u0435 \u0434\u0435\u0442\u0430\u043B\u044C\u043D\u044B\u0435 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u043C\u043E\u0436\u043D\u043E \u043D\u0430\u0439\u0442\u0438 \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445 \u043F\u043B\u0430\u0433\u0438\u043D\u0430 `\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F`.",
+  guide: "\u041F\u0435\u0440\u0435\u0442\u0430\u0441\u043A\u0438\u0432\u0430\u0439\u0442\u0435 \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u043C\u0435\u0449\u0435\u043D\u0438\u044F, \u043F\u0440\u043E\u043A\u0440\u0443\u0447\u0438\u0432\u0430\u0439\u0442\u0435 \u0438\u043B\u0438 \u0441\u0436\u0438\u043C\u0430\u0439\u0442\u0435 \u0434\u043B\u044F \u043C\u0430\u0441\u0448\u0442\u0430\u0431\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F, \u0434\u0432\u0430\u0436\u0434\u044B \u0449\u0435\u043B\u043A\u043D\u0438\u0442\u0435 \u0434\u043B\u044F \u0441\u0431\u0440\u043E\u0441\u0430.",
+  copyNotAllowed: "\u0424\u043E\u0440\u043C\u0430\u0442 pdf \u043D\u0435 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442\u0441\u044F \u0434\u043B\u044F \u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F",
+  exportAll: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0437\u0430\u043C\u0435\u0442\u043A\u0438",
+  noMarkdownFile: "\u0412 \u0442\u0435\u043A\u0443\u0449\u0435\u043C \u043A\u0430\u0442\u0430\u043B\u043E\u0433\u0435 \u043D\u0435\u0442 \u0444\u0430\u0439\u043B\u043E\u0432 markdown",
+  selectAll: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0432\u0441\u0435",
+  setting: {
+    title: "\u042D\u043A\u0441\u043F\u043E\u0440\u0442 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F",
+    imageWidth: {
+      label: "\u0421\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u043D\u0430\u044F \u0448\u0438\u0440\u0438\u043D\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0435\u043C\u043E\u0433\u043E \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F",
+      description: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u0448\u0438\u0440\u0438\u043D\u0443 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0438\u0440\u0443\u0435\u043C\u043E\u0433\u043E \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0432 \u043F\u0438\u043A\u0441\u0435\u043B\u044F\u0445. \u041F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E 640px."
+    },
+    filename: {
+      label: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0438\u043C\u044F \u0444\u0430\u0439\u043B\u0430 \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430",
+      description: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435, \u0441\u043B\u0435\u0434\u0443\u0435\u0442 \u043B\u0438 \u0432\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0438\u043C\u044F \u0444\u0430\u0439\u043B\u0430 \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430. \u041A\u043E\u0433\u0434\u0430 Obsidian \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442 \u0434\u043E\u043A\u0443\u043C\u0435\u043D\u0442, \u043E\u043D \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0435\u0442 \u0438\u043C\u044F \u0444\u0430\u0439\u043B\u0430 \u0432 \u043A\u0430\u0447\u0435\u0441\u0442\u0432\u0435 \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0430 h1. \u0418\u043D\u043E\u0433\u0434\u0430 \u044D\u0442\u043E \u043D\u0435 \u0442\u043E, \u0447\u0442\u043E \u0432\u044B \u0445\u043E\u0442\u0438\u0442\u0435, \u0438 \u0432\u044B \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u0435 \u0434\u0443\u0431\u043B\u0438\u0440\u0443\u044E\u0449\u0438\u0435\u0441\u044F \u0437\u0430\u0433\u043E\u043B\u043E\u0432\u043A\u0438."
+    },
+    "2x": {
+      label: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441 \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C 2x",
+      description: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435, \u0441\u043B\u0435\u0434\u0443\u0435\u0442 \u043B\u0438 \u0432\u043A\u043B\u044E\u0447\u0430\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441 \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C 2x. \u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0441 \u0440\u0430\u0437\u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C 2x \u0431\u0443\u0434\u0443\u0442 \u0432\u044B\u0433\u043B\u044F\u0434\u0435\u0442\u044C \u0431\u043E\u043B\u0435\u0435 \u0447\u0435\u0442\u043A\u0438\u043C\u0438 \u0438 \u043E\u0431\u0435\u0441\u043F\u0435\u0447\u0430\u0442 \u043B\u0443\u0447\u0448\u0438\u0439 \u043E\u043F\u044B\u0442 \u043D\u0430 \u044D\u043A\u0440\u0430\u043D\u0430\u0445 \u0441 \u0432\u044B\u0441\u043E\u043A\u043E\u0439 PPI, \u0442\u0430\u043A\u0438\u0445 \u043A\u0430\u043A \u0441\u043C\u0430\u0440\u0442\u0444\u043E\u043D\u044B. \u041E\u0434\u043D\u0430\u043A\u043E \u043D\u0435\u0434\u043E\u0441\u0442\u0430\u0442\u043E\u043A \u0437\u0430\u043A\u043B\u044E\u0447\u0430\u0435\u0442\u0441\u044F \u0432 \u0442\u043E\u043C, \u0447\u0442\u043E \u0440\u0430\u0437\u043C\u0435\u0440 \u0444\u0430\u0439\u043B\u0430 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439 \u0431\u0443\u0434\u0435\u0442 \u0431\u043E\u043B\u044C\u0448\u0435."
+    },
+    metadata: {
+      label: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u043C\u0435\u0442\u0430\u0434\u0430\u043D\u043D\u044B\u0435"
+    },
+    format: {
+      title: "\u0424\u043E\u0440\u043C\u0430\u0442 \u0432\u044B\u0445\u043E\u0434\u043D\u043E\u0433\u043E \u0444\u0430\u0439\u043B\u0430",
+      description: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u0432 \u0444\u043E\u0440\u043C\u0430\u0442\u0435 PNG \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E \u0434\u043E\u043B\u0436\u043D\u044B \u0443\u0434\u043E\u0432\u043B\u0435\u0442\u0432\u043E\u0440\u0438\u0442\u044C \u0431\u043E\u043B\u044C\u0448\u0438\u043D\u0441\u0442\u0432\u043E \u043F\u043E\u0442\u0440\u0435\u0431\u043D\u043E\u0441\u0442\u0435\u0439, \u043D\u043E \u0434\u043B\u044F \u043B\u0443\u0447\u0448\u0435\u0439 \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0438 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0445 \u0441\u0446\u0435\u043D\u0430\u0440\u0438\u0435\u0432: 1. \u041F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439 \u0441 \u043E\u0431\u044B\u0447\u043D\u044B\u043C\u0438 \u0438 \u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u043C\u0438 \u0444\u043E\u043D\u0430\u043C\u0438; 2. \u041F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0439 \u0432 \u0444\u043E\u0440\u043C\u0430\u0442\u0435 JPG \u0434\u043B\u044F \u0443\u043C\u0435\u043D\u044C\u0448\u0435\u043D\u0438\u044F \u0440\u0430\u0437\u043C\u0435\u0440\u0430 \u0444\u0430\u0439\u043B\u0430, \u0445\u043E\u0442\u044F \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E, \u0447\u0442\u043E \u043D\u0435\u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E \u0431\u0443\u0434\u0435\u0442 \u0441\u043A\u043E\u043F\u0438\u0440\u043E\u0432\u0430\u0442\u044C \u043D\u0430\u043F\u0440\u044F\u043C\u0443\u044E \u0432 \u0431\u0443\u0444\u0435\u0440 \u043E\u0431\u043C\u0435\u043D\u0430; 3. \u041F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430 \u044D\u043A\u0441\u043F\u043E\u0440\u0442\u0430 \u0432 \u0444\u043E\u0440\u043C\u0430\u0442 \u043E\u0434\u043D\u043E\u0441\u0442\u0440\u0430\u043D\u0438\u0447\u043D\u043E\u0433\u043E PDF, \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043E\u0442\u043B\u0438\u0447\u0430\u0435\u0442\u0441\u044F \u043E\u0442 \u043E\u0431\u044B\u0447\u043D\u044B\u0445 \u0444\u043E\u0440\u043C\u0430\u0442\u043E\u0432 \u0431\u0443\u043C\u0430\u0433\u0438 PDF, \u043F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u0431\u0443\u0434\u044C\u0442\u0435 \u043E\u0441\u0442\u043E\u0440\u043E\u0436\u043D\u044B, \u0447\u0442\u043E\u0431\u044B \u043D\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u0435\u0433\u043E \u043D\u0435\u043F\u0440\u0430\u0432\u0438\u043B\u044C\u043D\u043E.",
+      png0: ".png - \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
+      png1: ".png - \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0441 \u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u043C \u0444\u043E\u043D\u043E\u043C",
+      jpg: ".jpg - \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435 \u0432 \u0444\u043E\u0440\u043C\u0430\u0442\u0435 jpg",
+      pdf: ".pdf - \u043E\u0434\u043D\u043E\u0441\u0442\u0440\u0430\u043D\u0438\u0447\u043D\u044B\u0439 PDF"
+    },
+    userInfo: {
+      title: "\u0418\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F \u043E\u0431 \u0430\u0432\u0442\u043E\u0440\u0435",
+      show: "\u041F\u043E\u043A\u0430\u0437\u0430\u0442\u044C \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044E \u043E\u0431 \u0430\u0432\u0442\u043E\u0440\u0435",
+      avatar: {
+        title: "\u0410\u0432\u0430\u0442\u0430\u0440",
+        description: "\u0420\u0435\u043A\u043E\u043C\u0435\u043D\u0434\u0443\u0435\u0442\u0441\u044F \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u044C \u043A\u0432\u0430\u0434\u0440\u0430\u0442\u043D\u044B\u0435 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F"
+      },
+      name: "\u0418\u043C\u044F \u0430\u0432\u0442\u043E\u0440\u0430",
+      position: "\u0413\u0434\u0435 \u043E\u0442\u043E\u0431\u0440\u0430\u0436\u0430\u0442\u044C",
+      remark: "\u0414\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435\u043B\u044C\u043D\u044B\u0439 \u0442\u0435\u043A\u0441\u0442",
+      align: "\u0412\u044B\u0440\u043E\u0432\u043D\u044F\u0442\u044C",
+      removeAvatar: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u0430\u0432\u0430\u0442\u0430\u0440"
+    },
+    watermark: {
+      title: "\u0412\u043E\u0434\u044F\u043D\u043E\u0439 \u0437\u043D\u0430\u043A",
+      enable: {
+        label: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0432\u043E\u0434\u044F\u043D\u043E\u0439 \u0437\u043D\u0430\u043A",
+        description: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0432\u043E\u0434\u044F\u043D\u043E\u0439 \u0437\u043D\u0430\u043A, \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 \u0442\u0435\u043A\u0441\u0442\u043E\u0432\u044B\u0439 \u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0447\u0435\u0441\u043A\u0438\u0439 \u0432\u043E\u0434\u044F\u043D\u044B\u0435 \u0437\u043D\u0430\u043A\u0438."
+      },
+      type: {
+        label: "\u0422\u0438\u043F \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430",
+        description: "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0435 \u0442\u0438\u043F \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430, \u0442\u0435\u043A\u0441\u0442 \u0438\u043B\u0438 \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435.",
+        text: "\u0422\u0435\u043A\u0441\u0442",
+        image: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435"
+      },
+      text: {
+        content: "\u0421\u043E\u0434\u0435\u0440\u0436\u0430\u043D\u0438\u0435 \u0442\u0435\u043A\u0441\u0442\u0430",
+        fontSize: "\u0420\u0430\u0437\u043C\u0435\u0440 \u0448\u0440\u0438\u0444\u0442\u0430 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430",
+        color: "\u0426\u0432\u0435\u0442 \u0442\u0435\u043A\u0441\u0442\u0430 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430"
+      },
+      image: {
+        src: {
+          label: "URL \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F",
+          upload: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0438\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u0435",
+          select: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C \u0438\u0437 \u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0430"
+        }
+      },
+      opacity: "\u041F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u043E\u0441\u0442\u044C \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430 (0 \u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u0439, 1 \u043D\u0435\u043F\u0440\u043E\u0437\u0440\u0430\u0447\u043D\u044B\u0439)",
+      rotate: "\u041F\u043E\u0432\u043E\u0440\u043E\u0442 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430 (\u0432 \u0433\u0440\u0430\u0434\u0443\u0441\u0430\u0445)",
+      width: "\u0428\u0438\u0440\u0438\u043D\u0430 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430",
+      height: "\u0412\u044B\u0441\u043E\u0442\u0430 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430",
+      x: "\u0413\u043E\u0440\u0438\u0437\u043E\u043D\u0442\u0430\u043B\u044C\u043D\u043E\u0435 \u0440\u0430\u0441\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430",
+      y: "\u0412\u0435\u0440\u0442\u0438\u043A\u0430\u043B\u044C\u043D\u043E\u0435 \u0440\u0430\u0441\u0441\u0442\u043E\u044F\u043D\u0438\u0435 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430"
+    },
+    preview: "\u041F\u0440\u0435\u0434\u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u0432\u043E\u0434\u044F\u043D\u043E\u0433\u043E \u0437\u043D\u0430\u043A\u0430",
+    reset: "\u0421\u0431\u0440\u043E\u0441\u0438\u0442\u044C \u043F\u043E \u0443\u043C\u043E\u043B\u0447\u0430\u043D\u0438\u044E",
+    recursive: "\u0412\u043A\u043B\u044E\u0447\u0438\u0442\u044C \u0437\u0430\u043C\u0435\u0442\u043A\u0438 \u0438\u0437 \u043F\u043E\u0434\u0434\u0438\u0440\u0435\u043A\u0442\u043E\u0440\u0438\u0439"
+  },
+  imageSelect: {
+    search: "\u041F\u043E\u0438\u0441\u043A",
+    select: "\u0412\u044B\u0431\u0440\u0430\u0442\u044C",
+    cancel: "\u041E\u0442\u043C\u0435\u043D\u0430",
+    empty: "\u0418\u0437\u043E\u0431\u0440\u0430\u0436\u0435\u043D\u0438\u044F \u043D\u0435 \u043D\u0430\u0439\u0434\u0435\u043D\u044B"
+  }
+};
+var ru_default = ru;
+
 // src/i18n/zh/index.ts
 var zh = {
   command: "Export as an image\uFF08\u5BFC\u51FA\u4E3A\u56FE\u7247\uFF09",
@@ -30478,8 +32459,23 @@ var zh_default = zh;
 
 // src/i18n/i18n-util.sync.ts
 var localeTranslations = {
+  cs: cs_default,
+  da: da_default,
   de: de_default,
   en: en_default,
+  es: es_default,
+  fr: fr_default,
+  hu: hu_default,
+  id: id_default,
+  ja: ja_default,
+  ko: ko_default,
+  ms: ms_default,
+  nl: nl_default,
+  no: no_default,
+  pl: pl_default,
+  pt: pt_default,
+  ro: ro_default,
+  ru: ru_default,
   zh: zh_default
 };
 var loadLocale = (locale2) => {
@@ -32150,9 +34146,74 @@ var TransformComponent = function(_a2) {
   );
 };
 
+// src/utils/index.ts
+var import_obsidian2 = require("obsidian");
+function isMarkdownFile(file) {
+  return ["md", "markdown"].includes(file?.extension ?? "");
+}
+async function fileToBase64(file) {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  return new Promise((resolve, reject) => {
+    reader.addEventListener("load", () => {
+      resolve(reader.result);
+    });
+    reader.onerror = (error) => {
+      reject(error);
+    };
+  });
+}
+function fileToUrl(file) {
+  return URL.createObjectURL(file);
+}
+async function getSizeOfImage(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.addEventListener("load", () => {
+      resolve({
+        width: Math.round(image.width / 2),
+        height: Math.round(image.height / 2)
+      });
+      URL.revokeObjectURL(url);
+      image.remove();
+    });
+    image.onerror = (error) => {
+      reject(error);
+      URL.revokeObjectURL(url);
+      image.remove();
+    };
+    image.src = url;
+  });
+}
+async function createHtml(path, app) {
+  const div = createDiv();
+  await import_obsidian2.MarkdownRenderer.render(
+    app,
+    `![](${(0, import_obsidian2.normalizePath)(path).replaceAll(" ", "%20")})`,
+    div,
+    "",
+    new import_obsidian2.MarkdownRenderChild(div)
+  );
+  return div;
+}
+function getMetadata(file, app) {
+  return app.metadataCache.getFileCache(file)?.frontmatter;
+}
+async function delay(time) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+}
+function getMime(format) {
+  return `image/${format.includes("png") ? "png" : format === "jpg" ? "jpeg" : format}`;
+}
+
 // src/imageFormatTester/tiny.ts
 var jpg = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=";
 var png = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
+var webp = "data:image/webp;base64,UklGRkAAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAIAAAAAAFZQOCAYAAAAMAEAnQEqAQABAAIANCWkAANwAP77/VAA";
 
 // src/imageFormatTester/index.ts
 async function tester(image) {
@@ -32171,23 +34232,59 @@ async function tester(image) {
     return false;
   }
 }
-var cache = {
+var copyCache = {
   pdf: Promise.resolve(false)
 };
+var createCache = {
+  pdf: true
+};
 async function isCopiable(type) {
-  if (type in cache) {
-    return cache[type];
+  if (type in copyCache) {
+    return copyCache[type];
   }
   if (type === "jpg") {
-    cache[type] = tester(jpg);
-    return cache[type];
+    copyCache[type] = tester(jpg);
+    return copyCache[type];
+  }
+  if (type === "webp") {
+    copyCache[type] = tester(webp);
+    return copyCache[type];
   }
   const result = tester(png);
-  cache.png0 = result;
-  cache.png1 = result;
+  copyCache.png0 = result;
+  copyCache.png1 = result;
   return result;
 }
-var imageFormatTester_default = isCopiable;
+async function isCreatable(type) {
+  if (type in createCache) {
+    return createCache[type];
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = 1;
+  const mime = getMime(type);
+  return new Promise((resolve) => {
+    try {
+      canvas.toBlob(() => {
+        if (type.includes("png")) {
+          createCache.png0 = true;
+          createCache.png1 = true;
+        } else {
+          createCache[type] = true;
+        }
+        resolve(true);
+      }, mime);
+    } catch {
+      if (type.includes("png")) {
+        createCache.png0 = false;
+        createCache.png1 = false;
+      } else {
+        createCache[type] = false;
+      }
+      resolve(false);
+    }
+  });
+}
 
 // src/utils/capture.ts
 var import_obsidian4 = require("obsidian");
@@ -32761,14 +34858,14 @@ var dflt = function(dat, lvl, plvl, pre, post, lst) {
           var ml = Math.min(258, rem);
           while (dif <= maxd && --ch_1 && imod != pimod) {
             if (dat[i4 + l3] == dat[i4 + l3 - dif]) {
-              var nl = 0;
-              for (; nl < ml && dat[i4 + nl] == dat[i4 + nl - dif]; ++nl)
+              var nl2 = 0;
+              for (; nl2 < ml && dat[i4 + nl2] == dat[i4 + nl2 - dif]; ++nl2)
                 ;
-              if (nl > l3) {
-                l3 = nl, d2 = dif;
-                if (nl > maxn)
+              if (nl2 > l3) {
+                l3 = nl2, d2 = dif;
+                if (nl2 > maxn)
                   break;
-                var mmd = Math.min(dif, nl - 2);
+                var mmd = Math.min(dif, nl2 - 2);
                 var md = 0;
                 for (var j2 = 0; j2 < mmd; ++j2) {
                   var ti = i4 - dif + j2 + 32768 & 32767;
@@ -33253,9 +35350,9 @@ function E(e4) {
     for (var e5 = t5.length, r6 = new ArrayBuffer(e5), n4 = new Uint8Array(r6); e5--; )
       n4[e5] = t5.charCodeAt(e5);
     return r6;
-  }, pt2 = [["Helvetica", "helvetica", "normal", "WinAnsiEncoding"], ["Helvetica-Bold", "helvetica", "bold", "WinAnsiEncoding"], ["Helvetica-Oblique", "helvetica", "italic", "WinAnsiEncoding"], ["Helvetica-BoldOblique", "helvetica", "bolditalic", "WinAnsiEncoding"], ["Courier", "courier", "normal", "WinAnsiEncoding"], ["Courier-Bold", "courier", "bold", "WinAnsiEncoding"], ["Courier-Oblique", "courier", "italic", "WinAnsiEncoding"], ["Courier-BoldOblique", "courier", "bolditalic", "WinAnsiEncoding"], ["Times-Roman", "times", "normal", "WinAnsiEncoding"], ["Times-Bold", "times", "bold", "WinAnsiEncoding"], ["Times-Italic", "times", "italic", "WinAnsiEncoding"], ["Times-BoldItalic", "times", "bolditalic", "WinAnsiEncoding"], ["ZapfDingbats", "zapfdingbats", "normal", null], ["Symbol", "symbol", "normal", null]];
+  }, pt3 = [["Helvetica", "helvetica", "normal", "WinAnsiEncoding"], ["Helvetica-Bold", "helvetica", "bold", "WinAnsiEncoding"], ["Helvetica-Oblique", "helvetica", "italic", "WinAnsiEncoding"], ["Helvetica-BoldOblique", "helvetica", "bolditalic", "WinAnsiEncoding"], ["Courier", "courier", "normal", "WinAnsiEncoding"], ["Courier-Bold", "courier", "bold", "WinAnsiEncoding"], ["Courier-Oblique", "courier", "italic", "WinAnsiEncoding"], ["Courier-BoldOblique", "courier", "bolditalic", "WinAnsiEncoding"], ["Times-Roman", "times", "normal", "WinAnsiEncoding"], ["Times-Bold", "times", "bold", "WinAnsiEncoding"], ["Times-Italic", "times", "italic", "WinAnsiEncoding"], ["Times-BoldItalic", "times", "bolditalic", "WinAnsiEncoding"], ["ZapfDingbats", "zapfdingbats", "normal", null], ["Symbol", "symbol", "normal", null]];
   y3.__private__.getStandardFonts = function() {
-    return pt2;
+    return pt3;
   };
   var gt2 = e4.fontSize || 16;
   y3.__private__.setFontSize = y3.setFontSize = function(t5) {
@@ -33651,8 +35748,8 @@ function E(e4) {
     var a3 = { id: "F" + (Object.keys(Ft2).length + 1).toString(10), postScriptName: t5, fontName: e5, fontStyle: r6, encoding: n4, isStandardFont: i5 || false, metadata: {} };
     return Tt2.publish("addFont", { font: a3, instance: this }), Ft2[a3.id] = a3, _e(a3), a3.id;
   }, ke = function(t5) {
-    for (var e5 = 0, r6 = pt2.length; e5 < r6; e5++) {
-      var n4 = Pe.call(this, t5[e5][0], t5[e5][1], t5[e5][2], pt2[e5][3], true);
+    for (var e5 = 0, r6 = pt3.length; e5 < r6; e5++) {
+      var n4 = Pe.call(this, t5[e5][0], t5[e5][1], t5[e5][2], pt3[e5][3], true);
       false === v3 && (b2[n4] = true);
       var i5 = t5[e5][0].split("-");
       _e({ id: n4, fontName: i5[0], fontStyle: i5[1] || "" });
@@ -33701,7 +35798,7 @@ function E(e4) {
       case "p":
         n4 > o5 && (s3 = [o5, n4]);
     }
-    je(s3), pr(fr), lt2(Lr), 0 !== kr && lt2(kr + " J"), 0 !== Ir && lt2(Ir + " j"), Tt2.publish("addPage", { pageNumber: Dt2 });
+    je(s3), pr(fr2), lt2(Lr), 0 !== kr && lt2(kr + " J"), 0 !== Ir && lt2(Ir + " j"), Tt2.publish("addPage", { pageNumber: Dt2 });
   }, Be = function(t5) {
     t5 > 0 && t5 <= Dt2 && (ot2.splice(t5, 1), Rt2.splice(t5, 1), Dt2--, $2 > Dt2 && ($2 = Dt2), this.setPage($2));
   }, Me = function(t5) {
@@ -34220,10 +36317,10 @@ function E(e4) {
     var a3 = ["StandardEncoding", "MacRomanEncoding", "Identity-H", "WinAnsiEncoding"];
     return arguments[3] && -1 !== a3.indexOf(arguments[3]) ? i5 = arguments[3] : arguments[3] && -1 == a3.indexOf(arguments[3]) && (r6 = k2(r6, n4)), i5 = i5 || "Identity-H", Pe.call(this, t5, e5, r6, i5);
   };
-  var lr2, fr = e4.lineWidth || 0.200025, dr = y3.__private__.getLineWidth = y3.getLineWidth = function() {
-    return fr;
+  var lr2, fr2 = e4.lineWidth || 0.200025, dr = y3.__private__.getLineWidth = y3.getLineWidth = function() {
+    return fr2;
   }, pr = y3.__private__.setLineWidth = y3.setLineWidth = function(t5) {
-    return fr = t5, lt2(O3(U2(t5)) + " w"), this;
+    return fr2 = t5, lt2(O3(U2(t5)) + " w"), this;
   };
   y3.__private__.setLineDash = E.API.setLineDash = E.API.setLineDashPattern = function(t5, e5) {
     if (t5 = t5 || [], e5 = e5 || 0, isNaN(e5) || !Array.isArray(t5))
@@ -34427,7 +36524,7 @@ function E(e4) {
     return Rr($2);
   }, set: function(t5) {
     Tr($2, t5);
-  }, enumerable: true, configurable: true }), ke.call(y3, pt2), St2 = "F1", Oe(s3, i4), Tt2.publish("initialized"), y3;
+  }, enumerable: true, configurable: true }), ke.call(y3, pt3), St2 = "F1", Oe(s3, i4), Tt2.publish("initialized"), y3;
 }
 I.prototype.lsbFirstWord = function(t5) {
   return String.fromCharCode(t5 >> 0 & 255, t5 >> 8 & 255, t5 >> 16 & 255, t5 >> 24 & 255);
@@ -35054,14 +37151,14 @@ var dt = function() {
   ft.call(this), this.fontName = "helvetica", this.combo = false;
 };
 H(dt, ft);
-var pt = function() {
+var pt2 = function() {
   dt.call(this), this.combo = true;
 };
-H(pt, dt);
+H(pt2, dt);
 var gt = function() {
-  pt.call(this), this.edit = true;
+  pt2.call(this), this.edit = true;
 };
-H(gt, pt);
+H(gt, pt2);
 var mt = function() {
   lt.call(this), this.FT = "/Btn", Object.defineProperty(this, "noToggleToOff", { enumerable: true, configurable: true, get: function() {
     return Boolean(X(this.Ff, 15));
@@ -35306,7 +37403,7 @@ var xt = q.addField = function(t5) {
   var e4;
   return (e4 = t5).scope.internal.acroformPlugin.printedOut && (e4.scope.internal.acroformPlugin.printedOut = false, e4.scope.internal.acroformPlugin.acroFormDictionaryRoot = null), e4.scope.internal.acroformPlugin.acroFormDictionaryRoot.Fields.push(e4), t5.page = t5.scope.internal.getCurrentPageInfo().pageNumber, this;
 };
-q.AcroFormChoiceField = ft, q.AcroFormListBox = dt, q.AcroFormComboBox = pt, q.AcroFormEditBox = gt, q.AcroFormButton = mt, q.AcroFormPushButton = vt, q.AcroFormRadioButton = bt, q.AcroFormCheckBox = wt, q.AcroFormTextField = Nt, q.AcroFormPasswordField = Lt, q.AcroFormAppearance = At, q.AcroForm = { ChoiceField: ft, ListBox: dt, ComboBox: pt, EditBox: gt, Button: mt, PushButton: vt, RadioButton: bt, CheckBox: wt, TextField: Nt, PasswordField: Lt, Appearance: At }, E.AcroForm = { ChoiceField: ft, ListBox: dt, ComboBox: pt, EditBox: gt, Button: mt, PushButton: vt, RadioButton: bt, CheckBox: wt, TextField: Nt, PasswordField: Lt, Appearance: At };
+q.AcroFormChoiceField = ft, q.AcroFormListBox = dt, q.AcroFormComboBox = pt2, q.AcroFormEditBox = gt, q.AcroFormButton = mt, q.AcroFormPushButton = vt, q.AcroFormRadioButton = bt, q.AcroFormCheckBox = wt, q.AcroFormTextField = Nt, q.AcroFormPasswordField = Lt, q.AcroFormAppearance = At, q.AcroForm = { ChoiceField: ft, ListBox: dt, ComboBox: pt2, EditBox: gt, Button: mt, PushButton: vt, RadioButton: bt, CheckBox: wt, TextField: Nt, PasswordField: Lt, Appearance: At }, E.AcroForm = { ChoiceField: ft, ListBox: dt, ComboBox: pt2, EditBox: gt, Button: mt, PushButton: vt, RadioButton: bt, CheckBox: wt, TextField: Nt, PasswordField: Lt, Appearance: At };
 var St = E.AcroForm;
 function _t(t5) {
   return t5.reduce(function(t6, e4, r5) {
@@ -38049,7 +40146,7 @@ function ee(t5) {
       var r6 = t7.ma, n5 = t7.U, i5 = t7.T;
       return e4(!(1 & t7.ka)), 0 >= n5 || 0 >= i5 ? 0 : (n5 = r6.Ib(t7, r6), null != r6.Jb && r6.Jb(t7, r6, n5), r6.Dc += n5, 1);
     }
-    function pt2(t7) {
+    function pt3(t7) {
       t7.ma.memory = null;
     }
     function gt2(t7, e5, r6, n5) {
@@ -38355,8 +40452,8 @@ function ee(t5) {
                     var dt3 = null;
                   else
                     e4(65536 >= lt3), dt3 = ft3;
-                  var pt3 = a3(rt3);
-                  if (null == dt3 || null == pt3 || null == ht3) {
+                  var pt4 = a3(rt3);
+                  if (null == dt3 || null == pt4 || null == ht3) {
                     Y3.a = 1;
                     break r;
                   }
@@ -38366,7 +40463,7 @@ function ee(t5) {
                     for (V3 = 0; 5 > V3; ++V3) {
                       ut3 = Xn[V3], vt3[V3] = gt3, bt3[V3] = G3, !V3 && 0 < K3 && (ut3 += 1 << K3);
                       n: {
-                        var At3, xt3 = ut3, St3 = Y3, kt3 = pt3, Ft3 = gt3, Ct3 = G3, jt3 = 0, Ot3 = St3.m, Bt3 = y4(Ot3, 1);
+                        var At3, xt3 = ut3, St3 = Y3, kt3 = pt4, Ft3 = gt3, Ct3 = G3, jt3 = 0, Ot3 = St3.m, Bt3 = y4(Ot3, 1);
                         if (i4(kt3, 0, 0, xt3), Bt3) {
                           var Mt3 = y4(Ot3, 1) + 1, Et3 = y4(Ot3, 1), qt3 = y4(Ot3, 0 == Et3 ? 1 : 8);
                           kt3[qt3] = 1, 2 == Mt3 && (kt3[qt3 = y4(Ot3, 8)] = 1);
@@ -38414,9 +40511,9 @@ function ee(t5) {
                       if (0 == Ut3)
                         break r;
                       if (Nt3 && 1 == Kn[V3] && (Nt3 = 0 == gt3[G3].g), wt3 += gt3[G3].g, G3 += Ut3, 3 >= V3) {
-                        var oe3, se3 = pt3[0];
+                        var oe3, se3 = pt4[0];
                         for (oe3 = 1; oe3 < ut3; ++oe3)
-                          pt3[oe3] > se3 && (se3 = pt3[oe3]);
+                          pt4[oe3] > se3 && (se3 = pt4[oe3]);
                         Lt3 += se3;
                       }
                     }
@@ -39136,7 +41233,7 @@ function ee(t5) {
               r6 = 0;
             else if (u5.$a = h5[l5 + 0] >> 0 & 3, u5.Z = h5[l5 + 0] >> 2 & 3, u5.Lc = h5[l5 + 0] >> 4 & 3, l5 = h5[l5 + 0] >> 6 & 3, 0 > u5.$a || 1 < u5.$a || 4 <= u5.Z || 1 < u5.Lc || l5)
               r6 = 0;
-            else if (b4.put = dt2, b4.ac = ft2, b4.bc = pt2, b4.ma = u5, b4.width = r6.width, b4.height = r6.height, b4.Da = r6.Da, b4.v = r6.v, b4.va = r6.va, b4.j = r6.j, b4.o = r6.o, u5.$a)
+            else if (b4.put = dt2, b4.ac = ft2, b4.bc = pt3, b4.ma = u5, b4.width = r6.width, b4.height = r6.height, b4.Da = r6.Da, b4.v = r6.v, b4.va = r6.va, b4.j = r6.j, b4.o = r6.o, u5.$a)
               t: {
                 e4(1 == u5.$a), r6 = kt2();
                 e:
@@ -39223,7 +41320,7 @@ function ee(t5) {
       }
       return t7.nb + i5 * s4;
     }
-    function fr(t7, e5, r6, n5, i5, a4) {
+    function fr2(t7, e5, r6, n5, i5, a4) {
       for (; 0 < i5--; ) {
         var o5, s4 = t7, c7 = e5 + (r6 ? 1 : 0), u5 = t7, h5 = e5 + (r6 ? 0 : 3);
         for (o5 = 0; o5 < n5; ++o5) {
@@ -39260,7 +41357,7 @@ function ee(t5) {
         r6[n5 + a4] = t7[e5 + a4] >> 8;
     }
     function mr() {
-      An = fr, xn = dr, Sn = pr, _n = gr;
+      An = fr2, xn = dr, Sn = pr, _n = gr;
     }
     function vr(r6, n5, i5) {
       t6[r6] = function(t7, r7, a4, o5, s4, c7, u5, h5, l5, f5, d4, p5, g4, m7, v5, b4, y5) {
@@ -39647,7 +41744,7 @@ function ee(t5) {
         c7.width = c7.width[0], c7.height = c7.height[0], null != i5 && (i5[0] = c7.width), null != a4 && (a4[0] = c7.height);
         t: {
           if (i5 = new Gt2(), (a4 = new nr()).data = t7, a4.w = r6, a4.ha = n5, a4.kd = 1, r6 = [0], e4(null != a4), (0 == (t7 = Br(a4.data, a4.w, a4.ha, null, null, null, r6, null, a4)) || 7 == t7) && r6[0] && (t7 = 4), 0 == (r6 = t7)) {
-            if (e4(null != s4), i5.data = a4.data, i5.w = a4.w + a4.offset, i5.ha = a4.ha - a4.offset, i5.put = dt2, i5.ac = ft2, i5.bc = pt2, i5.ma = s4, a4.xa) {
+            if (e4(null != s4), i5.data = a4.data, i5.w = a4.w + a4.offset, i5.ha = a4.ha - a4.offset, i5.put = dt2, i5.ac = ft2, i5.bc = pt3, i5.ma = s4, a4.xa) {
               if (null == (t7 = kt2())) {
                 s4 = 1;
                 break t;
@@ -41435,67 +43532,6 @@ var Target = (0, import_react5.forwardRef)(({ frontmatter, setting, title, metad
 });
 var Target_default = Target;
 
-// src/utils/index.ts
-var import_obsidian2 = require("obsidian");
-function isMarkdownFile(file) {
-  return ["md", "markdown"].includes(file?.extension ?? "");
-}
-async function fileToBase64(file) {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  return new Promise((resolve, reject) => {
-    reader.addEventListener("load", () => {
-      resolve(reader.result);
-    });
-    reader.onerror = (error) => {
-      reject(error);
-    };
-  });
-}
-function fileToUrl(file) {
-  return URL.createObjectURL(file);
-}
-async function getSizeOfImage(url) {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.addEventListener("load", () => {
-      resolve({
-        width: Math.round(image.width / 2),
-        height: Math.round(image.height / 2)
-      });
-      URL.revokeObjectURL(url);
-      image.remove();
-    });
-    image.onerror = (error) => {
-      reject(error);
-      URL.revokeObjectURL(url);
-      image.remove();
-    };
-    image.src = url;
-  });
-}
-async function createHtml(path, app) {
-  const div = createDiv();
-  await import_obsidian2.MarkdownRenderer.render(
-    app,
-    `![](${(0, import_obsidian2.normalizePath)(path).replaceAll(" ", "%20")})`,
-    div,
-    "",
-    new import_obsidian2.MarkdownRenderChild(div)
-  );
-  return div;
-}
-function getMetadata(file, app) {
-  return app.metadataCache.getFileCache(file)?.frontmatter;
-}
-async function delay(time) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-}
-
 // src/utils/makeHTML.tsx
 var root;
 async function makeHTML(file, settings, app, container) {
@@ -41566,11 +43602,12 @@ async function save(app, el, title, higtResolution, format, isMobile) {
   const blob = await getBlob(
     el,
     higtResolution,
-    `image/${format.includes("png") ? "png" : "jpeg"}`
+    getMime(format)
   );
   const filename = `${title.replaceAll(/\s+/g, "_")}.${format.replace(/\d$/, "")}`;
   switch (format) {
     case "jpg":
+    case "webp":
     case "png0":
     case "png1": {
       if (isMobile) {
@@ -41607,7 +43644,7 @@ async function copy(el, higtResolution, format) {
   const blob = await getBlob(
     el,
     higtResolution,
-    `image/${format.includes("png") ? "png" : "jpeg"}`
+    getMime(format)
   );
   const data = [];
   data.push(
@@ -41906,7 +43943,7 @@ function isShow(field, settings) {
   }
   return (0, import_get2.default)(settings, field.when.path) === field.when.flag;
 }
-var FormItems = ({ formSchema: formSchema3, settings, update, app }) => /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, formSchema3.map(
+var FormItems = ({ formSchema: formSchema2, settings, update, app }) => /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, formSchema2.map(
   (fieldSchema) => isShow(fieldSchema, settings) && /* @__PURE__ */ import_react9.default.createElement(
     "div",
     {
@@ -42049,7 +44086,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
   const [processing, setProcessing] = (0, import_react10.useState)(false);
   const [allowCopy, setAllowCopy] = (0, import_react10.useState)(true);
   (0, import_react10.useEffect)(() => {
-    imageFormatTester_default(formData.format).then((result) => {
+    isCopiable(formData.format).then((result) => {
       setAllowCopy(Boolean(result));
     });
   }, [formData.format]);
@@ -42224,6 +44261,15 @@ var DEFAULT_SETTINGS = {
     y: 100
   }
 };
+var formatList = ["png0", "png1", "jpg", "webp", "pdf"];
+var formatAvailable = [];
+(async () => {
+  for (const type of formatList) {
+    if (await isCreatable(type)) {
+      formatAvailable.push(type);
+    }
+  }
+})();
 
 // src/components/folder/exportFolder.tsx
 var import_react13 = __toESM(require_react());
@@ -42233,44 +44279,6 @@ var import_client5 = __toESM(require_client());
 // src/components/folder/ModalContent.tsx
 var import_react12 = __toESM(require_react());
 var import_obsidian8 = require("obsidian");
-var formSchema2 = [
-  {
-    label: L_default.setting.recursive(),
-    path: "recursive",
-    type: "boolean"
-  },
-  {
-    label: L_default.includingFilename(),
-    path: "showFilename",
-    type: "boolean"
-  },
-  {
-    label: L_default.imageWidth(),
-    path: "width",
-    type: "number"
-  },
-  {
-    label: L_default.setting.userInfo.show(),
-    path: "authorInfo.show",
-    type: "boolean"
-  },
-  {
-    label: L_default.setting.watermark.enable.label(),
-    path: "watermark.enable",
-    type: "boolean"
-  },
-  {
-    label: L_default.setting.format.title(),
-    path: "format",
-    type: "select",
-    options: [
-      { value: "png0", text: "png" },
-      { value: "png1", text: "png - transparent background" },
-      { value: "jpg", text: "jpg" },
-      { value: "pdf", text: "pdf" }
-    ]
-  }
-];
 var ModalContent2 = ({ settings, app, folder, close }) => {
   const [formData, setFormData] = (0, import_react12.useState)(settings);
   const [fileList, setFileList] = (0, import_react12.useState)([]);
@@ -42306,6 +44314,45 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
     close,
     folder.name
   ]);
+  const formSchema2 = [
+    {
+      label: L_default.setting.recursive(),
+      path: "recursive",
+      type: "boolean"
+    },
+    {
+      label: L_default.includingFilename(),
+      path: "showFilename",
+      type: "boolean"
+    },
+    {
+      label: L_default.imageWidth(),
+      path: "width",
+      type: "number"
+    },
+    {
+      label: L_default.setting.userInfo.show(),
+      path: "authorInfo.show",
+      type: "boolean"
+    },
+    {
+      label: L_default.setting.watermark.enable.label(),
+      path: "watermark.enable",
+      type: "boolean"
+    },
+    {
+      label: L_default.setting.format.title(),
+      path: "format",
+      type: "select",
+      options: [
+        { value: "png0", text: "png(normal)" },
+        { value: "png1", text: "png(no background)" },
+        { value: "jpg", text: "jpg" },
+        { value: "webp", text: "webp" },
+        { value: "pdf", text: "pdf" }
+      ].filter(({ value }) => formatAvailable.contains(value))
+    }
+  ];
   (0, import_react12.useEffect)(() => {
     const fileList2 = [];
     if (formData.recursive) {
@@ -42586,12 +44633,13 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
       });
     });
     new import_obsidian10.Setting(containerEl).setName(L_default.setting.format.title()).setDesc(L_default.setting.format.description()).addDropdown((dropdown) => {
-      dropdown.addOptions({
+      dropdown.addOptions((0, import_pick.default)({
         png0: L_default.setting.format.png0(),
         png1: L_default.setting.format.png1(),
         jpg: L_default.setting.format.jpg(),
+        webp: "webp",
         pdf: L_default.setting.format.pdf()
-      }).setValue(this.plugin.settings.format).onChange(async (value) => {
+      }, formatAvailable)).setValue(this.plugin.settings.format).onChange(async (value) => {
         this.plugin.settings.format = value;
         await this.update();
       });

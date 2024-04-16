@@ -1,3 +1,5 @@
+import {isCreatable} from './imageFormatTester';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DEFAULT_SETTINGS: ISettings = {
   width: 640,
@@ -31,3 +33,15 @@ export const DEFAULT_SETTINGS: ISettings = {
     y: 100,
   },
 };
+
+const formatList: FileFormat[] = ['png0', 'png1', 'jpg', 'webp', 'pdf'];
+export const formatAvailable: FileFormat[] = [];
+
+// eslint-disable-next-line unicorn/prefer-top-level-await
+(async () => {
+  for (const type of formatList) {
+    if (await isCreatable(type)) {
+      formatAvailable.push(type);
+    }
+  }
+})();

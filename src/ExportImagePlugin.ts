@@ -7,6 +7,7 @@ import {
   Notice,
   TFolder,
 } from 'obsidian';
+import pick from 'lodash/pick';
 import {renderPreview} from './settingPreview';
 import exportImage from './components/file/exportImage';
 import L from './L';
@@ -18,7 +19,7 @@ import {
   isMarkdownFile,
 } from './utils';
 import ImageSelectModal from './components/common/imageSelectModal';
-import {DEFAULT_SETTINGS} from './settings';
+import {DEFAULT_SETTINGS, formatAvailable} from './settings';
 import exportFolder from './components/folder/exportFolder';
 
 export default class ExportImagePlugin extends Plugin {
@@ -224,17 +225,19 @@ class ImageSettingTab extends PluginSettingTab {
           await this.update();
         });
       });
+
     new Setting(containerEl)
       .setName(L.setting.format.title())
       .setDesc(L.setting.format.description())
       .addDropdown(dropdown => {
         dropdown
-          .addOptions({
+          .addOptions(pick({
             png0: L.setting.format.png0(),
             png1: L.setting.format.png1(),
             jpg: L.setting.format.jpg(),
+            webp: 'webp',
             pdf: L.setting.format.pdf(),
-          })
+          }, formatAvailable))
           .setValue(this.plugin.settings.format)
           .onChange(async (value: FileFormat) => {
             this.plugin.settings.format = value;
