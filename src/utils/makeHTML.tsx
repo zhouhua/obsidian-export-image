@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   type App,
   MarkdownRenderChild,
@@ -37,10 +39,9 @@ export default async function makeHTML(
       || new MarkdownRenderChild(element),
   );
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const metadataMap: Record<string, {type: MetadataType}>
-    /* @ts-ignore */
-    = app.metadataCache.getAllPropertyInfos(); // eslint-disable-line @typescript-eslint/no-unsafe-call
+  /* @ts-ignore */
+  const metadataMap: Record<string, {type: MetadataType}> = app.metadataCache.getAllPropertyInfos();
+
   const frontmatter = getMetadata(file, app);
 
   root = createRoot(container);

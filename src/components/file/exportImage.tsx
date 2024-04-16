@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import React from 'react';
 import {
   type App,
@@ -35,10 +37,8 @@ export default async function (
   modal.modalEl.style.maxWidth = '1500px';
   modal.open();
   const root = createRoot(modal.contentEl);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const metadataMap: Record<string, {type: MetadataType}>
-    /* @ts-ignore */
-    = app.metadataCache.getAllPropertyInfos(); // eslint-disable-line @typescript-eslint/no-unsafe-call
+  /* @ts-ignore */
+  const metadataMap: Record<string, {type: MetadataType}> = app.metadataCache.getAllPropertyInfos();
   root.render(
     <ModalContent
       markdownEl={el}
