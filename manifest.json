@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-export-image",
 	"name": "Export Image plugin",
-	"version": "2.3.3",
+	"version": "2.3.4",
 	"minAppVersion": "1.5.3",
 	"description": "Easily convert your article to image.",
 	"author": "Zhou Hua",
