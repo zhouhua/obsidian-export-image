@@ -105,12 +105,18 @@ If your plugin does not need CSS, delete this file.
 
 .export-image-preview-actions {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: center;
-  margin-bottom: 20px;
 }
 .export-image-preview-actions button {
-  margin-left: 10px;
+  margin: 0 32px;
+}
+
+.export-image-preview-actions p {
+  margin: 5px 0 0 0;
+  font-size: 12px;
+  color: var(--color-red);
+  text-align: center;
 }
 
 .export-image-root .multi-select-pill-content {

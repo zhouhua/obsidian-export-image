@@ -1,9 +1,10 @@
-declare type FileFormat = "jpg" | "png" | "pdf";
+declare type FileFormat = 'png0' | 'png1' | 'jpg' | 'pdf';
 
-declare interface ISettings {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+declare type ISettings = {
   width?: number;
   showFilename: boolean;
-  "2x": boolean;
+  '2x': boolean;
   format: FileFormat;
   showMetadata: boolean;
   recursive: boolean;
@@ -12,12 +13,12 @@ declare interface ISettings {
     name?: string;
     remark?: string;
     avatar?: string;
-    align?: "left" | "center" | "right";
-    position?: "top" | "bottom";
+    align?: 'left' | 'center' | 'right';
+    position?: 'top' | 'bottom';
   };
   watermark: {
     enable: boolean;
-    type?: "text" | "image";
+    type?: 'text' | 'image';
     text: {
       content?: string;
       fontSize?: number;
@@ -33,34 +34,36 @@ declare interface ISettings {
     width?: number;
     height?: number;
   };
-}
+};
 
-type ConditionType<T> = { flag: any; path: string } | ((data: T) => boolean);
+type ConditionType<T> = {flag: any; path: string} | ((data: T) => boolean);
 
-interface BaseFieldSchema<T> {
+type ValueType = 'number' | 'string' | 'boolean' | 'file';
+
+type BaseFieldSchema<T> = {
   label: string;
   path: string;
-  type: "number" | "string" | "boolean" | "file";
+  type: ValueType;
   when?: ConditionType<T>;
   desc?: string;
-}
-interface SelectFieldSchema<T> {
+};
+type SelectFieldSchema<T> = {
   label: string;
   path: string;
-  type: "select";
-  options: { text: string; value: string }[];
+  type: 'select';
+  options: Array<{text: string; value: string}>;
   when?: ConditionType<T>;
   desc?: string;
-}
+};
 declare type FieldSchema<T> = BaseFieldSchema<T> | SelectFieldSchema<T>;
-declare type FormSchema<T> = FieldSchema<T>[];
+declare type FormSchema<T> = Array<FieldSchema<T>>;
 
 declare type MetadataType =
-  | "text"
-  | "date"
-  | "datetime"
-  | "checkbox"
-  | "multitext"
-  | "number"
-  | "tags"
-  | "aliases";
+  | 'text'
+  | 'date'
+  | 'datetime'
+  | 'checkbox'
+  | 'multitext'
+  | 'number'
+  | 'tags'
+  | 'aliases';

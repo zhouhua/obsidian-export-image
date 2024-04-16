@@ -1,3 +1,3 @@
-interface ExportImageSettings {
-    width: string;
-}
+type ExportImageSettings = {
+  width: string;
+};

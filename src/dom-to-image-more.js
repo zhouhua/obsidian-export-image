@@ -1,5 +1,5 @@
 (function (global) {
-  ("use strict");
+  ('use strict');
 
   const util = newUtil();
   const inliner = newInliner();
@@ -17,47 +17,47 @@
     // Use (existing) authentication credentials for external URIs (CORS requests)
     useCredentials: false,
     // Default resolve timeout
-    httpTimeout: 30000,
+    httpTimeout: 30_000,
     // Style computation cache tag rules (options are strict, relaxed)
-    styleCaching: "strict",
+    styleCaching: 'strict',
     // Default cors config is to request the image address directly
     corsImg: undefined,
   };
 
   const domtoimage = {
-    toSvg: toSvg,
-    toPng: toPng,
-    toJpeg: toJpeg,
-    toBlob: toBlob,
-    toPixelData: toPixelData,
-    toCanvas: toCanvas,
+    toSvg,
+    toPng,
+    toJpeg,
+    toBlob,
+    toPixelData,
+    toCanvas,
     impl: {
-      fontFaces: fontFaces,
-      images: images,
-      util: util,
-      inliner: inliner,
+      fontFaces,
+      images,
+      util,
+      inliner,
       urlCache: [],
       options: {},
     },
   };
 
-  if (typeof exports === "object" && typeof module === "object") {
-    module.exports = domtoimage; // eslint-disable-line no-undef
+  if (typeof exports === 'object' && typeof module === 'object') {
+    module.exports = domtoimage;
   } else {
     global.domtoimage = domtoimage;
   }
 
   // support node and browsers
-  const ELEMENT_NODE =
-    (typeof Node !== "undefined" ? Node.ELEMENT_NODE : undefined) || 1;
-  const getComputedStyle =
-    (typeof global !== "undefined" ? global.getComputedStyle : undefined) ||
-    (typeof window !== "undefined" ? window.getComputedStyle : undefined) ||
-    globalThis.getComputedStyle;
-  const atob =
-    (typeof global !== "undefined" ? global.atob : undefined) ||
-    (typeof window !== "undefined" ? window.atob : undefined) ||
-    globalThis.atob;
+  const ELEMENT_NODE
+    = (typeof Node === 'undefined' ? undefined : Node.ELEMENT_NODE) || 1;
+  const getComputedStyle
+    = (global === undefined ? undefined : global.getComputedStyle)
+    || (typeof window === 'undefined' ? undefined : window.getComputedStyle)
+    || globalThis.getComputedStyle;
+  const atob
+    = (global === undefined ? undefined : global.atob)
+    || (typeof window === 'undefined' ? undefined : window.atob)
+    || globalThis.atob;
 
   /**
      * @param {Node} node - The DOM Node object to render
@@ -89,14 +89,12 @@
      * */
   function toSvg(node, options) {
     const ownerWindow = domtoimage.impl.util.getWindow(node);
-    options = options || {};
+    options ||= {};
     copyOptions(options);
-    let restorations = [];
+    const restorations = [];
     return Promise.resolve(node)
       .then(ensureElement)
-      .then(function (clonee) {
-        return cloneNode(clonee, options, null, ownerWindow);
-      })
+      .then(clonee => cloneNode(clonee, options, null, ownerWindow))
       .then(embedFonts)
       .then(inlineImages)
       .then(applyOptions)
@@ -105,12 +103,14 @@
       .then(clearCache);
 
     function ensureElement(node) {
-      if (node.nodeType === ELEMENT_NODE) return node;
+      if (node.nodeType === ELEMENT_NODE) {
+        return node;
+      }
 
       const originalChild = node;
       const originalParent = node.parentNode;
-      const wrappingSpan = document.createElement("span");
-      originalParent.replaceChild(wrappingSpan, originalChild);
+      const wrappingSpan = document.createElement('span');
+      originalChild.replaceWith(wrappingSpan);
       wrappingSpan.append(node);
       restorations.push({
         parent: originalParent,
@@ -140,55 +140,54 @@
       if (options.bgcolor) {
         clone.style.backgroundColor = options.bgcolor;
       }
+
       if (options.width) {
         clone.style.width = `${options.width}px`;
       }
+
       if (options.height) {
         clone.style.height = `${options.height}px`;
       }
+
       if (options.style) {
-        Object.keys(options.style).forEach(function (property) {
+        for (const property of Object.keys(options.style)) {
           clone.style[property] = options.style[property];
-        });
+        }
       }
 
       let onCloneResult = null;
 
-      if (typeof options.onclone === "function") {
+      if (typeof options.onclone === 'function') {
         onCloneResult = options.onclone(clone);
       }
 
-      return Promise.resolve(onCloneResult).then(function () {
-        return clone;
-      });
+      return Promise.resolve(onCloneResult).then(() => clone);
     }
 
     function makeSvgDataUri(node) {
-      let width = options.width || util.width(node);
-      let height = options.height || util.height(node);
+      const width = options.width || util.width(node);
+      const height = options.height || util.height(node);
 
       return Promise.resolve(node)
-        .then(function (svg) {
-          svg.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+        .then(svg => {
+          svg.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
           return new XMLSerializer().serializeToString(svg);
         })
         .then(util.escapeXhtml)
-        .then(function (xhtml) {
-          const foreignObjectSizing =
-            (util.isDimensionMissing(width)
+        .then(xhtml => {
+          const foreignObjectSizing
+            = (util.isDimensionMissing(width)
               ? ' width="100%"'
-              : ` width="${width}"`) +
-            (util.isDimensionMissing(height)
+              : ` width="${width}"`)
+            + (util.isDimensionMissing(height)
               ? ' height="100%"'
               : ` height="${height}"`);
-          const svgSizing =
-            (util.isDimensionMissing(width) ? "" : ` width="${width}"`) +
-            (util.isDimensionMissing(height) ? "" : ` height="${height}"`);
+          const svgSizing
+            = (util.isDimensionMissing(width) ? '' : ` width="${width}"`)
+            + (util.isDimensionMissing(height) ? '' : ` height="${height}"`);
           return `<svg xmlns="http://www.w3.org/2000/svg"${svgSizing}><foreignObject${foreignObjectSizing}>${xhtml}</foreignObject></svg>`;
         })
-        .then(function (svg) {
-          return `data:image/svg+xml;charset=utf-8,${svg}`;
-        });
+        .then(svg => `data:image/svg+xml;charset=utf-8,${svg}`);
     }
   }
 
@@ -198,11 +197,9 @@
    * @return {Promise} - A promise that is fulfilled with a Uint8Array containing RGBA pixel data.
    * */
   function toPixelData(node, options) {
-    return draw(node, options).then(function (canvas) {
-      return canvas
-        .getContext("2d")
-        .getImageData(0, 0, util.width(node), util.height(node)).data;
-    });
+    return draw(node, options).then(canvas => canvas
+      .getContext('2d')
+      .getImageData(0, 0, util.width(node), util.height(node)).data);
   }
 
   /**
@@ -211,22 +208,19 @@
    * @return {Promise} - A promise that is fulfilled with a PNG image data URL
    * */
   function toPng(node, options) {
-    return draw(node, options).then(function (canvas) {
-      return canvas.toDataURL();
-    });
+    return draw(node, options).then(canvas => canvas.toDataURL());
   }
+
   /**
    * @param {Node} node - The DOM Node object to render
    * @param {Object} options - Rendering options, @see {@link toSvg}
    * @return {Promise} - A promise that is fulfilled with a JPEG image data URL
    * */
   function toJpeg(node, options) {
-    return draw(node, options).then(function (canvas) {
-      return canvas.toDataURL(
-        "image/jpeg",
-        (options ? options.quality : undefined) || 1.0
-      );
-    });
+    return draw(node, options).then(canvas => canvas.toDataURL(
+      'image/jpeg',
+      (options ? options.quality : undefined) || 1,
+    ));
   }
 
   /**
@@ -249,68 +243,50 @@
 
   function copyOptions(options) {
     // Copy options to impl options for use in impl
-    if (typeof options.copyDefaultStyles === "undefined") {
-      domtoimage.impl.options.copyDefaultStyles =
-        defaultOptions.copyDefaultStyles;
+    if (options.copyDefaultStyles === undefined) {
+      domtoimage.impl.options.copyDefaultStyles
+        = defaultOptions.copyDefaultStyles;
     } else {
       domtoimage.impl.options.copyDefaultStyles = options.copyDefaultStyles;
     }
 
-    if (typeof options.imagePlaceholder === "undefined") {
-      domtoimage.impl.options.imagePlaceholder =
-        defaultOptions.imagePlaceholder;
+    if (options.imagePlaceholder === undefined) {
+      domtoimage.impl.options.imagePlaceholder
+        = defaultOptions.imagePlaceholder;
     } else {
       domtoimage.impl.options.imagePlaceholder = options.imagePlaceholder;
     }
 
-    if (typeof options.cacheBust === "undefined") {
-      domtoimage.impl.options.cacheBust = defaultOptions.cacheBust;
-    } else {
-      domtoimage.impl.options.cacheBust = options.cacheBust;
-    }
+    domtoimage.impl.options.cacheBust = options.cacheBust === undefined ? defaultOptions.cacheBust : options.cacheBust;
 
-    if (typeof options.corsImg === "undefined") {
-      domtoimage.impl.options.corsImg = defaultOptions.corsImg;
-    } else {
-      domtoimage.impl.options.corsImg = options.corsImg;
-    }
+    domtoimage.impl.options.corsImg = options.corsImg === undefined ? defaultOptions.corsImg : options.corsImg;
 
-    if (typeof options.useCredentials === "undefined") {
-      domtoimage.impl.options.useCredentials = defaultOptions.useCredentials;
-    } else {
-      domtoimage.impl.options.useCredentials = options.useCredentials;
-    }
+    domtoimage.impl.options.useCredentials = options.useCredentials === undefined ? defaultOptions.useCredentials : options.useCredentials;
 
-    if (typeof options.httpTimeout === "undefined") {
-      domtoimage.impl.options.httpTimeout = defaultOptions.httpTimeout;
-    } else {
-      domtoimage.impl.options.httpTimeout = options.httpTimeout;
-    }
+    domtoimage.impl.options.httpTimeout = options.httpTimeout === undefined ? defaultOptions.httpTimeout : options.httpTimeout;
 
-    if (typeof options.styleCaching === "undefined") {
-      domtoimage.impl.options.styleCaching = defaultOptions.styleCaching;
-    } else {
-      domtoimage.impl.options.styleCaching = options.styleCaching;
-    }
+    domtoimage.impl.options.styleCaching = options.styleCaching === undefined ? defaultOptions.styleCaching : options.styleCaching;
+
     domtoimage.impl.options.requestUrl = options.requestUrl;
-    domtoimage.impl.options.type = options.type || "image/png";
-    domtoimage.impl.options.quality = options.quality || 1.0;
+    domtoimage.impl.options.type = options.type || 'image/png';
+    domtoimage.impl.options.quality = options.quality || 1;
   }
 
   function draw(domNode, options) {
-    options = options || {};
+    options ||= {};
     return toSvg(domNode, options)
       .then(util.makeImage)
-      .then(function (image) {
-        const scale = typeof options.scale !== "number" ? 1 : options.scale;
+      .then(image => {
+        const scale = typeof options.scale === 'number' ? options.scale : 1;
         const canvas = newCanvas(domNode, scale);
-        const ctx = canvas.getContext("2d");
-        ctx.msImageSmoothingEnabled = false;
-        ctx.imageSmoothingEnabled = false;
+        const context = canvas.getContext('2d');
+        context.msImageSmoothingEnabled = false;
+        context.imageSmoothingEnabled = false;
         if (image) {
-          ctx.scale(scale, scale);
-          ctx.drawImage(image, 0, 0);
+          context.scale(scale, scale);
+          context.drawImage(image, 0, 0);
         }
+
         return canvas;
       });
 
@@ -321,21 +297,21 @@
       // per https://www.w3.org/TR/CSS2/visudet.html#inline-replaced-width the default width should be 300px if height
       // not set, otherwise should be 2:1 aspect ratio for whatever height is specified
       if (util.isDimensionMissing(width)) {
-        width = util.isDimensionMissing(height) ? 300 : height * 2.0;
+        width = util.isDimensionMissing(height) ? 300 : height * 2;
       }
 
       if (util.isDimensionMissing(height)) {
-        height = width / 2.0;
+        height = width / 2;
       }
 
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
       canvas.width = width * scale;
       canvas.height = height * scale;
 
       if (options.bgcolor) {
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = options.bgcolor;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const context = canvas.getContext('2d');
+        context.fillStyle = options.bgcolor;
+        context.fillRect(0, 0, canvas.width, canvas.height);
       }
 
       return canvas;
@@ -347,28 +323,25 @@
   function cloneNode(node, options, parentComputedStyles, ownerWindow) {
     const filter = options.filter;
     if (
-      node === sandbox ||
-      util.isHTMLScriptElement(node) ||
-      util.isHTMLStyleElement(node) ||
-      util.isHTMLLinkElement(node) ||
-      (parentComputedStyles !== null && filter && !filter(node))
+      node === sandbox
+      || util.isHTMLScriptElement(node)
+      || util.isHTMLStyleElement(node)
+      || util.isHTMLLinkElement(node)
+      || (parentComputedStyles !== null && filter && !filter(node))
     ) {
       return Promise.resolve();
     }
 
     return Promise.resolve(node)
       .then(makeNodeCopy)
-      .then(function (clone) {
-        return cloneChildren(clone, getParentOfChildren(node));
-      })
-      .then(function (clone) {
-        return processClone(clone, node);
-      });
+      .then(clone => cloneChildren(clone, getParentOfChildren(node)))
+      .then(clone => processClone(clone, node));
 
     function makeNodeCopy(original) {
       if (util.isHTMLCanvasElement(original)) {
         return util.makeImage(original.toDataURL());
       }
+
       return original.cloneNode(false);
     }
 
@@ -376,6 +349,7 @@
       if (util.isElementHostForOpenShadowRoot(original)) {
         return original.shadowRoot; // jump "down" to #shadow-root
       }
+
       return original;
     }
 
@@ -383,35 +357,32 @@
       const originalChildren = getRenderedChildren(original);
       let done = Promise.resolve();
 
-      if (originalChildren.length !== 0) {
+      if (originalChildren.length > 0) {
         const originalComputedStyles = getComputedStyle(
-          getRenderedParent(original)
+          getRenderedParent(original),
         );
 
-        util.asArray(originalChildren).forEach(function (originalChild) {
-          done = done.then(function () {
-            return cloneNode(
-              originalChild,
-              options,
-              originalComputedStyles,
-              ownerWindow
-            ).then(function (clonedChild) {
-              if (clonedChild) {
-                clone.appendChild(clonedChild);
-              }
-            });
-          });
-        });
+        for (const originalChild of util.asArray(originalChildren)) {
+          done = done.then(() => cloneNode(
+            originalChild,
+            options,
+            originalComputedStyles,
+            ownerWindow,
+          ).then(clonedChild => {
+            if (clonedChild) {
+              clone.append(clonedChild);
+            }
+          }));
+        }
       }
 
-      return done.then(function () {
-        return clone;
-      });
+      return done.then(() => clone);
 
       function getRenderedParent(original) {
         if (util.isShadowRoot(original)) {
           return original.host; // jump up from #shadow-root to its parent <element>
         }
+
         return original;
       }
 
@@ -419,6 +390,7 @@
         if (util.isShadowSlotElement(original)) {
           return original.assignedNodes(); // shadow DOM <slot> has "assigned nodes" as rendered children
         }
+
         return original.childNodes;
       }
     }
@@ -433,9 +405,7 @@
         .then(clonePseudoElements)
         .then(copyUserInput)
         .then(fixSvg)
-        .then(function () {
-          return clone;
-        });
+        .then(() => clone);
 
       function cloneStyle() {
         copyStyle(original, clone);
@@ -468,19 +438,20 @@
               sourceElement,
               sourceComputedStyles,
               parentComputedStyles,
-              targetElement
+              targetElement,
             );
 
             // Remove positioning of initial element, which stops them from being captured correctly
             if (parentComputedStyles === null) {
-              ["inset-block", "inset-block-start", "inset-block-end"].forEach(
-                (prop) => targetElement.style.removeProperty(prop)
-              );
-              ["left", "right", "top", "bottom"].forEach((prop) => {
-                if (targetElement.style.getPropertyValue(prop)) {
-                  targetElement.style.setProperty(prop, "0px");
+              for (const property of ['inset-block', 'inset-block-start', 'inset-block-end']) {
+                targetElement.style.removeProperty(property);
+              }
+
+              for (const property of ['left', 'right', 'top', 'bottom']) {
+                if (targetElement.style.getPropertyValue(property)) {
+                  targetElement.style.setProperty(property, '0px');
                 }
-              });
+              }
             }
           }
         }
@@ -489,24 +460,24 @@
       function clonePseudoElements() {
         const cloneClassName = util.uid();
 
-        [":before", ":after"].forEach(function (element) {
+        for (const element of [':before', ':after']) {
           clonePseudoElement(element);
-        });
+        }
 
         function clonePseudoElement(element) {
           const style = getComputedStyle(original, element);
-          const content = style.getPropertyValue("content");
+          const content = style.getPropertyValue('content');
 
-          if (content === "" || content === "none") {
+          if (content === '' || content === 'none') {
             return;
           }
 
-          const currentClass = clone.getAttribute("class") || "";
-          clone.setAttribute("class", `${currentClass} ${cloneClassName}`);
+          const currentClass = clone.getAttribute('class') || '';
+          clone.setAttribute('class', `${currentClass} ${cloneClassName}`);
 
-          const styleElement = document.createElement("style");
-          styleElement.appendChild(formatPseudoElementStyle());
-          clone.appendChild(styleElement);
+          const styleElement = document.createElement('style');
+          styleElement.append(formatPseudoElementStyle());
+          clone.append(styleElement);
 
           function formatPseudoElementStyle() {
             const selector = `.${cloneClassName}:${element}`;
@@ -524,14 +495,14 @@
               const styleText = util
                 .asArray(style)
                 .map(formatProperty)
-                .join("; ");
+                .join('; ');
               return `${styleText};`;
 
               function formatProperty(name) {
                 const propertyValue = style.getPropertyValue(name);
                 const propertyPriority = style.getPropertyPriority(name)
-                  ? " !important"
-                  : "";
+                  ? ' !important'
+                  : '';
                 return `${name}: ${propertyValue}${propertyPriority}`;
               }
             }
@@ -543,22 +514,23 @@
         if (util.isHTMLTextAreaElement(original)) {
           clone.innerHTML = original.value;
         }
+
         if (util.isHTMLInputElement(original)) {
-          clone.setAttribute("value", original.value);
+          clone.setAttribute('value', original.value);
         }
       }
 
       function fixSvg() {
         if (util.isSVGElement(clone)) {
-          clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+          clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 
           if (util.isSVGRectElement(clone)) {
-            ["width", "height"].forEach(function (attribute) {
+            for (const attribute of ['width', 'height']) {
               const value = clone.getAttribute(attribute);
               if (value) {
                 clone.style.setProperty(attribute, value);
               }
-            });
+            }
           }
         }
       }
@@ -566,62 +538,62 @@
   }
 
   function embedFonts(node) {
-    return fontFaces.resolveAll().then(function (cssText) {
-      if (cssText !== "") {
-        const styleNode = document.createElement("style");
-        node.appendChild(styleNode);
-        styleNode.appendChild(document.createTextNode(cssText));
+    return fontFaces.resolveAll().then(cssText => {
+      if (cssText !== '') {
+        const styleNode = document.createElement('style');
+        node.append(styleNode);
+        styleNode.append(document.createTextNode(cssText));
       }
+
       return node;
     });
   }
 
   function inlineImages(node) {
-    return images.inlineAll(node).then(function () {
-      return node;
-    });
+    return images.inlineAll(node).then(() => node);
   }
+
   function newUtil() {
     let uid_index = 0;
 
     return {
       escape: escapeRegEx,
-      isDataUrl: isDataUrl,
-      canvasToBlob: canvasToBlob,
-      resolveUrl: resolveUrl,
-      getAndEncode: getAndEncode,
-      uid: uid,
-      delay: delay,
-      asArray: asArray,
-      escapeXhtml: escapeXhtml,
-      makeImage: makeImage,
-      width: width,
-      height: height,
-      getWindow: getWindow,
-      isElement: isElement,
-      isElementHostForOpenShadowRoot: isElementHostForOpenShadowRoot,
-      isShadowRoot: isShadowRoot,
-      isInShadowRoot: isInShadowRoot,
-      isHTMLElement: isHTMLElement,
-      isHTMLCanvasElement: isHTMLCanvasElement,
-      isHTMLInputElement: isHTMLInputElement,
-      isHTMLImageElement: isHTMLImageElement,
-      isHTMLLinkElement: isHTMLLinkElement,
-      isHTMLScriptElement: isHTMLScriptElement,
-      isHTMLStyleElement: isHTMLStyleElement,
-      isHTMLTextAreaElement: isHTMLTextAreaElement,
-      isShadowSlotElement: isShadowSlotElement,
-      isSVGElement: isSVGElement,
-      isSVGRectElement: isSVGRectElement,
-      isDimensionMissing: isDimensionMissing,
+      isDataUrl,
+      canvasToBlob,
+      resolveUrl,
+      getAndEncode,
+      uid,
+      delay,
+      asArray,
+      escapeXhtml,
+      makeImage,
+      width,
+      height,
+      getWindow,
+      isElement,
+      isElementHostForOpenShadowRoot,
+      isShadowRoot,
+      isInShadowRoot,
+      isHTMLElement,
+      isHTMLCanvasElement,
+      isHTMLInputElement,
+      isHTMLImageElement,
+      isHTMLLinkElement,
+      isHTMLScriptElement,
+      isHTMLStyleElement,
+      isHTMLTextAreaElement,
+      isShadowSlotElement,
+      isSVGElement,
+      isSVGRectElement,
+      isDimensionMissing,
     };
 
     function getWindow(node) {
       const ownerDocument = node ? node.ownerDocument : undefined;
       return (
-        (ownerDocument ? ownerDocument.defaultView : undefined) ||
-        global ||
-        window
+        (ownerDocument ? ownerDocument.defaultView : undefined)
+        || global
+        || window
       );
     }
 
@@ -635,9 +607,9 @@
 
     function isInShadowRoot(value) {
       return (
-        value !== null &&
-        Object.prototype.hasOwnProperty.call(value, "getRootNode") &&
-        isShadowRoot(value.getRootNode())
+        value !== null
+        && Object.hasOwn(value, 'getRootNode')
+        && isShadowRoot(value.getRootNode())
       );
     }
 
@@ -679,8 +651,8 @@
 
     function isShadowSlotElement(value) {
       return (
-        isInShadowRoot(value) &&
-        value instanceof getWindow(value).HTMLSlotElement
+        isInShadowRoot(value)
+        && value instanceof getWindow(value).HTMLSlotElement
       );
     }
 
@@ -701,8 +673,8 @@
     }
 
     function asBlob(canvas) {
-      return new Promise(function (resolve) {
-        const binaryString = atob(canvas.toDataURL().split(",")[1]);
+      return new Promise(resolve => {
+        const binaryString = atob(canvas.toDataURL().split(',')[1]);
         const length = binaryString.length;
         const binaryArray = new Uint8Array(length);
 
@@ -713,18 +685,18 @@
         resolve(
           new Blob([binaryArray], {
             type: domtoimage.impl.options.type,
-          })
+          }),
         );
       });
     }
 
     function canvasToBlob(canvas) {
       if (canvas.toBlob) {
-        return new Promise(function (resolve) {
+        return new Promise(resolve => {
           canvas.toBlob(
             resolve,
             domtoimage.impl.options.type,
-            domtoimage.impl.options.quality
+            domtoimage.impl.options.quality,
           );
         });
       }
@@ -733,11 +705,11 @@
     }
 
     function resolveUrl(url, baseUrl) {
-      const doc = document.implementation.createHTMLDocument();
-      const base = doc.createElement("base");
-      doc.head.appendChild(base);
-      const a = doc.createElement("a");
-      doc.body.appendChild(a);
+      const document_ = document.implementation.createHTMLDocument();
+      const base = document_.createElement('base');
+      document_.head.append(base);
+      const a = document_.createElement('a');
+      document_.body.append(a);
       base.href = baseUrl;
       a.href = url;
       return a.href;
@@ -748,47 +720,47 @@
 
       function fourRandomChars() {
         /* see https://stackoverflow.com/a/6248722/2519373 */
-        return `0000${((Math.random() * Math.pow(36, 4)) << 0).toString(
-          36
+        return `0000${(Math.trunc(Math.random() * 36 ** 4)).toString(
+          36,
         )}`.slice(-4);
       }
     }
 
     function makeImage(uri) {
-      if (uri === "data:,") {
+      if (uri === 'data:,') {
         return Promise.resolve();
       }
 
-      return new Promise(function (resolve, reject) {
+      return new Promise((resolve, reject) => {
         const image = new Image();
         if (domtoimage.impl.options.useCredentials) {
-          image.crossOrigin = "use-credentials";
+          image.crossOrigin = 'use-credentials';
         }
-        image.onload = function () {
+
+        image.addEventListener('load', () => {
           if (window && window.requestAnimationFrame) {
             // In order to work around a Firefox bug (webcompat/web-bugs#119834) we
             // need to wait one extra frame before it's safe to read the image data.
-            window.requestAnimationFrame(function () {
+            window.requestAnimationFrame(() => {
               resolve(image);
             });
           } else {
             // If we don't have a window or requestAnimationFrame function proceed immediately.
             resolve(image);
           }
-        };
+        });
+
         image.onerror = reject;
         image.src = uri;
       });
     }
 
     function getAndEncode(url) {
-      let cacheEntry = domtoimage.impl.urlCache.find(function (el) {
-        return el.url === url;
-      });
+      let cacheEntry = domtoimage.impl.urlCache.find(element => element.url === url);
 
       if (!cacheEntry) {
         cacheEntry = {
-          url: url,
+          url,
           promise: null,
         };
         domtoimage.impl.urlCache.push(cacheEntry);
@@ -798,89 +770,90 @@
         if (domtoimage.impl.options.cacheBust) {
           // Cache bypass so we dont have CORS issues with cached images
           // Source: https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest/Using_XMLHttpRequest#Bypassing_the_cache
-          url += (/\?/.test(url) ? "&" : "?") + new Date().getTime();
+          url += (/\?/.test(url) ? '&' : '?') + Date.now();
         }
-        if (domtoimage.impl.options.requestUrl && /^http/.test(url)) {
+
+        if (domtoimage.impl.options.requestUrl && url.startsWith('http')) {
           cacheEntry.promise = domtoimage.impl.options
             .requestUrl({
               url,
-              method: "GET",
+              method: 'GET',
             })
-            .then((data) => {
-              return new Promise((resolve) => {
-                const encoder = new FileReader();
-                encoder.onload = function (env) {
-                  resolve(env.target.result);
-                };
-                encoder.readAsDataURL(
-                  new Blob([data.arrayBuffer], {
-                    type: data.headers["content-type"],
-                  })
-                );
+            .then(data => new Promise(resolve => {
+              const encoder = new FileReader();
+              encoder.addEventListener('load', env => {
+                resolve(env.target.result);
               });
-            })
-            .catch((err) => {
-              console.error(
-                "cannot fetch resource: " + url + ", error: " + err
+
+              encoder.readAsDataURL(
+                new Blob([data.arrayBuffer], {
+                  type: data.headers['content-type'],
+                }),
               );
-              return "";
+            }))
+            .catch(error => {
+              console.error(
+                'cannot fetch resource: ' + url + ', error: ' + error,
+              );
+              return '';
             });
         } else {
-          cacheEntry.promise = new Promise(function (resolve) {
+          cacheEntry.promise = new Promise(resolve => {
             const httpTimeout = domtoimage.impl.options.httpTimeout;
             const request = new XMLHttpRequest();
 
-            request.onreadystatechange = done;
+            request.addEventListener('readystatechange', done);
             request.ontimeout = timeout;
-            request.responseType = "blob";
+            request.responseType = 'blob';
             request.timeout = httpTimeout;
             if (domtoimage.impl.options.useCredentials) {
               request.withCredentials = true;
             }
 
             if (
-              domtoimage.impl.options.corsImg &&
-              url.indexOf("http") === 0 &&
-              url.indexOf(window.location.origin) === -1
+              domtoimage.impl.options.corsImg
+              && url.indexOf('http') === 0
+              && !url.includes(window.location.origin)
             ) {
-              const method =
-                (
-                  domtoimage.impl.options.corsImg.method || "GET"
-                ).toUpperCase() === "POST"
-                  ? "POST"
-                  : "GET";
+              const method
+                = (
+                  domtoimage.impl.options.corsImg.method || 'GET'
+                ).toUpperCase() === 'POST'
+                  ? 'POST'
+                  : 'GET';
 
               request.open(
                 method,
-                (domtoimage.impl.options.corsImg.url || "").replace(
-                  "#{cors}",
-                  url
+                (domtoimage.impl.options.corsImg.url || '').replace(
+                  '#{cors}',
+                  url,
                 ),
-                true
+                true,
               );
 
               let isJson = false;
               const headers = domtoimage.impl.options.corsImg.headers || {};
-              Object.keys(headers).forEach(function (key) {
-                if (headers[key].indexOf("application/json") !== -1) {
+              for (const key of Object.keys(headers)) {
+                if (headers[key].includes('application/json')) {
                   isJson = true;
                 }
+
                 request.setRequestHeader(key, headers[key]);
-              });
+              }
 
               const corsData = handleJson(
-                domtoimage.impl.options.corsImg.data || ""
+                domtoimage.impl.options.corsImg.data || '',
               );
 
-              Object.keys(corsData).forEach(function (key) {
-                if (typeof corsData[key] === "string") {
-                  corsData[key] = corsData[key].replace("#{cors}", url);
+              for (const key of Object.keys(corsData)) {
+                if (typeof corsData[key] === 'string') {
+                  corsData[key] = corsData[key].replace('#{cors}', url);
                 }
-              });
+              }
 
               request.send(isJson ? JSON.stringify(corsData) : corsData);
             } else {
-              request.open("GET", url, true);
+              request.open('GET', url, true);
               request.send();
             }
 
@@ -902,7 +875,7 @@
                   resolve(placeholder);
                 } else {
                   fail(
-                    `cannot fetch resource: ${url}, status: ${request.status}`
+                    `cannot fetch resource: ${url}, status: ${request.status}`,
                   );
                 }
 
@@ -913,6 +886,7 @@
               encoder.onloadend = function () {
                 resolve(encoder.result);
               };
+
               encoder.readAsDataURL(request.response);
             }
 
@@ -921,7 +895,7 @@
                 resolve(placeholder);
               } else {
                 fail(
-                  `timeout of ${httpTimeout}ms occured while fetching resource: ${url}`
+                  `timeout of ${httpTimeout}ms occured while fetching resource: ${url}`,
                 );
               }
             }
@@ -929,31 +903,31 @@
             function handleJson(data) {
               try {
                 return JSON.parse(JSON.stringify(data));
-              } catch (e) {
-                fail("corsImg.data is missing or invalid");
-                return;
+              } catch {
+                fail('corsImg.data is missing or invalid');
               }
             }
 
             function fail(message) {
               console.error(message);
-              resolve("");
+              resolve('');
             }
           });
         }
       }
+
       return cacheEntry.promise;
     }
 
     function escapeRegEx(string) {
-      return string.replace(/([.*+?^${}()|[]\/\\])/g, "\\$1");
+      return string.replaceAll(/([.*+?^${}()|[]\/\\])/g, '\\$1');
     }
 
     function delay(ms) {
-      return function (arg) {
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            resolve(arg);
+      return function (argument) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(argument);
           }, ms);
         });
       };
@@ -971,42 +945,47 @@
 
     function escapeXhtml(string) {
       return string
-        .replace(/%/g, "%25")
-        .replace(/#/g, "%23")
-        .replace(/\n/g, "%0A")
-        .replace(/[\x00-\x1F\x7F]/g, ""); // remove control characters and DEL characters
+        .replaceAll('%', '%25')
+        .replaceAll('#', '%23')
+        .replaceAll('\n', '%0A')
+        // eslint-disable-next-line no-control-regex
+        .replaceAll(/[\u0000-\u001F\u007F]/g, ''); // remove control characters and DEL characters
     }
 
     function width(node) {
-      const width = px(node, "width");
+      const width = px(node, 'width');
 
-      if (!isNaN(width)) return width;
+      if (!isNaN(width)) {
+        return width;
+      }
 
-      const leftBorder = px(node, "border-left-width");
-      const rightBorder = px(node, "border-right-width");
+      const leftBorder = px(node, 'border-left-width');
+      const rightBorder = px(node, 'border-right-width');
       return node.scrollWidth + leftBorder + rightBorder;
     }
 
     function height(node) {
-      const height = px(node, "height");
+      const height = px(node, 'height');
 
-      if (!isNaN(height)) return height;
+      if (!isNaN(height)) {
+        return height;
+      }
 
-      const topBorder = px(node, "border-top-width");
-      const bottomBorder = px(node, "border-bottom-width");
+      const topBorder = px(node, 'border-top-width');
+      const bottomBorder = px(node, 'border-bottom-width');
       return node.scrollHeight + topBorder + bottomBorder;
     }
 
     function px(node, styleProperty) {
       if (node.nodeType === ELEMENT_NODE) {
         let value = getComputedStyle(node).getPropertyValue(styleProperty);
-        if (value.slice(-2) === "px") {
+        if (value.slice(-2) === 'px') {
           value = value.slice(0, -2);
-          return parseFloat(value);
+          return Number.parseFloat(value);
         }
       }
 
-      return NaN;
+      return Number.NaN;
     }
   }
 
@@ -1014,11 +993,11 @@
     const URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
 
     return {
-      inlineAll: inlineAll,
-      shouldProcess: shouldProcess,
+      inlineAll,
+      shouldProcess,
       impl: {
-        readUrls: readUrls,
-        inline: inline,
+        readUrls,
+        inline,
       },
     };
 
@@ -1032,25 +1011,20 @@
       while ((match = URL_REGEX.exec(string)) !== null) {
         result.push(match[1]);
       }
-      return result.filter(function (url) {
-        return !util.isDataUrl(url);
-      });
+
+      return result.filter(url => !util.isDataUrl(url));
     }
 
     function inline(string, url, baseUrl, get) {
       return Promise.resolve(url)
-        .then(function (urlValue) {
-          return baseUrl ? util.resolveUrl(urlValue, baseUrl) : urlValue;
-        })
+        .then(urlValue => baseUrl ? util.resolveUrl(urlValue, baseUrl) : urlValue)
         .then(get || util.getAndEncode)
-        .then(function (dataUrl) {
-          return string.replace(urlAsRegex(url), `$1${dataUrl}$3`);
-        });
+        .then(dataUrl => string.replace(urlAsRegex(url), `$1${dataUrl}$3`));
 
       function urlAsRegex(urlValue) {
         return new RegExp(
           `(url\\(['"]?)(${util.escape(urlValue)})(['"]?\\))`,
-          "g"
+          'g',
         );
       }
     }
@@ -1062,13 +1036,12 @@
 
       return Promise.resolve(string)
         .then(readUrls)
-        .then(function (urls) {
+        .then(urls => {
           let done = Promise.resolve(string);
-          urls.forEach(function (url) {
-            done = done.then(function (prefix) {
-              return inline(prefix, url, baseUrl, get);
-            });
-          });
+          for (const url of urls) {
+            done = done.then(prefix => inline(prefix, url, baseUrl, get));
+          }
+
           return done;
         });
 
@@ -1080,65 +1053,54 @@
 
   function newFontFaces() {
     return {
-      resolveAll: resolveAll,
+      resolveAll,
       impl: {
-        readAll: readAll,
+        readAll,
       },
     };
 
     function resolveAll() {
       return readAll()
-        .then(function (webFonts) {
-          return Promise.all(
-            webFonts.map(function (webFont) {
-              return webFont.resolve();
-            })
-          );
-        })
-        .then(function (cssStrings) {
-          return cssStrings.join("\n");
-        });
+        .then(webFonts => Promise.all(
+          webFonts.map(webFont => webFont.resolve()),
+        ))
+        .then(cssStrings => cssStrings.join('\n'));
     }
 
     function readAll() {
       return Promise.resolve(util.asArray(document.styleSheets))
         .then(getCssRules)
         .then(selectWebFontRules)
-        .then(function (rules) {
-          return rules.map(newWebFont);
-        });
+        .then(rules => rules.map(newWebFont));
 
       function selectWebFontRules(cssRules) {
         return cssRules
-          .filter(function (rule) {
-            return rule.type === CSSRule.FONT_FACE_RULE;
-          })
-          .filter(function (rule) {
-            return inliner.shouldProcess(rule.style.getPropertyValue("src"));
-          });
+          .filter(rule => rule.type === CSSRule.FONT_FACE_RULE)
+          .filter(rule => inliner.shouldProcess(rule.style.getPropertyValue('src')));
       }
 
       function getCssRules(styleSheets) {
         const cssRules = [];
-        styleSheets.forEach(function (sheet) {
+        for (const sheet of styleSheets) {
           if (
-            Object.prototype.hasOwnProperty.call(
+            Object.hasOwn(
               Object.getPrototypeOf(sheet),
-              "cssRules"
+              'cssRules',
             )
           ) {
             try {
               util
                 .asArray(sheet.cssRules || [])
                 .forEach(cssRules.push.bind(cssRules));
-            } catch (e) {
+            } catch (error) {
               console.error(
                 `domtoimage: Error while reading CSS rules from ${sheet.href}`,
-                e.toString()
+                error.toString(),
               );
             }
           }
-        });
+        }
+
         return cssRules;
       }
 
@@ -1148,8 +1110,8 @@
             const baseUrl = (webFontRule.parentStyleSheet || {}).href;
             return inliner.inlineAll(webFontRule.cssText, baseUrl);
           },
-          src: function () {
-            return webFontRule.style.getPropertyValue("src");
+          src() {
+            return webFontRule.style.getPropertyValue('src');
           },
         };
       }
@@ -1158,15 +1120,15 @@
 
   function newImages() {
     return {
-      inlineAll: inlineAll,
+      inlineAll,
       impl: {
-        newImage: newImage,
+        newImage,
       },
     };
 
     function newImage(element) {
       return {
-        inline: inline,
+        inline,
       };
 
       function inline(get) {
@@ -1176,14 +1138,12 @@
 
         return Promise.resolve(element.src)
           .then(get || util.getAndEncode)
-          .then(function (dataUrl) {
-            return new Promise(function (resolve) {
-              element.onload = resolve;
-              // for any image with invalid src(such as <img src />), just ignore it
-              element.onerror = resolve;
-              element.src = dataUrl;
-            });
-          });
+          .then(dataUrl => new Promise(resolve => {
+            element.addEventListener('load', resolve);
+            // for any image with invalid src(such as <img src />), just ignore it
+            element.onerror = resolve;
+            element.src = dataUrl;
+          }));
       }
     }
 
@@ -1192,22 +1152,20 @@
         return Promise.resolve(node);
       }
 
-      return inlineCSSProperty(node).then(function () {
+      return inlineCSSProperty(node).then(() => {
         if (util.isHTMLImageElement(node)) {
           return newImage(node).inline();
-        } else {
-          return Promise.all(
-            util.asArray(node.childNodes).map(function (child) {
-              return inlineAll(child);
-            })
-          );
         }
+
+        return Promise.all(
+          util.asArray(node.childNodes).map(child => inlineAll(child)),
+        );
       });
 
       function inlineCSSProperty(node) {
-        const properties = ["background", "background-image"];
+        const properties = ['background', 'background-image'];
 
-        const inliningTasks = properties.map(function (propertyName) {
+        const inliningTasks = properties.map(propertyName => {
           const value = node.style.getPropertyValue(propertyName);
           const priority = node.style.getPropertyPriority(propertyName);
 
@@ -1215,20 +1173,18 @@
             return Promise.resolve();
           }
 
-          return inliner.inlineAll(value).then(function (inlinedValue) {
+          return inliner.inlineAll(value).then(inlinedValue => {
             node.style.setProperty(propertyName, inlinedValue, priority);
           });
         });
 
-        return Promise.all(inliningTasks).then(function () {
-          return node;
-        });
+        return Promise.all(inliningTasks).then(() => node);
       }
     }
   }
 
   function setStyleProperty(targetStyle, name, value, priority) {
-    const needs_prefixing = ["background-clip"].indexOf(name) >= 0;
+    const needs_prefixing = ['background-clip'].includes(name);
     if (priority) {
       targetStyle.setProperty(name, value, priority);
       if (needs_prefixing) {
@@ -1247,14 +1203,14 @@
     sourceElement,
     sourceComputedStyles,
     parentComputedStyles,
-    targetElement
+    targetElement,
   ) {
     const defaultStyle = domtoimage.impl.options.copyDefaultStyles
       ? getDefaultStyle(options, sourceElement)
       : {};
     const targetStyle = targetElement.style;
 
-    util.asArray(sourceComputedStyles).forEach(function (name) {
+    for (const name of util.asArray(sourceComputedStyles)) {
       const sourceValue = sourceComputedStyles.getPropertyValue(name);
       const defaultValue = defaultStyle[name];
       const parentValue = parentComputedStyles
@@ -1264,62 +1220,62 @@
       // If the style does not match the default, or it does not match the parent's, set it. We don't know which
       // styles are inherited from the parent and which aren't, so we have to always check both.
       if (
-        sourceValue !== defaultValue ||
-        (parentComputedStyles && sourceValue !== parentValue)
+        sourceValue !== defaultValue
+        || (parentComputedStyles && sourceValue !== parentValue)
       ) {
         const priority = sourceComputedStyles.getPropertyPriority(name);
         setStyleProperty(targetStyle, name, sourceValue, priority);
       }
-    });
+    }
   }
 
   let removeDefaultStylesTimeoutId = null;
   let tagNameDefaultStyles = {};
 
-  const ascentStoppers = [
+  const ascentStoppers = new Set([
     // these come from https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements
-    "ADDRESS",
-    "ARTICLE",
-    "ASIDE",
-    "BLOCKQUOTE",
-    "DETAILS",
-    "DIALOG",
-    "DD",
-    "DIV",
-    "DL",
-    "DT",
-    "FIELDSET",
-    "FIGCAPTION",
-    "FIGURE",
-    "FOOTER",
-    "FORM",
-    "H1",
-    "H2",
-    "H3",
-    "H4",
-    "H5",
-    "H6",
-    "HEADER",
-    "HGROUP",
-    "HR",
-    "LI",
-    "MAIN",
-    "NAV",
-    "OL",
-    "P",
-    "PRE",
-    "SECTION",
-    "SVG",
-    "TABLE",
-    "UL",
+    'ADDRESS',
+    'ARTICLE',
+    'ASIDE',
+    'BLOCKQUOTE',
+    'DETAILS',
+    'DIALOG',
+    'DD',
+    'DIV',
+    'DL',
+    'DT',
+    'FIELDSET',
+    'FIGCAPTION',
+    'FIGURE',
+    'FOOTER',
+    'FORM',
+    'H1',
+    'H2',
+    'H3',
+    'H4',
+    'H5',
+    'H6',
+    'HEADER',
+    'HGROUP',
+    'HR',
+    'LI',
+    'MAIN',
+    'NAV',
+    'OL',
+    'P',
+    'PRE',
+    'SECTION',
+    'SVG',
+    'TABLE',
+    'UL',
     // this is some non-standard ones
-    "math", // intentionally lowercase, thanks Safari
-    "svg", // in case we have an svg embedded element
+    'math', // intentionally lowercase, thanks Safari
+    'svg', // in case we have an svg embedded element
     // these are ultimate stoppers in case something drastic changes in how the DOM works
-    "BODY",
-    "HEAD",
-    "HTML",
-  ];
+    'BODY',
+    'HEAD',
+    'HTML',
+  ]);
 
   function getDefaultStyle(options, sourceElement) {
     const tagHierarchy = computeTagHierarchy(sourceElement);
@@ -1334,7 +1290,7 @@
     const sandboxWindow = ensureSandboxWindow();
     const defaultElement = constructElementHierachy(
       sandboxWindow.document,
-      tagHierarchy
+      tagHierarchy,
     );
     const defaultStyle = computeStyleForDefaults(sandboxWindow, defaultElement);
     destroyElementHierarchy(defaultElement);
@@ -1350,7 +1306,7 @@
           const tagName = sourceNode.tagName;
           tagNames.push(tagName);
 
-          if (ascentStoppers.includes(tagName)) {
+          if (ascentStoppers.has(tagName)) {
             break;
           }
         }
@@ -1362,15 +1318,16 @@
     }
 
     function computeTagKey(tagHierarchy) {
-      if (options.styleCaching === "relaxed") {
+      if (options.styleCaching === 'relaxed') {
         // pick up only the ascent-stopping element tag and the element tag itself
         /* jshint unused:true */
         return tagHierarchy
           .filter((_, i, a) => i === 0 || i === a.length - 1)
-          .join(">");
+          .join('>');
       }
+
       // for all other cases, fall back the the entire path
-      return tagHierarchy.join(">"); // it's like CSS
+      return tagHierarchy.join('>'); // it's like CSS
     }
 
     function constructElementHierachy(sandboxDocument, tagHierarchy) {
@@ -1378,29 +1335,30 @@
       do {
         const childTagName = tagHierarchy.pop();
         const childElement = sandboxDocument.createElement(childTagName);
-        element.appendChild(childElement);
+        element.append(childElement);
         element = childElement;
       } while (tagHierarchy.length > 0);
 
       // Ensure that there is some content, so that properties like margin are applied.
       // we use zero-width space to handle FireFox adding a pixel
-      element.textContent = "\u200b";
+      element.textContent = '\u200B';
       return element;
     }
 
     function computeStyleForDefaults(sandboxWindow, defaultElement) {
       const defaultStyle = {};
-      const defaultComputedStyle =
-        sandboxWindow.getComputedStyle(defaultElement);
+      const defaultComputedStyle
+        = sandboxWindow.getComputedStyle(defaultElement);
 
       // Copy styles to an object, making sure that 'width' and 'height' are given the default value of 'auto', since
       // their initial value is always 'auto' despite that the default computed value is sometimes an absolute length.
-      util.asArray(defaultComputedStyle).forEach(function (name) {
-        defaultStyle[name] =
-          name === "width" || name === "height"
-            ? "auto"
+      for (const name of util.asArray(defaultComputedStyle)) {
+        defaultStyle[name]
+          = name === 'width' || name === 'height'
+            ? 'auto'
             : defaultComputedStyle.getPropertyValue(name);
-      });
+      }
+
       return defaultStyle;
     }
 
@@ -1408,10 +1366,11 @@
       do {
         const parentElement = element.parentElement;
         if (parentElement !== null) {
-          parentElement.removeChild(element);
+          element.remove();
         }
+
         element = parentElement;
-      } while (element && element.tagName !== "BODY");
+      } while (element && element.tagName !== 'BODY');
     }
   }
 
@@ -1421,68 +1380,68 @@
     }
 
     // figure out how this document is defined (doctype and charset)
-    const charsetToUse = document.characterSet || "UTF-8";
-    const docType = document.doctype;
-    const docTypeDeclaration = docType
-      ? `<!DOCTYPE ${escapeHTML(docType.name)} ${escapeHTML(
-          docType.publicId
-        )} ${escapeHTML(docType.systemId)}`.trim() + ">"
-      : "";
+    const charsetToUse = document.characterSet || 'UTF-8';
+    const documentType = document.doctype;
+    const documentTypeDeclaration = documentType
+      ? `<!DOCTYPE ${escapeHTML(documentType.name)} ${escapeHTML(
+        documentType.publicId,
+      )} ${escapeHTML(documentType.systemId)}`.trim() + '>'
+      : '';
 
     // Create a hidden sandbox <iframe> element within we can create default HTML elements and query their
     // computed styles. Elements must be rendered in order to query their computed styles. The <iframe> won't
     // render at all with `display: none`, so we have to use `visibility: hidden` with `position: fixed`.
-    sandbox = document.createElement("iframe");
-    sandbox.id = "domtoimage-sandbox-" + util.uid();
-    sandbox.style.visibility = "hidden";
-    sandbox.style.position = "fixed";
-    document.body.appendChild(sandbox);
+    sandbox = document.createElement('iframe');
+    sandbox.id = 'domtoimage-sandbox-' + util.uid();
+    sandbox.style.visibility = 'hidden';
+    sandbox.style.position = 'fixed';
+    document.body.append(sandbox);
 
     return tryTechniques(
       sandbox,
-      docTypeDeclaration,
+      documentTypeDeclaration,
       charsetToUse,
-      "domtoimage-sandbox"
+      'domtoimage-sandbox',
     );
 
     function escapeHTML(unsafeText) {
       if (unsafeText) {
-        const div = document.createElement("div");
+        const div = document.createElement('div');
         div.innerText = unsafeText;
         return div.innerHTML;
-      } else {
-        return "";
       }
+
+      return '';
     }
 
     function tryTechniques(sandbox, doctype, charset, title) {
       // try the good old-fashioned document write with all the correct attributes set
       try {
         sandbox.contentWindow.document.write(
-          `${doctype}<html><head><meta charset='${charset}'><title>${title}</title></head><body></body></html>`
+          `${doctype}<html><head><meta charset='${charset}'><title>${title}</title></head><body></body></html>`,
         );
         return sandbox.contentWindow;
-      } catch (_) {
+      } catch {
         // swallow exception and fall through to next technique
       }
 
-      const metaCharset = document.createElement("meta");
-      metaCharset.setAttribute("charset", charset);
+      const metaCharset = document.createElement('meta');
+      metaCharset.setAttribute('charset', charset);
 
       // let's attempt it using srcdoc, so we can still set the doctype and charset
       try {
-        const sandboxDocument =
-          document.implementation.createHTMLDocument(title);
-        sandboxDocument.head.appendChild(metaCharset);
+        const sandboxDocument
+          = document.implementation.createHTMLDocument(title);
+        sandboxDocument.head.append(metaCharset);
         const sandboxHTML = doctype + sandboxDocument.documentElement.outerHTML;
-        sandbox.setAttribute("srcdoc", sandboxHTML);
+        sandbox.setAttribute('srcdoc', sandboxHTML);
         return sandbox.contentWindow;
-      } catch (_) {
+      } catch {
         // swallow exception and fall through to the simplest path
       }
 
       // let's attempt it using contentDocument... here we're not able to set the doctype
-      sandbox.contentDocument.head.appendChild(metaCharset);
+      sandbox.contentDocument.head.append(metaCharset);
       sandbox.contentDocument.title = title;
       return sandbox.contentWindow;
     }
@@ -1490,7 +1449,7 @@
 
   function removeSandbox() {
     if (sandbox) {
-      document.body.removeChild(sandbox);
+      sandbox.remove();
       sandbox = null;
     }
 

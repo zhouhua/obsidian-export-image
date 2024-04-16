@@ -4,7 +4,7 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "module": "ESNext",
-    "target": "ES6",
+    "target": "ESNext",
     "allowJs": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
@@ -13,10 +13,10 @@
     "strictNullChecks": true,
     "allowSyntheticDefaultImports": true,
     "types": ["obsidian-typings"],
-    "lib": ["DOM", "ES5", "ES6", "ES7"],
+    "lib": ["DOM", "ESNext"],
     "jsx": "preserve",
     "outDir": "dist"
   },
   "include": ["src/**/*.ts", "main.ts", "src/**/*.tsx"],
-  "exclude": ["src/dom-to-image-more.js"]
+  "exclude": ["src/dom-to-image-more.js", "*.mjs"]
 }

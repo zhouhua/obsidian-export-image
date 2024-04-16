@@ -7828,1128 +7828,6 @@ var require_client = __commonJS({
   }
 });
 
-// src/dom-to-image-more.js
-var require_dom_to_image_more = __commonJS({
-  "src/dom-to-image-more.js"(exports, module2) {
-    (function(global2) {
-      "use strict";
-      const util = newUtil();
-      const inliner = newInliner();
-      const fontFaces = newFontFaces();
-      const images = newImages();
-      const defaultOptions2 = {
-        // Default is to copy default styles of elements
-        copyDefaultStyles: true,
-        // Default is to fail on error, no placeholder
-        imagePlaceholder: void 0,
-        // Default cache bust is false, it will use the cache
-        cacheBust: false,
-        // Use (existing) authentication credentials for external URIs (CORS requests)
-        useCredentials: false,
-        // Default resolve timeout
-        httpTimeout: 3e4,
-        // Style computation cache tag rules (options are strict, relaxed)
-        styleCaching: "strict",
-        // Default cors config is to request the image address directly
-        corsImg: void 0
-      };
-      const domtoimage2 = {
-        toSvg,
-        toPng,
-        toJpeg,
-        toBlob,
-        toPixelData,
-        toCanvas,
-        impl: {
-          fontFaces,
-          images,
-          util,
-          inliner,
-          urlCache: [],
-          options: {}
-        }
-      };
-      if (typeof exports === "object" && typeof module2 === "object") {
-        module2.exports = domtoimage2;
-      } else {
-        global2.domtoimage = domtoimage2;
-      }
-      const ELEMENT_NODE = (typeof Node !== "undefined" ? Node.ELEMENT_NODE : void 0) || 1;
-      const getComputedStyle2 = (typeof global2 !== "undefined" ? global2.getComputedStyle : void 0) || (typeof window !== "undefined" ? window.getComputedStyle : void 0) || globalThis.getComputedStyle;
-      const atob2 = (typeof global2 !== "undefined" ? global2.atob : void 0) || (typeof window !== "undefined" ? window.atob : void 0) || globalThis.atob;
-      function toSvg(node2, options) {
-        const ownerWindow = domtoimage2.impl.util.getWindow(node2);
-        options = options || {};
-        copyOptions(options);
-        let restorations = [];
-        return Promise.resolve(node2).then(ensureElement).then(function(clonee) {
-          return cloneNode(clonee, options, null, ownerWindow);
-        }).then(embedFonts).then(inlineImages).then(applyOptions).then(makeSvgDataUri).then(restoreWrappers).then(clearCache);
-        function ensureElement(node3) {
-          if (node3.nodeType === ELEMENT_NODE)
-            return node3;
-          const originalChild = node3;
-          const originalParent = node3.parentNode;
-          const wrappingSpan = document.createElement("span");
-          originalParent.replaceChild(wrappingSpan, originalChild);
-          wrappingSpan.append(node3);
-          restorations.push({
-            parent: originalParent,
-            child: originalChild,
-            wrapper: wrappingSpan
-          });
-          return wrappingSpan;
-        }
-        function restoreWrappers(result) {
-          while (restorations.length > 0) {
-            const restoration = restorations.pop();
-            restoration.parent.replaceChild(restoration.child, restoration.wrapper);
-          }
-          return result;
-        }
-        function clearCache(result) {
-          domtoimage2.impl.urlCache = [];
-          removeSandbox();
-          return result;
-        }
-        function applyOptions(clone) {
-          if (options.bgcolor) {
-            clone.style.backgroundColor = options.bgcolor;
-          }
-          if (options.width) {
-            clone.style.width = `${options.width}px`;
-          }
-          if (options.height) {
-            clone.style.height = `${options.height}px`;
-          }
-          if (options.style) {
-            Object.keys(options.style).forEach(function(property) {
-              clone.style[property] = options.style[property];
-            });
-          }
-          let onCloneResult = null;
-          if (typeof options.onclone === "function") {
-            onCloneResult = options.onclone(clone);
-          }
-          return Promise.resolve(onCloneResult).then(function() {
-            return clone;
-          });
-        }
-        function makeSvgDataUri(node3) {
-          let width = options.width || util.width(node3);
-          let height = options.height || util.height(node3);
-          return Promise.resolve(node3).then(function(svg) {
-            svg.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-            return new XMLSerializer().serializeToString(svg);
-          }).then(util.escapeXhtml).then(function(xhtml) {
-            const foreignObjectSizing = (util.isDimensionMissing(width) ? ' width="100%"' : ` width="${width}"`) + (util.isDimensionMissing(height) ? ' height="100%"' : ` height="${height}"`);
-            const svgSizing = (util.isDimensionMissing(width) ? "" : ` width="${width}"`) + (util.isDimensionMissing(height) ? "" : ` height="${height}"`);
-            return `<svg xmlns="http://www.w3.org/2000/svg"${svgSizing}><foreignObject${foreignObjectSizing}>${xhtml}</foreignObject></svg>`;
-          }).then(function(svg) {
-            return `data:image/svg+xml;charset=utf-8,${svg}`;
-          });
-        }
-      }
-      function toPixelData(node2, options) {
-        return draw(node2, options).then(function(canvas) {
-          return canvas.getContext("2d").getImageData(0, 0, util.width(node2), util.height(node2)).data;
-        });
-      }
-      function toPng(node2, options) {
-        return draw(node2, options).then(function(canvas) {
-          return canvas.toDataURL();
-        });
-      }
-      function toJpeg(node2, options) {
-        return draw(node2, options).then(function(canvas) {
-          return canvas.toDataURL(
-            "image/jpeg",
-            (options ? options.quality : void 0) || 1
-          );
-        });
-      }
-      function toBlob(node2, options) {
-        return draw(node2, options).then(util.canvasToBlob);
-      }
-      function toCanvas(node2, options) {
-        return draw(node2, options);
-      }
-      function copyOptions(options) {
-        if (typeof options.copyDefaultStyles === "undefined") {
-          domtoimage2.impl.options.copyDefaultStyles = defaultOptions2.copyDefaultStyles;
-        } else {
-          domtoimage2.impl.options.copyDefaultStyles = options.copyDefaultStyles;
-        }
-        if (typeof options.imagePlaceholder === "undefined") {
-          domtoimage2.impl.options.imagePlaceholder = defaultOptions2.imagePlaceholder;
-        } else {
-          domtoimage2.impl.options.imagePlaceholder = options.imagePlaceholder;
-        }
-        if (typeof options.cacheBust === "undefined") {
-          domtoimage2.impl.options.cacheBust = defaultOptions2.cacheBust;
-        } else {
-          domtoimage2.impl.options.cacheBust = options.cacheBust;
-        }
-        if (typeof options.corsImg === "undefined") {
-          domtoimage2.impl.options.corsImg = defaultOptions2.corsImg;
-        } else {
-          domtoimage2.impl.options.corsImg = options.corsImg;
-        }
-        if (typeof options.useCredentials === "undefined") {
-          domtoimage2.impl.options.useCredentials = defaultOptions2.useCredentials;
-        } else {
-          domtoimage2.impl.options.useCredentials = options.useCredentials;
-        }
-        if (typeof options.httpTimeout === "undefined") {
-          domtoimage2.impl.options.httpTimeout = defaultOptions2.httpTimeout;
-        } else {
-          domtoimage2.impl.options.httpTimeout = options.httpTimeout;
-        }
-        if (typeof options.styleCaching === "undefined") {
-          domtoimage2.impl.options.styleCaching = defaultOptions2.styleCaching;
-        } else {
-          domtoimage2.impl.options.styleCaching = options.styleCaching;
-        }
-        domtoimage2.impl.options.requestUrl = options.requestUrl;
-        domtoimage2.impl.options.type = options.type || "image/png";
-        domtoimage2.impl.options.quality = options.quality || 1;
-      }
-      function draw(domNode, options) {
-        options = options || {};
-        return toSvg(domNode, options).then(util.makeImage).then(function(image) {
-          const scale = typeof options.scale !== "number" ? 1 : options.scale;
-          const canvas = newCanvas(domNode, scale);
-          const ctx = canvas.getContext("2d");
-          ctx.msImageSmoothingEnabled = false;
-          ctx.imageSmoothingEnabled = false;
-          if (image) {
-            ctx.scale(scale, scale);
-            ctx.drawImage(image, 0, 0);
-          }
-          return canvas;
-        });
-        function newCanvas(node2, scale) {
-          let width = options.width || util.width(node2);
-          let height = options.height || util.height(node2);
-          if (util.isDimensionMissing(width)) {
-            width = util.isDimensionMissing(height) ? 300 : height * 2;
-          }
-          if (util.isDimensionMissing(height)) {
-            height = width / 2;
-          }
-          const canvas = document.createElement("canvas");
-          canvas.width = width * scale;
-          canvas.height = height * scale;
-          if (options.bgcolor) {
-            const ctx = canvas.getContext("2d");
-            ctx.fillStyle = options.bgcolor;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-          }
-          return canvas;
-        }
-      }
-      let sandbox = null;
-      function cloneNode(node2, options, parentComputedStyles, ownerWindow) {
-        const filter = options.filter;
-        if (node2 === sandbox || util.isHTMLScriptElement(node2) || util.isHTMLStyleElement(node2) || util.isHTMLLinkElement(node2) || parentComputedStyles !== null && filter && !filter(node2)) {
-          return Promise.resolve();
-        }
-        return Promise.resolve(node2).then(makeNodeCopy).then(function(clone) {
-          return cloneChildren(clone, getParentOfChildren(node2));
-        }).then(function(clone) {
-          return processClone(clone, node2);
-        });
-        function makeNodeCopy(original) {
-          if (util.isHTMLCanvasElement(original)) {
-            return util.makeImage(original.toDataURL());
-          }
-          return original.cloneNode(false);
-        }
-        function getParentOfChildren(original) {
-          if (util.isElementHostForOpenShadowRoot(original)) {
-            return original.shadowRoot;
-          }
-          return original;
-        }
-        function cloneChildren(clone, original) {
-          const originalChildren = getRenderedChildren(original);
-          let done = Promise.resolve();
-          if (originalChildren.length !== 0) {
-            const originalComputedStyles = getComputedStyle2(
-              getRenderedParent(original)
-            );
-            util.asArray(originalChildren).forEach(function(originalChild) {
-              done = done.then(function() {
-                return cloneNode(
-                  originalChild,
-                  options,
-                  originalComputedStyles,
-                  ownerWindow
-                ).then(function(clonedChild) {
-                  if (clonedChild) {
-                    clone.appendChild(clonedChild);
-                  }
-                });
-              });
-            });
-          }
-          return done.then(function() {
-            return clone;
-          });
-          function getRenderedParent(original2) {
-            if (util.isShadowRoot(original2)) {
-              return original2.host;
-            }
-            return original2;
-          }
-          function getRenderedChildren(original2) {
-            if (util.isShadowSlotElement(original2)) {
-              return original2.assignedNodes();
-            }
-            return original2.childNodes;
-          }
-        }
-        function processClone(clone, original) {
-          if (!util.isElement(clone) || util.isShadowSlotElement(original)) {
-            return Promise.resolve(clone);
-          }
-          return Promise.resolve().then(cloneStyle).then(clonePseudoElements).then(copyUserInput).then(fixSvg).then(function() {
-            return clone;
-          });
-          function cloneStyle() {
-            copyStyle(original, clone);
-            function copyFont(source, target) {
-              target.font = source.font;
-              target.fontFamily = source.fontFamily;
-              target.fontFeatureSettings = source.fontFeatureSettings;
-              target.fontKerning = source.fontKerning;
-              target.fontSize = source.fontSize;
-              target.fontStretch = source.fontStretch;
-              target.fontStyle = source.fontStyle;
-              target.fontVariant = source.fontVariant;
-              target.fontVariantCaps = source.fontVariantCaps;
-              target.fontVariantEastAsian = source.fontVariantEastAsian;
-              target.fontVariantLigatures = source.fontVariantLigatures;
-              target.fontVariantNumeric = source.fontVariantNumeric;
-              target.fontVariationSettings = source.fontVariationSettings;
-              target.fontWeight = source.fontWeight;
-            }
-            function copyStyle(sourceElement, targetElement) {
-              const sourceComputedStyles = getComputedStyle2(sourceElement);
-              if (sourceComputedStyles.cssText) {
-                targetElement.style.cssText = sourceComputedStyles.cssText;
-                copyFont(sourceComputedStyles, targetElement.style);
-              } else {
-                copyUserComputedStyleFast(
-                  options,
-                  sourceElement,
-                  sourceComputedStyles,
-                  parentComputedStyles,
-                  targetElement
-                );
-                if (parentComputedStyles === null) {
-                  ["inset-block", "inset-block-start", "inset-block-end"].forEach(
-                    (prop) => targetElement.style.removeProperty(prop)
-                  );
-                  ["left", "right", "top", "bottom"].forEach((prop) => {
-                    if (targetElement.style.getPropertyValue(prop)) {
-                      targetElement.style.setProperty(prop, "0px");
-                    }
-                  });
-                }
-              }
-            }
-          }
-          function clonePseudoElements() {
-            const cloneClassName = util.uid();
-            [":before", ":after"].forEach(function(element) {
-              clonePseudoElement(element);
-            });
-            function clonePseudoElement(element) {
-              const style = getComputedStyle2(original, element);
-              const content = style.getPropertyValue("content");
-              if (content === "" || content === "none") {
-                return;
-              }
-              const currentClass = clone.getAttribute("class") || "";
-              clone.setAttribute("class", `${currentClass} ${cloneClassName}`);
-              const styleElement = document.createElement("style");
-              styleElement.appendChild(formatPseudoElementStyle());
-              clone.appendChild(styleElement);
-              function formatPseudoElementStyle() {
-                const selector = `.${cloneClassName}:${element}`;
-                const cssText = style.cssText ? formatCssText() : formatCssProperties();
-                return document.createTextNode(`${selector}{${cssText}}`);
-                function formatCssText() {
-                  return `${style.cssText} content: ${content};`;
-                }
-                function formatCssProperties() {
-                  const styleText = util.asArray(style).map(formatProperty).join("; ");
-                  return `${styleText};`;
-                  function formatProperty(name) {
-                    const propertyValue = style.getPropertyValue(name);
-                    const propertyPriority = style.getPropertyPriority(name) ? " !important" : "";
-                    return `${name}: ${propertyValue}${propertyPriority}`;
-                  }
-                }
-              }
-            }
-          }
-          function copyUserInput() {
-            if (util.isHTMLTextAreaElement(original)) {
-              clone.innerHTML = original.value;
-            }
-            if (util.isHTMLInputElement(original)) {
-              clone.setAttribute("value", original.value);
-            }
-          }
-          function fixSvg() {
-            if (util.isSVGElement(clone)) {
-              clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-              if (util.isSVGRectElement(clone)) {
-                ["width", "height"].forEach(function(attribute) {
-                  const value = clone.getAttribute(attribute);
-                  if (value) {
-                    clone.style.setProperty(attribute, value);
-                  }
-                });
-              }
-            }
-          }
-        }
-      }
-      function embedFonts(node2) {
-        return fontFaces.resolveAll().then(function(cssText) {
-          if (cssText !== "") {
-            const styleNode = document.createElement("style");
-            node2.appendChild(styleNode);
-            styleNode.appendChild(document.createTextNode(cssText));
-          }
-          return node2;
-        });
-      }
-      function inlineImages(node2) {
-        return images.inlineAll(node2).then(function() {
-          return node2;
-        });
-      }
-      function newUtil() {
-        let uid_index = 0;
-        return {
-          escape: escapeRegEx,
-          isDataUrl,
-          canvasToBlob,
-          resolveUrl,
-          getAndEncode,
-          uid,
-          delay: delay2,
-          asArray,
-          escapeXhtml,
-          makeImage,
-          width,
-          height,
-          getWindow,
-          isElement,
-          isElementHostForOpenShadowRoot,
-          isShadowRoot,
-          isInShadowRoot,
-          isHTMLElement,
-          isHTMLCanvasElement,
-          isHTMLInputElement,
-          isHTMLImageElement,
-          isHTMLLinkElement,
-          isHTMLScriptElement,
-          isHTMLStyleElement,
-          isHTMLTextAreaElement,
-          isShadowSlotElement,
-          isSVGElement,
-          isSVGRectElement,
-          isDimensionMissing
-        };
-        function getWindow(node2) {
-          const ownerDocument = node2 ? node2.ownerDocument : void 0;
-          return (ownerDocument ? ownerDocument.defaultView : void 0) || global2 || window;
-        }
-        function isElementHostForOpenShadowRoot(value) {
-          return isElement(value) && value.shadowRoot !== null;
-        }
-        function isShadowRoot(value) {
-          return value instanceof getWindow(value).ShadowRoot;
-        }
-        function isInShadowRoot(value) {
-          return value !== null && Object.prototype.hasOwnProperty.call(value, "getRootNode") && isShadowRoot(value.getRootNode());
-        }
-        function isElement(value) {
-          return value instanceof getWindow(value).Element;
-        }
-        function isHTMLCanvasElement(value) {
-          return value instanceof getWindow(value).HTMLCanvasElement;
-        }
-        function isHTMLElement(value) {
-          return value instanceof getWindow(value).HTMLElement;
-        }
-        function isHTMLImageElement(value) {
-          return value instanceof getWindow(value).HTMLImageElement;
-        }
-        function isHTMLInputElement(value) {
-          return value instanceof getWindow(value).HTMLInputElement;
-        }
-        function isHTMLLinkElement(value) {
-          return value instanceof getWindow(value).HTMLLinkElement;
-        }
-        function isHTMLScriptElement(value) {
-          return value instanceof getWindow(value).HTMLScriptElement;
-        }
-        function isHTMLStyleElement(value) {
-          return value instanceof getWindow(value).HTMLStyleElement;
-        }
-        function isHTMLTextAreaElement(value) {
-          return value instanceof getWindow(value).HTMLTextAreaElement;
-        }
-        function isShadowSlotElement(value) {
-          return isInShadowRoot(value) && value instanceof getWindow(value).HTMLSlotElement;
-        }
-        function isSVGElement(value) {
-          return value instanceof getWindow(value).SVGElement;
-        }
-        function isSVGRectElement(value) {
-          return value instanceof getWindow(value).SVGRectElement;
-        }
-        function isDataUrl(url) {
-          return url.search(/^(data:)/) !== -1;
-        }
-        function isDimensionMissing(value) {
-          return isNaN(value) || value <= 0;
-        }
-        function asBlob(canvas) {
-          return new Promise(function(resolve) {
-            const binaryString = atob2(canvas.toDataURL().split(",")[1]);
-            const length = binaryString.length;
-            const binaryArray = new Uint8Array(length);
-            for (let i4 = 0; i4 < length; i4++) {
-              binaryArray[i4] = binaryString.charCodeAt(i4);
-            }
-            resolve(
-              new Blob([binaryArray], {
-                type: domtoimage2.impl.options.type
-              })
-            );
-          });
-        }
-        function canvasToBlob(canvas) {
-          if (canvas.toBlob) {
-            return new Promise(function(resolve) {
-              canvas.toBlob(
-                resolve,
-                domtoimage2.impl.options.type,
-                domtoimage2.impl.options.quality
-              );
-            });
-          }
-          return asBlob(canvas);
-        }
-        function resolveUrl(url, baseUrl) {
-          const doc = document.implementation.createHTMLDocument();
-          const base = doc.createElement("base");
-          doc.head.appendChild(base);
-          const a3 = doc.createElement("a");
-          doc.body.appendChild(a3);
-          base.href = baseUrl;
-          a3.href = url;
-          return a3.href;
-        }
-        function uid() {
-          return `u${fourRandomChars()}${uid_index++}`;
-          function fourRandomChars() {
-            return `0000${(Math.random() * Math.pow(36, 4) << 0).toString(
-              36
-            )}`.slice(-4);
-          }
-        }
-        function makeImage(uri) {
-          if (uri === "data:,") {
-            return Promise.resolve();
-          }
-          return new Promise(function(resolve, reject) {
-            const image = new Image();
-            if (domtoimage2.impl.options.useCredentials) {
-              image.crossOrigin = "use-credentials";
-            }
-            image.onload = function() {
-              if (window && window.requestAnimationFrame) {
-                window.requestAnimationFrame(function() {
-                  resolve(image);
-                });
-              } else {
-                resolve(image);
-              }
-            };
-            image.onerror = reject;
-            image.src = uri;
-          });
-        }
-        function getAndEncode(url) {
-          let cacheEntry = domtoimage2.impl.urlCache.find(function(el) {
-            return el.url === url;
-          });
-          if (!cacheEntry) {
-            cacheEntry = {
-              url,
-              promise: null
-            };
-            domtoimage2.impl.urlCache.push(cacheEntry);
-          }
-          if (cacheEntry.promise === null) {
-            if (domtoimage2.impl.options.cacheBust) {
-              url += (/\?/.test(url) ? "&" : "?") + (/* @__PURE__ */ new Date()).getTime();
-            }
-            if (domtoimage2.impl.options.requestUrl && /^http/.test(url)) {
-              cacheEntry.promise = domtoimage2.impl.options.requestUrl({
-                url,
-                method: "GET"
-              }).then((data) => {
-                return new Promise((resolve) => {
-                  const encoder = new FileReader();
-                  encoder.onload = function(env) {
-                    resolve(env.target.result);
-                  };
-                  encoder.readAsDataURL(
-                    new Blob([data.arrayBuffer], {
-                      type: data.headers["content-type"]
-                    })
-                  );
-                });
-              }).catch((err) => {
-                console.error(
-                  "cannot fetch resource: " + url + ", error: " + err
-                );
-                return "";
-              });
-            } else {
-              cacheEntry.promise = new Promise(function(resolve) {
-                const httpTimeout = domtoimage2.impl.options.httpTimeout;
-                const request = new XMLHttpRequest();
-                request.onreadystatechange = done;
-                request.ontimeout = timeout;
-                request.responseType = "blob";
-                request.timeout = httpTimeout;
-                if (domtoimage2.impl.options.useCredentials) {
-                  request.withCredentials = true;
-                }
-                if (domtoimage2.impl.options.corsImg && url.indexOf("http") === 0 && url.indexOf(window.location.origin) === -1) {
-                  const method = (domtoimage2.impl.options.corsImg.method || "GET").toUpperCase() === "POST" ? "POST" : "GET";
-                  request.open(
-                    method,
-                    (domtoimage2.impl.options.corsImg.url || "").replace(
-                      "#{cors}",
-                      url
-                    ),
-                    true
-                  );
-                  let isJson = false;
-                  const headers = domtoimage2.impl.options.corsImg.headers || {};
-                  Object.keys(headers).forEach(function(key) {
-                    if (headers[key].indexOf("application/json") !== -1) {
-                      isJson = true;
-                    }
-                    request.setRequestHeader(key, headers[key]);
-                  });
-                  const corsData = handleJson(
-                    domtoimage2.impl.options.corsImg.data || ""
-                  );
-                  Object.keys(corsData).forEach(function(key) {
-                    if (typeof corsData[key] === "string") {
-                      corsData[key] = corsData[key].replace("#{cors}", url);
-                    }
-                  });
-                  request.send(isJson ? JSON.stringify(corsData) : corsData);
-                } else {
-                  request.open("GET", url, true);
-                  request.send();
-                }
-                let placeholder;
-                if (domtoimage2.impl.options.imagePlaceholder) {
-                  const split = domtoimage2.impl.options.imagePlaceholder.split(/,/);
-                  if (split && split[1]) {
-                    placeholder = split[1];
-                  }
-                }
-                function done() {
-                  if (request.readyState !== 4) {
-                    return;
-                  }
-                  if (request.status >= 300) {
-                    if (placeholder) {
-                      resolve(placeholder);
-                    } else {
-                      fail(
-                        `cannot fetch resource: ${url}, status: ${request.status}`
-                      );
-                    }
-                    return;
-                  }
-                  const encoder = new FileReader();
-                  encoder.onloadend = function() {
-                    resolve(encoder.result);
-                  };
-                  encoder.readAsDataURL(request.response);
-                }
-                function timeout() {
-                  if (placeholder) {
-                    resolve(placeholder);
-                  } else {
-                    fail(
-                      `timeout of ${httpTimeout}ms occured while fetching resource: ${url}`
-                    );
-                  }
-                }
-                function handleJson(data) {
-                  try {
-                    return JSON.parse(JSON.stringify(data));
-                  } catch (e4) {
-                    fail("corsImg.data is missing or invalid");
-                    return;
-                  }
-                }
-                function fail(message) {
-                  console.error(message);
-                  resolve("");
-                }
-              });
-            }
-          }
-          return cacheEntry.promise;
-        }
-        function escapeRegEx(string) {
-          return string.replace(/([.*+?^${}()|[]\/\\])/g, "\\$1");
-        }
-        function delay2(ms) {
-          return function(arg) {
-            return new Promise(function(resolve) {
-              setTimeout(function() {
-                resolve(arg);
-              }, ms);
-            });
-          };
-        }
-        function asArray(arrayLike) {
-          const array = [];
-          const length = arrayLike.length;
-          for (let i4 = 0; i4 < length; i4++) {
-            array.push(arrayLike[i4]);
-          }
-          return array;
-        }
-        function escapeXhtml(string) {
-          return string.replace(/%/g, "%25").replace(/#/g, "%23").replace(/\n/g, "%0A").replace(/[\x00-\x1F\x7F]/g, "");
-        }
-        function width(node2) {
-          const width2 = px(node2, "width");
-          if (!isNaN(width2))
-            return width2;
-          const leftBorder = px(node2, "border-left-width");
-          const rightBorder = px(node2, "border-right-width");
-          return node2.scrollWidth + leftBorder + rightBorder;
-        }
-        function height(node2) {
-          const height2 = px(node2, "height");
-          if (!isNaN(height2))
-            return height2;
-          const topBorder = px(node2, "border-top-width");
-          const bottomBorder = px(node2, "border-bottom-width");
-          return node2.scrollHeight + topBorder + bottomBorder;
-        }
-        function px(node2, styleProperty) {
-          if (node2.nodeType === ELEMENT_NODE) {
-            let value = getComputedStyle2(node2).getPropertyValue(styleProperty);
-            if (value.slice(-2) === "px") {
-              value = value.slice(0, -2);
-              return parseFloat(value);
-            }
-          }
-          return NaN;
-        }
-      }
-      function newInliner() {
-        const URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
-        return {
-          inlineAll,
-          shouldProcess,
-          impl: {
-            readUrls,
-            inline
-          }
-        };
-        function shouldProcess(string) {
-          return string.search(URL_REGEX) !== -1;
-        }
-        function readUrls(string) {
-          const result = [];
-          let match;
-          while ((match = URL_REGEX.exec(string)) !== null) {
-            result.push(match[1]);
-          }
-          return result.filter(function(url) {
-            return !util.isDataUrl(url);
-          });
-        }
-        function inline(string, url, baseUrl, get3) {
-          return Promise.resolve(url).then(function(urlValue) {
-            return baseUrl ? util.resolveUrl(urlValue, baseUrl) : urlValue;
-          }).then(get3 || util.getAndEncode).then(function(dataUrl) {
-            return string.replace(urlAsRegex(url), `$1${dataUrl}$3`);
-          });
-          function urlAsRegex(urlValue) {
-            return new RegExp(
-              `(url\\(['"]?)(${util.escape(urlValue)})(['"]?\\))`,
-              "g"
-            );
-          }
-        }
-        function inlineAll(string, baseUrl, get3) {
-          if (nothingToInline()) {
-            return Promise.resolve(string);
-          }
-          return Promise.resolve(string).then(readUrls).then(function(urls) {
-            let done = Promise.resolve(string);
-            urls.forEach(function(url) {
-              done = done.then(function(prefix) {
-                return inline(prefix, url, baseUrl, get3);
-              });
-            });
-            return done;
-          });
-          function nothingToInline() {
-            return !shouldProcess(string);
-          }
-        }
-      }
-      function newFontFaces() {
-        return {
-          resolveAll,
-          impl: {
-            readAll
-          }
-        };
-        function resolveAll() {
-          return readAll().then(function(webFonts) {
-            return Promise.all(
-              webFonts.map(function(webFont) {
-                return webFont.resolve();
-              })
-            );
-          }).then(function(cssStrings) {
-            return cssStrings.join("\n");
-          });
-        }
-        function readAll() {
-          return Promise.resolve(util.asArray(document.styleSheets)).then(getCssRules).then(selectWebFontRules).then(function(rules) {
-            return rules.map(newWebFont);
-          });
-          function selectWebFontRules(cssRules) {
-            return cssRules.filter(function(rule) {
-              return rule.type === CSSRule.FONT_FACE_RULE;
-            }).filter(function(rule) {
-              return inliner.shouldProcess(rule.style.getPropertyValue("src"));
-            });
-          }
-          function getCssRules(styleSheets) {
-            const cssRules = [];
-            styleSheets.forEach(function(sheet) {
-              if (Object.prototype.hasOwnProperty.call(
-                Object.getPrototypeOf(sheet),
-                "cssRules"
-              )) {
-                try {
-                  util.asArray(sheet.cssRules || []).forEach(cssRules.push.bind(cssRules));
-                } catch (e4) {
-                  console.error(
-                    `domtoimage: Error while reading CSS rules from ${sheet.href}`,
-                    e4.toString()
-                  );
-                }
-              }
-            });
-            return cssRules;
-          }
-          function newWebFont(webFontRule) {
-            return {
-              resolve: function resolve() {
-                const baseUrl = (webFontRule.parentStyleSheet || {}).href;
-                return inliner.inlineAll(webFontRule.cssText, baseUrl);
-              },
-              src: function() {
-                return webFontRule.style.getPropertyValue("src");
-              }
-            };
-          }
-        }
-      }
-      function newImages() {
-        return {
-          inlineAll,
-          impl: {
-            newImage
-          }
-        };
-        function newImage(element) {
-          return {
-            inline
-          };
-          function inline(get3) {
-            if (util.isDataUrl(element.src)) {
-              return Promise.resolve();
-            }
-            return Promise.resolve(element.src).then(get3 || util.getAndEncode).then(function(dataUrl) {
-              return new Promise(function(resolve) {
-                element.onload = resolve;
-                element.onerror = resolve;
-                element.src = dataUrl;
-              });
-            });
-          }
-        }
-        function inlineAll(node2) {
-          if (!util.isElement(node2)) {
-            return Promise.resolve(node2);
-          }
-          return inlineCSSProperty(node2).then(function() {
-            if (util.isHTMLImageElement(node2)) {
-              return newImage(node2).inline();
-            } else {
-              return Promise.all(
-                util.asArray(node2.childNodes).map(function(child) {
-                  return inlineAll(child);
-                })
-              );
-            }
-          });
-          function inlineCSSProperty(node3) {
-            const properties = ["background", "background-image"];
-            const inliningTasks = properties.map(function(propertyName) {
-              const value = node3.style.getPropertyValue(propertyName);
-              const priority = node3.style.getPropertyPriority(propertyName);
-              if (!value) {
-                return Promise.resolve();
-              }
-              return inliner.inlineAll(value).then(function(inlinedValue) {
-                node3.style.setProperty(propertyName, inlinedValue, priority);
-              });
-            });
-            return Promise.all(inliningTasks).then(function() {
-              return node3;
-            });
-          }
-        }
-      }
-      function setStyleProperty(targetStyle, name, value, priority) {
-        const needs_prefixing = ["background-clip"].indexOf(name) >= 0;
-        if (priority) {
-          targetStyle.setProperty(name, value, priority);
-          if (needs_prefixing) {
-            targetStyle.setProperty(`-webkit-${name}`, value, priority);
-          }
-        } else {
-          targetStyle.setProperty(name, value);
-          if (needs_prefixing) {
-            targetStyle.setProperty(`-webkit-${name}`, value);
-          }
-        }
-      }
-      function copyUserComputedStyleFast(options, sourceElement, sourceComputedStyles, parentComputedStyles, targetElement) {
-        const defaultStyle = domtoimage2.impl.options.copyDefaultStyles ? getDefaultStyle(options, sourceElement) : {};
-        const targetStyle = targetElement.style;
-        util.asArray(sourceComputedStyles).forEach(function(name) {
-          const sourceValue = sourceComputedStyles.getPropertyValue(name);
-          const defaultValue = defaultStyle[name];
-          const parentValue = parentComputedStyles ? parentComputedStyles.getPropertyValue(name) : void 0;
-          if (sourceValue !== defaultValue || parentComputedStyles && sourceValue !== parentValue) {
-            const priority = sourceComputedStyles.getPropertyPriority(name);
-            setStyleProperty(targetStyle, name, sourceValue, priority);
-          }
-        });
-      }
-      let removeDefaultStylesTimeoutId = null;
-      let tagNameDefaultStyles = {};
-      const ascentStoppers = [
-        // these come from https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements
-        "ADDRESS",
-        "ARTICLE",
-        "ASIDE",
-        "BLOCKQUOTE",
-        "DETAILS",
-        "DIALOG",
-        "DD",
-        "DIV",
-        "DL",
-        "DT",
-        "FIELDSET",
-        "FIGCAPTION",
-        "FIGURE",
-        "FOOTER",
-        "FORM",
-        "H1",
-        "H2",
-        "H3",
-        "H4",
-        "H5",
-        "H6",
-        "HEADER",
-        "HGROUP",
-        "HR",
-        "LI",
-        "MAIN",
-        "NAV",
-        "OL",
-        "P",
-        "PRE",
-        "SECTION",
-        "SVG",
-        "TABLE",
-        "UL",
-        // this is some non-standard ones
-        "math",
-        // intentionally lowercase, thanks Safari
-        "svg",
-        // in case we have an svg embedded element
-        // these are ultimate stoppers in case something drastic changes in how the DOM works
-        "BODY",
-        "HEAD",
-        "HTML"
-      ];
-      function getDefaultStyle(options, sourceElement) {
-        const tagHierarchy = computeTagHierarchy(sourceElement);
-        const tagKey = computeTagKey(tagHierarchy);
-        if (tagNameDefaultStyles[tagKey]) {
-          return tagNameDefaultStyles[tagKey];
-        }
-        const sandboxWindow = ensureSandboxWindow();
-        const defaultElement = constructElementHierachy(
-          sandboxWindow.document,
-          tagHierarchy
-        );
-        const defaultStyle = computeStyleForDefaults(sandboxWindow, defaultElement);
-        destroyElementHierarchy(defaultElement);
-        tagNameDefaultStyles[tagKey] = defaultStyle;
-        return defaultStyle;
-        function computeTagHierarchy(sourceNode) {
-          const tagNames = [];
-          do {
-            if (sourceNode.nodeType === ELEMENT_NODE) {
-              const tagName = sourceNode.tagName;
-              tagNames.push(tagName);
-              if (ascentStoppers.includes(tagName)) {
-                break;
-              }
-            }
-            sourceNode = sourceNode.parentNode;
-          } while (sourceNode);
-          return tagNames;
-        }
-        function computeTagKey(tagHierarchy2) {
-          if (options.styleCaching === "relaxed") {
-            return tagHierarchy2.filter((_3, i4, a3) => i4 === 0 || i4 === a3.length - 1).join(">");
-          }
-          return tagHierarchy2.join(">");
-        }
-        function constructElementHierachy(sandboxDocument, tagHierarchy2) {
-          let element = sandboxDocument.body;
-          do {
-            const childTagName = tagHierarchy2.pop();
-            const childElement = sandboxDocument.createElement(childTagName);
-            element.appendChild(childElement);
-            element = childElement;
-          } while (tagHierarchy2.length > 0);
-          element.textContent = "\u200B";
-          return element;
-        }
-        function computeStyleForDefaults(sandboxWindow2, defaultElement2) {
-          const defaultStyle2 = {};
-          const defaultComputedStyle = sandboxWindow2.getComputedStyle(defaultElement2);
-          util.asArray(defaultComputedStyle).forEach(function(name) {
-            defaultStyle2[name] = name === "width" || name === "height" ? "auto" : defaultComputedStyle.getPropertyValue(name);
-          });
-          return defaultStyle2;
-        }
-        function destroyElementHierarchy(element) {
-          do {
-            const parentElement = element.parentElement;
-            if (parentElement !== null) {
-              parentElement.removeChild(element);
-            }
-            element = parentElement;
-          } while (element && element.tagName !== "BODY");
-        }
-      }
-      function ensureSandboxWindow() {
-        if (sandbox) {
-          return sandbox.contentWindow;
-        }
-        const charsetToUse = document.characterSet || "UTF-8";
-        const docType = document.doctype;
-        const docTypeDeclaration = docType ? `<!DOCTYPE ${escapeHTML(docType.name)} ${escapeHTML(
-          docType.publicId
-        )} ${escapeHTML(docType.systemId)}`.trim() + ">" : "";
-        sandbox = document.createElement("iframe");
-        sandbox.id = "domtoimage-sandbox-" + util.uid();
-        sandbox.style.visibility = "hidden";
-        sandbox.style.position = "fixed";
-        document.body.appendChild(sandbox);
-        return tryTechniques(
-          sandbox,
-          docTypeDeclaration,
-          charsetToUse,
-          "domtoimage-sandbox"
-        );
-        function escapeHTML(unsafeText) {
-          if (unsafeText) {
-            const div = document.createElement("div");
-            div.innerText = unsafeText;
-            return div.innerHTML;
-          } else {
-            return "";
-          }
-        }
-        function tryTechniques(sandbox2, doctype, charset, title) {
-          try {
-            sandbox2.contentWindow.document.write(
-              `${doctype}<html><head><meta charset='${charset}'><title>${title}</title></head><body></body></html>`
-            );
-            return sandbox2.contentWindow;
-          } catch (_3) {
-          }
-          const metaCharset = document.createElement("meta");
-          metaCharset.setAttribute("charset", charset);
-          try {
-            const sandboxDocument = document.implementation.createHTMLDocument(title);
-            sandboxDocument.head.appendChild(metaCharset);
-            const sandboxHTML = doctype + sandboxDocument.documentElement.outerHTML;
-            sandbox2.setAttribute("srcdoc", sandboxHTML);
-            return sandbox2.contentWindow;
-          } catch (_3) {
-          }
-          sandbox2.contentDocument.head.appendChild(metaCharset);
-          sandbox2.contentDocument.title = title;
-          return sandbox2.contentWindow;
-        }
-      }
-      function removeSandbox() {
-        if (sandbox) {
-          document.body.removeChild(sandbox);
-          sandbox = null;
-        }
-        if (removeDefaultStylesTimeoutId) {
-          clearTimeout(removeDefaultStylesTimeoutId);
-        }
-        removeDefaultStylesTimeoutId = setTimeout(() => {
-          removeDefaultStylesTimeoutId = null;
-          tagNameDefaultStyles = {};
-        }, 20 * 1e3);
-      }
-    })(exports);
-  }
-});
-
 // node_modules/.pnpm/file-saver@2.0.5/node_modules/file-saver/dist/FileSaver.min.js
 var require_FileSaver_min = __commonJS({
   "node_modules/.pnpm/file-saver@2.0.5/node_modules/file-saver/dist/FileSaver.min.js"(exports, module2) {
@@ -28532,6 +27410,1054 @@ var init_index_es = __esm({
   }
 });
 
+// src/dom-to-image-more.js
+var require_dom_to_image_more = __commonJS({
+  "src/dom-to-image-more.js"(exports, module2) {
+    (function(global2) {
+      "use strict";
+      const util = newUtil();
+      const inliner = newInliner();
+      const fontFaces = newFontFaces();
+      const images = newImages();
+      const defaultOptions2 = {
+        // Default is to copy default styles of elements
+        copyDefaultStyles: true,
+        // Default is to fail on error, no placeholder
+        imagePlaceholder: void 0,
+        // Default cache bust is false, it will use the cache
+        cacheBust: false,
+        // Use (existing) authentication credentials for external URIs (CORS requests)
+        useCredentials: false,
+        // Default resolve timeout
+        httpTimeout: 3e4,
+        // Style computation cache tag rules (options are strict, relaxed)
+        styleCaching: "strict",
+        // Default cors config is to request the image address directly
+        corsImg: void 0
+      };
+      const domtoimage2 = {
+        toSvg,
+        toPng,
+        toJpeg,
+        toBlob,
+        toPixelData,
+        toCanvas,
+        impl: {
+          fontFaces,
+          images,
+          util,
+          inliner,
+          urlCache: [],
+          options: {}
+        }
+      };
+      if (typeof exports === "object" && typeof module2 === "object") {
+        module2.exports = domtoimage2;
+      } else {
+        global2.domtoimage = domtoimage2;
+      }
+      const ELEMENT_NODE = (typeof Node === "undefined" ? void 0 : Node.ELEMENT_NODE) || 1;
+      const getComputedStyle2 = (global2 === void 0 ? void 0 : global2.getComputedStyle) || (typeof window === "undefined" ? void 0 : window.getComputedStyle) || globalThis.getComputedStyle;
+      const atob2 = (global2 === void 0 ? void 0 : global2.atob) || (typeof window === "undefined" ? void 0 : window.atob) || globalThis.atob;
+      function toSvg(node2, options) {
+        const ownerWindow = domtoimage2.impl.util.getWindow(node2);
+        options ||= {};
+        copyOptions(options);
+        const restorations = [];
+        return Promise.resolve(node2).then(ensureElement).then((clonee) => cloneNode(clonee, options, null, ownerWindow)).then(embedFonts).then(inlineImages).then(applyOptions).then(makeSvgDataUri).then(restoreWrappers).then(clearCache);
+        function ensureElement(node3) {
+          if (node3.nodeType === ELEMENT_NODE) {
+            return node3;
+          }
+          const originalChild = node3;
+          const originalParent = node3.parentNode;
+          const wrappingSpan = document.createElement("span");
+          originalChild.replaceWith(wrappingSpan);
+          wrappingSpan.append(node3);
+          restorations.push({
+            parent: originalParent,
+            child: originalChild,
+            wrapper: wrappingSpan
+          });
+          return wrappingSpan;
+        }
+        function restoreWrappers(result) {
+          while (restorations.length > 0) {
+            const restoration = restorations.pop();
+            restoration.parent.replaceChild(restoration.child, restoration.wrapper);
+          }
+          return result;
+        }
+        function clearCache(result) {
+          domtoimage2.impl.urlCache = [];
+          removeSandbox();
+          return result;
+        }
+        function applyOptions(clone) {
+          if (options.bgcolor) {
+            clone.style.backgroundColor = options.bgcolor;
+          }
+          if (options.width) {
+            clone.style.width = `${options.width}px`;
+          }
+          if (options.height) {
+            clone.style.height = `${options.height}px`;
+          }
+          if (options.style) {
+            for (const property of Object.keys(options.style)) {
+              clone.style[property] = options.style[property];
+            }
+          }
+          let onCloneResult = null;
+          if (typeof options.onclone === "function") {
+            onCloneResult = options.onclone(clone);
+          }
+          return Promise.resolve(onCloneResult).then(() => clone);
+        }
+        function makeSvgDataUri(node3) {
+          const width = options.width || util.width(node3);
+          const height = options.height || util.height(node3);
+          return Promise.resolve(node3).then((svg) => {
+            svg.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+            return new XMLSerializer().serializeToString(svg);
+          }).then(util.escapeXhtml).then((xhtml) => {
+            const foreignObjectSizing = (util.isDimensionMissing(width) ? ' width="100%"' : ` width="${width}"`) + (util.isDimensionMissing(height) ? ' height="100%"' : ` height="${height}"`);
+            const svgSizing = (util.isDimensionMissing(width) ? "" : ` width="${width}"`) + (util.isDimensionMissing(height) ? "" : ` height="${height}"`);
+            return `<svg xmlns="http://www.w3.org/2000/svg"${svgSizing}><foreignObject${foreignObjectSizing}>${xhtml}</foreignObject></svg>`;
+          }).then((svg) => `data:image/svg+xml;charset=utf-8,${svg}`);
+        }
+      }
+      function toPixelData(node2, options) {
+        return draw(node2, options).then((canvas) => canvas.getContext("2d").getImageData(0, 0, util.width(node2), util.height(node2)).data);
+      }
+      function toPng(node2, options) {
+        return draw(node2, options).then((canvas) => canvas.toDataURL());
+      }
+      function toJpeg(node2, options) {
+        return draw(node2, options).then((canvas) => canvas.toDataURL(
+          "image/jpeg",
+          (options ? options.quality : void 0) || 1
+        ));
+      }
+      function toBlob(node2, options) {
+        return draw(node2, options).then(util.canvasToBlob);
+      }
+      function toCanvas(node2, options) {
+        return draw(node2, options);
+      }
+      function copyOptions(options) {
+        if (options.copyDefaultStyles === void 0) {
+          domtoimage2.impl.options.copyDefaultStyles = defaultOptions2.copyDefaultStyles;
+        } else {
+          domtoimage2.impl.options.copyDefaultStyles = options.copyDefaultStyles;
+        }
+        if (options.imagePlaceholder === void 0) {
+          domtoimage2.impl.options.imagePlaceholder = defaultOptions2.imagePlaceholder;
+        } else {
+          domtoimage2.impl.options.imagePlaceholder = options.imagePlaceholder;
+        }
+        domtoimage2.impl.options.cacheBust = options.cacheBust === void 0 ? defaultOptions2.cacheBust : options.cacheBust;
+        domtoimage2.impl.options.corsImg = options.corsImg === void 0 ? defaultOptions2.corsImg : options.corsImg;
+        domtoimage2.impl.options.useCredentials = options.useCredentials === void 0 ? defaultOptions2.useCredentials : options.useCredentials;
+        domtoimage2.impl.options.httpTimeout = options.httpTimeout === void 0 ? defaultOptions2.httpTimeout : options.httpTimeout;
+        domtoimage2.impl.options.styleCaching = options.styleCaching === void 0 ? defaultOptions2.styleCaching : options.styleCaching;
+        domtoimage2.impl.options.requestUrl = options.requestUrl;
+        domtoimage2.impl.options.type = options.type || "image/png";
+        domtoimage2.impl.options.quality = options.quality || 1;
+      }
+      function draw(domNode, options) {
+        options ||= {};
+        return toSvg(domNode, options).then(util.makeImage).then((image) => {
+          const scale = typeof options.scale === "number" ? options.scale : 1;
+          const canvas = newCanvas(domNode, scale);
+          const context = canvas.getContext("2d");
+          context.msImageSmoothingEnabled = false;
+          context.imageSmoothingEnabled = false;
+          if (image) {
+            context.scale(scale, scale);
+            context.drawImage(image, 0, 0);
+          }
+          return canvas;
+        });
+        function newCanvas(node2, scale) {
+          let width = options.width || util.width(node2);
+          let height = options.height || util.height(node2);
+          if (util.isDimensionMissing(width)) {
+            width = util.isDimensionMissing(height) ? 300 : height * 2;
+          }
+          if (util.isDimensionMissing(height)) {
+            height = width / 2;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = width * scale;
+          canvas.height = height * scale;
+          if (options.bgcolor) {
+            const context = canvas.getContext("2d");
+            context.fillStyle = options.bgcolor;
+            context.fillRect(0, 0, canvas.width, canvas.height);
+          }
+          return canvas;
+        }
+      }
+      let sandbox = null;
+      function cloneNode(node2, options, parentComputedStyles, ownerWindow) {
+        const filter = options.filter;
+        if (node2 === sandbox || util.isHTMLScriptElement(node2) || util.isHTMLStyleElement(node2) || util.isHTMLLinkElement(node2) || parentComputedStyles !== null && filter && !filter(node2)) {
+          return Promise.resolve();
+        }
+        return Promise.resolve(node2).then(makeNodeCopy).then((clone) => cloneChildren(clone, getParentOfChildren(node2))).then((clone) => processClone(clone, node2));
+        function makeNodeCopy(original) {
+          if (util.isHTMLCanvasElement(original)) {
+            return util.makeImage(original.toDataURL());
+          }
+          return original.cloneNode(false);
+        }
+        function getParentOfChildren(original) {
+          if (util.isElementHostForOpenShadowRoot(original)) {
+            return original.shadowRoot;
+          }
+          return original;
+        }
+        function cloneChildren(clone, original) {
+          const originalChildren = getRenderedChildren(original);
+          let done = Promise.resolve();
+          if (originalChildren.length > 0) {
+            const originalComputedStyles = getComputedStyle2(
+              getRenderedParent(original)
+            );
+            for (const originalChild of util.asArray(originalChildren)) {
+              done = done.then(() => cloneNode(
+                originalChild,
+                options,
+                originalComputedStyles,
+                ownerWindow
+              ).then((clonedChild) => {
+                if (clonedChild) {
+                  clone.append(clonedChild);
+                }
+              }));
+            }
+          }
+          return done.then(() => clone);
+          function getRenderedParent(original2) {
+            if (util.isShadowRoot(original2)) {
+              return original2.host;
+            }
+            return original2;
+          }
+          function getRenderedChildren(original2) {
+            if (util.isShadowSlotElement(original2)) {
+              return original2.assignedNodes();
+            }
+            return original2.childNodes;
+          }
+        }
+        function processClone(clone, original) {
+          if (!util.isElement(clone) || util.isShadowSlotElement(original)) {
+            return Promise.resolve(clone);
+          }
+          return Promise.resolve().then(cloneStyle).then(clonePseudoElements).then(copyUserInput).then(fixSvg).then(() => clone);
+          function cloneStyle() {
+            copyStyle(original, clone);
+            function copyFont(source, target) {
+              target.font = source.font;
+              target.fontFamily = source.fontFamily;
+              target.fontFeatureSettings = source.fontFeatureSettings;
+              target.fontKerning = source.fontKerning;
+              target.fontSize = source.fontSize;
+              target.fontStretch = source.fontStretch;
+              target.fontStyle = source.fontStyle;
+              target.fontVariant = source.fontVariant;
+              target.fontVariantCaps = source.fontVariantCaps;
+              target.fontVariantEastAsian = source.fontVariantEastAsian;
+              target.fontVariantLigatures = source.fontVariantLigatures;
+              target.fontVariantNumeric = source.fontVariantNumeric;
+              target.fontVariationSettings = source.fontVariationSettings;
+              target.fontWeight = source.fontWeight;
+            }
+            function copyStyle(sourceElement, targetElement) {
+              const sourceComputedStyles = getComputedStyle2(sourceElement);
+              if (sourceComputedStyles.cssText) {
+                targetElement.style.cssText = sourceComputedStyles.cssText;
+                copyFont(sourceComputedStyles, targetElement.style);
+              } else {
+                copyUserComputedStyleFast(
+                  options,
+                  sourceElement,
+                  sourceComputedStyles,
+                  parentComputedStyles,
+                  targetElement
+                );
+                if (parentComputedStyles === null) {
+                  for (const property of ["inset-block", "inset-block-start", "inset-block-end"]) {
+                    targetElement.style.removeProperty(property);
+                  }
+                  for (const property of ["left", "right", "top", "bottom"]) {
+                    if (targetElement.style.getPropertyValue(property)) {
+                      targetElement.style.setProperty(property, "0px");
+                    }
+                  }
+                }
+              }
+            }
+          }
+          function clonePseudoElements() {
+            const cloneClassName = util.uid();
+            for (const element of [":before", ":after"]) {
+              clonePseudoElement(element);
+            }
+            function clonePseudoElement(element) {
+              const style = getComputedStyle2(original, element);
+              const content = style.getPropertyValue("content");
+              if (content === "" || content === "none") {
+                return;
+              }
+              const currentClass = clone.getAttribute("class") || "";
+              clone.setAttribute("class", `${currentClass} ${cloneClassName}`);
+              const styleElement = document.createElement("style");
+              styleElement.append(formatPseudoElementStyle());
+              clone.append(styleElement);
+              function formatPseudoElementStyle() {
+                const selector = `.${cloneClassName}:${element}`;
+                const cssText = style.cssText ? formatCssText() : formatCssProperties();
+                return document.createTextNode(`${selector}{${cssText}}`);
+                function formatCssText() {
+                  return `${style.cssText} content: ${content};`;
+                }
+                function formatCssProperties() {
+                  const styleText = util.asArray(style).map(formatProperty).join("; ");
+                  return `${styleText};`;
+                  function formatProperty(name) {
+                    const propertyValue = style.getPropertyValue(name);
+                    const propertyPriority = style.getPropertyPriority(name) ? " !important" : "";
+                    return `${name}: ${propertyValue}${propertyPriority}`;
+                  }
+                }
+              }
+            }
+          }
+          function copyUserInput() {
+            if (util.isHTMLTextAreaElement(original)) {
+              clone.innerHTML = original.value;
+            }
+            if (util.isHTMLInputElement(original)) {
+              clone.setAttribute("value", original.value);
+            }
+          }
+          function fixSvg() {
+            if (util.isSVGElement(clone)) {
+              clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+              if (util.isSVGRectElement(clone)) {
+                for (const attribute of ["width", "height"]) {
+                  const value = clone.getAttribute(attribute);
+                  if (value) {
+                    clone.style.setProperty(attribute, value);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      function embedFonts(node2) {
+        return fontFaces.resolveAll().then((cssText) => {
+          if (cssText !== "") {
+            const styleNode = document.createElement("style");
+            node2.append(styleNode);
+            styleNode.append(document.createTextNode(cssText));
+          }
+          return node2;
+        });
+      }
+      function inlineImages(node2) {
+        return images.inlineAll(node2).then(() => node2);
+      }
+      function newUtil() {
+        let uid_index = 0;
+        return {
+          escape: escapeRegEx,
+          isDataUrl,
+          canvasToBlob,
+          resolveUrl,
+          getAndEncode,
+          uid,
+          delay: delay2,
+          asArray,
+          escapeXhtml,
+          makeImage,
+          width,
+          height,
+          getWindow,
+          isElement,
+          isElementHostForOpenShadowRoot,
+          isShadowRoot,
+          isInShadowRoot,
+          isHTMLElement,
+          isHTMLCanvasElement,
+          isHTMLInputElement,
+          isHTMLImageElement,
+          isHTMLLinkElement,
+          isHTMLScriptElement,
+          isHTMLStyleElement,
+          isHTMLTextAreaElement,
+          isShadowSlotElement,
+          isSVGElement,
+          isSVGRectElement,
+          isDimensionMissing
+        };
+        function getWindow(node2) {
+          const ownerDocument = node2 ? node2.ownerDocument : void 0;
+          return (ownerDocument ? ownerDocument.defaultView : void 0) || global2 || window;
+        }
+        function isElementHostForOpenShadowRoot(value) {
+          return isElement(value) && value.shadowRoot !== null;
+        }
+        function isShadowRoot(value) {
+          return value instanceof getWindow(value).ShadowRoot;
+        }
+        function isInShadowRoot(value) {
+          return value !== null && Object.hasOwn(value, "getRootNode") && isShadowRoot(value.getRootNode());
+        }
+        function isElement(value) {
+          return value instanceof getWindow(value).Element;
+        }
+        function isHTMLCanvasElement(value) {
+          return value instanceof getWindow(value).HTMLCanvasElement;
+        }
+        function isHTMLElement(value) {
+          return value instanceof getWindow(value).HTMLElement;
+        }
+        function isHTMLImageElement(value) {
+          return value instanceof getWindow(value).HTMLImageElement;
+        }
+        function isHTMLInputElement(value) {
+          return value instanceof getWindow(value).HTMLInputElement;
+        }
+        function isHTMLLinkElement(value) {
+          return value instanceof getWindow(value).HTMLLinkElement;
+        }
+        function isHTMLScriptElement(value) {
+          return value instanceof getWindow(value).HTMLScriptElement;
+        }
+        function isHTMLStyleElement(value) {
+          return value instanceof getWindow(value).HTMLStyleElement;
+        }
+        function isHTMLTextAreaElement(value) {
+          return value instanceof getWindow(value).HTMLTextAreaElement;
+        }
+        function isShadowSlotElement(value) {
+          return isInShadowRoot(value) && value instanceof getWindow(value).HTMLSlotElement;
+        }
+        function isSVGElement(value) {
+          return value instanceof getWindow(value).SVGElement;
+        }
+        function isSVGRectElement(value) {
+          return value instanceof getWindow(value).SVGRectElement;
+        }
+        function isDataUrl(url) {
+          return url.search(/^(data:)/) !== -1;
+        }
+        function isDimensionMissing(value) {
+          return isNaN(value) || value <= 0;
+        }
+        function asBlob(canvas) {
+          return new Promise((resolve) => {
+            const binaryString = atob2(canvas.toDataURL().split(",")[1]);
+            const length = binaryString.length;
+            const binaryArray = new Uint8Array(length);
+            for (let i4 = 0; i4 < length; i4++) {
+              binaryArray[i4] = binaryString.charCodeAt(i4);
+            }
+            resolve(
+              new Blob([binaryArray], {
+                type: domtoimage2.impl.options.type
+              })
+            );
+          });
+        }
+        function canvasToBlob(canvas) {
+          if (canvas.toBlob) {
+            return new Promise((resolve) => {
+              canvas.toBlob(
+                resolve,
+                domtoimage2.impl.options.type,
+                domtoimage2.impl.options.quality
+              );
+            });
+          }
+          return asBlob(canvas);
+        }
+        function resolveUrl(url, baseUrl) {
+          const document_ = document.implementation.createHTMLDocument();
+          const base = document_.createElement("base");
+          document_.head.append(base);
+          const a3 = document_.createElement("a");
+          document_.body.append(a3);
+          base.href = baseUrl;
+          a3.href = url;
+          return a3.href;
+        }
+        function uid() {
+          return `u${fourRandomChars()}${uid_index++}`;
+          function fourRandomChars() {
+            return `0000${Math.trunc(Math.random() * 36 ** 4).toString(
+              36
+            )}`.slice(-4);
+          }
+        }
+        function makeImage(uri) {
+          if (uri === "data:,") {
+            return Promise.resolve();
+          }
+          return new Promise((resolve, reject) => {
+            const image = new Image();
+            if (domtoimage2.impl.options.useCredentials) {
+              image.crossOrigin = "use-credentials";
+            }
+            image.addEventListener("load", () => {
+              if (window && window.requestAnimationFrame) {
+                window.requestAnimationFrame(() => {
+                  resolve(image);
+                });
+              } else {
+                resolve(image);
+              }
+            });
+            image.onerror = reject;
+            image.src = uri;
+          });
+        }
+        function getAndEncode(url) {
+          let cacheEntry = domtoimage2.impl.urlCache.find((element) => element.url === url);
+          if (!cacheEntry) {
+            cacheEntry = {
+              url,
+              promise: null
+            };
+            domtoimage2.impl.urlCache.push(cacheEntry);
+          }
+          if (cacheEntry.promise === null) {
+            if (domtoimage2.impl.options.cacheBust) {
+              url += (/\?/.test(url) ? "&" : "?") + Date.now();
+            }
+            if (domtoimage2.impl.options.requestUrl && url.startsWith("http")) {
+              cacheEntry.promise = domtoimage2.impl.options.requestUrl({
+                url,
+                method: "GET"
+              }).then((data) => new Promise((resolve) => {
+                const encoder = new FileReader();
+                encoder.addEventListener("load", (env) => {
+                  resolve(env.target.result);
+                });
+                encoder.readAsDataURL(
+                  new Blob([data.arrayBuffer], {
+                    type: data.headers["content-type"]
+                  })
+                );
+              })).catch((error) => {
+                console.error(
+                  "cannot fetch resource: " + url + ", error: " + error
+                );
+                return "";
+              });
+            } else {
+              cacheEntry.promise = new Promise((resolve) => {
+                const httpTimeout = domtoimage2.impl.options.httpTimeout;
+                const request = new XMLHttpRequest();
+                request.addEventListener("readystatechange", done);
+                request.ontimeout = timeout;
+                request.responseType = "blob";
+                request.timeout = httpTimeout;
+                if (domtoimage2.impl.options.useCredentials) {
+                  request.withCredentials = true;
+                }
+                if (domtoimage2.impl.options.corsImg && url.indexOf("http") === 0 && !url.includes(window.location.origin)) {
+                  const method = (domtoimage2.impl.options.corsImg.method || "GET").toUpperCase() === "POST" ? "POST" : "GET";
+                  request.open(
+                    method,
+                    (domtoimage2.impl.options.corsImg.url || "").replace(
+                      "#{cors}",
+                      url
+                    ),
+                    true
+                  );
+                  let isJson = false;
+                  const headers = domtoimage2.impl.options.corsImg.headers || {};
+                  for (const key of Object.keys(headers)) {
+                    if (headers[key].includes("application/json")) {
+                      isJson = true;
+                    }
+                    request.setRequestHeader(key, headers[key]);
+                  }
+                  const corsData = handleJson(
+                    domtoimage2.impl.options.corsImg.data || ""
+                  );
+                  for (const key of Object.keys(corsData)) {
+                    if (typeof corsData[key] === "string") {
+                      corsData[key] = corsData[key].replace("#{cors}", url);
+                    }
+                  }
+                  request.send(isJson ? JSON.stringify(corsData) : corsData);
+                } else {
+                  request.open("GET", url, true);
+                  request.send();
+                }
+                let placeholder;
+                if (domtoimage2.impl.options.imagePlaceholder) {
+                  const split = domtoimage2.impl.options.imagePlaceholder.split(/,/);
+                  if (split && split[1]) {
+                    placeholder = split[1];
+                  }
+                }
+                function done() {
+                  if (request.readyState !== 4) {
+                    return;
+                  }
+                  if (request.status >= 300) {
+                    if (placeholder) {
+                      resolve(placeholder);
+                    } else {
+                      fail(
+                        `cannot fetch resource: ${url}, status: ${request.status}`
+                      );
+                    }
+                    return;
+                  }
+                  const encoder = new FileReader();
+                  encoder.onloadend = function() {
+                    resolve(encoder.result);
+                  };
+                  encoder.readAsDataURL(request.response);
+                }
+                function timeout() {
+                  if (placeholder) {
+                    resolve(placeholder);
+                  } else {
+                    fail(
+                      `timeout of ${httpTimeout}ms occured while fetching resource: ${url}`
+                    );
+                  }
+                }
+                function handleJson(data) {
+                  try {
+                    return JSON.parse(JSON.stringify(data));
+                  } catch {
+                    fail("corsImg.data is missing or invalid");
+                  }
+                }
+                function fail(message) {
+                  console.error(message);
+                  resolve("");
+                }
+              });
+            }
+          }
+          return cacheEntry.promise;
+        }
+        function escapeRegEx(string) {
+          return string.replaceAll(/([.*+?^${}()|[]\/\\])/g, "\\$1");
+        }
+        function delay2(ms) {
+          return function(argument) {
+            return new Promise((resolve) => {
+              setTimeout(() => {
+                resolve(argument);
+              }, ms);
+            });
+          };
+        }
+        function asArray(arrayLike) {
+          const array = [];
+          const length = arrayLike.length;
+          for (let i4 = 0; i4 < length; i4++) {
+            array.push(arrayLike[i4]);
+          }
+          return array;
+        }
+        function escapeXhtml(string) {
+          return string.replaceAll("%", "%25").replaceAll("#", "%23").replaceAll("\n", "%0A").replaceAll(/[\u0000-\u001F\u007F]/g, "");
+        }
+        function width(node2) {
+          const width2 = px(node2, "width");
+          if (!isNaN(width2)) {
+            return width2;
+          }
+          const leftBorder = px(node2, "border-left-width");
+          const rightBorder = px(node2, "border-right-width");
+          return node2.scrollWidth + leftBorder + rightBorder;
+        }
+        function height(node2) {
+          const height2 = px(node2, "height");
+          if (!isNaN(height2)) {
+            return height2;
+          }
+          const topBorder = px(node2, "border-top-width");
+          const bottomBorder = px(node2, "border-bottom-width");
+          return node2.scrollHeight + topBorder + bottomBorder;
+        }
+        function px(node2, styleProperty) {
+          if (node2.nodeType === ELEMENT_NODE) {
+            let value = getComputedStyle2(node2).getPropertyValue(styleProperty);
+            if (value.slice(-2) === "px") {
+              value = value.slice(0, -2);
+              return Number.parseFloat(value);
+            }
+          }
+          return Number.NaN;
+        }
+      }
+      function newInliner() {
+        const URL_REGEX = /url\(['"]?([^'"]+?)['"]?\)/g;
+        return {
+          inlineAll,
+          shouldProcess,
+          impl: {
+            readUrls,
+            inline
+          }
+        };
+        function shouldProcess(string) {
+          return string.search(URL_REGEX) !== -1;
+        }
+        function readUrls(string) {
+          const result = [];
+          let match;
+          while ((match = URL_REGEX.exec(string)) !== null) {
+            result.push(match[1]);
+          }
+          return result.filter((url) => !util.isDataUrl(url));
+        }
+        function inline(string, url, baseUrl, get3) {
+          return Promise.resolve(url).then((urlValue) => baseUrl ? util.resolveUrl(urlValue, baseUrl) : urlValue).then(get3 || util.getAndEncode).then((dataUrl) => string.replace(urlAsRegex(url), `$1${dataUrl}$3`));
+          function urlAsRegex(urlValue) {
+            return new RegExp(
+              `(url\\(['"]?)(${util.escape(urlValue)})(['"]?\\))`,
+              "g"
+            );
+          }
+        }
+        function inlineAll(string, baseUrl, get3) {
+          if (nothingToInline()) {
+            return Promise.resolve(string);
+          }
+          return Promise.resolve(string).then(readUrls).then((urls) => {
+            let done = Promise.resolve(string);
+            for (const url of urls) {
+              done = done.then((prefix) => inline(prefix, url, baseUrl, get3));
+            }
+            return done;
+          });
+          function nothingToInline() {
+            return !shouldProcess(string);
+          }
+        }
+      }
+      function newFontFaces() {
+        return {
+          resolveAll,
+          impl: {
+            readAll
+          }
+        };
+        function resolveAll() {
+          return readAll().then((webFonts) => Promise.all(
+            webFonts.map((webFont) => webFont.resolve())
+          )).then((cssStrings) => cssStrings.join("\n"));
+        }
+        function readAll() {
+          return Promise.resolve(util.asArray(document.styleSheets)).then(getCssRules).then(selectWebFontRules).then((rules) => rules.map(newWebFont));
+          function selectWebFontRules(cssRules) {
+            return cssRules.filter((rule) => rule.type === CSSRule.FONT_FACE_RULE).filter((rule) => inliner.shouldProcess(rule.style.getPropertyValue("src")));
+          }
+          function getCssRules(styleSheets) {
+            const cssRules = [];
+            for (const sheet of styleSheets) {
+              if (Object.hasOwn(
+                Object.getPrototypeOf(sheet),
+                "cssRules"
+              )) {
+                try {
+                  util.asArray(sheet.cssRules || []).forEach(cssRules.push.bind(cssRules));
+                } catch (error) {
+                  console.error(
+                    `domtoimage: Error while reading CSS rules from ${sheet.href}`,
+                    error.toString()
+                  );
+                }
+              }
+            }
+            return cssRules;
+          }
+          function newWebFont(webFontRule) {
+            return {
+              resolve: function resolve() {
+                const baseUrl = (webFontRule.parentStyleSheet || {}).href;
+                return inliner.inlineAll(webFontRule.cssText, baseUrl);
+              },
+              src() {
+                return webFontRule.style.getPropertyValue("src");
+              }
+            };
+          }
+        }
+      }
+      function newImages() {
+        return {
+          inlineAll,
+          impl: {
+            newImage
+          }
+        };
+        function newImage(element) {
+          return {
+            inline
+          };
+          function inline(get3) {
+            if (util.isDataUrl(element.src)) {
+              return Promise.resolve();
+            }
+            return Promise.resolve(element.src).then(get3 || util.getAndEncode).then((dataUrl) => new Promise((resolve) => {
+              element.addEventListener("load", resolve);
+              element.onerror = resolve;
+              element.src = dataUrl;
+            }));
+          }
+        }
+        function inlineAll(node2) {
+          if (!util.isElement(node2)) {
+            return Promise.resolve(node2);
+          }
+          return inlineCSSProperty(node2).then(() => {
+            if (util.isHTMLImageElement(node2)) {
+              return newImage(node2).inline();
+            }
+            return Promise.all(
+              util.asArray(node2.childNodes).map((child) => inlineAll(child))
+            );
+          });
+          function inlineCSSProperty(node3) {
+            const properties = ["background", "background-image"];
+            const inliningTasks = properties.map((propertyName) => {
+              const value = node3.style.getPropertyValue(propertyName);
+              const priority = node3.style.getPropertyPriority(propertyName);
+              if (!value) {
+                return Promise.resolve();
+              }
+              return inliner.inlineAll(value).then((inlinedValue) => {
+                node3.style.setProperty(propertyName, inlinedValue, priority);
+              });
+            });
+            return Promise.all(inliningTasks).then(() => node3);
+          }
+        }
+      }
+      function setStyleProperty(targetStyle, name, value, priority) {
+        const needs_prefixing = ["background-clip"].includes(name);
+        if (priority) {
+          targetStyle.setProperty(name, value, priority);
+          if (needs_prefixing) {
+            targetStyle.setProperty(`-webkit-${name}`, value, priority);
+          }
+        } else {
+          targetStyle.setProperty(name, value);
+          if (needs_prefixing) {
+            targetStyle.setProperty(`-webkit-${name}`, value);
+          }
+        }
+      }
+      function copyUserComputedStyleFast(options, sourceElement, sourceComputedStyles, parentComputedStyles, targetElement) {
+        const defaultStyle = domtoimage2.impl.options.copyDefaultStyles ? getDefaultStyle(options, sourceElement) : {};
+        const targetStyle = targetElement.style;
+        for (const name of util.asArray(sourceComputedStyles)) {
+          const sourceValue = sourceComputedStyles.getPropertyValue(name);
+          const defaultValue = defaultStyle[name];
+          const parentValue = parentComputedStyles ? parentComputedStyles.getPropertyValue(name) : void 0;
+          if (sourceValue !== defaultValue || parentComputedStyles && sourceValue !== parentValue) {
+            const priority = sourceComputedStyles.getPropertyPriority(name);
+            setStyleProperty(targetStyle, name, sourceValue, priority);
+          }
+        }
+      }
+      let removeDefaultStylesTimeoutId = null;
+      let tagNameDefaultStyles = {};
+      const ascentStoppers = /* @__PURE__ */ new Set([
+        // these come from https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements
+        "ADDRESS",
+        "ARTICLE",
+        "ASIDE",
+        "BLOCKQUOTE",
+        "DETAILS",
+        "DIALOG",
+        "DD",
+        "DIV",
+        "DL",
+        "DT",
+        "FIELDSET",
+        "FIGCAPTION",
+        "FIGURE",
+        "FOOTER",
+        "FORM",
+        "H1",
+        "H2",
+        "H3",
+        "H4",
+        "H5",
+        "H6",
+        "HEADER",
+        "HGROUP",
+        "HR",
+        "LI",
+        "MAIN",
+        "NAV",
+        "OL",
+        "P",
+        "PRE",
+        "SECTION",
+        "SVG",
+        "TABLE",
+        "UL",
+        // this is some non-standard ones
+        "math",
+        // intentionally lowercase, thanks Safari
+        "svg",
+        // in case we have an svg embedded element
+        // these are ultimate stoppers in case something drastic changes in how the DOM works
+        "BODY",
+        "HEAD",
+        "HTML"
+      ]);
+      function getDefaultStyle(options, sourceElement) {
+        const tagHierarchy = computeTagHierarchy(sourceElement);
+        const tagKey = computeTagKey(tagHierarchy);
+        if (tagNameDefaultStyles[tagKey]) {
+          return tagNameDefaultStyles[tagKey];
+        }
+        const sandboxWindow = ensureSandboxWindow();
+        const defaultElement = constructElementHierachy(
+          sandboxWindow.document,
+          tagHierarchy
+        );
+        const defaultStyle = computeStyleForDefaults(sandboxWindow, defaultElement);
+        destroyElementHierarchy(defaultElement);
+        tagNameDefaultStyles[tagKey] = defaultStyle;
+        return defaultStyle;
+        function computeTagHierarchy(sourceNode) {
+          const tagNames = [];
+          do {
+            if (sourceNode.nodeType === ELEMENT_NODE) {
+              const tagName = sourceNode.tagName;
+              tagNames.push(tagName);
+              if (ascentStoppers.has(tagName)) {
+                break;
+              }
+            }
+            sourceNode = sourceNode.parentNode;
+          } while (sourceNode);
+          return tagNames;
+        }
+        function computeTagKey(tagHierarchy2) {
+          if (options.styleCaching === "relaxed") {
+            return tagHierarchy2.filter((_3, i4, a3) => i4 === 0 || i4 === a3.length - 1).join(">");
+          }
+          return tagHierarchy2.join(">");
+        }
+        function constructElementHierachy(sandboxDocument, tagHierarchy2) {
+          let element = sandboxDocument.body;
+          do {
+            const childTagName = tagHierarchy2.pop();
+            const childElement = sandboxDocument.createElement(childTagName);
+            element.append(childElement);
+            element = childElement;
+          } while (tagHierarchy2.length > 0);
+          element.textContent = "\u200B";
+          return element;
+        }
+        function computeStyleForDefaults(sandboxWindow2, defaultElement2) {
+          const defaultStyle2 = {};
+          const defaultComputedStyle = sandboxWindow2.getComputedStyle(defaultElement2);
+          for (const name of util.asArray(defaultComputedStyle)) {
+            defaultStyle2[name] = name === "width" || name === "height" ? "auto" : defaultComputedStyle.getPropertyValue(name);
+          }
+          return defaultStyle2;
+        }
+        function destroyElementHierarchy(element) {
+          do {
+            const parentElement = element.parentElement;
+            if (parentElement !== null) {
+              element.remove();
+            }
+            element = parentElement;
+          } while (element && element.tagName !== "BODY");
+        }
+      }
+      function ensureSandboxWindow() {
+        if (sandbox) {
+          return sandbox.contentWindow;
+        }
+        const charsetToUse = document.characterSet || "UTF-8";
+        const documentType = document.doctype;
+        const documentTypeDeclaration = documentType ? `<!DOCTYPE ${escapeHTML(documentType.name)} ${escapeHTML(
+          documentType.publicId
+        )} ${escapeHTML(documentType.systemId)}`.trim() + ">" : "";
+        sandbox = document.createElement("iframe");
+        sandbox.id = "domtoimage-sandbox-" + util.uid();
+        sandbox.style.visibility = "hidden";
+        sandbox.style.position = "fixed";
+        document.body.append(sandbox);
+        return tryTechniques(
+          sandbox,
+          documentTypeDeclaration,
+          charsetToUse,
+          "domtoimage-sandbox"
+        );
+        function escapeHTML(unsafeText) {
+          if (unsafeText) {
+            const div = document.createElement("div");
+            div.innerText = unsafeText;
+            return div.innerHTML;
+          }
+          return "";
+        }
+        function tryTechniques(sandbox2, doctype, charset, title) {
+          try {
+            sandbox2.contentWindow.document.write(
+              `${doctype}<html><head><meta charset='${charset}'><title>${title}</title></head><body></body></html>`
+            );
+            return sandbox2.contentWindow;
+          } catch {
+          }
+          const metaCharset = document.createElement("meta");
+          metaCharset.setAttribute("charset", charset);
+          try {
+            const sandboxDocument = document.implementation.createHTMLDocument(title);
+            sandboxDocument.head.append(metaCharset);
+            const sandboxHTML = doctype + sandboxDocument.documentElement.outerHTML;
+            sandbox2.setAttribute("srcdoc", sandboxHTML);
+            return sandbox2.contentWindow;
+          } catch {
+          }
+          sandbox2.contentDocument.head.append(metaCharset);
+          sandbox2.contentDocument.title = title;
+          return sandbox2.contentWindow;
+        }
+      }
+      function removeSandbox() {
+        if (sandbox) {
+          sandbox.remove();
+          sandbox = null;
+        }
+        if (removeDefaultStylesTimeoutId) {
+          clearTimeout(removeDefaultStylesTimeoutId);
+        }
+        removeDefaultStylesTimeoutId = setTimeout(() => {
+          removeDefaultStylesTimeoutId = null;
+          tagNameDefaultStyles = {};
+        }, 20 * 1e3);
+      }
+    })(exports);
+  }
+});
+
 // node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js
 var require_isArray = __commonJS({
   "node_modules/.pnpm/lodash@4.17.21/node_modules/lodash/isArray.js"(exports, module2) {
@@ -29167,12 +29093,12 @@ var require_memoize = __commonJS({
         throw new TypeError(FUNC_ERROR_TEXT);
       }
       var memoized = function() {
-        var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache = memoized.cache;
-        if (cache.has(key)) {
-          return cache.get(key);
+        var args = arguments, key = resolver ? resolver.apply(this, args) : args[0], cache2 = memoized.cache;
+        if (cache2.has(key)) {
+          return cache2.get(key);
         }
         var result = func.apply(this, args);
-        memoized.cache = cache.set(key, result) || cache;
+        memoized.cache = cache2.set(key, result) || cache2;
         return result;
       };
       memoized.cache = new (memoize.Cache || MapCache)();
@@ -29190,12 +29116,12 @@ var require_memoizeCapped = __commonJS({
     var MAX_MEMOIZE_SIZE = 500;
     function memoizeCapped(func) {
       var result = memoize(func, function(key) {
-        if (cache.size === MAX_MEMOIZE_SIZE) {
-          cache.clear();
+        if (cache2.size === MAX_MEMOIZE_SIZE) {
+          cache2.clear();
         }
         return key;
       });
-      var cache = result.cache;
+      var cache2 = result.cache;
       return result;
     }
     module2.exports = memoizeCapped;
@@ -29452,7 +29378,7 @@ var require_set = __commonJS({
 // main.ts
 var main_exports = {};
 __export(main_exports, {
-  default: () => main_default
+  default: () => ExportImagePlugin
 });
 module.exports = __toCommonJS(main_exports);
 
@@ -29926,7 +29852,6 @@ var Watermark2 = (_a2) => {
     style
   }, children);
 };
-var src_default = Watermark2;
 
 // src/settingPreview.tsx
 var defaultConfig = {
@@ -29939,9 +29864,9 @@ var Preview = ({
 }) => {
   const container = (0, import_react2.useRef)(null);
   (0, import_react2.useEffect)(() => {
-    container.current?.appendChild(el);
+    container.current?.append(el);
   });
-  const props = {
+  const properties = {
     ...defaultConfig,
     visible: setting.watermark.enable,
     rotate: setting.watermark.rotate ?? -30,
@@ -29952,14 +29877,14 @@ var Preview = ({
     gapY: setting.watermark.y ?? 100
   };
   if (setting.watermark.type === "text") {
-    props.text = setting.watermark.text.content;
-    props.fontSize = setting.watermark.text.fontSize || 16;
-    props.fontColor = setting.watermark.text.color || "#cccccc";
-    props.image = void 0;
+    properties.text = setting.watermark.text.content;
+    properties.fontSize = setting.watermark.text.fontSize ?? 16;
+    properties.fontColor = setting.watermark.text.color ?? "#cccccc";
+    properties.image = void 0;
   } else {
-    props.image = setting.watermark.image.src;
+    properties.image = setting.watermark.image.src;
   }
-  return /* @__PURE__ */ import_react2.default.createElement(Watermark2, { ...props }, /* @__PURE__ */ import_react2.default.createElement(
+  return /* @__PURE__ */ import_react2.default.createElement(Watermark2, { ...properties }, /* @__PURE__ */ import_react2.default.createElement(
     "div",
     {
       className: "markdown-preview-view markdown-rendered export-image-setting-preview-mock",
@@ -29967,9 +29892,9 @@ var Preview = ({
     }
   ));
 };
-var renderPreview = (root2, app) => {
-  const el = createDiv();
-  import_obsidian.MarkdownRenderer.render(
+var renderPreview = async (root2, app) => {
+  const element = createDiv();
+  await import_obsidian.MarkdownRenderer.render(
     app,
     [
       "# test markdown",
@@ -29978,29 +29903,22 @@ var renderPreview = (root2, app) => {
       "some content...\n",
       "some content...\n"
     ].join("\n"),
-    el,
+    element,
     "/",
-    new import_obsidian.MarkdownRenderChild(el)
+    new import_obsidian.MarkdownRenderChild(element)
   );
   const r5 = (0, import_client.createRoot)(root2);
-  return (setting) => r5.render(/* @__PURE__ */ import_react2.default.createElement(Preview, { setting, el }));
+  return (setting) => {
+    r5.render(/* @__PURE__ */ import_react2.default.createElement(Preview, { setting, el: element }));
+  };
 };
 
 // src/components/file/exportImage.tsx
-var import_react12 = __toESM(require_react());
+var import_react11 = __toESM(require_react());
 var import_obsidian7 = require("obsidian");
 var import_client4 = __toESM(require_client());
 
-// src/components/file/ModalContent.tsx
-var import_obsidian6 = require("obsidian");
-var import_react10 = __toESM(require_react());
-
-// src/utils/capture.ts
-var import_obsidian4 = require("obsidian");
-var import_dom_to_image_more = __toESM(require_dom_to_image_more());
-var import_file_saver = __toESM(require_FileSaver_min());
-
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/runtime/esm/parser/src/basic.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/parser/src/basic.mjs
 var removeEmptyValues = (object) => Object.fromEntries(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Object.entries(object).map(([key, value]) => key !== "i" && value && value != "0" && [key, value]).filter(Boolean)
@@ -30071,7 +29989,7 @@ var parseRawText = (rawText, optimize = true, firstKey = "", lastKey = "") => ra
   return optimize ? removeEmptyValues(trimmed) : trimmed;
 });
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/runtime/esm/runtime/src/core.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/runtime/src/core.mjs
 var applyFormatters = (formatters, formatterKeys, initialValue) => formatterKeys.reduce((value, formatterKey) => {
   var _a2, _b2;
   return (_b2 = formatterKey.match(REGEX_SWITCH_CASE) ? ((cases) => {
@@ -30115,14 +30033,14 @@ var translate = (textParts, pluralRules, formatters, args) => {
   return applyArguments(textParts, pluralRules, formatters, transformedArgs);
 };
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.string.mjs
-var getPartsFromString = (cache, text) => cache[text] || (cache[text] = parseRawText(text));
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.string.mjs
+var getPartsFromString = (cache2, text) => cache2[text] || (cache2[text] = parseRawText(text));
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.object.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.object.mjs
 var getTranslateInstance = (locale2, formatters) => {
-  const cache = {};
+  const cache2 = {};
   const pluralRules = new Intl.PluralRules(locale2);
-  return (text, ...args) => translate(getPartsFromString(cache, text), pluralRules, formatters, args);
+  return (text, ...args) => translate(getPartsFromString(cache2, text), pluralRules, formatters, args);
 };
 function i18nObject(locale2, translations, formatters = {}) {
   return createProxy(translations, getTranslateInstance(locale2, formatters));
@@ -30136,15 +30054,15 @@ var createProxy = (proxyObject, translateFn) => new Proxy(wrap(proxyObject, tran
   }
 });
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.instance.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/runtime/esm/runtime/src/util.instance.mjs
 var i18n = (translations, formatters) => {
-  const cache = {};
+  const cache2 = {};
   return new Proxy({}, {
-    get: (_target, locale2) => cache[locale2] || (cache[locale2] = i18nObject(locale2, translations[locale2], formatters[locale2]))
+    get: (_target, locale2) => cache2[locale2] || (cache2[locale2] = i18nObject(locale2, translations[locale2], formatters[locale2]))
   });
 };
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/detectors/detectors/browser/document-cookie.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/detectors/detectors/browser/document-cookie.mjs
 var r = (o4, c5) => {
   let t5 = o4?.split(";").map((e4) => e4.trim()).find((e4) => e4.startsWith(c5))?.split("=")[1];
   return t5 ? [t5] : [];
@@ -30152,24 +30070,24 @@ var r = (o4, c5) => {
 var i = (o4 = "lang") => () => r(document?.cookie, o4);
 var n = i();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/detectors/detectors/browser/localstorage-detector.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/detectors/detectors/browser/localstorage-detector.mjs
 var e = (r5) => !!r5;
 var t = (r5 = "lang") => () => [window?.localStorage?.getItem(r5)].filter(e);
 var xe = t();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/detectors/detectors/browser/query-string.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/detectors/detectors/browser/query-string.mjs
 var o = (e4 = "lang") => () => {
   let t5 = location?.search?.slice(1).split("&").find((r5) => r5.startsWith(e4))?.split("=")[1];
   return t5 ? [t5] : [];
 };
 var c = o();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/detectors/detectors/browser/sessionstorage-detector.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/detectors/detectors/browser/sessionstorage-detector.mjs
 var r2 = (e4) => !!e4;
 var t2 = (e4 = "lang") => () => [window?.sessionStorage?.getItem(e4)].filter(r2);
 var lr = t2();
 
-// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.4/node_modules/typesafe-i18n/utils/index.mjs
+// node_modules/.pnpm/typesafe-i18n@5.26.2_typescript@5.4.5/node_modules/typesafe-i18n/utils/index.mjs
 var objectExtend = extend;
 function extend() {
   var args = [].slice.call(arguments);
@@ -30238,8 +30156,11 @@ var en = {
   imageExportPreview: "Image Export Preview",
   copiedSuccess: "Copied to clipboard",
   copy: "Copy to Clipboard",
+  copyFail: "Failed to copy",
+  notAllowCopy: "Unable to directly copy {format} format",
   save: "Save Image",
   saveSuccess: "Export and save the image as {filePath: string}.",
+  saveFail: "Failed to save the image",
   saveVault: "Save to Vault",
   includingFilename: "Including File Name As Title",
   imageWidth: "Image Width",
@@ -30273,9 +30194,10 @@ var en = {
     },
     format: {
       title: "Output file format",
-      description: "The default JPG format for images should suffice for most needs. However, for customization: 1. Support PNG format for images with transparent backgrounds. 2. Offer the ability to export as a single-page PDF with a non-standard paper size, please ensure it is used correctly.",
-      jpg: ".jpg - default",
-      png: ".png - transparent background image",
+      description: "Default PNG format images should satisfy the majority of needs, but to better support user scenarios: 1. Support for exporting images with both normal and transparent backgrounds; 2. Support for exporting JPG images to achieve smaller file sizes, though it may not be possible to copy directly to the clipboard; 3. Support for exporting to single-page PDF format, which differs from the usual PDF paper formats, please be careful not to misuse.",
+      png0: ".png - default",
+      png1: ".png - transparent background image",
+      jpg: ".jpg - jpg format image",
       pdf: ".pdf - single page pdf"
     },
     userInfo: {
@@ -30342,8 +30264,11 @@ var zh = {
   imageExportPreview: "\u56FE\u7247\u5BFC\u51FA\u9884\u89C8",
   copiedSuccess: "\u5DF2\u590D\u5236\u5230\u526A\u8D34\u677F",
   copy: "\u590D\u5236\u5230\u526A\u8D34\u677F",
+  copyFail: "\u590D\u5236\u5230\u526A\u8D34\u677F\u5931\u8D25",
+  notAllowCopy: "\u65E0\u6CD5\u76F4\u63A5\u590D\u5236 {format} \u683C\u5F0F",
   save: "\u4FDD\u5B58\u56FE\u7247",
   saveSuccess: "\u5DF2\u5BFC\u51FA\u5E76\u4FDD\u5B58\u56FE\u7247\u81F3 {filePath}\u3002",
+  saveFail: "\u4FDD\u5B58\u56FE\u7247\u5931\u8D25",
   saveVault: "\u4FDD\u5B58\u5230 vault",
   includingFilename: "\u5305\u542B\u6587\u4EF6\u540D\u4F5C\u4E3A\u6807\u9898",
   imageWidth: "\u56FE\u7247\u5BBD\u5EA6",
@@ -30377,9 +30302,10 @@ var zh = {
     },
     format: {
       title: "\u8F93\u51FA\u6587\u4EF6\u683C\u5F0F",
-      description: "\u9ED8\u8BA4\u7684 jpg \u683C\u5F0F\u56FE\u7247\u5E94\u8BE5\u6EE1\u8DB3\u7EDD\u5927\u591A\u6570\u9700\u6C42\uFF0C\u4F46\u4E3A\u4E86\u4E00\u4E9B\u5B9A\u5236\u5316\u7684\u573A\u666F\uFF1A1. \u652F\u6301 png \u683C\u5F0F\u56FE\u7247\uFF0C\u4EE5\u8F93\u51FA\u900F\u660E\u80CC\u666F\u7684\u56FE\u7247\uFF1B2. \u652F\u6301\u5BFC\u51FA\u6210\u5355\u9875 pdf \u529F\u80FD\uFF0C\u8FD9\u4E0E\u901A\u5E38 pdf \u7684\u7EB8\u5F20\u683C\u5F0F\u4E0D\u540C\uFF0C\u8BF7\u6CE8\u610F\u4E0D\u8981\u8BEF\u7528\u3002",
-      jpg: "jpg - \u9ED8\u8BA4",
-      png: "png - \u5BFC\u51FA\u900F\u660E\u80CC\u666F\u7684\u56FE\u7247",
+      description: "\u9ED8\u8BA4\u7684 png \u683C\u5F0F\u56FE\u7247\u5E94\u8BE5\u6EE1\u8DB3\u7EDD\u5927\u591A\u6570\u9700\u6C42\uFF0C\u4F46\u4E3A\u4E86\u66F4\u597D\u5730\u652F\u6301\u7528\u6237\u573A\u666F\uFF1A1. \u652F\u6301\u5BFC\u51FA\u6B63\u5E38\u80CC\u666F\u4E0E\u900F\u660E\u80CC\u666F\u7684\uFF1B\u56FE\u7247\uFF1B2. \u652F\u6301\u5BFC\u51FA jpg \u56FE\u7247\u4EE5\u83B7\u5F97\u66F4\u5C0F\u7684\u56FE\u7247\u5927\u5C0F\uFF0C\u4F46\u53EF\u80FD\u65E0\u6CD5\u76F4\u63A5\u590D\u5236\u5230\u526A\u5207\u677F\uFF1B3. \u652F\u6301\u5BFC\u51FA\u6210\u5355\u9875 pdf \u529F\u80FD\uFF0C\u8FD9\u4E0E\u901A\u5E38 pdf \u7684\u7EB8\u5F20\u683C\u5F0F\u4E0D\u540C\uFF0C\u8BF7\u6CE8\u610F\u4E0D\u8981\u8BEF\u7528\u3002",
+      png0: "png - \u9ED8\u8BA4",
+      png1: "png - \u5BFC\u51FA\u900F\u660E\u80CC\u666F\u56FE\u7247",
+      jpg: "jpg - \u5BFC\u51FA jpg \u56FE\u7247",
       pdf: "pdf - \u5BFC\u51FA\u5355\u9875 pdf"
     },
     userInfo: {
@@ -30457,72 +30383,1697 @@ var loadFormatters = (locale2) => void (loadedFormatters[locale2] = initFormatte
 loadAllLocales();
 var locale = "en";
 try {
-  locale = /^zh/.test(global?.i18next?.language || "") ? "zh" : "en";
-} catch (e4) {
+  locale = (global?.i18next?.language || "").startsWith("zh") ? "zh" : "en";
+} catch {
 }
 var L = i18n2()[locale];
 var L_default = L;
 
-// src/utils/index.ts
-var import_obsidian2 = require("obsidian");
-function isMarkdownFile(file) {
-  return ["md", "markdown"].includes(file?.extension ?? "");
+// src/components/file/ModalContent.tsx
+var import_obsidian6 = require("obsidian");
+var import_react10 = __toESM(require_react());
+
+// node_modules/.pnpm/react-zoom-pan-pinch@3.4.4_react-dom@18.2.0_react@18.2.0/node_modules/react-zoom-pan-pinch/dist/index.esm.js
+var import_react3 = __toESM(require_react());
+var roundNumber = function(num, decimal) {
+  return Number(num.toFixed(decimal));
+};
+var checkIsNumber = function(num, defaultValue) {
+  return typeof num === "number" ? num : defaultValue;
+};
+var handleCallback = function(context, event, callback) {
+  if (callback && typeof callback === "function") {
+    callback(context, event);
+  }
+};
+var easeOut = function(t5) {
+  return -Math.cos(t5 * Math.PI) / 2 + 0.5;
+};
+var linear = function(t5) {
+  return t5;
+};
+var easeInQuad = function(t5) {
+  return t5 * t5;
+};
+var easeOutQuad = function(t5) {
+  return t5 * (2 - t5);
+};
+var easeInOutQuad = function(t5) {
+  return t5 < 0.5 ? 2 * t5 * t5 : -1 + (4 - 2 * t5) * t5;
+};
+var easeInCubic = function(t5) {
+  return t5 * t5 * t5;
+};
+var easeOutCubic = function(t5) {
+  return --t5 * t5 * t5 + 1;
+};
+var easeInOutCubic = function(t5) {
+  return t5 < 0.5 ? 4 * t5 * t5 * t5 : (t5 - 1) * (2 * t5 - 2) * (2 * t5 - 2) + 1;
+};
+var easeInQuart = function(t5) {
+  return t5 * t5 * t5 * t5;
+};
+var easeOutQuart = function(t5) {
+  return 1 - --t5 * t5 * t5 * t5;
+};
+var easeInOutQuart = function(t5) {
+  return t5 < 0.5 ? 8 * t5 * t5 * t5 * t5 : 1 - 8 * --t5 * t5 * t5 * t5;
+};
+var easeInQuint = function(t5) {
+  return t5 * t5 * t5 * t5 * t5;
+};
+var easeOutQuint = function(t5) {
+  return 1 + --t5 * t5 * t5 * t5 * t5;
+};
+var easeInOutQuint = function(t5) {
+  return t5 < 0.5 ? 16 * t5 * t5 * t5 * t5 * t5 : 1 + 16 * --t5 * t5 * t5 * t5 * t5;
+};
+var animations = {
+  easeOut,
+  linear,
+  easeInQuad,
+  easeOutQuad,
+  easeInOutQuad,
+  easeInCubic,
+  easeOutCubic,
+  easeInOutCubic,
+  easeInQuart,
+  easeOutQuart,
+  easeInOutQuart,
+  easeInQuint,
+  easeOutQuint,
+  easeInOutQuint
+};
+var handleCancelAnimationFrame = function(animation) {
+  if (typeof animation === "number") {
+    cancelAnimationFrame(animation);
+  }
+};
+var handleCancelAnimation = function(contextInstance) {
+  if (!contextInstance.mounted)
+    return;
+  handleCancelAnimationFrame(contextInstance.animation);
+  contextInstance.animate = false;
+  contextInstance.animation = null;
+  contextInstance.velocity = null;
+};
+function handleSetupAnimation(contextInstance, animationName, animationTime, callback) {
+  if (!contextInstance.mounted)
+    return;
+  var startTime = (/* @__PURE__ */ new Date()).getTime();
+  var lastStep = 1;
+  handleCancelAnimation(contextInstance);
+  contextInstance.animation = function() {
+    if (!contextInstance.mounted) {
+      return handleCancelAnimationFrame(contextInstance.animation);
+    }
+    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
+    var animationProgress = frameTime / animationTime;
+    var animationType = animations[animationName];
+    var step = animationType(animationProgress);
+    if (frameTime >= animationTime) {
+      callback(lastStep);
+      contextInstance.animation = null;
+    } else if (contextInstance.animation) {
+      callback(step);
+      requestAnimationFrame(contextInstance.animation);
+    }
+  };
+  requestAnimationFrame(contextInstance.animation);
 }
-async function fileToBase64(file) {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  return new Promise((resolve, reject) => {
-    reader.onload = () => {
-      resolve(reader.result);
-    };
-    reader.onerror = (error) => {
-      reject(error);
-    };
+function isValidTargetState(targetState) {
+  var scale = targetState.scale, positionX = targetState.positionX, positionY = targetState.positionY;
+  if (Number.isNaN(scale) || Number.isNaN(positionX) || Number.isNaN(positionY)) {
+    return false;
+  }
+  return true;
+}
+function animate(contextInstance, targetState, animationTime, animationName) {
+  var isValid = isValidTargetState(targetState);
+  if (!contextInstance.mounted || !isValid)
+    return;
+  var setTransformState = contextInstance.setTransformState;
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  var scaleDiff = targetState.scale - scale;
+  var positionXDiff = targetState.positionX - positionX;
+  var positionYDiff = targetState.positionY - positionY;
+  if (animationTime === 0) {
+    setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
+  } else {
+    handleSetupAnimation(contextInstance, animationName, animationTime, function(step) {
+      var newScale = scale + scaleDiff * step;
+      var newPositionX = positionX + positionXDiff * step;
+      var newPositionY = positionY + positionYDiff * step;
+      setTransformState(newScale, newPositionX, newPositionY);
+    });
+  }
+}
+function getComponentsSizes(wrapperComponent, contentComponent, newScale) {
+  var wrapperWidth = wrapperComponent.offsetWidth;
+  var wrapperHeight = wrapperComponent.offsetHeight;
+  var contentWidth = contentComponent.offsetWidth;
+  var contentHeight = contentComponent.offsetHeight;
+  var newContentWidth = contentWidth * newScale;
+  var newContentHeight = contentHeight * newScale;
+  var newDiffWidth = wrapperWidth - newContentWidth;
+  var newDiffHeight = wrapperHeight - newContentHeight;
+  return {
+    wrapperWidth,
+    wrapperHeight,
+    newContentWidth,
+    newDiffWidth,
+    newContentHeight,
+    newDiffHeight
+  };
+}
+var getBounds = function(wrapperWidth, newContentWidth, diffWidth, wrapperHeight, newContentHeight, diffHeight, centerZoomedOut) {
+  var scaleWidthFactor = wrapperWidth > newContentWidth ? diffWidth * (centerZoomedOut ? 1 : 0.5) : 0;
+  var scaleHeightFactor = wrapperHeight > newContentHeight ? diffHeight * (centerZoomedOut ? 1 : 0.5) : 0;
+  var minPositionX = wrapperWidth - newContentWidth - scaleWidthFactor;
+  var maxPositionX = scaleWidthFactor;
+  var minPositionY = wrapperHeight - newContentHeight - scaleHeightFactor;
+  var maxPositionY = scaleHeightFactor;
+  return { minPositionX, maxPositionX, minPositionY, maxPositionY };
+};
+var calculateBounds = function(contextInstance, newScale) {
+  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+  var centerZoomedOut = contextInstance.setup.centerZoomedOut;
+  if (!wrapperComponent || !contentComponent) {
+    throw new Error("Components are not mounted");
+  }
+  var _a2 = getComponentsSizes(wrapperComponent, contentComponent, newScale), wrapperWidth = _a2.wrapperWidth, wrapperHeight = _a2.wrapperHeight, newContentWidth = _a2.newContentWidth, newDiffWidth = _a2.newDiffWidth, newContentHeight = _a2.newContentHeight, newDiffHeight = _a2.newDiffHeight;
+  var bounds = getBounds(wrapperWidth, newContentWidth, newDiffWidth, wrapperHeight, newContentHeight, newDiffHeight, Boolean(centerZoomedOut));
+  return bounds;
+};
+var boundLimiter = function(value, minBound, maxBound, isActive) {
+  if (!isActive)
+    return roundNumber(value, 2);
+  if (value < minBound)
+    return roundNumber(minBound, 2);
+  if (value > maxBound)
+    return roundNumber(maxBound, 2);
+  return roundNumber(value, 2);
+};
+var handleCalculateBounds = function(contextInstance, newScale) {
+  var bounds = calculateBounds(contextInstance, newScale);
+  contextInstance.bounds = bounds;
+  return bounds;
+};
+function getMouseBoundedPosition(positionX, positionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent) {
+  var minPositionX = bounds.minPositionX, minPositionY = bounds.minPositionY, maxPositionX = bounds.maxPositionX, maxPositionY = bounds.maxPositionY;
+  var paddingX = 0;
+  var paddingY = 0;
+  if (wrapperComponent) {
+    paddingX = paddingValueX;
+    paddingY = paddingValueY;
+  }
+  var x2 = boundLimiter(positionX, minPositionX - paddingX, maxPositionX + paddingX, limitToBounds);
+  var y3 = boundLimiter(positionY, minPositionY - paddingY, maxPositionY + paddingY, limitToBounds);
+  return { x: x2, y: y3 };
+}
+function handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds) {
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  var scaleDifference = newScale - scale;
+  if (typeof mouseX !== "number" || typeof mouseY !== "number") {
+    console.error("Mouse X and Y position were not provided!");
+    return { x: positionX, y: positionY };
+  }
+  var calculatedPositionX = positionX - mouseX * scaleDifference;
+  var calculatedPositionY = positionY - mouseY * scaleDifference;
+  var newPositions = getMouseBoundedPosition(calculatedPositionX, calculatedPositionY, bounds, limitToBounds, 0, 0, null);
+  return newPositions;
+}
+function checkZoomBounds(zoom, minScale, maxScale, zoomPadding, enablePadding) {
+  var scalePadding = enablePadding ? zoomPadding : 0;
+  var minScaleWithPadding = minScale - scalePadding;
+  if (!Number.isNaN(maxScale) && zoom >= maxScale)
+    return maxScale;
+  if (!Number.isNaN(minScale) && zoom <= minScaleWithPadding)
+    return minScaleWithPadding;
+  return zoom;
+}
+var isPanningStartAllowed = function(contextInstance, event) {
+  var excluded = contextInstance.setup.panning.excluded;
+  var isInitialized = contextInstance.isInitialized, wrapperComponent = contextInstance.wrapperComponent;
+  var target = event.target;
+  var targetIsShadowDom = "shadowRoot" in target && "composedPath" in event;
+  var isWrapperChild = targetIsShadowDom ? event.composedPath().some(function(el) {
+    if (!(el instanceof Element)) {
+      return false;
+    }
+    return wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(el);
+  }) : wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
+  var isAllowed = isInitialized && target && isWrapperChild;
+  if (!isAllowed)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var isPanningAllowed = function(contextInstance) {
+  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning, setup = contextInstance.setup;
+  var disabled = setup.panning.disabled;
+  var isAllowed = isInitialized && isPanning && !disabled;
+  if (!isAllowed)
+    return false;
+  return true;
+};
+var handlePanningSetup = function(contextInstance, event) {
+  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
+  contextInstance.isPanning = true;
+  var x2 = event.clientX;
+  var y3 = event.clientY;
+  contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
+};
+var handleTouchPanningSetup = function(contextInstance, event) {
+  var touches = event.touches;
+  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
+  contextInstance.isPanning = true;
+  var oneFingerTouch = touches.length === 1;
+  if (oneFingerTouch) {
+    var x2 = touches[0].clientX;
+    var y3 = touches[0].clientY;
+    contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
+  }
+};
+function handlePanToBounds(contextInstance) {
+  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
+  var _b2 = contextInstance.setup, disabled = _b2.disabled, limitToBounds = _b2.limitToBounds, centerZoomedOut = _b2.centerZoomedOut;
+  var wrapperComponent = contextInstance.wrapperComponent;
+  if (disabled || !wrapperComponent || !contextInstance.bounds)
+    return;
+  var _c = contextInstance.bounds, maxPositionX = _c.maxPositionX, minPositionX = _c.minPositionX, maxPositionY = _c.maxPositionY, minPositionY = _c.minPositionY;
+  var xChanged = positionX > maxPositionX || positionX < minPositionX;
+  var yChanged = positionY > maxPositionY || positionY < minPositionY;
+  var mousePosX = positionX > maxPositionX ? wrapperComponent.offsetWidth : contextInstance.setup.minPositionX || 0;
+  var mousePosY = positionY > maxPositionY ? wrapperComponent.offsetHeight : contextInstance.setup.minPositionY || 0;
+  var _d = handleCalculateZoomPositions(contextInstance, mousePosX, mousePosY, scale, contextInstance.bounds, limitToBounds || centerZoomedOut), x2 = _d.x, y3 = _d.y;
+  return {
+    scale,
+    positionX: xChanged ? x2 : positionX,
+    positionY: yChanged ? y3 : positionY
+  };
+}
+function handleNewPosition(contextInstance, newPositionX, newPositionY, paddingValueX, paddingValueY) {
+  var limitToBounds = contextInstance.setup.limitToBounds;
+  var wrapperComponent = contextInstance.wrapperComponent, bounds = contextInstance.bounds;
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  if (wrapperComponent === null || bounds === null || newPositionX === positionX && newPositionY === positionY) {
+    return;
+  }
+  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
+  contextInstance.setTransformState(scale, x2, y3);
+}
+var getPanningClientPosition = function(contextInstance, clientX, clientY) {
+  var startCoords = contextInstance.startCoords, transformState = contextInstance.transformState;
+  var panning = contextInstance.setup.panning;
+  var lockAxisX = panning.lockAxisX, lockAxisY = panning.lockAxisY;
+  var positionX = transformState.positionX, positionY = transformState.positionY;
+  if (!startCoords) {
+    return { x: positionX, y: positionY };
+  }
+  var mouseX = clientX - startCoords.x;
+  var mouseY = clientY - startCoords.y;
+  var newPositionX = lockAxisX ? positionX : mouseX;
+  var newPositionY = lockAxisY ? positionY : mouseY;
+  return { x: newPositionX, y: newPositionY };
+};
+var getPaddingValue = function(contextInstance, size) {
+  var setup = contextInstance.setup, transformState = contextInstance.transformState;
+  var scale = transformState.scale;
+  var minScale = setup.minScale, disablePadding = setup.disablePadding;
+  if (size > 0 && scale >= minScale && !disablePadding) {
+    return size;
+  }
+  return 0;
+};
+var isVelocityCalculationAllowed = function(contextInstance) {
+  var mounted = contextInstance.mounted;
+  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
+  var scale = contextInstance.transformState.scale;
+  var disabledVelocity = velocityAnimation.disabled;
+  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
+  if (!isAllowed)
+    return false;
+  return true;
+};
+var isVelocityAllowed = function(contextInstance) {
+  var mounted = contextInstance.mounted, velocity = contextInstance.velocity, bounds = contextInstance.bounds;
+  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
+  var scale = contextInstance.transformState.scale;
+  var disabledVelocity = velocityAnimation.disabled;
+  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
+  if (!isAllowed)
+    return false;
+  if (!velocity || !bounds)
+    return false;
+  return true;
+};
+function getVelocityMoveTime(contextInstance, velocity) {
+  var velocityAnimation = contextInstance.setup.velocityAnimation;
+  var equalToMove = velocityAnimation.equalToMove, animationTime = velocityAnimation.animationTime, sensitivity = velocityAnimation.sensitivity;
+  if (equalToMove) {
+    return animationTime * velocity * sensitivity;
+  }
+  return animationTime;
+}
+function getVelocityPosition(newPosition, startPosition, currentPosition, isLocked, limitToBounds, minPosition, maxPosition, minTarget, maxTarget, step) {
+  if (limitToBounds) {
+    if (startPosition > maxPosition && currentPosition > maxPosition) {
+      var calculatedPosition = maxPosition + (newPosition - maxPosition) * step;
+      if (calculatedPosition > maxTarget)
+        return maxTarget;
+      if (calculatedPosition < maxPosition)
+        return maxPosition;
+      return calculatedPosition;
+    }
+    if (startPosition < minPosition && currentPosition < minPosition) {
+      var calculatedPosition = minPosition + (newPosition - minPosition) * step;
+      if (calculatedPosition < minTarget)
+        return minTarget;
+      if (calculatedPosition > minPosition)
+        return minPosition;
+      return calculatedPosition;
+    }
+  }
+  if (isLocked)
+    return startPosition;
+  return boundLimiter(newPosition, minPosition, maxPosition, limitToBounds);
+}
+function getSizeMultiplier(wrapperComponent, equalToMove) {
+  var defaultMultiplier = 1;
+  if (equalToMove) {
+    return Math.min(defaultMultiplier, wrapperComponent.offsetWidth / window.innerWidth);
+  }
+  return defaultMultiplier;
+}
+function handleCalculateVelocity(contextInstance, position) {
+  var isAllowed = isVelocityCalculationAllowed(contextInstance);
+  if (!isAllowed) {
+    return;
+  }
+  var lastMousePosition = contextInstance.lastMousePosition, velocityTime = contextInstance.velocityTime, setup = contextInstance.setup;
+  var wrapperComponent = contextInstance.wrapperComponent;
+  var equalToMove = setup.velocityAnimation.equalToMove;
+  var now = Date.now();
+  if (lastMousePosition && velocityTime && wrapperComponent) {
+    var sizeMultiplier = getSizeMultiplier(wrapperComponent, equalToMove);
+    var distanceX = position.x - lastMousePosition.x;
+    var distanceY = position.y - lastMousePosition.y;
+    var velocityX = distanceX / sizeMultiplier;
+    var velocityY = distanceY / sizeMultiplier;
+    var interval = now - velocityTime;
+    var speed = distanceX * distanceX + distanceY * distanceY;
+    var velocity = Math.sqrt(speed) / interval;
+    contextInstance.velocity = { velocityX, velocityY, total: velocity };
+  }
+  contextInstance.lastMousePosition = position;
+  contextInstance.velocityTime = now;
+}
+function handleVelocityPanning(contextInstance) {
+  var velocity = contextInstance.velocity, bounds = contextInstance.bounds, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
+  var isAllowed = isVelocityAllowed(contextInstance);
+  if (!isAllowed || !velocity || !bounds || !wrapperComponent) {
+    return;
+  }
+  var velocityX = velocity.velocityX, velocityY = velocity.velocityY, total = velocity.total;
+  var maxPositionX = bounds.maxPositionX, minPositionX = bounds.minPositionX, maxPositionY = bounds.maxPositionY, minPositionY = bounds.minPositionY;
+  var limitToBounds = setup.limitToBounds, alignmentAnimation = setup.alignmentAnimation;
+  var zoomAnimation = setup.zoomAnimation, panning = setup.panning;
+  var lockAxisY = panning.lockAxisY, lockAxisX = panning.lockAxisX;
+  var animationType = zoomAnimation.animationType;
+  var sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, velocityAlignmentTime = alignmentAnimation.velocityAlignmentTime;
+  var alignAnimationTime = velocityAlignmentTime;
+  var moveAnimationTime = getVelocityMoveTime(contextInstance, total);
+  var finalAnimationTime = Math.max(moveAnimationTime, alignAnimationTime);
+  var paddingValueX = getPaddingValue(contextInstance, sizeX);
+  var paddingValueY = getPaddingValue(contextInstance, sizeY);
+  var paddingX = paddingValueX * wrapperComponent.offsetWidth / 100;
+  var paddingY = paddingValueY * wrapperComponent.offsetHeight / 100;
+  var maxTargetX = maxPositionX + paddingX;
+  var minTargetX = minPositionX - paddingX;
+  var maxTargetY = maxPositionY + paddingY;
+  var minTargetY = minPositionY - paddingY;
+  var startState = contextInstance.transformState;
+  var startTime = (/* @__PURE__ */ new Date()).getTime();
+  handleSetupAnimation(contextInstance, animationType, finalAnimationTime, function(step) {
+    var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
+    var animationProgress = frameTime / alignAnimationTime;
+    var alignAnimation = animations[alignmentAnimation.animationType];
+    var alignStep = 1 - alignAnimation(Math.min(1, animationProgress));
+    var customStep = 1 - step;
+    var newPositionX = positionX + velocityX * customStep;
+    var newPositionY = positionY + velocityY * customStep;
+    var currentPositionX = getVelocityPosition(newPositionX, startState.positionX, positionX, lockAxisX, limitToBounds, minPositionX, maxPositionX, minTargetX, maxTargetX, alignStep);
+    var currentPositionY = getVelocityPosition(newPositionY, startState.positionY, positionY, lockAxisY, limitToBounds, minPositionY, maxPositionY, minTargetY, maxTargetY, alignStep);
+    if (positionX !== newPositionX || positionY !== newPositionY) {
+      contextInstance.setTransformState(scale, currentPositionX, currentPositionY);
+    }
   });
 }
-function fileToUrl(file) {
-  return URL.createObjectURL(file);
+function handlePanningStart(contextInstance, event) {
+  var scale = contextInstance.transformState.scale;
+  handleCancelAnimation(contextInstance);
+  handleCalculateBounds(contextInstance, scale);
+  if (window.TouchEvent !== void 0 && event instanceof TouchEvent) {
+    handleTouchPanningSetup(contextInstance, event);
+  } else {
+    handlePanningSetup(contextInstance, event);
+  }
 }
-async function getSizeOfImage(url) {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => {
-      resolve({
-        width: Math.round(image.width / 2),
-        height: Math.round(image.height / 2)
-      });
-      URL.revokeObjectURL(url);
-      image.remove();
-    };
-    image.onerror = (error) => {
-      reject(error);
-      URL.revokeObjectURL(url);
-      image.remove();
-    };
-    image.src = url;
+function handleAlignToBounds(contextInstance) {
+  var scale = contextInstance.transformState.scale;
+  var _a2 = contextInstance.setup, minScale = _a2.minScale, alignmentAnimation = _a2.alignmentAnimation;
+  var disabled = alignmentAnimation.disabled, sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, animationTime = alignmentAnimation.animationTime, animationType = alignmentAnimation.animationType;
+  var isDisabled = disabled || scale < minScale || !sizeX && !sizeY;
+  if (isDisabled)
+    return;
+  var targetState = handlePanToBounds(contextInstance);
+  if (targetState) {
+    animate(contextInstance, targetState, animationTime, animationType);
+  }
+}
+function handlePanning(contextInstance, clientX, clientY) {
+  var startCoords = contextInstance.startCoords, setup = contextInstance.setup;
+  var _a2 = setup.alignmentAnimation, sizeX = _a2.sizeX, sizeY = _a2.sizeY;
+  if (!startCoords)
+    return;
+  var _b2 = getPanningClientPosition(contextInstance, clientX, clientY), x2 = _b2.x, y3 = _b2.y;
+  var paddingValueX = getPaddingValue(contextInstance, sizeX);
+  var paddingValueY = getPaddingValue(contextInstance, sizeY);
+  handleCalculateVelocity(contextInstance, { x: x2, y: y3 });
+  handleNewPosition(contextInstance, x2, y3, paddingValueX, paddingValueY);
+}
+function handlePanningEnd(contextInstance) {
+  if (contextInstance.isPanning) {
+    var velocityDisabled = contextInstance.setup.panning.velocityDisabled;
+    var velocity = contextInstance.velocity, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+    contextInstance.isPanning = false;
+    contextInstance.animate = false;
+    contextInstance.animation = null;
+    var wrapperRect = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.getBoundingClientRect();
+    var contentRect = contentComponent === null || contentComponent === void 0 ? void 0 : contentComponent.getBoundingClientRect();
+    var wrapperWidth = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.width) || 0;
+    var wrapperHeight = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.height) || 0;
+    var contentWidth = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.width) || 0;
+    var contentHeight = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.height) || 0;
+    var isZoomed = wrapperWidth < contentWidth || wrapperHeight < contentHeight;
+    var shouldAnimate = !velocityDisabled && velocity && (velocity === null || velocity === void 0 ? void 0 : velocity.total) > 0.1 && isZoomed;
+    if (shouldAnimate) {
+      handleVelocityPanning(contextInstance);
+    } else {
+      handleAlignToBounds(contextInstance);
+    }
+  }
+}
+function handleZoomToPoint(contextInstance, scale, mouseX, mouseY) {
+  var _a2 = contextInstance.setup, minScale = _a2.minScale, maxScale = _a2.maxScale, limitToBounds = _a2.limitToBounds;
+  var newScale = checkZoomBounds(roundNumber(scale, 2), minScale, maxScale, 0, false);
+  var bounds = handleCalculateBounds(contextInstance, newScale);
+  var _b2 = handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds), x2 = _b2.x, y3 = _b2.y;
+  return { scale: newScale, positionX: x2, positionY: y3 };
+}
+function handleAlignToScaleBounds(contextInstance, mousePositionX, mousePositionY) {
+  var scale = contextInstance.transformState.scale;
+  var wrapperComponent = contextInstance.wrapperComponent;
+  var _a2 = contextInstance.setup, minScale = _a2.minScale, limitToBounds = _a2.limitToBounds, zoomAnimation = _a2.zoomAnimation;
+  var disabled = zoomAnimation.disabled, animationTime = zoomAnimation.animationTime, animationType = zoomAnimation.animationType;
+  var isDisabled = disabled || scale >= minScale;
+  if (scale >= 1 || limitToBounds) {
+    handleAlignToBounds(contextInstance);
+  }
+  if (isDisabled || !wrapperComponent || !contextInstance.mounted)
+    return;
+  var mouseX = mousePositionX || wrapperComponent.offsetWidth / 2;
+  var mouseY = mousePositionY || wrapperComponent.offsetHeight / 2;
+  var targetState = handleZoomToPoint(contextInstance, minScale, mouseX, mouseY);
+  if (targetState) {
+    animate(contextInstance, targetState, animationTime, animationType);
+  }
+}
+var __assign = function() {
+  __assign = Object.assign || function __assign2(t5) {
+    for (var s3, i4 = 1, n4 = arguments.length; i4 < n4; i4++) {
+      s3 = arguments[i4];
+      for (var p3 in s3)
+        if (Object.prototype.hasOwnProperty.call(s3, p3))
+          t5[p3] = s3[p3];
+    }
+    return t5;
+  };
+  return __assign.apply(this, arguments);
+};
+function __spreadArray(to, from, pack) {
+  if (pack || arguments.length === 2)
+    for (var i4 = 0, l3 = from.length, ar2; i4 < l3; i4++) {
+      if (ar2 || !(i4 in from)) {
+        if (!ar2)
+          ar2 = Array.prototype.slice.call(from, 0, i4);
+        ar2[i4] = from[i4];
+      }
+    }
+  return to.concat(ar2 || Array.prototype.slice.call(from));
+}
+var initialState = {
+  previousScale: 1,
+  scale: 1,
+  positionX: 0,
+  positionY: 0
+};
+var initialSetup = {
+  disabled: false,
+  minPositionX: null,
+  maxPositionX: null,
+  minPositionY: null,
+  maxPositionY: null,
+  minScale: 1,
+  maxScale: 8,
+  limitToBounds: true,
+  centerZoomedOut: false,
+  centerOnInit: false,
+  disablePadding: false,
+  smooth: true,
+  wheel: {
+    step: 0.2,
+    disabled: false,
+    smoothStep: 1e-3,
+    wheelDisabled: false,
+    touchPadDisabled: false,
+    activationKeys: [],
+    excluded: []
+  },
+  panning: {
+    disabled: false,
+    velocityDisabled: false,
+    lockAxisX: false,
+    lockAxisY: false,
+    allowLeftClickPan: true,
+    allowMiddleClickPan: true,
+    allowRightClickPan: true,
+    wheelPanning: false,
+    activationKeys: [],
+    excluded: []
+  },
+  pinch: {
+    step: 5,
+    disabled: false,
+    excluded: []
+  },
+  doubleClick: {
+    disabled: false,
+    step: 0.7,
+    mode: "zoomIn",
+    animationType: "easeOut",
+    animationTime: 200,
+    excluded: []
+  },
+  zoomAnimation: {
+    disabled: false,
+    size: 0.4,
+    animationTime: 200,
+    animationType: "easeOut"
+  },
+  alignmentAnimation: {
+    disabled: false,
+    sizeX: 100,
+    sizeY: 100,
+    animationTime: 200,
+    velocityAlignmentTime: 400,
+    animationType: "easeOut"
+  },
+  velocityAnimation: {
+    disabled: false,
+    sensitivity: 1,
+    animationTime: 400,
+    animationType: "easeOut",
+    equalToMove: true
+  }
+};
+var createState = function(props) {
+  var _a2, _b2, _c, _d;
+  return {
+    previousScale: (_a2 = props.initialScale) !== null && _a2 !== void 0 ? _a2 : initialState.scale,
+    scale: (_b2 = props.initialScale) !== null && _b2 !== void 0 ? _b2 : initialState.scale,
+    positionX: (_c = props.initialPositionX) !== null && _c !== void 0 ? _c : initialState.positionX,
+    positionY: (_d = props.initialPositionY) !== null && _d !== void 0 ? _d : initialState.positionY
+  };
+};
+var createSetup = function(props) {
+  var newSetup = __assign({}, initialSetup);
+  Object.keys(props).forEach(function(key) {
+    var validValue = typeof props[key] !== "undefined";
+    var validParameter = typeof initialSetup[key] !== "undefined";
+    if (validParameter && validValue) {
+      var dataType = Object.prototype.toString.call(initialSetup[key]);
+      var isObject = dataType === "[object Object]";
+      var isArray = dataType === "[object Array]";
+      if (isObject) {
+        newSetup[key] = __assign(__assign({}, initialSetup[key]), props[key]);
+      } else if (isArray) {
+        newSetup[key] = __spreadArray(__spreadArray([], initialSetup[key], true), props[key], true);
+      } else {
+        newSetup[key] = props[key];
+      }
+    }
   });
+  return newSetup;
+};
+var handleCalculateButtonZoom = function(contextInstance, delta, step) {
+  var scale = contextInstance.transformState.scale;
+  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
+  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, smooth = setup.smooth;
+  var size = zoomAnimation.size;
+  if (!wrapperComponent) {
+    throw new Error("Wrapper is not mounted");
+  }
+  var targetScale = smooth ? scale * Math.exp(delta * step) : scale + delta * step;
+  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, false);
+  return newScale;
+};
+function handleZoomToViewCenter(contextInstance, delta, step, animationTime, animationType) {
+  var wrapperComponent = contextInstance.wrapperComponent;
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  if (!wrapperComponent)
+    return console.error("No WrapperComponent found");
+  var wrapperWidth = wrapperComponent.offsetWidth;
+  var wrapperHeight = wrapperComponent.offsetHeight;
+  var mouseX = (wrapperWidth / 2 - positionX) / scale;
+  var mouseY = (wrapperHeight / 2 - positionY) / scale;
+  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
+  var targetState = handleZoomToPoint(contextInstance, newScale, mouseX, mouseY);
+  if (!targetState) {
+    return console.error("Error during zoom event. New transformation state was not calculated.");
+  }
+  animate(contextInstance, targetState, animationTime, animationType);
 }
-async function createHtml(path, app) {
-  const div = createDiv();
-  await import_obsidian2.MarkdownRenderer.render(
-    app,
-    `![](${(0, import_obsidian2.normalizePath)(path).replace(/ /g, "%20")})`,
-    div,
-    "",
-    new import_obsidian2.MarkdownRenderChild(div)
+function resetTransformations(contextInstance, animationTime, animationType, onResetTransformation) {
+  var setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
+  var limitToBounds = setup.limitToBounds;
+  var initialTransformation = createState(contextInstance.props);
+  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+  if (!wrapperComponent)
+    return;
+  var newBounds = calculateBounds(contextInstance, initialTransformation.scale);
+  var boundedPositions = getMouseBoundedPosition(initialTransformation.positionX, initialTransformation.positionY, newBounds, limitToBounds, 0, 0, wrapperComponent);
+  var newState = {
+    scale: initialTransformation.scale,
+    positionX: boundedPositions.x,
+    positionY: boundedPositions.y
+  };
+  if (scale === initialTransformation.scale && positionX === initialTransformation.positionX && positionY === initialTransformation.positionY) {
+    return;
+  }
+  onResetTransformation === null || onResetTransformation === void 0 ? void 0 : onResetTransformation();
+  animate(contextInstance, newState, animationTime, animationType);
+}
+function getOffset(element, wrapper, content, state) {
+  var offset = element.getBoundingClientRect();
+  var wrapperOffset = wrapper.getBoundingClientRect();
+  var contentOffset = content.getBoundingClientRect();
+  var xOff = wrapperOffset.x * state.scale;
+  var yOff = wrapperOffset.y * state.scale;
+  return {
+    x: (offset.x - contentOffset.x + xOff) / state.scale,
+    y: (offset.y - contentOffset.y + yOff) / state.scale
+  };
+}
+function calculateZoomToNode(contextInstance, node2, customZoom) {
+  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent, transformState = contextInstance.transformState;
+  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, minScale = _a2.minScale, maxScale = _a2.maxScale;
+  if (!wrapperComponent || !contentComponent)
+    return transformState;
+  var wrapperRect = wrapperComponent.getBoundingClientRect();
+  var nodeRect = node2.getBoundingClientRect();
+  var nodeOffset = getOffset(node2, wrapperComponent, contentComponent, transformState);
+  var nodeLeft = nodeOffset.x;
+  var nodeTop = nodeOffset.y;
+  var nodeWidth = nodeRect.width / transformState.scale;
+  var nodeHeight = nodeRect.height / transformState.scale;
+  var scaleX = wrapperComponent.offsetWidth / nodeWidth;
+  var scaleY = wrapperComponent.offsetHeight / nodeHeight;
+  var newScale = checkZoomBounds(customZoom || Math.min(scaleX, scaleY), minScale, maxScale, 0, false);
+  var offsetX = (wrapperRect.width - nodeWidth * newScale) / 2;
+  var offsetY = (wrapperRect.height - nodeHeight * newScale) / 2;
+  var newPositionX = (wrapperRect.left - nodeLeft) * newScale + offsetX;
+  var newPositionY = (wrapperRect.top - nodeTop) * newScale + offsetY;
+  var bounds = calculateBounds(contextInstance, newScale);
+  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, 0, 0, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
+  return { positionX: x2, positionY: y3, scale: newScale };
+}
+var zoomIn = function(contextInstance) {
+  return function(step, animationTime, animationType) {
+    if (step === void 0) {
+      step = 0.5;
+    }
+    if (animationTime === void 0) {
+      animationTime = 300;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    handleZoomToViewCenter(contextInstance, 1, step, animationTime, animationType);
+  };
+};
+var zoomOut = function(contextInstance) {
+  return function(step, animationTime, animationType) {
+    if (step === void 0) {
+      step = 0.5;
+    }
+    if (animationTime === void 0) {
+      animationTime = 300;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    handleZoomToViewCenter(contextInstance, -1, step, animationTime, animationType);
+  };
+};
+var setTransform = function(contextInstance) {
+  return function(newPositionX, newPositionY, newScale, animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 300;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
+    var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+    var disabled = contextInstance.setup.disabled;
+    if (disabled || !wrapperComponent || !contentComponent)
+      return;
+    var targetState = {
+      positionX: Number.isNaN(newPositionX) ? positionX : newPositionX,
+      positionY: Number.isNaN(newPositionY) ? positionY : newPositionY,
+      scale: Number.isNaN(newScale) ? scale : newScale
+    };
+    animate(contextInstance, targetState, animationTime, animationType);
+  };
+};
+var resetTransform = function(contextInstance) {
+  return function(animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 200;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    resetTransformations(contextInstance, animationTime, animationType);
+  };
+};
+var centerView = function(contextInstance) {
+  return function(scale, animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 200;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    var transformState = contextInstance.transformState, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
+    if (wrapperComponent && contentComponent) {
+      var targetState = getCenterPosition(scale || transformState.scale, wrapperComponent, contentComponent);
+      animate(contextInstance, targetState, animationTime, animationType);
+    }
+  };
+};
+var zoomToElement = function(contextInstance) {
+  return function(node2, scale, animationTime, animationType) {
+    if (animationTime === void 0) {
+      animationTime = 600;
+    }
+    if (animationType === void 0) {
+      animationType = "easeOut";
+    }
+    handleCancelAnimation(contextInstance);
+    var wrapperComponent = contextInstance.wrapperComponent;
+    var target = typeof node2 === "string" ? document.getElementById(node2) : node2;
+    if (wrapperComponent && target && wrapperComponent.contains(target)) {
+      var targetState = calculateZoomToNode(contextInstance, target, scale);
+      animate(contextInstance, targetState, animationTime, animationType);
+    }
+  };
+};
+var getControls = function(contextInstance) {
+  return {
+    instance: contextInstance,
+    zoomIn: zoomIn(contextInstance),
+    zoomOut: zoomOut(contextInstance),
+    setTransform: setTransform(contextInstance),
+    resetTransform: resetTransform(contextInstance),
+    centerView: centerView(contextInstance),
+    zoomToElement: zoomToElement(contextInstance)
+  };
+};
+var getState = function(contextInstance) {
+  return {
+    instance: contextInstance,
+    state: contextInstance.transformState
+  };
+};
+var getContext = function(contextInstance) {
+  var ref = {};
+  Object.assign(ref, getState(contextInstance));
+  Object.assign(ref, getControls(contextInstance));
+  return ref;
+};
+var passiveSupported = false;
+function makePassiveEventOption() {
+  try {
+    var options = {
+      get passive() {
+        passiveSupported = true;
+        return false;
+      }
+    };
+    return options;
+  } catch (err) {
+    passiveSupported = false;
+    return passiveSupported;
+  }
+}
+var isExcludedNode = function(node2, excluded) {
+  return excluded.some(function(exclude) {
+    return node2.matches("".concat(exclude, ", .").concat(exclude, ", ").concat(exclude, " *, .").concat(exclude, " *"));
+  });
+};
+var cancelTimeout = function(timeout) {
+  if (timeout) {
+    clearTimeout(timeout);
+  }
+};
+var getTransformStyles = function(x2, y3, scale) {
+  return "translate(".concat(x2, "px, ").concat(y3, "px) scale(").concat(scale, ")");
+};
+var getCenterPosition = function(scale, wrapperComponent, contentComponent) {
+  var contentWidth = contentComponent.offsetWidth * scale;
+  var contentHeight = contentComponent.offsetHeight * scale;
+  var centerPositionX = (wrapperComponent.offsetWidth - contentWidth) / 2;
+  var centerPositionY = (wrapperComponent.offsetHeight - contentHeight) / 2;
+  return {
+    scale,
+    positionX: centerPositionX,
+    positionY: centerPositionY
+  };
+};
+function mergeRefs(refs) {
+  return function(value) {
+    refs.forEach(function(ref) {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        ref.current = value;
+      }
+    });
+  };
+}
+var isWheelAllowed = function(contextInstance, event) {
+  var _a2 = contextInstance.setup.wheel, disabled = _a2.disabled, wheelDisabled = _a2.wheelDisabled, touchPadDisabled = _a2.touchPadDisabled, excluded = _a2.excluded;
+  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning;
+  var target = event.target;
+  var isAllowed = isInitialized && !isPanning && !disabled && target;
+  if (!isAllowed)
+    return false;
+  if (wheelDisabled && !event.ctrlKey)
+    return false;
+  if (touchPadDisabled && event.ctrlKey)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var getDeltaY = function(event) {
+  if (event) {
+    return event.deltaY < 0 ? 1 : -1;
+  }
+  return 0;
+};
+function getDelta(event, customDelta) {
+  var deltaY = getDeltaY(event);
+  var delta = checkIsNumber(customDelta, deltaY);
+  return delta;
+}
+function getMousePosition(event, contentComponent, scale) {
+  var contentRect = contentComponent.getBoundingClientRect();
+  var mouseX = 0;
+  var mouseY = 0;
+  if ("clientX" in event) {
+    mouseX = (event.clientX - contentRect.left) / scale;
+    mouseY = (event.clientY - contentRect.top) / scale;
+  } else {
+    var touch = event.touches[0];
+    mouseX = (touch.clientX - contentRect.left) / scale;
+    mouseY = (touch.clientY - contentRect.top) / scale;
+  }
+  if (Number.isNaN(mouseX) || Number.isNaN(mouseY))
+    console.error("No mouse or touch offset found");
+  return {
+    x: mouseX,
+    y: mouseY
+  };
+}
+var handleCalculateWheelZoom = function(contextInstance, delta, step, disable, getTarget) {
+  var scale = contextInstance.transformState.scale;
+  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
+  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
+  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
+  if (!wrapperComponent) {
+    throw new Error("Wrapper is not mounted");
+  }
+  var targetScale = scale + delta * step;
+  if (getTarget)
+    return targetScale;
+  var paddingEnabled = disable ? false : !disabled;
+  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, paddingEnabled && !disablePadding);
+  return newScale;
+};
+var handleWheelZoomStop = function(contextInstance, event) {
+  var previousWheelEvent = contextInstance.previousWheelEvent;
+  var scale = contextInstance.transformState.scale;
+  var _a2 = contextInstance.setup, maxScale = _a2.maxScale, minScale = _a2.minScale;
+  if (!previousWheelEvent)
+    return false;
+  if (scale < maxScale || scale > minScale)
+    return true;
+  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
+    return true;
+  if (previousWheelEvent.deltaY > 0 && previousWheelEvent.deltaY < event.deltaY)
+    return true;
+  if (previousWheelEvent.deltaY < 0 && previousWheelEvent.deltaY > event.deltaY)
+    return true;
+  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
+    return true;
+  return false;
+};
+var isPinchStartAllowed = function(contextInstance, event) {
+  var _a2 = contextInstance.setup.pinch, disabled = _a2.disabled, excluded = _a2.excluded;
+  var isInitialized = contextInstance.isInitialized;
+  var target = event.target;
+  var isAllowed = isInitialized && !disabled && target;
+  if (!isAllowed)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var isPinchAllowed = function(contextInstance) {
+  var disabled = contextInstance.setup.pinch.disabled;
+  var isInitialized = contextInstance.isInitialized, pinchStartDistance = contextInstance.pinchStartDistance;
+  var isAllowed = isInitialized && !disabled && pinchStartDistance;
+  if (!isAllowed)
+    return false;
+  return true;
+};
+var calculateTouchMidPoint = function(event, scale, contentComponent) {
+  var contentRect = contentComponent.getBoundingClientRect();
+  var touches = event.touches;
+  var firstPointX = roundNumber(touches[0].clientX - contentRect.left, 5);
+  var firstPointY = roundNumber(touches[0].clientY - contentRect.top, 5);
+  var secondPointX = roundNumber(touches[1].clientX - contentRect.left, 5);
+  var secondPointY = roundNumber(touches[1].clientY - contentRect.top, 5);
+  return {
+    x: (firstPointX + secondPointX) / 2 / scale,
+    y: (firstPointY + secondPointY) / 2 / scale
+  };
+};
+var getTouchDistance = function(event) {
+  return Math.sqrt(Math.pow(event.touches[0].pageX - event.touches[1].pageX, 2) + Math.pow(event.touches[0].pageY - event.touches[1].pageY, 2));
+};
+var calculatePinchZoom = function(contextInstance, currentDistance) {
+  var pinchStartScale = contextInstance.pinchStartScale, pinchStartDistance = contextInstance.pinchStartDistance, setup = contextInstance.setup;
+  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
+  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
+  if (!pinchStartScale || pinchStartDistance === null || !currentDistance) {
+    throw new Error("Pinch touches distance was not provided");
+  }
+  if (currentDistance < 0) {
+    return contextInstance.transformState.scale;
+  }
+  var touchProportion = currentDistance / pinchStartDistance;
+  var scaleDifference = touchProportion * pinchStartScale;
+  return checkZoomBounds(roundNumber(scaleDifference, 2), minScale, maxScale, size, !disabled && !disablePadding);
+};
+var wheelStopEventTime = 160;
+var wheelAnimationTime = 100;
+var handleWheelStart = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onWheelStart = _a2.onWheelStart, onZoomStart = _a2.onZoomStart;
+  if (!contextInstance.wheelStopEventTimer) {
+    handleCancelAnimation(contextInstance);
+    handleCallback(getContext(contextInstance), event, onWheelStart);
+    handleCallback(getContext(contextInstance), event, onZoomStart);
+  }
+};
+var handleWheelZoom = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onWheel = _a2.onWheel, onZoom = _a2.onZoom;
+  var contentComponent = contextInstance.contentComponent, setup = contextInstance.setup, transformState = contextInstance.transformState;
+  var scale = transformState.scale;
+  var limitToBounds = setup.limitToBounds, centerZoomedOut = setup.centerZoomedOut, zoomAnimation = setup.zoomAnimation, wheel = setup.wheel, disablePadding = setup.disablePadding, smooth = setup.smooth;
+  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
+  var step = wheel.step, smoothStep = wheel.smoothStep;
+  if (!contentComponent) {
+    throw new Error("Component not mounted");
+  }
+  event.preventDefault();
+  event.stopPropagation();
+  var delta = getDelta(event, null);
+  var zoomStep = smooth ? smoothStep * Math.abs(event.deltaY) : step;
+  var newScale = handleCalculateWheelZoom(contextInstance, delta, zoomStep, !event.ctrlKey);
+  if (scale === newScale)
+    return;
+  var bounds = handleCalculateBounds(contextInstance, newScale);
+  var mousePosition = getMousePosition(event, contentComponent, scale);
+  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut || disablePadding;
+  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
+  var _b2 = handleCalculateZoomPositions(contextInstance, mousePosition.x, mousePosition.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
+  contextInstance.previousWheelEvent = event;
+  contextInstance.setTransformState(newScale, x2, y3);
+  handleCallback(getContext(contextInstance), event, onWheel);
+  handleCallback(getContext(contextInstance), event, onZoom);
+};
+var handleWheelStop = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onWheelStop = _a2.onWheelStop, onZoomStop = _a2.onZoomStop;
+  cancelTimeout(contextInstance.wheelAnimationTimer);
+  contextInstance.wheelAnimationTimer = setTimeout(function() {
+    if (!contextInstance.mounted)
+      return;
+    handleAlignToScaleBounds(contextInstance, event.x, event.y);
+    contextInstance.wheelAnimationTimer = null;
+  }, wheelAnimationTime);
+  var hasStoppedZooming = handleWheelZoomStop(contextInstance, event);
+  if (hasStoppedZooming) {
+    cancelTimeout(contextInstance.wheelStopEventTimer);
+    contextInstance.wheelStopEventTimer = setTimeout(function() {
+      if (!contextInstance.mounted)
+        return;
+      contextInstance.wheelStopEventTimer = null;
+      handleCallback(getContext(contextInstance), event, onWheelStop);
+      handleCallback(getContext(contextInstance), event, onZoomStop);
+    }, wheelStopEventTime);
+  }
+};
+var handlePinchStart = function(contextInstance, event) {
+  var distance = getTouchDistance(event);
+  contextInstance.pinchStartDistance = distance;
+  contextInstance.lastDistance = distance;
+  contextInstance.pinchStartScale = contextInstance.transformState.scale;
+  contextInstance.isPanning = false;
+  handleCancelAnimation(contextInstance);
+};
+var handlePinchZoom = function(contextInstance, event) {
+  var contentComponent = contextInstance.contentComponent, pinchStartDistance = contextInstance.pinchStartDistance;
+  var scale = contextInstance.transformState.scale;
+  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, centerZoomedOut = _a2.centerZoomedOut, zoomAnimation = _a2.zoomAnimation;
+  var disabled = zoomAnimation.disabled, size = zoomAnimation.size;
+  if (pinchStartDistance === null || !contentComponent)
+    return;
+  var midPoint = calculateTouchMidPoint(event, scale, contentComponent);
+  if (!Number.isFinite(midPoint.x) || !Number.isFinite(midPoint.y))
+    return;
+  var currentDistance = getTouchDistance(event);
+  var newScale = calculatePinchZoom(contextInstance, currentDistance);
+  if (newScale === scale)
+    return;
+  var bounds = handleCalculateBounds(contextInstance, newScale);
+  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut;
+  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
+  var _b2 = handleCalculateZoomPositions(contextInstance, midPoint.x, midPoint.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
+  contextInstance.pinchMidpoint = midPoint;
+  contextInstance.lastDistance = currentDistance;
+  contextInstance.setTransformState(newScale, x2, y3);
+};
+var handlePinchStop = function(contextInstance) {
+  var pinchMidpoint = contextInstance.pinchMidpoint;
+  contextInstance.velocity = null;
+  contextInstance.lastDistance = null;
+  contextInstance.pinchMidpoint = null;
+  contextInstance.pinchStartScale = null;
+  contextInstance.pinchStartDistance = null;
+  handleAlignToScaleBounds(contextInstance, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.x, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.y);
+};
+var handleDoubleClickStop = function(contextInstance, event) {
+  var onZoomStop = contextInstance.props.onZoomStop;
+  var animationTime = contextInstance.setup.doubleClick.animationTime;
+  cancelTimeout(contextInstance.doubleClickStopEventTimer);
+  contextInstance.doubleClickStopEventTimer = setTimeout(function() {
+    contextInstance.doubleClickStopEventTimer = null;
+    handleCallback(getContext(contextInstance), event, onZoomStop);
+  }, animationTime);
+};
+var handleDoubleClickResetMode = function(contextInstance, event) {
+  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
+  var _b2 = contextInstance.setup.doubleClick, animationTime = _b2.animationTime, animationType = _b2.animationType;
+  handleCallback(getContext(contextInstance), event, onZoomStart);
+  resetTransformations(contextInstance, animationTime, animationType, function() {
+    return handleCallback(getContext(contextInstance), event, onZoom);
+  });
+  handleDoubleClickStop(contextInstance, event);
+};
+function getDoubleClickScale(mode, scale) {
+  if (mode === "toggle") {
+    return scale === 1 ? 1 : -1;
+  }
+  return mode === "zoomOut" ? -1 : 1;
+}
+function handleDoubleClick(contextInstance, event) {
+  var setup = contextInstance.setup, doubleClickStopEventTimer = contextInstance.doubleClickStopEventTimer, transformState = contextInstance.transformState, contentComponent = contextInstance.contentComponent;
+  var scale = transformState.scale;
+  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
+  var _b2 = setup.doubleClick, disabled = _b2.disabled, mode = _b2.mode, step = _b2.step, animationTime = _b2.animationTime, animationType = _b2.animationType;
+  if (disabled)
+    return;
+  if (doubleClickStopEventTimer)
+    return;
+  if (mode === "reset") {
+    return handleDoubleClickResetMode(contextInstance, event);
+  }
+  if (!contentComponent)
+    return console.error("No ContentComponent found");
+  var delta = getDoubleClickScale(mode, contextInstance.transformState.scale);
+  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
+  if (scale === newScale)
+    return;
+  handleCallback(getContext(contextInstance), event, onZoomStart);
+  var mousePosition = getMousePosition(event, contentComponent, scale);
+  var targetState = handleZoomToPoint(contextInstance, newScale, mousePosition.x, mousePosition.y);
+  if (!targetState) {
+    return console.error("Error during zoom event. New transformation state was not calculated.");
+  }
+  handleCallback(getContext(contextInstance), event, onZoom);
+  animate(contextInstance, targetState, animationTime, animationType);
+  handleDoubleClickStop(contextInstance, event);
+}
+var isDoubleClickAllowed = function(contextInstance, event) {
+  var isInitialized = contextInstance.isInitialized, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
+  var _a2 = setup.doubleClick, disabled = _a2.disabled, excluded = _a2.excluded;
+  var target = event.target;
+  var isWrapperChild = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
+  var isAllowed = isInitialized && target && isWrapperChild && !disabled;
+  if (!isAllowed)
+    return false;
+  var isExcluded = isExcludedNode(target, excluded);
+  if (isExcluded)
+    return false;
+  return true;
+};
+var ZoomPanPinch = (
+  /** @class */
+  /* @__PURE__ */ function() {
+    function ZoomPanPinch2(props) {
+      var _this = this;
+      this.mounted = true;
+      this.onChangeCallbacks = /* @__PURE__ */ new Set();
+      this.onInitCallbacks = /* @__PURE__ */ new Set();
+      this.wrapperComponent = null;
+      this.contentComponent = null;
+      this.isInitialized = false;
+      this.bounds = null;
+      this.previousWheelEvent = null;
+      this.wheelStopEventTimer = null;
+      this.wheelAnimationTimer = null;
+      this.isPanning = false;
+      this.isWheelPanning = false;
+      this.startCoords = null;
+      this.lastTouch = null;
+      this.distance = null;
+      this.lastDistance = null;
+      this.pinchStartDistance = null;
+      this.pinchStartScale = null;
+      this.pinchMidpoint = null;
+      this.doubleClickStopEventTimer = null;
+      this.velocity = null;
+      this.velocityTime = null;
+      this.lastMousePosition = null;
+      this.animate = false;
+      this.animation = null;
+      this.maxBounds = null;
+      this.pressedKeys = {};
+      this.mount = function() {
+        _this.initializeWindowEvents();
+      };
+      this.unmount = function() {
+        _this.cleanupWindowEvents();
+      };
+      this.update = function(newProps) {
+        _this.props = newProps;
+        handleCalculateBounds(_this, _this.transformState.scale);
+        _this.setup = createSetup(newProps);
+      };
+      this.initializeWindowEvents = function() {
+        var _a2, _b2;
+        var passive = makePassiveEventOption();
+        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
+        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
+        (_b2 = _this.wrapperComponent) === null || _b2 === void 0 ? void 0 : _b2.addEventListener("wheel", _this.onWheelPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousedown", _this.onPanningStart, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousemove", _this.onPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mouseup", _this.onPanningStop, passive);
+        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.addEventListener("mouseleave", _this.clearPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keyup", _this.setKeyUnPressed, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keydown", _this.setKeyPressed, passive);
+      };
+      this.cleanupWindowEvents = function() {
+        var _a2, _b2;
+        var passive = makePassiveEventOption();
+        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
+        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousedown", _this.onPanningStart, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousemove", _this.onPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mouseup", _this.onPanningStop, passive);
+        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.removeEventListener("mouseleave", _this.clearPanning, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keyup", _this.setKeyUnPressed, passive);
+        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keydown", _this.setKeyPressed, passive);
+        document.removeEventListener("mouseleave", _this.clearPanning, passive);
+        handleCancelAnimation(_this);
+        (_b2 = _this.observer) === null || _b2 === void 0 ? void 0 : _b2.disconnect();
+      };
+      this.handleInitializeWrapperEvents = function(wrapper) {
+        var passive = makePassiveEventOption();
+        wrapper.addEventListener("wheel", _this.onWheelZoom, passive);
+        wrapper.addEventListener("dblclick", _this.onDoubleClick, passive);
+        wrapper.addEventListener("touchstart", _this.onTouchPanningStart, passive);
+        wrapper.addEventListener("touchmove", _this.onTouchPanning, passive);
+        wrapper.addEventListener("touchend", _this.onTouchPanningStop, passive);
+      };
+      this.handleInitialize = function(contentComponent) {
+        var centerOnInit = _this.setup.centerOnInit;
+        _this.applyTransformation();
+        _this.onInitCallbacks.forEach(function(callback) {
+          return callback(getContext(_this));
+        });
+        if (centerOnInit) {
+          _this.setCenter();
+          _this.observer = new ResizeObserver(function() {
+            var _a2;
+            var currentWidth = contentComponent.offsetWidth;
+            var currentHeight = contentComponent.offsetHeight;
+            if (currentWidth > 0 || currentHeight > 0) {
+              _this.onInitCallbacks.forEach(function(callback) {
+                return callback(getContext(_this));
+              });
+              _this.setCenter();
+              (_a2 = _this.observer) === null || _a2 === void 0 ? void 0 : _a2.disconnect();
+            }
+          });
+          setTimeout(function() {
+            var _a2;
+            (_a2 = _this.observer) === null || _a2 === void 0 ? void 0 : _a2.disconnect();
+          }, 5e3);
+          _this.observer.observe(contentComponent);
+        }
+      };
+      this.onWheelZoom = function(event) {
+        var disabled = _this.setup.disabled;
+        if (disabled)
+          return;
+        var isAllowed = isWheelAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        var keysPressed = _this.isPressingKeys(_this.setup.wheel.activationKeys);
+        if (!keysPressed)
+          return;
+        handleWheelStart(_this, event);
+        handleWheelZoom(_this, event);
+        handleWheelStop(_this, event);
+      };
+      this.onWheelPanning = function(event) {
+        var _a2 = _this.setup, disabled = _a2.disabled, wheel = _a2.wheel, panning = _a2.panning;
+        if (!_this.wrapperComponent || !_this.contentComponent || disabled || !wheel.wheelDisabled || panning.disabled || !panning.wheelPanning || event.ctrlKey) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        var _b2 = _this.transformState, positionX = _b2.positionX, positionY = _b2.positionY;
+        var mouseX = positionX - event.deltaX;
+        var mouseY = positionY - event.deltaY;
+        var newPositionX = panning.lockAxisX ? positionX : mouseX;
+        var newPositionY = panning.lockAxisY ? positionY : mouseY;
+        var _c = _this.setup.alignmentAnimation, sizeX = _c.sizeX, sizeY = _c.sizeY;
+        var paddingValueX = getPaddingValue(_this, sizeX);
+        var paddingValueY = getPaddingValue(_this, sizeY);
+        if (newPositionX === positionX && newPositionY === positionY)
+          return;
+        handleNewPosition(_this, newPositionX, newPositionY, paddingValueX, paddingValueY);
+      };
+      this.onPanningStart = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanningStart = _this.props.onPanningStart;
+        if (disabled)
+          return;
+        var isAllowed = isPanningStartAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
+        if (!keysPressed)
+          return;
+        if (event.button === 0 && !_this.setup.panning.allowLeftClickPan)
+          return;
+        if (event.button === 1 && !_this.setup.panning.allowMiddleClickPan)
+          return;
+        if (event.button === 2 && !_this.setup.panning.allowRightClickPan)
+          return;
+        event.preventDefault();
+        event.stopPropagation();
+        handleCancelAnimation(_this);
+        handlePanningStart(_this, event);
+        handleCallback(getContext(_this), event, onPanningStart);
+      };
+      this.onPanning = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanning = _this.props.onPanning;
+        if (disabled)
+          return;
+        var isAllowed = isPanningAllowed(_this);
+        if (!isAllowed)
+          return;
+        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
+        if (!keysPressed)
+          return;
+        event.preventDefault();
+        event.stopPropagation();
+        handlePanning(_this, event.clientX, event.clientY);
+        handleCallback(getContext(_this), event, onPanning);
+      };
+      this.onPanningStop = function(event) {
+        var onPanningStop = _this.props.onPanningStop;
+        if (_this.isPanning) {
+          handlePanningEnd(_this);
+          handleCallback(getContext(_this), event, onPanningStop);
+        }
+      };
+      this.onPinchStart = function(event) {
+        var disabled = _this.setup.disabled;
+        var _a2 = _this.props, onPinchingStart = _a2.onPinchingStart, onZoomStart = _a2.onZoomStart;
+        if (disabled)
+          return;
+        var isAllowed = isPinchStartAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        handlePinchStart(_this, event);
+        handleCancelAnimation(_this);
+        handleCallback(getContext(_this), event, onPinchingStart);
+        handleCallback(getContext(_this), event, onZoomStart);
+      };
+      this.onPinch = function(event) {
+        var disabled = _this.setup.disabled;
+        var _a2 = _this.props, onPinching = _a2.onPinching, onZoom = _a2.onZoom;
+        if (disabled)
+          return;
+        var isAllowed = isPinchAllowed(_this);
+        if (!isAllowed)
+          return;
+        event.preventDefault();
+        event.stopPropagation();
+        handlePinchZoom(_this, event);
+        handleCallback(getContext(_this), event, onPinching);
+        handleCallback(getContext(_this), event, onZoom);
+      };
+      this.onPinchStop = function(event) {
+        var _a2 = _this.props, onPinchingStop = _a2.onPinchingStop, onZoomStop = _a2.onZoomStop;
+        if (_this.pinchStartScale) {
+          handlePinchStop(_this);
+          handleCallback(getContext(_this), event, onPinchingStop);
+          handleCallback(getContext(_this), event, onZoomStop);
+        }
+      };
+      this.onTouchPanningStart = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanningStart = _this.props.onPanningStart;
+        if (disabled)
+          return;
+        var isAllowed = isPanningStartAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        var isDoubleTap = _this.lastTouch && +/* @__PURE__ */ new Date() - _this.lastTouch < 200;
+        if (isDoubleTap && event.touches.length === 1) {
+          _this.onDoubleClick(event);
+        } else {
+          _this.lastTouch = +/* @__PURE__ */ new Date();
+          handleCancelAnimation(_this);
+          var touches = event.touches;
+          var isPanningAction = touches.length === 1;
+          var isPinchAction = touches.length === 2;
+          if (isPanningAction) {
+            handleCancelAnimation(_this);
+            handlePanningStart(_this, event);
+            handleCallback(getContext(_this), event, onPanningStart);
+          }
+          if (isPinchAction) {
+            _this.onPinchStart(event);
+          }
+        }
+      };
+      this.onTouchPanning = function(event) {
+        var disabled = _this.setup.disabled;
+        var onPanning = _this.props.onPanning;
+        if (_this.isPanning && event.touches.length === 1) {
+          if (disabled)
+            return;
+          var isAllowed = isPanningAllowed(_this);
+          if (!isAllowed)
+            return;
+          event.preventDefault();
+          event.stopPropagation();
+          var touch = event.touches[0];
+          handlePanning(_this, touch.clientX, touch.clientY);
+          handleCallback(getContext(_this), event, onPanning);
+        } else if (event.touches.length > 1) {
+          _this.onPinch(event);
+        }
+      };
+      this.onTouchPanningStop = function(event) {
+        _this.onPanningStop(event);
+        _this.onPinchStop(event);
+      };
+      this.onDoubleClick = function(event) {
+        var disabled = _this.setup.disabled;
+        if (disabled)
+          return;
+        var isAllowed = isDoubleClickAllowed(_this, event);
+        if (!isAllowed)
+          return;
+        handleDoubleClick(_this, event);
+      };
+      this.clearPanning = function(event) {
+        if (_this.isPanning) {
+          _this.onPanningStop(event);
+        }
+      };
+      this.setKeyPressed = function(e4) {
+        _this.pressedKeys[e4.key] = true;
+      };
+      this.setKeyUnPressed = function(e4) {
+        _this.pressedKeys[e4.key] = false;
+      };
+      this.isPressingKeys = function(keys) {
+        if (!keys.length) {
+          return true;
+        }
+        return Boolean(keys.find(function(key) {
+          return _this.pressedKeys[key];
+        }));
+      };
+      this.setTransformState = function(scale, positionX, positionY) {
+        var onTransformed = _this.props.onTransformed;
+        if (!Number.isNaN(scale) && !Number.isNaN(positionX) && !Number.isNaN(positionY)) {
+          if (scale !== _this.transformState.scale) {
+            _this.transformState.previousScale = _this.transformState.scale;
+            _this.transformState.scale = scale;
+          }
+          _this.transformState.positionX = positionX;
+          _this.transformState.positionY = positionY;
+          _this.applyTransformation();
+          var ctx_1 = getContext(_this);
+          _this.onChangeCallbacks.forEach(function(callback) {
+            return callback(ctx_1);
+          });
+          handleCallback(ctx_1, { scale, positionX, positionY }, onTransformed);
+        } else {
+          console.error("Detected NaN set state values");
+        }
+      };
+      this.setCenter = function() {
+        if (_this.wrapperComponent && _this.contentComponent) {
+          var targetState = getCenterPosition(_this.transformState.scale, _this.wrapperComponent, _this.contentComponent);
+          _this.setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
+        }
+      };
+      this.handleTransformStyles = function(x2, y3, scale) {
+        if (_this.props.customTransform) {
+          return _this.props.customTransform(x2, y3, scale);
+        }
+        return getTransformStyles(x2, y3, scale);
+      };
+      this.applyTransformation = function() {
+        if (!_this.mounted || !_this.contentComponent)
+          return;
+        var _a2 = _this.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
+        var transform = _this.handleTransformStyles(positionX, positionY, scale);
+        _this.contentComponent.style.transform = transform;
+      };
+      this.getContext = function() {
+        return getContext(_this);
+      };
+      this.onChange = function(callback) {
+        if (!_this.onChangeCallbacks.has(callback)) {
+          _this.onChangeCallbacks.add(callback);
+        }
+        return function() {
+          _this.onChangeCallbacks.delete(callback);
+        };
+      };
+      this.onInit = function(callback) {
+        if (!_this.onInitCallbacks.has(callback)) {
+          _this.onInitCallbacks.add(callback);
+        }
+        return function() {
+          _this.onInitCallbacks.delete(callback);
+        };
+      };
+      this.init = function(wrapperComponent, contentComponent) {
+        _this.cleanupWindowEvents();
+        _this.wrapperComponent = wrapperComponent;
+        _this.contentComponent = contentComponent;
+        handleCalculateBounds(_this, _this.transformState.scale);
+        _this.handleInitializeWrapperEvents(wrapperComponent);
+        _this.handleInitialize(contentComponent);
+        _this.initializeWindowEvents();
+        _this.isInitialized = true;
+        var ctx = getContext(_this);
+        handleCallback(ctx, void 0, _this.props.onInit);
+      };
+      this.props = props;
+      this.setup = createSetup(this.props);
+      this.transformState = createState(this.props);
+    }
+    return ZoomPanPinch2;
+  }()
+);
+var Context = import_react3.default.createContext(null);
+var getContent2 = function(children, ctx) {
+  if (typeof children === "function") {
+    return children(ctx);
+  }
+  return children;
+};
+var TransformWrapper = import_react3.default.forwardRef(function(props, ref) {
+  var instance = (0, import_react3.useRef)(new ZoomPanPinch(props)).current;
+  var content = getContent2(props.children, getControls(instance));
+  (0, import_react3.useImperativeHandle)(ref, function() {
+    return getControls(instance);
+  }, [instance]);
+  (0, import_react3.useEffect)(function() {
+    instance.update(props);
+  }, [instance, props]);
+  return import_react3.default.createElement(Context.Provider, { value: instance }, content);
+});
+var KeepScale = import_react3.default.forwardRef(function(props, ref) {
+  var localRef = (0, import_react3.useRef)(null);
+  var instance = (0, import_react3.useContext)(Context);
+  (0, import_react3.useEffect)(function() {
+    return instance.onChange(function(ctx) {
+      if (localRef.current) {
+        var positionX = 0;
+        var positionY = 0;
+        localRef.current.style.transform = instance.handleTransformStyles(positionX, positionY, 1 / ctx.instance.transformState.scale);
+      }
+    });
+  }, [instance]);
+  return import_react3.default.createElement("div", __assign({}, props, { ref: mergeRefs([localRef, ref]) }));
+});
+function styleInject(css, ref) {
+  if (ref === void 0)
+    ref = {};
+  var insertAt = ref.insertAt;
+  if (!css || typeof document === "undefined") {
+    return;
+  }
+  var head = document.head || document.getElementsByTagName("head")[0];
+  var style = document.createElement("style");
+  style.type = "text/css";
+  if (insertAt === "top") {
+    if (head.firstChild) {
+      head.insertBefore(style, head.firstChild);
+    } else {
+      head.appendChild(style);
+    }
+  } else {
+    head.appendChild(style);
+  }
+  if (style.styleSheet) {
+    style.styleSheet.cssText = css;
+  } else {
+    style.appendChild(document.createTextNode(css));
+  }
+}
+var css_248z = ".transform-component-module_wrapper__SPB86 {\n  position: relative;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  overflow: hidden;\n  -webkit-touch-callout: none; /* iOS Safari */\n  -webkit-user-select: none; /* Safari */\n  -khtml-user-select: none; /* Konqueror HTML */\n  -moz-user-select: none; /* Firefox */\n  -ms-user-select: none; /* Internet Explorer/Edge */\n  user-select: none;\n  margin: 0;\n  padding: 0;\n}\n.transform-component-module_content__FBWxo {\n  display: flex;\n  flex-wrap: wrap;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  margin: 0;\n  padding: 0;\n  transform-origin: 0% 0%;\n}\n.transform-component-module_content__FBWxo img {\n  pointer-events: none;\n}\n";
+var styles = { "wrapper": "transform-component-module_wrapper__SPB86", "content": "transform-component-module_content__FBWxo" };
+styleInject(css_248z);
+var TransformComponent = function(_a2) {
+  var children = _a2.children, _b2 = _a2.wrapperClass, wrapperClass = _b2 === void 0 ? "" : _b2, _c = _a2.contentClass, contentClass = _c === void 0 ? "" : _c, wrapperStyle = _a2.wrapperStyle, contentStyle = _a2.contentStyle, _d = _a2.wrapperProps, wrapperProps = _d === void 0 ? {} : _d, _e = _a2.contentProps, contentProps = _e === void 0 ? {} : _e;
+  var _f = (0, import_react3.useContext)(Context), init = _f.init, cleanupWindowEvents = _f.cleanupWindowEvents;
+  var wrapperRef = (0, import_react3.useRef)(null);
+  var contentRef = (0, import_react3.useRef)(null);
+  (0, import_react3.useEffect)(function() {
+    var wrapper = wrapperRef.current;
+    var content = contentRef.current;
+    if (wrapper !== null && content !== null && init) {
+      init === null || init === void 0 ? void 0 : init(wrapper, content);
+    }
+    return function() {
+      cleanupWindowEvents === null || cleanupWindowEvents === void 0 ? void 0 : cleanupWindowEvents();
+    };
+  }, []);
+  return import_react3.default.createElement(
+    "div",
+    __assign({}, wrapperProps, { ref: wrapperRef, className: "react-transform-wrapper ".concat(styles.wrapper, " ").concat(wrapperClass), style: wrapperStyle }),
+    import_react3.default.createElement("div", __assign({}, contentProps, { ref: contentRef, className: "react-transform-component ".concat(styles.content, " ").concat(contentClass), style: contentStyle }), children)
   );
-  return div;
+};
+
+// src/imageFormatTester/tiny.ts
+var jpg = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wgALCAABAAEBAREA/8QAFBABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQABPxA=";
+var png = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==";
+
+// src/imageFormatTester/index.ts
+async function tester(image) {
+  try {
+    const blob = await (await fetch(image)).blob();
+    const data = [];
+    data.push(
+      new ClipboardItem({
+        [blob.type]: blob
+      })
+    );
+    await navigator.clipboard.write(data);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
-function getMetadata(file, app) {
-  return app.metadataCache.getFileCache(file)?.frontmatter;
+var cache = {
+  pdf: Promise.resolve(false)
+};
+async function isCopiable(type) {
+  if (type in cache) {
+    return cache[type];
+  }
+  if (type === "jpg") {
+    cache[type] = tester(jpg);
+    return cache[type];
+  }
+  const result = tester(png);
+  cache.png0 = result;
+  cache.png1 = result;
+  return result;
 }
-function delay(time) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-}
+var imageFormatTester_default = isCopiable;
+
+// src/utils/capture.ts
+var import_obsidian4 = require("obsidian");
+var import_file_saver = __toESM(require_FileSaver_min());
 
 // node_modules/.pnpm/jspdf@2.5.1/node_modules/jspdf/dist/jspdf.es.min.js
 init_typeof();
@@ -39443,18 +40994,21 @@ E.API.PDFObject = function() {
 }();
 var jspdf_es_min_default = E;
 
+// src/utils/capture.ts
+var import_dom_to_image_more = __toESM(require_dom_to_image_more());
+
 // src/utils/makeHTML.tsx
 var import_obsidian3 = require("obsidian");
-var import_react5 = __toESM(require_react());
+var import_react6 = __toESM(require_react());
 var import_client2 = __toESM(require_client());
 
 // src/components/common/Target.tsx
-var import_react4 = __toESM(require_react());
+var import_react5 = __toESM(require_react());
 
 // src/components/common/Metadata.tsx
-var import_react3 = __toESM(require_react());
+var import_react4 = __toESM(require_react());
 var iconMap = {
-  text: /* @__PURE__ */ import_react3.default.createElement(
+  text: /* @__PURE__ */ import_react4.default.createElement(
     "svg",
     {
       xmlns: "http://www.w3.org/2000/svg",
@@ -39468,11 +41022,11 @@ var iconMap = {
       "stroke-linejoin": "round",
       className: "svg-icon"
     },
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M17 6.1H3" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M21 12.1H3" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M15.1 18H3" })
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M17 6.1H3" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M21 12.1H3" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M15.1 18H3" })
   ),
-  number: /* @__PURE__ */ import_react3.default.createElement(
+  number: /* @__PURE__ */ import_react4.default.createElement(
     "svg",
     {
       className: "svg-icon",
@@ -39486,14 +41040,14 @@ var iconMap = {
       "stroke-linecap": "round",
       "stroke-linejoin": "round"
     },
-    /* @__PURE__ */ import_react3.default.createElement("rect", { x: "14", y: "14", width: "4", height: "6", rx: "2" }),
-    /* @__PURE__ */ import_react3.default.createElement("rect", { x: "6", y: "4", width: "4", height: "6", rx: "2" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M6 20h4" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M14 10h4" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M6 14h2v6" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M14 4h2v6" })
+    /* @__PURE__ */ import_react4.default.createElement("rect", { x: "14", y: "14", width: "4", height: "6", rx: "2" }),
+    /* @__PURE__ */ import_react4.default.createElement("rect", { x: "6", y: "4", width: "4", height: "6", rx: "2" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M6 20h4" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M14 10h4" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M6 14h2v6" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M14 4h2v6" })
   ),
-  multitext: /* @__PURE__ */ import_react3.default.createElement(
+  multitext: /* @__PURE__ */ import_react4.default.createElement(
     "svg",
     {
       className: "svg-icon",
@@ -39507,14 +41061,14 @@ var iconMap = {
       "stroke-linecap": "round",
       "stroke-linejoin": "round"
     },
-    /* @__PURE__ */ import_react3.default.createElement("line", { x1: "8", x2: "21", y1: "6", y2: "6" }),
-    /* @__PURE__ */ import_react3.default.createElement("line", { x1: "8", x2: "21", y1: "12", y2: "12" }),
-    /* @__PURE__ */ import_react3.default.createElement("line", { x1: "8", x2: "21", y1: "18", y2: "18" }),
-    /* @__PURE__ */ import_react3.default.createElement("line", { x1: "3", x2: "3.01", y1: "6", y2: "6" }),
-    /* @__PURE__ */ import_react3.default.createElement("line", { x1: "3", x2: "3.01", y1: "12", y2: "12" }),
-    /* @__PURE__ */ import_react3.default.createElement("line", { x1: "3", x2: "3.01", y1: "18", y2: "18" })
+    /* @__PURE__ */ import_react4.default.createElement("line", { x1: "8", x2: "21", y1: "6", y2: "6" }),
+    /* @__PURE__ */ import_react4.default.createElement("line", { x1: "8", x2: "21", y1: "12", y2: "12" }),
+    /* @__PURE__ */ import_react4.default.createElement("line", { x1: "8", x2: "21", y1: "18", y2: "18" }),
+    /* @__PURE__ */ import_react4.default.createElement("line", { x1: "3", x2: "3.01", y1: "6", y2: "6" }),
+    /* @__PURE__ */ import_react4.default.createElement("line", { x1: "3", x2: "3.01", y1: "12", y2: "12" }),
+    /* @__PURE__ */ import_react4.default.createElement("line", { x1: "3", x2: "3.01", y1: "18", y2: "18" })
   ),
-  tags: /* @__PURE__ */ import_react3.default.createElement(
+  tags: /* @__PURE__ */ import_react4.default.createElement(
     "svg",
     {
       className: "svg-icon",
@@ -39528,11 +41082,11 @@ var iconMap = {
       "stroke-linecap": "round",
       "stroke-linejoin": "round"
     },
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z" }),
-    /* @__PURE__ */ import_react3.default.createElement("circle", { cx: "6.5", cy: "9.5", r: ".5", fill: "currentColor" })
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M9.586 5.586A2 2 0 0 0 8.172 5H3a1 1 0 0 0-1 1v5.172a2 2 0 0 0 .586 1.414L8.29 18.29a2.426 2.426 0 0 0 3.42 0l3.58-3.58a2.426 2.426 0 0 0 0-3.42z" }),
+    /* @__PURE__ */ import_react4.default.createElement("circle", { cx: "6.5", cy: "9.5", r: ".5", fill: "currentColor" })
   ),
-  date: /* @__PURE__ */ import_react3.default.createElement(
+  date: /* @__PURE__ */ import_react4.default.createElement(
     "svg",
     {
       className: "svg-icon",
@@ -39546,12 +41100,12 @@ var iconMap = {
       "stroke-linecap": "round",
       "stroke-linejoin": "round"
     },
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M8 2v4" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M16 2v4" }),
-    /* @__PURE__ */ import_react3.default.createElement("rect", { width: "18", height: "18", x: "3", y: "4", rx: "2" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M3 10h18" })
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M8 2v4" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M16 2v4" }),
+    /* @__PURE__ */ import_react4.default.createElement("rect", { width: "18", height: "18", x: "3", y: "4", rx: "2" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M3 10h18" })
   ),
-  datetime: /* @__PURE__ */ import_react3.default.createElement(
+  datetime: /* @__PURE__ */ import_react4.default.createElement(
     "svg",
     {
       className: "svg-icon",
@@ -39565,14 +41119,14 @@ var iconMap = {
       "stroke-linecap": "round",
       "stroke-linejoin": "round"
     },
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M16 2v4" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M8 2v4" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M3 10h5" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M17.5 17.5 16 16.3V14" }),
-    /* @__PURE__ */ import_react3.default.createElement("circle", { cx: "16", cy: "16", r: "6" })
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M16 2v4" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M8 2v4" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M3 10h5" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M17.5 17.5 16 16.3V14" }),
+    /* @__PURE__ */ import_react4.default.createElement("circle", { cx: "16", cy: "16", r: "6" })
   ),
-  checkbox: /* @__PURE__ */ import_react3.default.createElement(
+  checkbox: /* @__PURE__ */ import_react4.default.createElement(
     "svg",
     {
       className: "svg-icon",
@@ -39586,10 +41140,10 @@ var iconMap = {
       "stroke-linecap": "round",
       "stroke-linejoin": "round"
     },
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "m9 11 3 3L22 4" }),
-    /* @__PURE__ */ import_react3.default.createElement("path", { d: "M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" })
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "m9 11 3 3L22 4" }),
+    /* @__PURE__ */ import_react4.default.createElement("path", { d: "M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" })
   ),
-  aliases: /* @__PURE__ */ import_react3.default.createElement(import_react3.default.Fragment, null)
+  aliases: /* @__PURE__ */ import_react4.default.createElement(import_react4.default.Fragment, null)
 };
 var Metadata = ({ type, name, value }) => {
   if (["aliases", "cssclasses"].contains(name)) {
@@ -39598,25 +41152,27 @@ var Metadata = ({ type, name, value }) => {
   if (value === null) {
     return null;
   }
-  const iconSvg = iconMap[type] || iconMap["text"];
+  const iconSvg = iconMap[type] || iconMap.text;
   let valueElement;
   switch (type) {
-    case "text":
-      if (!value)
+    case "text": {
+      if (!value) {
         return null;
+      }
       let content = value;
-      if (typeof value !== "string") {
-        content = JSON.stringify(value);
-      } else {
-        const match = value.match(/^\[\[(.+)\]\]$/);
+      if (typeof value === "string") {
+        const match = /^\[\[(.+)]]$/.exec(value);
         if (match) {
           content = match[1];
         }
+      } else {
+        content = JSON.stringify(value);
       }
-      valueElement = /* @__PURE__ */ import_react3.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, content);
+      valueElement = /* @__PURE__ */ import_react4.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, content);
       break;
-    case "number":
-      valueElement = /* @__PURE__ */ import_react3.default.createElement(
+    }
+    case "number": {
+      valueElement = /* @__PURE__ */ import_react4.default.createElement(
         "input",
         {
           className: "metadata-input metadata-input-number",
@@ -39625,8 +41181,9 @@ var Metadata = ({ type, name, value }) => {
         }
       );
       break;
-    case "checkbox":
-      valueElement = /* @__PURE__ */ import_react3.default.createElement(
+    }
+    case "checkbox": {
+      valueElement = /* @__PURE__ */ import_react4.default.createElement(
         "input",
         {
           className: "metadata-input-checkbox",
@@ -39635,23 +41192,25 @@ var Metadata = ({ type, name, value }) => {
         }
       );
       break;
-    case "date":
-      valueElement = /* @__PURE__ */ import_react3.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
+    }
+    case "date": {
+      valueElement = /* @__PURE__ */ import_react4.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
       break;
-    case "datetime":
-      valueElement = /* @__PURE__ */ import_react3.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
+    }
+    case "datetime": {
+      valueElement = /* @__PURE__ */ import_react4.default.createElement("div", { className: "metadata-input-longtext mod-truncate" }, value);
       break;
+    }
     case "multitext":
-    case "tags":
-      valueElement = /* @__PURE__ */ import_react3.default.createElement("div", { className: "multi-select-container" }, value.map((str) => /* @__PURE__ */ import_react3.default.createElement("div", { className: "multi-select-pill", style: { border: "none" } }, /* @__PURE__ */ import_react3.default.createElement("div", { className: "multi-select-pill-content" }, /* @__PURE__ */ import_react3.default.createElement("span", null, str)))));
+    case "tags": {
+      valueElement = /* @__PURE__ */ import_react4.default.createElement("div", { className: "multi-select-container" }, value?.map((str) => /* @__PURE__ */ import_react4.default.createElement("div", { className: "multi-select-pill", style: { border: "none" } }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "multi-select-pill-content" }, /* @__PURE__ */ import_react4.default.createElement("span", null, str)))));
       break;
-    case "aliases":
+    }
+    case "aliases": {
       return null;
-    default:
-      valueElement = value;
-      break;
+    }
   }
-  return /* @__PURE__ */ import_react3.default.createElement(
+  return /* @__PURE__ */ import_react4.default.createElement(
     "div",
     {
       className: "metadata-property",
@@ -39659,8 +41218,8 @@ var Metadata = ({ type, name, value }) => {
       "data-property-key": name,
       style: { border: 0 }
     },
-    /* @__PURE__ */ import_react3.default.createElement("div", { className: "metadata-property-key" }, /* @__PURE__ */ import_react3.default.createElement("span", { className: "metadata-property-icon" }, iconSvg), /* @__PURE__ */ import_react3.default.createElement("span", { className: "metadata-property-name" }, name)),
-    /* @__PURE__ */ import_react3.default.createElement("div", { className: "metadata-property-value" }, valueElement)
+    /* @__PURE__ */ import_react4.default.createElement("div", { className: "metadata-property-key" }, /* @__PURE__ */ import_react4.default.createElement("span", { className: "metadata-property-icon" }, iconSvg), /* @__PURE__ */ import_react4.default.createElement("span", { className: "metadata-property-name" }, name)),
+    /* @__PURE__ */ import_react4.default.createElement("div", { className: "metadata-property-value" }, valueElement)
   );
 };
 var Metadata_default = Metadata;
@@ -39671,13 +41230,13 @@ var alignMap = {
   center: "center",
   right: "flex-end"
 };
-var Target = (0, import_react4.forwardRef)(({ frontmatter, setting, title, metadataMap, markdownEl, app }, ref) => {
-  const [watermarkProps, setWatermarkProps] = (0, import_react4.useState)({});
-  const contentRef = (0, import_react4.useRef)(null);
-  (0, import_react4.useEffect)(() => {
-    contentRef.current?.appendChild(markdownEl);
+var Target = (0, import_react5.forwardRef)(({ frontmatter, setting, title, metadataMap, markdownEl }, ref) => {
+  const [watermarkProps, setWatermarkProps] = (0, import_react5.useState)({});
+  const contentRef = (0, import_react5.useRef)(null);
+  (0, import_react5.useEffect)(() => {
+    contentRef.current?.append(markdownEl);
   }, []);
-  (0, import_react4.useEffect)(() => {
+  (0, import_react5.useEffect)(() => {
     const props = {
       monitor: false,
       mode: "interval",
@@ -39699,7 +41258,7 @@ var Target = (0, import_react4.forwardRef)(({ frontmatter, setting, title, metad
     }
     setWatermarkProps(props);
   }, [setting]);
-  return /* @__PURE__ */ import_react4.default.createElement(
+  return /* @__PURE__ */ import_react5.default.createElement(
     "div",
     {
       className: `export-image-root ${(frontmatter?.cssclasses || []).join(
@@ -39709,10 +41268,10 @@ var Target = (0, import_react4.forwardRef)(({ frontmatter, setting, title, metad
       style: {
         display: "flex",
         flexDirection: setting.authorInfo.position === "bottom" ? "column" : "column-reverse",
-        backgroundColor: setting.format === "png" ? "unset" : "var(--background-primary)"
+        backgroundColor: setting.format === "png1" ? "unset" : "var(--background-primary)"
       }
     },
-    /* @__PURE__ */ import_react4.default.createElement(src_default, { ...watermarkProps }, /* @__PURE__ */ import_react4.default.createElement(
+    /* @__PURE__ */ import_react5.default.createElement(Watermark2, { ...watermarkProps }, /* @__PURE__ */ import_react5.default.createElement(
       "div",
       {
         className: "markdown-preview-view markdown-rendered export-image-preview-container",
@@ -39721,8 +41280,8 @@ var Target = (0, import_react4.forwardRef)(({ frontmatter, setting, title, metad
           transition: "width 0.25s"
         }
       },
-      setting.showFilename && /* @__PURE__ */ import_react4.default.createElement("div", { className: "inline-title", autoCapitalize: "on" }, title),
-      setting.showMetadata && frontmatter && Object.keys(frontmatter).length > 0 && /* @__PURE__ */ import_react4.default.createElement("div", { className: "metadata-container", style: { display: "block" } }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "metadata-content" }, Object.keys(frontmatter).map((name) => /* @__PURE__ */ import_react4.default.createElement(
+      setting.showFilename && /* @__PURE__ */ import_react5.default.createElement("div", { className: "inline-title", autoCapitalize: "on" }, title),
+      setting.showMetadata && frontmatter && Object.keys(frontmatter).length > 0 && /* @__PURE__ */ import_react5.default.createElement("div", { className: "metadata-container", style: { display: "block" } }, /* @__PURE__ */ import_react5.default.createElement("div", { className: "metadata-content" }, Object.keys(frontmatter).map((name) => /* @__PURE__ */ import_react5.default.createElement(
         Metadata_default,
         {
           name,
@@ -39731,19 +41290,19 @@ var Target = (0, import_react4.forwardRef)(({ frontmatter, setting, title, metad
           type: metadataMap[name]?.type || "text"
         }
       )))),
-      /* @__PURE__ */ import_react4.default.createElement("div", { ref: contentRef })
+      /* @__PURE__ */ import_react5.default.createElement("div", { ref: contentRef })
     )),
-    setting.authorInfo.show && (setting.authorInfo.avatar || setting.authorInfo.name) && /* @__PURE__ */ import_react4.default.createElement(
+    setting.authorInfo.show && (setting.authorInfo.avatar || setting.authorInfo.name) && /* @__PURE__ */ import_react5.default.createElement(
       "div",
       {
         className: "user-info-container",
         style: {
           [setting.authorInfo.position === "top" ? "borderBottom" : "borderTop"]: "1px solid var(--background-modifier-border)",
           justifyContent: alignMap[setting.authorInfo.align || "right"],
-          background: setting.format === "png" ? "unset" : "var(--background-primary)"
+          background: setting.format === "png1" ? "unset" : "var(--background-primary)"
         }
       },
-      setting.authorInfo.avatar && /* @__PURE__ */ import_react4.default.createElement(
+      setting.authorInfo.avatar && /* @__PURE__ */ import_react5.default.createElement(
         "div",
         {
           className: "user-info-avatar",
@@ -39752,11 +41311,72 @@ var Target = (0, import_react4.forwardRef)(({ frontmatter, setting, title, metad
           }
         }
       ),
-      setting.authorInfo.name && /* @__PURE__ */ import_react4.default.createElement("div", null, /* @__PURE__ */ import_react4.default.createElement("div", { className: "user-info-name" }, setting.authorInfo.name), setting.authorInfo.remark && /* @__PURE__ */ import_react4.default.createElement("div", { className: "user-info-remark" }, setting.authorInfo.remark))
+      setting.authorInfo.name && /* @__PURE__ */ import_react5.default.createElement("div", null, /* @__PURE__ */ import_react5.default.createElement("div", { className: "user-info-name" }, setting.authorInfo.name), setting.authorInfo.remark && /* @__PURE__ */ import_react5.default.createElement("div", { className: "user-info-remark" }, setting.authorInfo.remark))
     )
   );
 });
 var Target_default = Target;
+
+// src/utils/index.ts
+var import_obsidian2 = require("obsidian");
+function isMarkdownFile(file) {
+  return ["md", "markdown"].includes(file?.extension ?? "");
+}
+async function fileToBase64(file) {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  return new Promise((resolve, reject) => {
+    reader.addEventListener("load", () => {
+      resolve(reader.result);
+    });
+    reader.onerror = (error) => {
+      reject(error);
+    };
+  });
+}
+function fileToUrl(file) {
+  return URL.createObjectURL(file);
+}
+async function getSizeOfImage(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.addEventListener("load", () => {
+      resolve({
+        width: Math.round(image.width / 2),
+        height: Math.round(image.height / 2)
+      });
+      URL.revokeObjectURL(url);
+      image.remove();
+    });
+    image.onerror = (error) => {
+      reject(error);
+      URL.revokeObjectURL(url);
+      image.remove();
+    };
+    image.src = url;
+  });
+}
+async function createHtml(path, app) {
+  const div = createDiv();
+  await import_obsidian2.MarkdownRenderer.render(
+    app,
+    `![](${(0, import_obsidian2.normalizePath)(path).replaceAll(" ", "%20")})`,
+    div,
+    "",
+    new import_obsidian2.MarkdownRenderChild(div)
+  );
+  return div;
+}
+function getMetadata(file, app) {
+  return app.metadataCache.getFileCache(file)?.frontmatter;
+}
+async function delay(time) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+}
 
 // src/utils/makeHTML.tsx
 var root;
@@ -39767,40 +41387,37 @@ async function makeHTML(file, settings, app, container) {
     container.empty();
   }
   const markdown = await app.vault.cachedRead(file);
-  const el = document.createElement("div");
-  import_obsidian3.MarkdownRenderer.render(
+  const element = document.createElement("div");
+  await import_obsidian3.MarkdownRenderer.render(
     app,
     markdown,
-    el.createDiv(),
+    element.createDiv(),
     file.path,
-    app.workspace.getActiveViewOfType(import_obsidian3.MarkdownView) || app.workspace.activeLeaf?.view || new import_obsidian3.MarkdownRenderChild(el)
+    app.workspace.getActiveViewOfType(import_obsidian3.MarkdownView) || app.workspace.activeLeaf?.view || new import_obsidian3.MarkdownRenderChild(element)
   );
-  const metadataMap = (
-    // @ts-ignore
-    app.metadataCache.getAllPropertyInfos()
-  );
-  const frontmatter = getMetadata(file, this.app);
+  const metadataMap = app.metadataCache.getAllPropertyInfos();
+  const frontmatter = getMetadata(file, app);
   root = (0, import_client2.createRoot)(container);
   root.render(
-    /* @__PURE__ */ import_react5.default.createElement(
+    /* @__PURE__ */ import_react6.default.createElement(
       Target_default,
       {
         frontmatter,
         setting: settings,
         title: file.basename,
-        markdownEl: el,
+        markdownEl: element,
         app,
         metadataMap
       }
     )
   );
   await delay(100);
-  return el.closest(".export-image-root") || el;
+  return element.closest(".export-image-root") || element;
 }
 
 // src/utils/capture.ts
 async function getBlob(el, higtResolution, type) {
-  return await import_dom_to_image_more.default.toBlob(el, {
+  return import_dom_to_image_more.default.toBlob(el, {
     width: el.clientWidth,
     height: el.clientHeight,
     quality: 0.85,
@@ -39831,12 +41448,13 @@ async function save(app, el, title, higtResolution, format, isMobile) {
   const blob = await getBlob(
     el,
     higtResolution,
-    `image/${format === "png" ? "png" : "jpeg"}`
+    `image/${format.includes("png") ? "png" : "jpeg"}`
   );
-  const filename = `${title.replace(/\s+/g, "_")}.${format}`;
+  const filename = `${title.replaceAll(/\s+/g, "_")}.${format.replace(/\d$/, "")}`;
   switch (format) {
     case "jpg":
-    case "png":
+    case "png0":
+    case "png1": {
       if (isMobile) {
         const filePath = await app.fileManager.getAvailablePathForAttachment(
           filename
@@ -39847,7 +41465,8 @@ async function save(app, el, title, higtResolution, format, isMobile) {
         (0, import_file_saver.default)(blob, filename);
       }
       break;
-    case "pdf":
+    }
+    case "pdf": {
       const pdf = await makePdf(blob, el);
       if (isMobile) {
         const filePath = await app.fileManager.getAvailablePathForAttachment(
@@ -39859,8 +41478,7 @@ async function save(app, el, title, higtResolution, format, isMobile) {
         pdf.save(filename);
       }
       break;
-    default:
-      break;
+    }
   }
 }
 async function copy(el, higtResolution, format) {
@@ -39871,7 +41489,7 @@ async function copy(el, higtResolution, format) {
   const blob = await getBlob(
     el,
     higtResolution,
-    `image/${format === "png" ? "png" : "jpeg"}`
+    `image/${format.includes("png") ? "png" : "jpeg"}`
   );
   const data = [];
   data.push(
@@ -39915,7 +41533,7 @@ async function saveMultipleFiles(files, settings, onProgress, app, folderName, c
     if (!pdf) {
       return;
     }
-    const fileName = `${folderName.replace(/\s+/g, "_")}.pdf`;
+    const fileName = `${folderName.replaceAll(/\s+/g, "_")}.pdf`;
     if (app.isMobile) {
       const filePath = await app.fileManager.getAvailablePathForAttachment(
         fileName
@@ -39941,1648 +41559,6 @@ async function saveMultipleFiles(files, settings, onProgress, app, folderName, c
   }
 }
 
-// node_modules/.pnpm/react-zoom-pan-pinch@3.4.4_react-dom@18.2.0_react@18.2.0/node_modules/react-zoom-pan-pinch/dist/index.esm.js
-var import_react6 = __toESM(require_react());
-var roundNumber = function(num, decimal) {
-  return Number(num.toFixed(decimal));
-};
-var checkIsNumber = function(num, defaultValue) {
-  return typeof num === "number" ? num : defaultValue;
-};
-var handleCallback = function(context, event, callback) {
-  if (callback && typeof callback === "function") {
-    callback(context, event);
-  }
-};
-var easeOut = function(t5) {
-  return -Math.cos(t5 * Math.PI) / 2 + 0.5;
-};
-var linear = function(t5) {
-  return t5;
-};
-var easeInQuad = function(t5) {
-  return t5 * t5;
-};
-var easeOutQuad = function(t5) {
-  return t5 * (2 - t5);
-};
-var easeInOutQuad = function(t5) {
-  return t5 < 0.5 ? 2 * t5 * t5 : -1 + (4 - 2 * t5) * t5;
-};
-var easeInCubic = function(t5) {
-  return t5 * t5 * t5;
-};
-var easeOutCubic = function(t5) {
-  return --t5 * t5 * t5 + 1;
-};
-var easeInOutCubic = function(t5) {
-  return t5 < 0.5 ? 4 * t5 * t5 * t5 : (t5 - 1) * (2 * t5 - 2) * (2 * t5 - 2) + 1;
-};
-var easeInQuart = function(t5) {
-  return t5 * t5 * t5 * t5;
-};
-var easeOutQuart = function(t5) {
-  return 1 - --t5 * t5 * t5 * t5;
-};
-var easeInOutQuart = function(t5) {
-  return t5 < 0.5 ? 8 * t5 * t5 * t5 * t5 : 1 - 8 * --t5 * t5 * t5 * t5;
-};
-var easeInQuint = function(t5) {
-  return t5 * t5 * t5 * t5 * t5;
-};
-var easeOutQuint = function(t5) {
-  return 1 + --t5 * t5 * t5 * t5 * t5;
-};
-var easeInOutQuint = function(t5) {
-  return t5 < 0.5 ? 16 * t5 * t5 * t5 * t5 * t5 : 1 + 16 * --t5 * t5 * t5 * t5 * t5;
-};
-var animations = {
-  easeOut,
-  linear,
-  easeInQuad,
-  easeOutQuad,
-  easeInOutQuad,
-  easeInCubic,
-  easeOutCubic,
-  easeInOutCubic,
-  easeInQuart,
-  easeOutQuart,
-  easeInOutQuart,
-  easeInQuint,
-  easeOutQuint,
-  easeInOutQuint
-};
-var handleCancelAnimationFrame = function(animation) {
-  if (typeof animation === "number") {
-    cancelAnimationFrame(animation);
-  }
-};
-var handleCancelAnimation = function(contextInstance) {
-  if (!contextInstance.mounted)
-    return;
-  handleCancelAnimationFrame(contextInstance.animation);
-  contextInstance.animate = false;
-  contextInstance.animation = null;
-  contextInstance.velocity = null;
-};
-function handleSetupAnimation(contextInstance, animationName, animationTime, callback) {
-  if (!contextInstance.mounted)
-    return;
-  var startTime = (/* @__PURE__ */ new Date()).getTime();
-  var lastStep = 1;
-  handleCancelAnimation(contextInstance);
-  contextInstance.animation = function() {
-    if (!contextInstance.mounted) {
-      return handleCancelAnimationFrame(contextInstance.animation);
-    }
-    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
-    var animationProgress = frameTime / animationTime;
-    var animationType = animations[animationName];
-    var step = animationType(animationProgress);
-    if (frameTime >= animationTime) {
-      callback(lastStep);
-      contextInstance.animation = null;
-    } else if (contextInstance.animation) {
-      callback(step);
-      requestAnimationFrame(contextInstance.animation);
-    }
-  };
-  requestAnimationFrame(contextInstance.animation);
-}
-function isValidTargetState(targetState) {
-  var scale = targetState.scale, positionX = targetState.positionX, positionY = targetState.positionY;
-  if (Number.isNaN(scale) || Number.isNaN(positionX) || Number.isNaN(positionY)) {
-    return false;
-  }
-  return true;
-}
-function animate(contextInstance, targetState, animationTime, animationName) {
-  var isValid = isValidTargetState(targetState);
-  if (!contextInstance.mounted || !isValid)
-    return;
-  var setTransformState = contextInstance.setTransformState;
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  var scaleDiff = targetState.scale - scale;
-  var positionXDiff = targetState.positionX - positionX;
-  var positionYDiff = targetState.positionY - positionY;
-  if (animationTime === 0) {
-    setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
-  } else {
-    handleSetupAnimation(contextInstance, animationName, animationTime, function(step) {
-      var newScale = scale + scaleDiff * step;
-      var newPositionX = positionX + positionXDiff * step;
-      var newPositionY = positionY + positionYDiff * step;
-      setTransformState(newScale, newPositionX, newPositionY);
-    });
-  }
-}
-function getComponentsSizes(wrapperComponent, contentComponent, newScale) {
-  var wrapperWidth = wrapperComponent.offsetWidth;
-  var wrapperHeight = wrapperComponent.offsetHeight;
-  var contentWidth = contentComponent.offsetWidth;
-  var contentHeight = contentComponent.offsetHeight;
-  var newContentWidth = contentWidth * newScale;
-  var newContentHeight = contentHeight * newScale;
-  var newDiffWidth = wrapperWidth - newContentWidth;
-  var newDiffHeight = wrapperHeight - newContentHeight;
-  return {
-    wrapperWidth,
-    wrapperHeight,
-    newContentWidth,
-    newDiffWidth,
-    newContentHeight,
-    newDiffHeight
-  };
-}
-var getBounds = function(wrapperWidth, newContentWidth, diffWidth, wrapperHeight, newContentHeight, diffHeight, centerZoomedOut) {
-  var scaleWidthFactor = wrapperWidth > newContentWidth ? diffWidth * (centerZoomedOut ? 1 : 0.5) : 0;
-  var scaleHeightFactor = wrapperHeight > newContentHeight ? diffHeight * (centerZoomedOut ? 1 : 0.5) : 0;
-  var minPositionX = wrapperWidth - newContentWidth - scaleWidthFactor;
-  var maxPositionX = scaleWidthFactor;
-  var minPositionY = wrapperHeight - newContentHeight - scaleHeightFactor;
-  var maxPositionY = scaleHeightFactor;
-  return { minPositionX, maxPositionX, minPositionY, maxPositionY };
-};
-var calculateBounds = function(contextInstance, newScale) {
-  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-  var centerZoomedOut = contextInstance.setup.centerZoomedOut;
-  if (!wrapperComponent || !contentComponent) {
-    throw new Error("Components are not mounted");
-  }
-  var _a2 = getComponentsSizes(wrapperComponent, contentComponent, newScale), wrapperWidth = _a2.wrapperWidth, wrapperHeight = _a2.wrapperHeight, newContentWidth = _a2.newContentWidth, newDiffWidth = _a2.newDiffWidth, newContentHeight = _a2.newContentHeight, newDiffHeight = _a2.newDiffHeight;
-  var bounds = getBounds(wrapperWidth, newContentWidth, newDiffWidth, wrapperHeight, newContentHeight, newDiffHeight, Boolean(centerZoomedOut));
-  return bounds;
-};
-var boundLimiter = function(value, minBound, maxBound, isActive) {
-  if (!isActive)
-    return roundNumber(value, 2);
-  if (value < minBound)
-    return roundNumber(minBound, 2);
-  if (value > maxBound)
-    return roundNumber(maxBound, 2);
-  return roundNumber(value, 2);
-};
-var handleCalculateBounds = function(contextInstance, newScale) {
-  var bounds = calculateBounds(contextInstance, newScale);
-  contextInstance.bounds = bounds;
-  return bounds;
-};
-function getMouseBoundedPosition(positionX, positionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent) {
-  var minPositionX = bounds.minPositionX, minPositionY = bounds.minPositionY, maxPositionX = bounds.maxPositionX, maxPositionY = bounds.maxPositionY;
-  var paddingX = 0;
-  var paddingY = 0;
-  if (wrapperComponent) {
-    paddingX = paddingValueX;
-    paddingY = paddingValueY;
-  }
-  var x2 = boundLimiter(positionX, minPositionX - paddingX, maxPositionX + paddingX, limitToBounds);
-  var y3 = boundLimiter(positionY, minPositionY - paddingY, maxPositionY + paddingY, limitToBounds);
-  return { x: x2, y: y3 };
-}
-function handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds) {
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  var scaleDifference = newScale - scale;
-  if (typeof mouseX !== "number" || typeof mouseY !== "number") {
-    console.error("Mouse X and Y position were not provided!");
-    return { x: positionX, y: positionY };
-  }
-  var calculatedPositionX = positionX - mouseX * scaleDifference;
-  var calculatedPositionY = positionY - mouseY * scaleDifference;
-  var newPositions = getMouseBoundedPosition(calculatedPositionX, calculatedPositionY, bounds, limitToBounds, 0, 0, null);
-  return newPositions;
-}
-function checkZoomBounds(zoom, minScale, maxScale, zoomPadding, enablePadding) {
-  var scalePadding = enablePadding ? zoomPadding : 0;
-  var minScaleWithPadding = minScale - scalePadding;
-  if (!Number.isNaN(maxScale) && zoom >= maxScale)
-    return maxScale;
-  if (!Number.isNaN(minScale) && zoom <= minScaleWithPadding)
-    return minScaleWithPadding;
-  return zoom;
-}
-var isPanningStartAllowed = function(contextInstance, event) {
-  var excluded = contextInstance.setup.panning.excluded;
-  var isInitialized = contextInstance.isInitialized, wrapperComponent = contextInstance.wrapperComponent;
-  var target = event.target;
-  var targetIsShadowDom = "shadowRoot" in target && "composedPath" in event;
-  var isWrapperChild = targetIsShadowDom ? event.composedPath().some(function(el) {
-    if (!(el instanceof Element)) {
-      return false;
-    }
-    return wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(el);
-  }) : wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
-  var isAllowed = isInitialized && target && isWrapperChild;
-  if (!isAllowed)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var isPanningAllowed = function(contextInstance) {
-  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning, setup = contextInstance.setup;
-  var disabled = setup.panning.disabled;
-  var isAllowed = isInitialized && isPanning && !disabled;
-  if (!isAllowed)
-    return false;
-  return true;
-};
-var handlePanningSetup = function(contextInstance, event) {
-  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
-  contextInstance.isPanning = true;
-  var x2 = event.clientX;
-  var y3 = event.clientY;
-  contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
-};
-var handleTouchPanningSetup = function(contextInstance, event) {
-  var touches = event.touches;
-  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY;
-  contextInstance.isPanning = true;
-  var oneFingerTouch = touches.length === 1;
-  if (oneFingerTouch) {
-    var x2 = touches[0].clientX;
-    var y3 = touches[0].clientY;
-    contextInstance.startCoords = { x: x2 - positionX, y: y3 - positionY };
-  }
-};
-function handlePanToBounds(contextInstance) {
-  var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
-  var _b2 = contextInstance.setup, disabled = _b2.disabled, limitToBounds = _b2.limitToBounds, centerZoomedOut = _b2.centerZoomedOut;
-  var wrapperComponent = contextInstance.wrapperComponent;
-  if (disabled || !wrapperComponent || !contextInstance.bounds)
-    return;
-  var _c = contextInstance.bounds, maxPositionX = _c.maxPositionX, minPositionX = _c.minPositionX, maxPositionY = _c.maxPositionY, minPositionY = _c.minPositionY;
-  var xChanged = positionX > maxPositionX || positionX < minPositionX;
-  var yChanged = positionY > maxPositionY || positionY < minPositionY;
-  var mousePosX = positionX > maxPositionX ? wrapperComponent.offsetWidth : contextInstance.setup.minPositionX || 0;
-  var mousePosY = positionY > maxPositionY ? wrapperComponent.offsetHeight : contextInstance.setup.minPositionY || 0;
-  var _d = handleCalculateZoomPositions(contextInstance, mousePosX, mousePosY, scale, contextInstance.bounds, limitToBounds || centerZoomedOut), x2 = _d.x, y3 = _d.y;
-  return {
-    scale,
-    positionX: xChanged ? x2 : positionX,
-    positionY: yChanged ? y3 : positionY
-  };
-}
-function handleNewPosition(contextInstance, newPositionX, newPositionY, paddingValueX, paddingValueY) {
-  var limitToBounds = contextInstance.setup.limitToBounds;
-  var wrapperComponent = contextInstance.wrapperComponent, bounds = contextInstance.bounds;
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  if (wrapperComponent === null || bounds === null || newPositionX === positionX && newPositionY === positionY) {
-    return;
-  }
-  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, paddingValueX, paddingValueY, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
-  contextInstance.setTransformState(scale, x2, y3);
-}
-var getPanningClientPosition = function(contextInstance, clientX, clientY) {
-  var startCoords = contextInstance.startCoords, transformState = contextInstance.transformState;
-  var panning = contextInstance.setup.panning;
-  var lockAxisX = panning.lockAxisX, lockAxisY = panning.lockAxisY;
-  var positionX = transformState.positionX, positionY = transformState.positionY;
-  if (!startCoords) {
-    return { x: positionX, y: positionY };
-  }
-  var mouseX = clientX - startCoords.x;
-  var mouseY = clientY - startCoords.y;
-  var newPositionX = lockAxisX ? positionX : mouseX;
-  var newPositionY = lockAxisY ? positionY : mouseY;
-  return { x: newPositionX, y: newPositionY };
-};
-var getPaddingValue = function(contextInstance, size) {
-  var setup = contextInstance.setup, transformState = contextInstance.transformState;
-  var scale = transformState.scale;
-  var minScale = setup.minScale, disablePadding = setup.disablePadding;
-  if (size > 0 && scale >= minScale && !disablePadding) {
-    return size;
-  }
-  return 0;
-};
-var isVelocityCalculationAllowed = function(contextInstance) {
-  var mounted = contextInstance.mounted;
-  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
-  var scale = contextInstance.transformState.scale;
-  var disabledVelocity = velocityAnimation.disabled;
-  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
-  if (!isAllowed)
-    return false;
-  return true;
-};
-var isVelocityAllowed = function(contextInstance) {
-  var mounted = contextInstance.mounted, velocity = contextInstance.velocity, bounds = contextInstance.bounds;
-  var _a2 = contextInstance.setup, disabled = _a2.disabled, velocityAnimation = _a2.velocityAnimation;
-  var scale = contextInstance.transformState.scale;
-  var disabledVelocity = velocityAnimation.disabled;
-  var isAllowed = !disabledVelocity || scale > 1 || !disabled || mounted;
-  if (!isAllowed)
-    return false;
-  if (!velocity || !bounds)
-    return false;
-  return true;
-};
-function getVelocityMoveTime(contextInstance, velocity) {
-  var velocityAnimation = contextInstance.setup.velocityAnimation;
-  var equalToMove = velocityAnimation.equalToMove, animationTime = velocityAnimation.animationTime, sensitivity = velocityAnimation.sensitivity;
-  if (equalToMove) {
-    return animationTime * velocity * sensitivity;
-  }
-  return animationTime;
-}
-function getVelocityPosition(newPosition, startPosition, currentPosition, isLocked, limitToBounds, minPosition, maxPosition, minTarget, maxTarget, step) {
-  if (limitToBounds) {
-    if (startPosition > maxPosition && currentPosition > maxPosition) {
-      var calculatedPosition = maxPosition + (newPosition - maxPosition) * step;
-      if (calculatedPosition > maxTarget)
-        return maxTarget;
-      if (calculatedPosition < maxPosition)
-        return maxPosition;
-      return calculatedPosition;
-    }
-    if (startPosition < minPosition && currentPosition < minPosition) {
-      var calculatedPosition = minPosition + (newPosition - minPosition) * step;
-      if (calculatedPosition < minTarget)
-        return minTarget;
-      if (calculatedPosition > minPosition)
-        return minPosition;
-      return calculatedPosition;
-    }
-  }
-  if (isLocked)
-    return startPosition;
-  return boundLimiter(newPosition, minPosition, maxPosition, limitToBounds);
-}
-function getSizeMultiplier(wrapperComponent, equalToMove) {
-  var defaultMultiplier = 1;
-  if (equalToMove) {
-    return Math.min(defaultMultiplier, wrapperComponent.offsetWidth / window.innerWidth);
-  }
-  return defaultMultiplier;
-}
-function handleCalculateVelocity(contextInstance, position) {
-  var isAllowed = isVelocityCalculationAllowed(contextInstance);
-  if (!isAllowed) {
-    return;
-  }
-  var lastMousePosition = contextInstance.lastMousePosition, velocityTime = contextInstance.velocityTime, setup = contextInstance.setup;
-  var wrapperComponent = contextInstance.wrapperComponent;
-  var equalToMove = setup.velocityAnimation.equalToMove;
-  var now = Date.now();
-  if (lastMousePosition && velocityTime && wrapperComponent) {
-    var sizeMultiplier = getSizeMultiplier(wrapperComponent, equalToMove);
-    var distanceX = position.x - lastMousePosition.x;
-    var distanceY = position.y - lastMousePosition.y;
-    var velocityX = distanceX / sizeMultiplier;
-    var velocityY = distanceY / sizeMultiplier;
-    var interval = now - velocityTime;
-    var speed = distanceX * distanceX + distanceY * distanceY;
-    var velocity = Math.sqrt(speed) / interval;
-    contextInstance.velocity = { velocityX, velocityY, total: velocity };
-  }
-  contextInstance.lastMousePosition = position;
-  contextInstance.velocityTime = now;
-}
-function handleVelocityPanning(contextInstance) {
-  var velocity = contextInstance.velocity, bounds = contextInstance.bounds, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
-  var isAllowed = isVelocityAllowed(contextInstance);
-  if (!isAllowed || !velocity || !bounds || !wrapperComponent) {
-    return;
-  }
-  var velocityX = velocity.velocityX, velocityY = velocity.velocityY, total = velocity.total;
-  var maxPositionX = bounds.maxPositionX, minPositionX = bounds.minPositionX, maxPositionY = bounds.maxPositionY, minPositionY = bounds.minPositionY;
-  var limitToBounds = setup.limitToBounds, alignmentAnimation = setup.alignmentAnimation;
-  var zoomAnimation = setup.zoomAnimation, panning = setup.panning;
-  var lockAxisY = panning.lockAxisY, lockAxisX = panning.lockAxisX;
-  var animationType = zoomAnimation.animationType;
-  var sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, velocityAlignmentTime = alignmentAnimation.velocityAlignmentTime;
-  var alignAnimationTime = velocityAlignmentTime;
-  var moveAnimationTime = getVelocityMoveTime(contextInstance, total);
-  var finalAnimationTime = Math.max(moveAnimationTime, alignAnimationTime);
-  var paddingValueX = getPaddingValue(contextInstance, sizeX);
-  var paddingValueY = getPaddingValue(contextInstance, sizeY);
-  var paddingX = paddingValueX * wrapperComponent.offsetWidth / 100;
-  var paddingY = paddingValueY * wrapperComponent.offsetHeight / 100;
-  var maxTargetX = maxPositionX + paddingX;
-  var minTargetX = minPositionX - paddingX;
-  var maxTargetY = maxPositionY + paddingY;
-  var minTargetY = minPositionY - paddingY;
-  var startState = contextInstance.transformState;
-  var startTime = (/* @__PURE__ */ new Date()).getTime();
-  handleSetupAnimation(contextInstance, animationType, finalAnimationTime, function(step) {
-    var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-    var frameTime = (/* @__PURE__ */ new Date()).getTime() - startTime;
-    var animationProgress = frameTime / alignAnimationTime;
-    var alignAnimation = animations[alignmentAnimation.animationType];
-    var alignStep = 1 - alignAnimation(Math.min(1, animationProgress));
-    var customStep = 1 - step;
-    var newPositionX = positionX + velocityX * customStep;
-    var newPositionY = positionY + velocityY * customStep;
-    var currentPositionX = getVelocityPosition(newPositionX, startState.positionX, positionX, lockAxisX, limitToBounds, minPositionX, maxPositionX, minTargetX, maxTargetX, alignStep);
-    var currentPositionY = getVelocityPosition(newPositionY, startState.positionY, positionY, lockAxisY, limitToBounds, minPositionY, maxPositionY, minTargetY, maxTargetY, alignStep);
-    if (positionX !== newPositionX || positionY !== newPositionY) {
-      contextInstance.setTransformState(scale, currentPositionX, currentPositionY);
-    }
-  });
-}
-function handlePanningStart(contextInstance, event) {
-  var scale = contextInstance.transformState.scale;
-  handleCancelAnimation(contextInstance);
-  handleCalculateBounds(contextInstance, scale);
-  if (window.TouchEvent !== void 0 && event instanceof TouchEvent) {
-    handleTouchPanningSetup(contextInstance, event);
-  } else {
-    handlePanningSetup(contextInstance, event);
-  }
-}
-function handleAlignToBounds(contextInstance) {
-  var scale = contextInstance.transformState.scale;
-  var _a2 = contextInstance.setup, minScale = _a2.minScale, alignmentAnimation = _a2.alignmentAnimation;
-  var disabled = alignmentAnimation.disabled, sizeX = alignmentAnimation.sizeX, sizeY = alignmentAnimation.sizeY, animationTime = alignmentAnimation.animationTime, animationType = alignmentAnimation.animationType;
-  var isDisabled = disabled || scale < minScale || !sizeX && !sizeY;
-  if (isDisabled)
-    return;
-  var targetState = handlePanToBounds(contextInstance);
-  if (targetState) {
-    animate(contextInstance, targetState, animationTime, animationType);
-  }
-}
-function handlePanning(contextInstance, clientX, clientY) {
-  var startCoords = contextInstance.startCoords, setup = contextInstance.setup;
-  var _a2 = setup.alignmentAnimation, sizeX = _a2.sizeX, sizeY = _a2.sizeY;
-  if (!startCoords)
-    return;
-  var _b2 = getPanningClientPosition(contextInstance, clientX, clientY), x2 = _b2.x, y3 = _b2.y;
-  var paddingValueX = getPaddingValue(contextInstance, sizeX);
-  var paddingValueY = getPaddingValue(contextInstance, sizeY);
-  handleCalculateVelocity(contextInstance, { x: x2, y: y3 });
-  handleNewPosition(contextInstance, x2, y3, paddingValueX, paddingValueY);
-}
-function handlePanningEnd(contextInstance) {
-  if (contextInstance.isPanning) {
-    var velocityDisabled = contextInstance.setup.panning.velocityDisabled;
-    var velocity = contextInstance.velocity, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-    contextInstance.isPanning = false;
-    contextInstance.animate = false;
-    contextInstance.animation = null;
-    var wrapperRect = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.getBoundingClientRect();
-    var contentRect = contentComponent === null || contentComponent === void 0 ? void 0 : contentComponent.getBoundingClientRect();
-    var wrapperWidth = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.width) || 0;
-    var wrapperHeight = (wrapperRect === null || wrapperRect === void 0 ? void 0 : wrapperRect.height) || 0;
-    var contentWidth = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.width) || 0;
-    var contentHeight = (contentRect === null || contentRect === void 0 ? void 0 : contentRect.height) || 0;
-    var isZoomed = wrapperWidth < contentWidth || wrapperHeight < contentHeight;
-    var shouldAnimate = !velocityDisabled && velocity && (velocity === null || velocity === void 0 ? void 0 : velocity.total) > 0.1 && isZoomed;
-    if (shouldAnimate) {
-      handleVelocityPanning(contextInstance);
-    } else {
-      handleAlignToBounds(contextInstance);
-    }
-  }
-}
-function handleZoomToPoint(contextInstance, scale, mouseX, mouseY) {
-  var _a2 = contextInstance.setup, minScale = _a2.minScale, maxScale = _a2.maxScale, limitToBounds = _a2.limitToBounds;
-  var newScale = checkZoomBounds(roundNumber(scale, 2), minScale, maxScale, 0, false);
-  var bounds = handleCalculateBounds(contextInstance, newScale);
-  var _b2 = handleCalculateZoomPositions(contextInstance, mouseX, mouseY, newScale, bounds, limitToBounds), x2 = _b2.x, y3 = _b2.y;
-  return { scale: newScale, positionX: x2, positionY: y3 };
-}
-function handleAlignToScaleBounds(contextInstance, mousePositionX, mousePositionY) {
-  var scale = contextInstance.transformState.scale;
-  var wrapperComponent = contextInstance.wrapperComponent;
-  var _a2 = contextInstance.setup, minScale = _a2.minScale, limitToBounds = _a2.limitToBounds, zoomAnimation = _a2.zoomAnimation;
-  var disabled = zoomAnimation.disabled, animationTime = zoomAnimation.animationTime, animationType = zoomAnimation.animationType;
-  var isDisabled = disabled || scale >= minScale;
-  if (scale >= 1 || limitToBounds) {
-    handleAlignToBounds(contextInstance);
-  }
-  if (isDisabled || !wrapperComponent || !contextInstance.mounted)
-    return;
-  var mouseX = mousePositionX || wrapperComponent.offsetWidth / 2;
-  var mouseY = mousePositionY || wrapperComponent.offsetHeight / 2;
-  var targetState = handleZoomToPoint(contextInstance, minScale, mouseX, mouseY);
-  if (targetState) {
-    animate(contextInstance, targetState, animationTime, animationType);
-  }
-}
-var __assign = function() {
-  __assign = Object.assign || function __assign2(t5) {
-    for (var s3, i4 = 1, n4 = arguments.length; i4 < n4; i4++) {
-      s3 = arguments[i4];
-      for (var p3 in s3)
-        if (Object.prototype.hasOwnProperty.call(s3, p3))
-          t5[p3] = s3[p3];
-    }
-    return t5;
-  };
-  return __assign.apply(this, arguments);
-};
-function __spreadArray(to, from, pack) {
-  if (pack || arguments.length === 2)
-    for (var i4 = 0, l3 = from.length, ar2; i4 < l3; i4++) {
-      if (ar2 || !(i4 in from)) {
-        if (!ar2)
-          ar2 = Array.prototype.slice.call(from, 0, i4);
-        ar2[i4] = from[i4];
-      }
-    }
-  return to.concat(ar2 || Array.prototype.slice.call(from));
-}
-var initialState = {
-  previousScale: 1,
-  scale: 1,
-  positionX: 0,
-  positionY: 0
-};
-var initialSetup = {
-  disabled: false,
-  minPositionX: null,
-  maxPositionX: null,
-  minPositionY: null,
-  maxPositionY: null,
-  minScale: 1,
-  maxScale: 8,
-  limitToBounds: true,
-  centerZoomedOut: false,
-  centerOnInit: false,
-  disablePadding: false,
-  smooth: true,
-  wheel: {
-    step: 0.2,
-    disabled: false,
-    smoothStep: 1e-3,
-    wheelDisabled: false,
-    touchPadDisabled: false,
-    activationKeys: [],
-    excluded: []
-  },
-  panning: {
-    disabled: false,
-    velocityDisabled: false,
-    lockAxisX: false,
-    lockAxisY: false,
-    allowLeftClickPan: true,
-    allowMiddleClickPan: true,
-    allowRightClickPan: true,
-    wheelPanning: false,
-    activationKeys: [],
-    excluded: []
-  },
-  pinch: {
-    step: 5,
-    disabled: false,
-    excluded: []
-  },
-  doubleClick: {
-    disabled: false,
-    step: 0.7,
-    mode: "zoomIn",
-    animationType: "easeOut",
-    animationTime: 200,
-    excluded: []
-  },
-  zoomAnimation: {
-    disabled: false,
-    size: 0.4,
-    animationTime: 200,
-    animationType: "easeOut"
-  },
-  alignmentAnimation: {
-    disabled: false,
-    sizeX: 100,
-    sizeY: 100,
-    animationTime: 200,
-    velocityAlignmentTime: 400,
-    animationType: "easeOut"
-  },
-  velocityAnimation: {
-    disabled: false,
-    sensitivity: 1,
-    animationTime: 400,
-    animationType: "easeOut",
-    equalToMove: true
-  }
-};
-var createState = function(props) {
-  var _a2, _b2, _c, _d;
-  return {
-    previousScale: (_a2 = props.initialScale) !== null && _a2 !== void 0 ? _a2 : initialState.scale,
-    scale: (_b2 = props.initialScale) !== null && _b2 !== void 0 ? _b2 : initialState.scale,
-    positionX: (_c = props.initialPositionX) !== null && _c !== void 0 ? _c : initialState.positionX,
-    positionY: (_d = props.initialPositionY) !== null && _d !== void 0 ? _d : initialState.positionY
-  };
-};
-var createSetup = function(props) {
-  var newSetup = __assign({}, initialSetup);
-  Object.keys(props).forEach(function(key) {
-    var validValue = typeof props[key] !== "undefined";
-    var validParameter = typeof initialSetup[key] !== "undefined";
-    if (validParameter && validValue) {
-      var dataType = Object.prototype.toString.call(initialSetup[key]);
-      var isObject = dataType === "[object Object]";
-      var isArray = dataType === "[object Array]";
-      if (isObject) {
-        newSetup[key] = __assign(__assign({}, initialSetup[key]), props[key]);
-      } else if (isArray) {
-        newSetup[key] = __spreadArray(__spreadArray([], initialSetup[key], true), props[key], true);
-      } else {
-        newSetup[key] = props[key];
-      }
-    }
-  });
-  return newSetup;
-};
-var handleCalculateButtonZoom = function(contextInstance, delta, step) {
-  var scale = contextInstance.transformState.scale;
-  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
-  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, smooth = setup.smooth;
-  var size = zoomAnimation.size;
-  if (!wrapperComponent) {
-    throw new Error("Wrapper is not mounted");
-  }
-  var targetScale = smooth ? scale * Math.exp(delta * step) : scale + delta * step;
-  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, false);
-  return newScale;
-};
-function handleZoomToViewCenter(contextInstance, delta, step, animationTime, animationType) {
-  var wrapperComponent = contextInstance.wrapperComponent;
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  if (!wrapperComponent)
-    return console.error("No WrapperComponent found");
-  var wrapperWidth = wrapperComponent.offsetWidth;
-  var wrapperHeight = wrapperComponent.offsetHeight;
-  var mouseX = (wrapperWidth / 2 - positionX) / scale;
-  var mouseY = (wrapperHeight / 2 - positionY) / scale;
-  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
-  var targetState = handleZoomToPoint(contextInstance, newScale, mouseX, mouseY);
-  if (!targetState) {
-    return console.error("Error during zoom event. New transformation state was not calculated.");
-  }
-  animate(contextInstance, targetState, animationTime, animationType);
-}
-function resetTransformations(contextInstance, animationTime, animationType, onResetTransformation) {
-  var setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
-  var limitToBounds = setup.limitToBounds;
-  var initialTransformation = createState(contextInstance.props);
-  var _a2 = contextInstance.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-  if (!wrapperComponent)
-    return;
-  var newBounds = calculateBounds(contextInstance, initialTransformation.scale);
-  var boundedPositions = getMouseBoundedPosition(initialTransformation.positionX, initialTransformation.positionY, newBounds, limitToBounds, 0, 0, wrapperComponent);
-  var newState = {
-    scale: initialTransformation.scale,
-    positionX: boundedPositions.x,
-    positionY: boundedPositions.y
-  };
-  if (scale === initialTransformation.scale && positionX === initialTransformation.positionX && positionY === initialTransformation.positionY) {
-    return;
-  }
-  onResetTransformation === null || onResetTransformation === void 0 ? void 0 : onResetTransformation();
-  animate(contextInstance, newState, animationTime, animationType);
-}
-function getOffset(element, wrapper, content, state) {
-  var offset = element.getBoundingClientRect();
-  var wrapperOffset = wrapper.getBoundingClientRect();
-  var contentOffset = content.getBoundingClientRect();
-  var xOff = wrapperOffset.x * state.scale;
-  var yOff = wrapperOffset.y * state.scale;
-  return {
-    x: (offset.x - contentOffset.x + xOff) / state.scale,
-    y: (offset.y - contentOffset.y + yOff) / state.scale
-  };
-}
-function calculateZoomToNode(contextInstance, node2, customZoom) {
-  var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent, transformState = contextInstance.transformState;
-  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, minScale = _a2.minScale, maxScale = _a2.maxScale;
-  if (!wrapperComponent || !contentComponent)
-    return transformState;
-  var wrapperRect = wrapperComponent.getBoundingClientRect();
-  var nodeRect = node2.getBoundingClientRect();
-  var nodeOffset = getOffset(node2, wrapperComponent, contentComponent, transformState);
-  var nodeLeft = nodeOffset.x;
-  var nodeTop = nodeOffset.y;
-  var nodeWidth = nodeRect.width / transformState.scale;
-  var nodeHeight = nodeRect.height / transformState.scale;
-  var scaleX = wrapperComponent.offsetWidth / nodeWidth;
-  var scaleY = wrapperComponent.offsetHeight / nodeHeight;
-  var newScale = checkZoomBounds(customZoom || Math.min(scaleX, scaleY), minScale, maxScale, 0, false);
-  var offsetX = (wrapperRect.width - nodeWidth * newScale) / 2;
-  var offsetY = (wrapperRect.height - nodeHeight * newScale) / 2;
-  var newPositionX = (wrapperRect.left - nodeLeft) * newScale + offsetX;
-  var newPositionY = (wrapperRect.top - nodeTop) * newScale + offsetY;
-  var bounds = calculateBounds(contextInstance, newScale);
-  var _b2 = getMouseBoundedPosition(newPositionX, newPositionY, bounds, limitToBounds, 0, 0, wrapperComponent), x2 = _b2.x, y3 = _b2.y;
-  return { positionX: x2, positionY: y3, scale: newScale };
-}
-var zoomIn = function(contextInstance) {
-  return function(step, animationTime, animationType) {
-    if (step === void 0) {
-      step = 0.5;
-    }
-    if (animationTime === void 0) {
-      animationTime = 300;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    handleZoomToViewCenter(contextInstance, 1, step, animationTime, animationType);
-  };
-};
-var zoomOut = function(contextInstance) {
-  return function(step, animationTime, animationType) {
-    if (step === void 0) {
-      step = 0.5;
-    }
-    if (animationTime === void 0) {
-      animationTime = 300;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    handleZoomToViewCenter(contextInstance, -1, step, animationTime, animationType);
-  };
-};
-var setTransform = function(contextInstance) {
-  return function(newPositionX, newPositionY, newScale, animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 300;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    var _a2 = contextInstance.transformState, positionX = _a2.positionX, positionY = _a2.positionY, scale = _a2.scale;
-    var wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-    var disabled = contextInstance.setup.disabled;
-    if (disabled || !wrapperComponent || !contentComponent)
-      return;
-    var targetState = {
-      positionX: Number.isNaN(newPositionX) ? positionX : newPositionX,
-      positionY: Number.isNaN(newPositionY) ? positionY : newPositionY,
-      scale: Number.isNaN(newScale) ? scale : newScale
-    };
-    animate(contextInstance, targetState, animationTime, animationType);
-  };
-};
-var resetTransform = function(contextInstance) {
-  return function(animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 200;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    resetTransformations(contextInstance, animationTime, animationType);
-  };
-};
-var centerView = function(contextInstance) {
-  return function(scale, animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 200;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    var transformState = contextInstance.transformState, wrapperComponent = contextInstance.wrapperComponent, contentComponent = contextInstance.contentComponent;
-    if (wrapperComponent && contentComponent) {
-      var targetState = getCenterPosition(scale || transformState.scale, wrapperComponent, contentComponent);
-      animate(contextInstance, targetState, animationTime, animationType);
-    }
-  };
-};
-var zoomToElement = function(contextInstance) {
-  return function(node2, scale, animationTime, animationType) {
-    if (animationTime === void 0) {
-      animationTime = 600;
-    }
-    if (animationType === void 0) {
-      animationType = "easeOut";
-    }
-    handleCancelAnimation(contextInstance);
-    var wrapperComponent = contextInstance.wrapperComponent;
-    var target = typeof node2 === "string" ? document.getElementById(node2) : node2;
-    if (wrapperComponent && target && wrapperComponent.contains(target)) {
-      var targetState = calculateZoomToNode(contextInstance, target, scale);
-      animate(contextInstance, targetState, animationTime, animationType);
-    }
-  };
-};
-var getControls = function(contextInstance) {
-  return {
-    instance: contextInstance,
-    zoomIn: zoomIn(contextInstance),
-    zoomOut: zoomOut(contextInstance),
-    setTransform: setTransform(contextInstance),
-    resetTransform: resetTransform(contextInstance),
-    centerView: centerView(contextInstance),
-    zoomToElement: zoomToElement(contextInstance)
-  };
-};
-var getState = function(contextInstance) {
-  return {
-    instance: contextInstance,
-    state: contextInstance.transformState
-  };
-};
-var getContext = function(contextInstance) {
-  var ref = {};
-  Object.assign(ref, getState(contextInstance));
-  Object.assign(ref, getControls(contextInstance));
-  return ref;
-};
-var passiveSupported = false;
-function makePassiveEventOption() {
-  try {
-    var options = {
-      get passive() {
-        passiveSupported = true;
-        return false;
-      }
-    };
-    return options;
-  } catch (err) {
-    passiveSupported = false;
-    return passiveSupported;
-  }
-}
-var isExcludedNode = function(node2, excluded) {
-  return excluded.some(function(exclude) {
-    return node2.matches("".concat(exclude, ", .").concat(exclude, ", ").concat(exclude, " *, .").concat(exclude, " *"));
-  });
-};
-var cancelTimeout = function(timeout) {
-  if (timeout) {
-    clearTimeout(timeout);
-  }
-};
-var getTransformStyles = function(x2, y3, scale) {
-  return "translate(".concat(x2, "px, ").concat(y3, "px) scale(").concat(scale, ")");
-};
-var getCenterPosition = function(scale, wrapperComponent, contentComponent) {
-  var contentWidth = contentComponent.offsetWidth * scale;
-  var contentHeight = contentComponent.offsetHeight * scale;
-  var centerPositionX = (wrapperComponent.offsetWidth - contentWidth) / 2;
-  var centerPositionY = (wrapperComponent.offsetHeight - contentHeight) / 2;
-  return {
-    scale,
-    positionX: centerPositionX,
-    positionY: centerPositionY
-  };
-};
-function mergeRefs(refs) {
-  return function(value) {
-    refs.forEach(function(ref) {
-      if (typeof ref === "function") {
-        ref(value);
-      } else if (ref != null) {
-        ref.current = value;
-      }
-    });
-  };
-}
-var isWheelAllowed = function(contextInstance, event) {
-  var _a2 = contextInstance.setup.wheel, disabled = _a2.disabled, wheelDisabled = _a2.wheelDisabled, touchPadDisabled = _a2.touchPadDisabled, excluded = _a2.excluded;
-  var isInitialized = contextInstance.isInitialized, isPanning = contextInstance.isPanning;
-  var target = event.target;
-  var isAllowed = isInitialized && !isPanning && !disabled && target;
-  if (!isAllowed)
-    return false;
-  if (wheelDisabled && !event.ctrlKey)
-    return false;
-  if (touchPadDisabled && event.ctrlKey)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var getDeltaY = function(event) {
-  if (event) {
-    return event.deltaY < 0 ? 1 : -1;
-  }
-  return 0;
-};
-function getDelta(event, customDelta) {
-  var deltaY = getDeltaY(event);
-  var delta = checkIsNumber(customDelta, deltaY);
-  return delta;
-}
-function getMousePosition(event, contentComponent, scale) {
-  var contentRect = contentComponent.getBoundingClientRect();
-  var mouseX = 0;
-  var mouseY = 0;
-  if ("clientX" in event) {
-    mouseX = (event.clientX - contentRect.left) / scale;
-    mouseY = (event.clientY - contentRect.top) / scale;
-  } else {
-    var touch = event.touches[0];
-    mouseX = (touch.clientX - contentRect.left) / scale;
-    mouseY = (touch.clientY - contentRect.top) / scale;
-  }
-  if (Number.isNaN(mouseX) || Number.isNaN(mouseY))
-    console.error("No mouse or touch offset found");
-  return {
-    x: mouseX,
-    y: mouseY
-  };
-}
-var handleCalculateWheelZoom = function(contextInstance, delta, step, disable, getTarget) {
-  var scale = contextInstance.transformState.scale;
-  var wrapperComponent = contextInstance.wrapperComponent, setup = contextInstance.setup;
-  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
-  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
-  if (!wrapperComponent) {
-    throw new Error("Wrapper is not mounted");
-  }
-  var targetScale = scale + delta * step;
-  if (getTarget)
-    return targetScale;
-  var paddingEnabled = disable ? false : !disabled;
-  var newScale = checkZoomBounds(roundNumber(targetScale, 3), minScale, maxScale, size, paddingEnabled && !disablePadding);
-  return newScale;
-};
-var handleWheelZoomStop = function(contextInstance, event) {
-  var previousWheelEvent = contextInstance.previousWheelEvent;
-  var scale = contextInstance.transformState.scale;
-  var _a2 = contextInstance.setup, maxScale = _a2.maxScale, minScale = _a2.minScale;
-  if (!previousWheelEvent)
-    return false;
-  if (scale < maxScale || scale > minScale)
-    return true;
-  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
-    return true;
-  if (previousWheelEvent.deltaY > 0 && previousWheelEvent.deltaY < event.deltaY)
-    return true;
-  if (previousWheelEvent.deltaY < 0 && previousWheelEvent.deltaY > event.deltaY)
-    return true;
-  if (Math.sign(previousWheelEvent.deltaY) !== Math.sign(event.deltaY))
-    return true;
-  return false;
-};
-var isPinchStartAllowed = function(contextInstance, event) {
-  var _a2 = contextInstance.setup.pinch, disabled = _a2.disabled, excluded = _a2.excluded;
-  var isInitialized = contextInstance.isInitialized;
-  var target = event.target;
-  var isAllowed = isInitialized && !disabled && target;
-  if (!isAllowed)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var isPinchAllowed = function(contextInstance) {
-  var disabled = contextInstance.setup.pinch.disabled;
-  var isInitialized = contextInstance.isInitialized, pinchStartDistance = contextInstance.pinchStartDistance;
-  var isAllowed = isInitialized && !disabled && pinchStartDistance;
-  if (!isAllowed)
-    return false;
-  return true;
-};
-var calculateTouchMidPoint = function(event, scale, contentComponent) {
-  var contentRect = contentComponent.getBoundingClientRect();
-  var touches = event.touches;
-  var firstPointX = roundNumber(touches[0].clientX - contentRect.left, 5);
-  var firstPointY = roundNumber(touches[0].clientY - contentRect.top, 5);
-  var secondPointX = roundNumber(touches[1].clientX - contentRect.left, 5);
-  var secondPointY = roundNumber(touches[1].clientY - contentRect.top, 5);
-  return {
-    x: (firstPointX + secondPointX) / 2 / scale,
-    y: (firstPointY + secondPointY) / 2 / scale
-  };
-};
-var getTouchDistance = function(event) {
-  return Math.sqrt(Math.pow(event.touches[0].pageX - event.touches[1].pageX, 2) + Math.pow(event.touches[0].pageY - event.touches[1].pageY, 2));
-};
-var calculatePinchZoom = function(contextInstance, currentDistance) {
-  var pinchStartScale = contextInstance.pinchStartScale, pinchStartDistance = contextInstance.pinchStartDistance, setup = contextInstance.setup;
-  var maxScale = setup.maxScale, minScale = setup.minScale, zoomAnimation = setup.zoomAnimation, disablePadding = setup.disablePadding;
-  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
-  if (!pinchStartScale || pinchStartDistance === null || !currentDistance) {
-    throw new Error("Pinch touches distance was not provided");
-  }
-  if (currentDistance < 0) {
-    return contextInstance.transformState.scale;
-  }
-  var touchProportion = currentDistance / pinchStartDistance;
-  var scaleDifference = touchProportion * pinchStartScale;
-  return checkZoomBounds(roundNumber(scaleDifference, 2), minScale, maxScale, size, !disabled && !disablePadding);
-};
-var wheelStopEventTime = 160;
-var wheelAnimationTime = 100;
-var handleWheelStart = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onWheelStart = _a2.onWheelStart, onZoomStart = _a2.onZoomStart;
-  if (!contextInstance.wheelStopEventTimer) {
-    handleCancelAnimation(contextInstance);
-    handleCallback(getContext(contextInstance), event, onWheelStart);
-    handleCallback(getContext(contextInstance), event, onZoomStart);
-  }
-};
-var handleWheelZoom = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onWheel = _a2.onWheel, onZoom = _a2.onZoom;
-  var contentComponent = contextInstance.contentComponent, setup = contextInstance.setup, transformState = contextInstance.transformState;
-  var scale = transformState.scale;
-  var limitToBounds = setup.limitToBounds, centerZoomedOut = setup.centerZoomedOut, zoomAnimation = setup.zoomAnimation, wheel = setup.wheel, disablePadding = setup.disablePadding, smooth = setup.smooth;
-  var size = zoomAnimation.size, disabled = zoomAnimation.disabled;
-  var step = wheel.step, smoothStep = wheel.smoothStep;
-  if (!contentComponent) {
-    throw new Error("Component not mounted");
-  }
-  event.preventDefault();
-  event.stopPropagation();
-  var delta = getDelta(event, null);
-  var zoomStep = smooth ? smoothStep * Math.abs(event.deltaY) : step;
-  var newScale = handleCalculateWheelZoom(contextInstance, delta, zoomStep, !event.ctrlKey);
-  if (scale === newScale)
-    return;
-  var bounds = handleCalculateBounds(contextInstance, newScale);
-  var mousePosition = getMousePosition(event, contentComponent, scale);
-  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut || disablePadding;
-  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
-  var _b2 = handleCalculateZoomPositions(contextInstance, mousePosition.x, mousePosition.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
-  contextInstance.previousWheelEvent = event;
-  contextInstance.setTransformState(newScale, x2, y3);
-  handleCallback(getContext(contextInstance), event, onWheel);
-  handleCallback(getContext(contextInstance), event, onZoom);
-};
-var handleWheelStop = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onWheelStop = _a2.onWheelStop, onZoomStop = _a2.onZoomStop;
-  cancelTimeout(contextInstance.wheelAnimationTimer);
-  contextInstance.wheelAnimationTimer = setTimeout(function() {
-    if (!contextInstance.mounted)
-      return;
-    handleAlignToScaleBounds(contextInstance, event.x, event.y);
-    contextInstance.wheelAnimationTimer = null;
-  }, wheelAnimationTime);
-  var hasStoppedZooming = handleWheelZoomStop(contextInstance, event);
-  if (hasStoppedZooming) {
-    cancelTimeout(contextInstance.wheelStopEventTimer);
-    contextInstance.wheelStopEventTimer = setTimeout(function() {
-      if (!contextInstance.mounted)
-        return;
-      contextInstance.wheelStopEventTimer = null;
-      handleCallback(getContext(contextInstance), event, onWheelStop);
-      handleCallback(getContext(contextInstance), event, onZoomStop);
-    }, wheelStopEventTime);
-  }
-};
-var handlePinchStart = function(contextInstance, event) {
-  var distance = getTouchDistance(event);
-  contextInstance.pinchStartDistance = distance;
-  contextInstance.lastDistance = distance;
-  contextInstance.pinchStartScale = contextInstance.transformState.scale;
-  contextInstance.isPanning = false;
-  handleCancelAnimation(contextInstance);
-};
-var handlePinchZoom = function(contextInstance, event) {
-  var contentComponent = contextInstance.contentComponent, pinchStartDistance = contextInstance.pinchStartDistance;
-  var scale = contextInstance.transformState.scale;
-  var _a2 = contextInstance.setup, limitToBounds = _a2.limitToBounds, centerZoomedOut = _a2.centerZoomedOut, zoomAnimation = _a2.zoomAnimation;
-  var disabled = zoomAnimation.disabled, size = zoomAnimation.size;
-  if (pinchStartDistance === null || !contentComponent)
-    return;
-  var midPoint = calculateTouchMidPoint(event, scale, contentComponent);
-  if (!Number.isFinite(midPoint.x) || !Number.isFinite(midPoint.y))
-    return;
-  var currentDistance = getTouchDistance(event);
-  var newScale = calculatePinchZoom(contextInstance, currentDistance);
-  if (newScale === scale)
-    return;
-  var bounds = handleCalculateBounds(contextInstance, newScale);
-  var isPaddingDisabled = disabled || size === 0 || centerZoomedOut;
-  var isLimitedToBounds = limitToBounds && isPaddingDisabled;
-  var _b2 = handleCalculateZoomPositions(contextInstance, midPoint.x, midPoint.y, newScale, bounds, isLimitedToBounds), x2 = _b2.x, y3 = _b2.y;
-  contextInstance.pinchMidpoint = midPoint;
-  contextInstance.lastDistance = currentDistance;
-  contextInstance.setTransformState(newScale, x2, y3);
-};
-var handlePinchStop = function(contextInstance) {
-  var pinchMidpoint = contextInstance.pinchMidpoint;
-  contextInstance.velocity = null;
-  contextInstance.lastDistance = null;
-  contextInstance.pinchMidpoint = null;
-  contextInstance.pinchStartScale = null;
-  contextInstance.pinchStartDistance = null;
-  handleAlignToScaleBounds(contextInstance, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.x, pinchMidpoint === null || pinchMidpoint === void 0 ? void 0 : pinchMidpoint.y);
-};
-var handleDoubleClickStop = function(contextInstance, event) {
-  var onZoomStop = contextInstance.props.onZoomStop;
-  var animationTime = contextInstance.setup.doubleClick.animationTime;
-  cancelTimeout(contextInstance.doubleClickStopEventTimer);
-  contextInstance.doubleClickStopEventTimer = setTimeout(function() {
-    contextInstance.doubleClickStopEventTimer = null;
-    handleCallback(getContext(contextInstance), event, onZoomStop);
-  }, animationTime);
-};
-var handleDoubleClickResetMode = function(contextInstance, event) {
-  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
-  var _b2 = contextInstance.setup.doubleClick, animationTime = _b2.animationTime, animationType = _b2.animationType;
-  handleCallback(getContext(contextInstance), event, onZoomStart);
-  resetTransformations(contextInstance, animationTime, animationType, function() {
-    return handleCallback(getContext(contextInstance), event, onZoom);
-  });
-  handleDoubleClickStop(contextInstance, event);
-};
-function getDoubleClickScale(mode, scale) {
-  if (mode === "toggle") {
-    return scale === 1 ? 1 : -1;
-  }
-  return mode === "zoomOut" ? -1 : 1;
-}
-function handleDoubleClick(contextInstance, event) {
-  var setup = contextInstance.setup, doubleClickStopEventTimer = contextInstance.doubleClickStopEventTimer, transformState = contextInstance.transformState, contentComponent = contextInstance.contentComponent;
-  var scale = transformState.scale;
-  var _a2 = contextInstance.props, onZoomStart = _a2.onZoomStart, onZoom = _a2.onZoom;
-  var _b2 = setup.doubleClick, disabled = _b2.disabled, mode = _b2.mode, step = _b2.step, animationTime = _b2.animationTime, animationType = _b2.animationType;
-  if (disabled)
-    return;
-  if (doubleClickStopEventTimer)
-    return;
-  if (mode === "reset") {
-    return handleDoubleClickResetMode(contextInstance, event);
-  }
-  if (!contentComponent)
-    return console.error("No ContentComponent found");
-  var delta = getDoubleClickScale(mode, contextInstance.transformState.scale);
-  var newScale = handleCalculateButtonZoom(contextInstance, delta, step);
-  if (scale === newScale)
-    return;
-  handleCallback(getContext(contextInstance), event, onZoomStart);
-  var mousePosition = getMousePosition(event, contentComponent, scale);
-  var targetState = handleZoomToPoint(contextInstance, newScale, mousePosition.x, mousePosition.y);
-  if (!targetState) {
-    return console.error("Error during zoom event. New transformation state was not calculated.");
-  }
-  handleCallback(getContext(contextInstance), event, onZoom);
-  animate(contextInstance, targetState, animationTime, animationType);
-  handleDoubleClickStop(contextInstance, event);
-}
-var isDoubleClickAllowed = function(contextInstance, event) {
-  var isInitialized = contextInstance.isInitialized, setup = contextInstance.setup, wrapperComponent = contextInstance.wrapperComponent;
-  var _a2 = setup.doubleClick, disabled = _a2.disabled, excluded = _a2.excluded;
-  var target = event.target;
-  var isWrapperChild = wrapperComponent === null || wrapperComponent === void 0 ? void 0 : wrapperComponent.contains(target);
-  var isAllowed = isInitialized && target && isWrapperChild && !disabled;
-  if (!isAllowed)
-    return false;
-  var isExcluded = isExcludedNode(target, excluded);
-  if (isExcluded)
-    return false;
-  return true;
-};
-var ZoomPanPinch = (
-  /** @class */
-  /* @__PURE__ */ function() {
-    function ZoomPanPinch2(props) {
-      var _this = this;
-      this.mounted = true;
-      this.onChangeCallbacks = /* @__PURE__ */ new Set();
-      this.onInitCallbacks = /* @__PURE__ */ new Set();
-      this.wrapperComponent = null;
-      this.contentComponent = null;
-      this.isInitialized = false;
-      this.bounds = null;
-      this.previousWheelEvent = null;
-      this.wheelStopEventTimer = null;
-      this.wheelAnimationTimer = null;
-      this.isPanning = false;
-      this.isWheelPanning = false;
-      this.startCoords = null;
-      this.lastTouch = null;
-      this.distance = null;
-      this.lastDistance = null;
-      this.pinchStartDistance = null;
-      this.pinchStartScale = null;
-      this.pinchMidpoint = null;
-      this.doubleClickStopEventTimer = null;
-      this.velocity = null;
-      this.velocityTime = null;
-      this.lastMousePosition = null;
-      this.animate = false;
-      this.animation = null;
-      this.maxBounds = null;
-      this.pressedKeys = {};
-      this.mount = function() {
-        _this.initializeWindowEvents();
-      };
-      this.unmount = function() {
-        _this.cleanupWindowEvents();
-      };
-      this.update = function(newProps) {
-        _this.props = newProps;
-        handleCalculateBounds(_this, _this.transformState.scale);
-        _this.setup = createSetup(newProps);
-      };
-      this.initializeWindowEvents = function() {
-        var _a2, _b2;
-        var passive = makePassiveEventOption();
-        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
-        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
-        (_b2 = _this.wrapperComponent) === null || _b2 === void 0 ? void 0 : _b2.addEventListener("wheel", _this.onWheelPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousedown", _this.onPanningStart, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mousemove", _this.onPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("mouseup", _this.onPanningStop, passive);
-        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.addEventListener("mouseleave", _this.clearPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keyup", _this.setKeyUnPressed, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.addEventListener("keydown", _this.setKeyPressed, passive);
-      };
-      this.cleanupWindowEvents = function() {
-        var _a2, _b2;
-        var passive = makePassiveEventOption();
-        var currentDocument = (_a2 = _this.wrapperComponent) === null || _a2 === void 0 ? void 0 : _a2.ownerDocument;
-        var currentWindow = currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.defaultView;
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousedown", _this.onPanningStart, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mousemove", _this.onPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("mouseup", _this.onPanningStop, passive);
-        currentDocument === null || currentDocument === void 0 ? void 0 : currentDocument.removeEventListener("mouseleave", _this.clearPanning, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keyup", _this.setKeyUnPressed, passive);
-        currentWindow === null || currentWindow === void 0 ? void 0 : currentWindow.removeEventListener("keydown", _this.setKeyPressed, passive);
-        document.removeEventListener("mouseleave", _this.clearPanning, passive);
-        handleCancelAnimation(_this);
-        (_b2 = _this.observer) === null || _b2 === void 0 ? void 0 : _b2.disconnect();
-      };
-      this.handleInitializeWrapperEvents = function(wrapper) {
-        var passive = makePassiveEventOption();
-        wrapper.addEventListener("wheel", _this.onWheelZoom, passive);
-        wrapper.addEventListener("dblclick", _this.onDoubleClick, passive);
-        wrapper.addEventListener("touchstart", _this.onTouchPanningStart, passive);
-        wrapper.addEventListener("touchmove", _this.onTouchPanning, passive);
-        wrapper.addEventListener("touchend", _this.onTouchPanningStop, passive);
-      };
-      this.handleInitialize = function(contentComponent) {
-        var centerOnInit = _this.setup.centerOnInit;
-        _this.applyTransformation();
-        _this.onInitCallbacks.forEach(function(callback) {
-          return callback(getContext(_this));
-        });
-        if (centerOnInit) {
-          _this.setCenter();
-          _this.observer = new ResizeObserver(function() {
-            var _a2;
-            var currentWidth = contentComponent.offsetWidth;
-            var currentHeight = contentComponent.offsetHeight;
-            if (currentWidth > 0 || currentHeight > 0) {
-              _this.onInitCallbacks.forEach(function(callback) {
-                return callback(getContext(_this));
-              });
-              _this.setCenter();
-              (_a2 = _this.observer) === null || _a2 === void 0 ? void 0 : _a2.disconnect();
-            }
-          });
-          setTimeout(function() {
-            var _a2;
-            (_a2 = _this.observer) === null || _a2 === void 0 ? void 0 : _a2.disconnect();
-          }, 5e3);
-          _this.observer.observe(contentComponent);
-        }
-      };
-      this.onWheelZoom = function(event) {
-        var disabled = _this.setup.disabled;
-        if (disabled)
-          return;
-        var isAllowed = isWheelAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        var keysPressed = _this.isPressingKeys(_this.setup.wheel.activationKeys);
-        if (!keysPressed)
-          return;
-        handleWheelStart(_this, event);
-        handleWheelZoom(_this, event);
-        handleWheelStop(_this, event);
-      };
-      this.onWheelPanning = function(event) {
-        var _a2 = _this.setup, disabled = _a2.disabled, wheel = _a2.wheel, panning = _a2.panning;
-        if (!_this.wrapperComponent || !_this.contentComponent || disabled || !wheel.wheelDisabled || panning.disabled || !panning.wheelPanning || event.ctrlKey) {
-          return;
-        }
-        event.preventDefault();
-        event.stopPropagation();
-        var _b2 = _this.transformState, positionX = _b2.positionX, positionY = _b2.positionY;
-        var mouseX = positionX - event.deltaX;
-        var mouseY = positionY - event.deltaY;
-        var newPositionX = panning.lockAxisX ? positionX : mouseX;
-        var newPositionY = panning.lockAxisY ? positionY : mouseY;
-        var _c = _this.setup.alignmentAnimation, sizeX = _c.sizeX, sizeY = _c.sizeY;
-        var paddingValueX = getPaddingValue(_this, sizeX);
-        var paddingValueY = getPaddingValue(_this, sizeY);
-        if (newPositionX === positionX && newPositionY === positionY)
-          return;
-        handleNewPosition(_this, newPositionX, newPositionY, paddingValueX, paddingValueY);
-      };
-      this.onPanningStart = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanningStart = _this.props.onPanningStart;
-        if (disabled)
-          return;
-        var isAllowed = isPanningStartAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
-        if (!keysPressed)
-          return;
-        if (event.button === 0 && !_this.setup.panning.allowLeftClickPan)
-          return;
-        if (event.button === 1 && !_this.setup.panning.allowMiddleClickPan)
-          return;
-        if (event.button === 2 && !_this.setup.panning.allowRightClickPan)
-          return;
-        event.preventDefault();
-        event.stopPropagation();
-        handleCancelAnimation(_this);
-        handlePanningStart(_this, event);
-        handleCallback(getContext(_this), event, onPanningStart);
-      };
-      this.onPanning = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanning = _this.props.onPanning;
-        if (disabled)
-          return;
-        var isAllowed = isPanningAllowed(_this);
-        if (!isAllowed)
-          return;
-        var keysPressed = _this.isPressingKeys(_this.setup.panning.activationKeys);
-        if (!keysPressed)
-          return;
-        event.preventDefault();
-        event.stopPropagation();
-        handlePanning(_this, event.clientX, event.clientY);
-        handleCallback(getContext(_this), event, onPanning);
-      };
-      this.onPanningStop = function(event) {
-        var onPanningStop = _this.props.onPanningStop;
-        if (_this.isPanning) {
-          handlePanningEnd(_this);
-          handleCallback(getContext(_this), event, onPanningStop);
-        }
-      };
-      this.onPinchStart = function(event) {
-        var disabled = _this.setup.disabled;
-        var _a2 = _this.props, onPinchingStart = _a2.onPinchingStart, onZoomStart = _a2.onZoomStart;
-        if (disabled)
-          return;
-        var isAllowed = isPinchStartAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        handlePinchStart(_this, event);
-        handleCancelAnimation(_this);
-        handleCallback(getContext(_this), event, onPinchingStart);
-        handleCallback(getContext(_this), event, onZoomStart);
-      };
-      this.onPinch = function(event) {
-        var disabled = _this.setup.disabled;
-        var _a2 = _this.props, onPinching = _a2.onPinching, onZoom = _a2.onZoom;
-        if (disabled)
-          return;
-        var isAllowed = isPinchAllowed(_this);
-        if (!isAllowed)
-          return;
-        event.preventDefault();
-        event.stopPropagation();
-        handlePinchZoom(_this, event);
-        handleCallback(getContext(_this), event, onPinching);
-        handleCallback(getContext(_this), event, onZoom);
-      };
-      this.onPinchStop = function(event) {
-        var _a2 = _this.props, onPinchingStop = _a2.onPinchingStop, onZoomStop = _a2.onZoomStop;
-        if (_this.pinchStartScale) {
-          handlePinchStop(_this);
-          handleCallback(getContext(_this), event, onPinchingStop);
-          handleCallback(getContext(_this), event, onZoomStop);
-        }
-      };
-      this.onTouchPanningStart = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanningStart = _this.props.onPanningStart;
-        if (disabled)
-          return;
-        var isAllowed = isPanningStartAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        var isDoubleTap = _this.lastTouch && +/* @__PURE__ */ new Date() - _this.lastTouch < 200;
-        if (isDoubleTap && event.touches.length === 1) {
-          _this.onDoubleClick(event);
-        } else {
-          _this.lastTouch = +/* @__PURE__ */ new Date();
-          handleCancelAnimation(_this);
-          var touches = event.touches;
-          var isPanningAction = touches.length === 1;
-          var isPinchAction = touches.length === 2;
-          if (isPanningAction) {
-            handleCancelAnimation(_this);
-            handlePanningStart(_this, event);
-            handleCallback(getContext(_this), event, onPanningStart);
-          }
-          if (isPinchAction) {
-            _this.onPinchStart(event);
-          }
-        }
-      };
-      this.onTouchPanning = function(event) {
-        var disabled = _this.setup.disabled;
-        var onPanning = _this.props.onPanning;
-        if (_this.isPanning && event.touches.length === 1) {
-          if (disabled)
-            return;
-          var isAllowed = isPanningAllowed(_this);
-          if (!isAllowed)
-            return;
-          event.preventDefault();
-          event.stopPropagation();
-          var touch = event.touches[0];
-          handlePanning(_this, touch.clientX, touch.clientY);
-          handleCallback(getContext(_this), event, onPanning);
-        } else if (event.touches.length > 1) {
-          _this.onPinch(event);
-        }
-      };
-      this.onTouchPanningStop = function(event) {
-        _this.onPanningStop(event);
-        _this.onPinchStop(event);
-      };
-      this.onDoubleClick = function(event) {
-        var disabled = _this.setup.disabled;
-        if (disabled)
-          return;
-        var isAllowed = isDoubleClickAllowed(_this, event);
-        if (!isAllowed)
-          return;
-        handleDoubleClick(_this, event);
-      };
-      this.clearPanning = function(event) {
-        if (_this.isPanning) {
-          _this.onPanningStop(event);
-        }
-      };
-      this.setKeyPressed = function(e4) {
-        _this.pressedKeys[e4.key] = true;
-      };
-      this.setKeyUnPressed = function(e4) {
-        _this.pressedKeys[e4.key] = false;
-      };
-      this.isPressingKeys = function(keys) {
-        if (!keys.length) {
-          return true;
-        }
-        return Boolean(keys.find(function(key) {
-          return _this.pressedKeys[key];
-        }));
-      };
-      this.setTransformState = function(scale, positionX, positionY) {
-        var onTransformed = _this.props.onTransformed;
-        if (!Number.isNaN(scale) && !Number.isNaN(positionX) && !Number.isNaN(positionY)) {
-          if (scale !== _this.transformState.scale) {
-            _this.transformState.previousScale = _this.transformState.scale;
-            _this.transformState.scale = scale;
-          }
-          _this.transformState.positionX = positionX;
-          _this.transformState.positionY = positionY;
-          _this.applyTransformation();
-          var ctx_1 = getContext(_this);
-          _this.onChangeCallbacks.forEach(function(callback) {
-            return callback(ctx_1);
-          });
-          handleCallback(ctx_1, { scale, positionX, positionY }, onTransformed);
-        } else {
-          console.error("Detected NaN set state values");
-        }
-      };
-      this.setCenter = function() {
-        if (_this.wrapperComponent && _this.contentComponent) {
-          var targetState = getCenterPosition(_this.transformState.scale, _this.wrapperComponent, _this.contentComponent);
-          _this.setTransformState(targetState.scale, targetState.positionX, targetState.positionY);
-        }
-      };
-      this.handleTransformStyles = function(x2, y3, scale) {
-        if (_this.props.customTransform) {
-          return _this.props.customTransform(x2, y3, scale);
-        }
-        return getTransformStyles(x2, y3, scale);
-      };
-      this.applyTransformation = function() {
-        if (!_this.mounted || !_this.contentComponent)
-          return;
-        var _a2 = _this.transformState, scale = _a2.scale, positionX = _a2.positionX, positionY = _a2.positionY;
-        var transform = _this.handleTransformStyles(positionX, positionY, scale);
-        _this.contentComponent.style.transform = transform;
-      };
-      this.getContext = function() {
-        return getContext(_this);
-      };
-      this.onChange = function(callback) {
-        if (!_this.onChangeCallbacks.has(callback)) {
-          _this.onChangeCallbacks.add(callback);
-        }
-        return function() {
-          _this.onChangeCallbacks.delete(callback);
-        };
-      };
-      this.onInit = function(callback) {
-        if (!_this.onInitCallbacks.has(callback)) {
-          _this.onInitCallbacks.add(callback);
-        }
-        return function() {
-          _this.onInitCallbacks.delete(callback);
-        };
-      };
-      this.init = function(wrapperComponent, contentComponent) {
-        _this.cleanupWindowEvents();
-        _this.wrapperComponent = wrapperComponent;
-        _this.contentComponent = contentComponent;
-        handleCalculateBounds(_this, _this.transformState.scale);
-        _this.handleInitializeWrapperEvents(wrapperComponent);
-        _this.handleInitialize(contentComponent);
-        _this.initializeWindowEvents();
-        _this.isInitialized = true;
-        var ctx = getContext(_this);
-        handleCallback(ctx, void 0, _this.props.onInit);
-      };
-      this.props = props;
-      this.setup = createSetup(this.props);
-      this.transformState = createState(this.props);
-    }
-    return ZoomPanPinch2;
-  }()
-);
-var Context = import_react6.default.createContext(null);
-var getContent2 = function(children, ctx) {
-  if (typeof children === "function") {
-    return children(ctx);
-  }
-  return children;
-};
-var TransformWrapper = import_react6.default.forwardRef(function(props, ref) {
-  var instance = (0, import_react6.useRef)(new ZoomPanPinch(props)).current;
-  var content = getContent2(props.children, getControls(instance));
-  (0, import_react6.useImperativeHandle)(ref, function() {
-    return getControls(instance);
-  }, [instance]);
-  (0, import_react6.useEffect)(function() {
-    instance.update(props);
-  }, [instance, props]);
-  return import_react6.default.createElement(Context.Provider, { value: instance }, content);
-});
-var KeepScale = import_react6.default.forwardRef(function(props, ref) {
-  var localRef = (0, import_react6.useRef)(null);
-  var instance = (0, import_react6.useContext)(Context);
-  (0, import_react6.useEffect)(function() {
-    return instance.onChange(function(ctx) {
-      if (localRef.current) {
-        var positionX = 0;
-        var positionY = 0;
-        localRef.current.style.transform = instance.handleTransformStyles(positionX, positionY, 1 / ctx.instance.transformState.scale);
-      }
-    });
-  }, [instance]);
-  return import_react6.default.createElement("div", __assign({}, props, { ref: mergeRefs([localRef, ref]) }));
-});
-function styleInject(css, ref) {
-  if (ref === void 0)
-    ref = {};
-  var insertAt = ref.insertAt;
-  if (!css || typeof document === "undefined") {
-    return;
-  }
-  var head = document.head || document.getElementsByTagName("head")[0];
-  var style = document.createElement("style");
-  style.type = "text/css";
-  if (insertAt === "top") {
-    if (head.firstChild) {
-      head.insertBefore(style, head.firstChild);
-    } else {
-      head.appendChild(style);
-    }
-  } else {
-    head.appendChild(style);
-  }
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-}
-var css_248z = ".transform-component-module_wrapper__SPB86 {\n  position: relative;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  overflow: hidden;\n  -webkit-touch-callout: none; /* iOS Safari */\n  -webkit-user-select: none; /* Safari */\n  -khtml-user-select: none; /* Konqueror HTML */\n  -moz-user-select: none; /* Firefox */\n  -ms-user-select: none; /* Internet Explorer/Edge */\n  user-select: none;\n  margin: 0;\n  padding: 0;\n}\n.transform-component-module_content__FBWxo {\n  display: flex;\n  flex-wrap: wrap;\n  width: -moz-fit-content;\n  width: fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  margin: 0;\n  padding: 0;\n  transform-origin: 0% 0%;\n}\n.transform-component-module_content__FBWxo img {\n  pointer-events: none;\n}\n";
-var styles = { "wrapper": "transform-component-module_wrapper__SPB86", "content": "transform-component-module_content__FBWxo" };
-styleInject(css_248z);
-var TransformComponent = function(_a2) {
-  var children = _a2.children, _b2 = _a2.wrapperClass, wrapperClass = _b2 === void 0 ? "" : _b2, _c = _a2.contentClass, contentClass = _c === void 0 ? "" : _c, wrapperStyle = _a2.wrapperStyle, contentStyle = _a2.contentStyle, _d = _a2.wrapperProps, wrapperProps = _d === void 0 ? {} : _d, _e = _a2.contentProps, contentProps = _e === void 0 ? {} : _e;
-  var _f = (0, import_react6.useContext)(Context), init = _f.init, cleanupWindowEvents = _f.cleanupWindowEvents;
-  var wrapperRef = (0, import_react6.useRef)(null);
-  var contentRef = (0, import_react6.useRef)(null);
-  (0, import_react6.useEffect)(function() {
-    var wrapper = wrapperRef.current;
-    var content = contentRef.current;
-    if (wrapper !== null && content !== null && init) {
-      init === null || init === void 0 ? void 0 : init(wrapper, content);
-    }
-    return function() {
-      cleanupWindowEvents === null || cleanupWindowEvents === void 0 ? void 0 : cleanupWindowEvents();
-    };
-  }, []);
-  return import_react6.default.createElement(
-    "div",
-    __assign({}, wrapperProps, { ref: wrapperRef, className: "react-transform-wrapper ".concat(styles.wrapper, " ").concat(wrapperClass), style: wrapperStyle }),
-    import_react6.default.createElement("div", __assign({}, contentProps, { ref: contentRef, className: "react-transform-component ".concat(styles.content, " ").concat(contentClass), style: contentStyle }), children)
-  );
-};
-
-// src/components/file/ModalContent.tsx
-var import_react11 = __toESM(require_react());
-
 // src/components/common/form/FormItems.tsx
 var import_get2 = __toESM(require_get());
 var import_react9 = __toESM(require_react());
@@ -41604,16 +41580,16 @@ var ImageSelect = ({ imageList, app, onSelect, onClose }) => {
   );
   const previewRef = (0, import_react7.useRef)(null);
   (0, import_react7.useEffect)(() => {
-    if (!keyword) {
-      setList(imageList);
-    } else {
+    if (keyword) {
       const regExp = new RegExp(keyword.split("").join(".*"), "i");
       setList(imageList.filter((file) => regExp.test(file.path)));
+    } else {
+      setList(imageList);
     }
   }, [keyword, imageList]);
   (0, import_react7.useEffect)(() => {
-    if (!list.length) {
-      setSelected(null);
+    if (list.length === 0) {
+      setSelected(void 0);
     } else if (!selected || !list.find((file) => file.path === selected.path)) {
       setSelected(list?.[0] || null);
     }
@@ -41622,8 +41598,12 @@ var ImageSelect = ({ imageList, app, onSelect, onClose }) => {
     previewRef.current?.empty();
     if (selected) {
       createHtml(selected.path, app).then(
-        (html) => previewRef.current?.appendChild(html)
-      );
+        (html) => (
+          // eslint-disable-next-line unicorn/prefer-dom-node-append
+          previewRef.current?.appendChild(html)
+        )
+      ).catch(() => {
+      });
     }
   }, [selected]);
   const submit = (0, import_react7.useCallback)(async () => {
@@ -41642,14 +41622,18 @@ var ImageSelect = ({ imageList, app, onSelect, onClose }) => {
       spellCheck: "false",
       value: keyword,
       placeholder: L_default.imageSelect.search(),
-      onChange: (e4) => setKeyword(e4.target.value)
+      onChange: (e4) => {
+        setKeyword(e4.target.value);
+      }
     }
-  ), /* @__PURE__ */ import_react7.default.createElement("div", { className: "search-input-clear-button" })), /* @__PURE__ */ import_react7.default.createElement("div", { className: "export-image-select-photo-main" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "export-image-select-photo-left" }, list.length ? list.map((file) => /* @__PURE__ */ import_react7.default.createElement(
+  ), /* @__PURE__ */ import_react7.default.createElement("div", { className: "search-input-clear-button" })), /* @__PURE__ */ import_react7.default.createElement("div", { className: "export-image-select-photo-main" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "export-image-select-photo-left" }, list.length > 0 ? list.map((file) => /* @__PURE__ */ import_react7.default.createElement(
     "div",
     {
       key: file.path,
       title: file.path,
-      onClick: () => setSelected(file),
+      onClick: () => {
+        setSelected(file);
+      },
       style: {
         background: selected?.path === file.path ? "var(--background-modifier-hover)" : "transparent"
       }
@@ -41667,12 +41651,14 @@ var ImageSelect = ({ imageList, app, onSelect, onClose }) => {
   ), /* @__PURE__ */ import_react7.default.createElement("button", { onClick: onClose }, L_default.imageSelect.cancel())));
 };
 var ImageSelectModal = class extends import_obsidian5.Modal {
+  select;
+  root;
   constructor(app, select) {
     super(app);
     this.select = select;
   }
   onOpen() {
-    let { contentEl, select } = this;
+    const { contentEl, select } = this;
     const imageList = this.app.vault.getFiles().filter((file) => /^jpe?g|png$/i.test(file.extension || ""));
     this.root = (0, import_client3.createRoot)(contentEl);
     this.root.render(
@@ -41682,13 +41668,15 @@ var ImageSelectModal = class extends import_obsidian5.Modal {
           imageList,
           app: this.app,
           onSelect: select,
-          onClose: () => this.close()
+          onClose: () => {
+            this.close();
+          }
         }
       )
     );
   }
   onClose() {
-    let { contentEl, root: root2 } = this;
+    const { contentEl, root: root2 } = this;
     root2?.unmount();
     contentEl.empty();
   }
@@ -41697,14 +41685,14 @@ var ImageSelectModal = class extends import_obsidian5.Modal {
 // src/components/common/form/Control.tsx
 var Control = ({ fieldSchema, setting, update, app }) => {
   const value = (0, import_get.default)(setting, fieldSchema.path);
-  const inputRef = (0, import_react8.useRef)(null);
+  const inputReference = (0, import_react8.useRef)(null);
   const onChange = (value2) => {
     const newSetting = { ...setting };
     (0, import_set.default)(newSetting, fieldSchema.path, value2);
     update(newSetting);
   };
   const upload = async () => {
-    const file = inputRef.current?.files?.[0];
+    const file = inputReference.current?.files?.[0];
     if (file) {
       onChange(await fileToBase64(file));
     }
@@ -41723,7 +41711,9 @@ var Control = ({ fieldSchema, setting, update, app }) => {
         {
           type: "number",
           value,
-          onChange: (e4) => onChange(e4.target.value ? Number(e4.target.value) : void 0)
+          onChange: (e4) => {
+            onChange(e4.target.value ? Number(e4.target.value) : void 0);
+          }
         }
       );
     }
@@ -41733,7 +41723,9 @@ var Control = ({ fieldSchema, setting, update, app }) => {
         {
           type: "text",
           value,
-          onChange: (e4) => onChange(e4.target.value)
+          onChange: (e4) => {
+            onChange(e4.target.value);
+          }
         }
       );
     }
@@ -41742,7 +41734,9 @@ var Control = ({ fieldSchema, setting, update, app }) => {
         "div",
         {
           className: `checkbox-container${value ? " is-enabled" : ""}`,
-          onClick: () => onChange(!(0, import_get.default)(setting, fieldSchema.path))
+          onClick: () => {
+            onChange(!(0, import_get.default)(setting, fieldSchema.path));
+          }
         },
         /* @__PURE__ */ import_react8.default.createElement("input", { type: "checkbox", checked: value })
       );
@@ -41752,7 +41746,9 @@ var Control = ({ fieldSchema, setting, update, app }) => {
         "select",
         {
           value,
-          onChange: (e4) => onChange(e4.target.value),
+          onChange: (e4) => {
+            onChange(e4.target.value);
+          },
           className: "dropdown"
         },
         fieldSchema.options?.map((option) => /* @__PURE__ */ import_react8.default.createElement("option", { key: option.value, value: option.value }, option.text))
@@ -41768,18 +41764,16 @@ var Control = ({ fieldSchema, setting, update, app }) => {
             display: value ? "block" : "none"
           }
         }
-      ), /* @__PURE__ */ import_react8.default.createElement("button", { onClick: () => inputRef.current?.click() }, L_default.setting.watermark.image.src.upload(), /* @__PURE__ */ import_react8.default.createElement(
+      ), /* @__PURE__ */ import_react8.default.createElement("button", { onClick: () => inputReference.current?.click() }, L_default.setting.watermark.image.src.upload(), /* @__PURE__ */ import_react8.default.createElement(
         "input",
         {
           style: { display: "none" },
           type: "file",
-          ref: inputRef,
+          ref: inputReference,
           onChange: upload
         }
       )), /* @__PURE__ */ import_react8.default.createElement("button", { onClick: select }, L_default.setting.watermark.image.src.select()));
     }
-    default:
-      return null;
   }
 };
 var Control_default = Control;
@@ -41794,28 +41788,26 @@ function isShow(field, settings) {
   }
   return (0, import_get2.default)(settings, field.when.path) === field.when.flag;
 }
-var FormItems = ({ formSchema: formSchema3, settings, update, app }) => {
-  return /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, formSchema3.map(
-    (fieldSchema) => isShow(fieldSchema, settings) && /* @__PURE__ */ import_react9.default.createElement(
-      "div",
+var FormItems = ({ formSchema: formSchema3, settings, update, app }) => /* @__PURE__ */ import_react9.default.createElement(import_react9.default.Fragment, null, formSchema3.map(
+  (fieldSchema) => isShow(fieldSchema, settings) && /* @__PURE__ */ import_react9.default.createElement(
+    "div",
+    {
+      className: "setting-item",
+      key: fieldSchema.path,
+      style: { padding: "10px 0" }
+    },
+    /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-info" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-name" }, fieldSchema.label), fieldSchema.desc && /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-description" }, fieldSchema.desc)),
+    /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-control" }, /* @__PURE__ */ import_react9.default.createElement(
+      Control_default,
       {
-        className: "setting-item",
-        key: fieldSchema.path,
-        style: { padding: "10px 0" }
-      },
-      /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-info" }, /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-name" }, fieldSchema.label), fieldSchema.desc && /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-description" }, fieldSchema.desc)),
-      /* @__PURE__ */ import_react9.default.createElement("div", { className: "setting-item-control" }, /* @__PURE__ */ import_react9.default.createElement(
-        Control_default,
-        {
-          fieldSchema,
-          setting: settings,
-          update,
-          app
-        }
-      ))
-    )
-  ));
-};
+        fieldSchema,
+        setting: settings,
+        update,
+        app
+      }
+    ))
+  )
+));
 var FormItems_default = FormItems;
 
 // src/components/file/ModalContent.tsx
@@ -41937,21 +41929,31 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
     setFormData(settings);
   }, [settings]);
   const [processing, setProcessing] = (0, import_react10.useState)(false);
+  const [allowCopy, setAllowCopy] = (0, import_react10.useState)(true);
+  (0, import_react10.useEffect)(() => {
+    imageFormatTester_default(formData.format).then((result) => {
+      setAllowCopy(Boolean(result));
+    });
+  }, [formData.format]);
   const handleSave = (0, import_react10.useCallback)(async () => {
     if ((formData.width || 640) <= 20) {
       new import_obsidian6.Notice(L_default.invalidWidth());
       return;
     }
     setProcessing(true);
-    await save(
-      app,
-      root2.current,
-      title,
-      formData["2x"],
-      formData.format,
-      // @ts-ignore
-      app.isMobile
-    );
+    try {
+      await save(
+        app,
+        root2.current,
+        title,
+        formData["2x"],
+        formData.format,
+        // @ts-expect-error
+        app.isMobile
+      );
+    } catch {
+      new import_obsidian6.Notice(L_default.saveFail());
+    }
     setProcessing(false);
   }, [root2, formData["2x"], formData.format, title, formData.width]);
   const handleCopy = (0, import_react10.useCallback)(async () => {
@@ -41960,10 +41962,14 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
       return;
     }
     setProcessing(true);
-    await copy(root2.current, formData["2x"], formData.format);
+    try {
+      await copy(root2.current, formData["2x"], formData.format);
+    } catch {
+      new import_obsidian6.Notice(L_default.copyFail());
+    }
     setProcessing(false);
   }, [root2, formData["2x"], formData.format, title, formData.width]);
-  return /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-root" }, /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-main" }, /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-left" }, /* @__PURE__ */ import_react11.default.createElement(
+  return /* @__PURE__ */ import_react10.default.createElement("div", { className: "export-image-preview-root" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "export-image-preview-main" }, /* @__PURE__ */ import_react10.default.createElement("div", { className: "export-image-preview-left" }, /* @__PURE__ */ import_react10.default.createElement(
     FormItems_default,
     {
       formSchema,
@@ -41971,7 +41977,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
       settings: formData,
       app
     }
-  ), /* @__PURE__ */ import_react11.default.createElement("div", { className: "info-text" }, L_default.moreSetting())), /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-right" }, /* @__PURE__ */ import_react11.default.createElement(
+  ), /* @__PURE__ */ import_react10.default.createElement("div", { className: "info-text" }, L_default.moreSetting())), /* @__PURE__ */ import_react10.default.createElement("div", { className: "export-image-preview-right" }, /* @__PURE__ */ import_react10.default.createElement(
     "div",
     {
       className: "export-image-preview-out",
@@ -41981,7 +41987,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
         cursor: isGrabbing ? "grabbing" : "grab"
       }
     },
-    /* @__PURE__ */ import_react11.default.createElement(
+    /* @__PURE__ */ import_react10.default.createElement(
       TransformWrapper,
       {
         minScale: Math.min(
@@ -41993,10 +41999,14 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
         pinch: { step: 20 },
         doubleClick: { mode: "reset" },
         centerZoomedOut: false,
-        onPanning: () => setIsGrabbing(true),
-        onPanningStop: () => setIsGrabbing(false)
+        onPanning: () => {
+          setIsGrabbing(true);
+        },
+        onPanningStop: () => {
+          setIsGrabbing(false);
+        }
       },
-      /* @__PURE__ */ import_react11.default.createElement(
+      /* @__PURE__ */ import_react10.default.createElement(
         TransformComponent,
         {
           wrapperStyle: {
@@ -42010,7 +42020,7 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
             boxShadow: "0 0 10px 10px rgba(0,0,0,0.15)"
           }
         },
-        /* @__PURE__ */ import_react11.default.createElement(
+        /* @__PURE__ */ import_react10.default.createElement(
           Target_default,
           {
             ref: root2,
@@ -42024,32 +42034,29 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
         )
       )
     )
-  ), /* @__PURE__ */ import_react11.default.createElement("div", { className: "info-text" }, L_default.guide()))), /* @__PURE__ */ import_react11.default.createElement("div", { className: "export-image-preview-actions" }, /* @__PURE__ */ import_react11.default.createElement("button", { onClick: handleCopy, disabled: processing }, L_default.copy()), /* @__PURE__ */ import_react11.default.createElement("button", { onClick: handleSave, disabled: processing }, app.isMobile ? L_default.saveVault() : L_default.save())));
+  ), /* @__PURE__ */ import_react10.default.createElement("div", { className: "info-text" }, L_default.guide()))), /* @__PURE__ */ import_react10.default.createElement("div", { className: "export-image-preview-actions" }, /* @__PURE__ */ import_react10.default.createElement("div", null, /* @__PURE__ */ import_react10.default.createElement("button", { onClick: handleCopy, disabled: processing || !allowCopy }, L_default.copy()), allowCopy || /* @__PURE__ */ import_react10.default.createElement("p", null, L_default.notAllowCopy({ format: formData.format.replace(/\d$/, "").toUpperCase() }))), /* @__PURE__ */ import_react10.default.createElement("button", { onClick: handleSave, disabled: processing }, app.isMobile ? L_default.saveVault() : L_default.save())));
 };
 var ModalContent_default = ModalContent;
 
 // src/components/file/exportImage.tsx
 async function exportImage_default(app, settings, markdown, file, frontmatter) {
   const el = document.createElement("div");
-  import_obsidian7.MarkdownRenderer.render(
+  await import_obsidian7.MarkdownRenderer.render(
     app,
     markdown,
     el.createDiv(),
     file.path,
     app.workspace.getActiveViewOfType(import_obsidian7.MarkdownView) || app.workspace.activeLeaf?.view || new import_obsidian7.MarkdownRenderChild(el)
   );
-  const modal = new import_obsidian7.Modal(this.app);
+  const modal = new import_obsidian7.Modal(app);
   modal.setTitle(L_default.imageExportPreview());
   modal.modalEl.style.width = "85vw";
   modal.modalEl.style.maxWidth = "1500px";
   modal.open();
   const root2 = (0, import_client4.createRoot)(modal.contentEl);
-  const metadataMap = (
-    // @ts-ignore
-    app.metadataCache.getAllPropertyInfos()
-  );
+  const metadataMap = app.metadataCache.getAllPropertyInfos();
   root2.render(
-    /* @__PURE__ */ import_react12.default.createElement(
+    /* @__PURE__ */ import_react11.default.createElement(
       ModalContent_default,
       {
         markdownEl: el,
@@ -42070,8 +42077,9 @@ async function exportImage_default(app, settings, markdown, file, frontmatter) {
 var DEFAULT_SETTINGS = {
   width: 640,
   showFilename: true,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   "2x": true,
-  format: "jpg",
+  format: "png0",
   showMetadata: false,
   recursive: false,
   authorInfo: {
@@ -42100,12 +42108,12 @@ var DEFAULT_SETTINGS = {
 };
 
 // src/components/folder/exportFolder.tsx
-var import_react14 = __toESM(require_react());
+var import_react13 = __toESM(require_react());
 var import_obsidian9 = require("obsidian");
 var import_client5 = __toESM(require_client());
 
 // src/components/folder/ModalContent.tsx
-var import_react13 = __toESM(require_react());
+var import_react12 = __toESM(require_react());
 var import_obsidian8 = require("obsidian");
 var formSchema2 = [
   {
@@ -42138,23 +42146,24 @@ var formSchema2 = [
     path: "format",
     type: "select",
     options: [
+      { value: "png0", text: "png" },
+      { value: "png1", text: "png - transparent background" },
       { value: "jpg", text: "jpg" },
-      { value: "png", text: "png" },
       { value: "pdf", text: "pdf" }
     ]
   }
 ];
 var ModalContent2 = ({ settings, app, folder, close }) => {
-  const [formData, setFormData] = (0, import_react13.useState)(settings);
-  const [fileList, setFileList] = (0, import_react13.useState)([]);
-  const [selectFiles, setSelectFiles] = (0, import_react13.useState)([]);
-  const [finished, setFinished] = (0, import_react13.useState)(0);
-  const [running, setRunning] = (0, import_react13.useState)(false);
-  const hiddenRef = (0, import_react13.useRef)(null);
-  (0, import_react13.useEffect)(() => {
+  const [formData, setFormData] = (0, import_react12.useState)(settings);
+  const [fileList, setFileList] = (0, import_react12.useState)([]);
+  const [selectFiles, setSelectFiles] = (0, import_react12.useState)([]);
+  const [finished, setFinished] = (0, import_react12.useState)(0);
+  const [running, setRunning] = (0, import_react12.useState)(false);
+  const hiddenRef = (0, import_react12.useRef)(null);
+  (0, import_react12.useEffect)(() => {
     setFormData(settings);
   }, [settings]);
-  const exportAll = (0, import_react13.useCallback)(async () => {
+  const exportAll = (0, import_react12.useCallback)(async () => {
     if (running) {
       return;
     }
@@ -42179,7 +42188,7 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
     close,
     folder.name
   ]);
-  (0, import_react13.useEffect)(() => {
+  (0, import_react12.useEffect)(() => {
     const fileList2 = [];
     if (formData.recursive) {
       const recursiveFileList = (folder2) => {
@@ -42193,7 +42202,7 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
       };
       recursiveFileList(folder);
     } else {
-      for (let child of folder.children) {
+      for (const child of folder.children) {
         if (child instanceof import_obsidian8.TFile && isMarkdownFile(child)) {
           fileList2.push(child);
         }
@@ -42201,14 +42210,14 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
     }
     setFileList(fileList2);
   }, [formData.recursive, folder]);
-  const selectAll = (0, import_react13.useCallback)(() => {
+  const selectAll = (0, import_react12.useCallback)(() => {
     if (fileList.length === selectFiles.length) {
       setSelectFiles([]);
     } else {
       setSelectFiles(fileList);
     }
   }, [fileList, selectFiles]);
-  (0, import_react13.useEffect)(() => {
+  (0, import_react12.useEffect)(() => {
     const newSelectFiles = selectFiles.filter(
       (file) => fileList.includes(file)
     );
@@ -42216,7 +42225,7 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
       setSelectFiles(newSelectFiles);
     }
   }, [fileList, selectFiles]);
-  return /* @__PURE__ */ import_react13.default.createElement(import_react13.default.Fragment, null, /* @__PURE__ */ import_react13.default.createElement("div", { className: "export-image-hidden", ref: hiddenRef }), /* @__PURE__ */ import_react13.default.createElement(
+  return /* @__PURE__ */ import_react12.default.createElement(import_react12.default.Fragment, null, /* @__PURE__ */ import_react12.default.createElement("div", { className: "export-image-hidden", ref: hiddenRef }), /* @__PURE__ */ import_react12.default.createElement(
     "div",
     {
       className: "export-image-preview-root",
@@ -42225,7 +42234,7 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
         cursor: "not-allowed"
       }
     },
-    /* @__PURE__ */ import_react13.default.createElement("div", { className: "export-image-preview-main" }, /* @__PURE__ */ import_react13.default.createElement("div", { className: "export-image-preview-left" }, /* @__PURE__ */ import_react13.default.createElement(
+    /* @__PURE__ */ import_react12.default.createElement("div", { className: "export-image-preview-main" }, /* @__PURE__ */ import_react12.default.createElement("div", { className: "export-image-preview-left" }, /* @__PURE__ */ import_react12.default.createElement(
       FormItems_default,
       {
         formSchema: formSchema2,
@@ -42233,26 +42242,26 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
         settings: formData,
         app
       }
-    )), /* @__PURE__ */ import_react13.default.createElement(
+    )), /* @__PURE__ */ import_react12.default.createElement(
       "div",
       {
         className: "export-image-preview-right",
         style: { maxHeight: 320, overflowY: "auto" }
       },
-      fileList.length ? /* @__PURE__ */ import_react13.default.createElement("div", null, /* @__PURE__ */ import_react13.default.createElement("div", { className: "export-image-preview-file-item export-image-select-all" }, /* @__PURE__ */ import_react13.default.createElement(
+      fileList.length > 0 ? /* @__PURE__ */ import_react12.default.createElement("div", null, /* @__PURE__ */ import_react12.default.createElement("div", { className: "export-image-preview-file-item export-image-select-all" }, /* @__PURE__ */ import_react12.default.createElement(
         "input",
         {
           type: "checkbox",
           checked: selectFiles.length === fileList.length,
           onChange: selectAll
         }
-      ), /* @__PURE__ */ import_react13.default.createElement("span", { className: "export-image-filename" }, L_default.selectAll()), /* @__PURE__ */ import_react13.default.createElement("span", { className: "export-image-select-number" }, selectFiles.length, "/", fileList.length)), fileList.map((file) => /* @__PURE__ */ import_react13.default.createElement(
+      ), /* @__PURE__ */ import_react12.default.createElement("span", { className: "export-image-filename" }, L_default.selectAll()), /* @__PURE__ */ import_react12.default.createElement("span", { className: "export-image-select-number" }, selectFiles.length, "/", fileList.length)), fileList.map((file) => /* @__PURE__ */ import_react12.default.createElement(
         "div",
         {
           className: "export-image-preview-file-item",
           key: file.path
         },
-        /* @__PURE__ */ import_react13.default.createElement(
+        /* @__PURE__ */ import_react12.default.createElement(
           "input",
           {
             type: "checkbox",
@@ -42266,25 +42275,25 @@ var ModalContent2 = ({ settings, app, folder, close }) => {
             }
           }
         ),
-        /* @__PURE__ */ import_react13.default.createElement("span", { className: "export-image-filename", title: file.path }, file.path)
-      ))) : /* @__PURE__ */ import_react13.default.createElement("div", null, L_default.noMarkdownFile())
+        /* @__PURE__ */ import_react12.default.createElement("span", { className: "export-image-filename", title: file.path }, file.path)
+      ))) : /* @__PURE__ */ import_react12.default.createElement("div", null, L_default.noMarkdownFile())
     )),
-    /* @__PURE__ */ import_react13.default.createElement(
+    /* @__PURE__ */ import_react12.default.createElement(
       "div",
       {
         className: "export-image-preview-actions",
         style: { justifyContent: "space-around" }
       },
-      /* @__PURE__ */ import_react13.default.createElement("div", { className: "export-image-progress-bar", style: { width: "40%" } }, /* @__PURE__ */ import_react13.default.createElement(
+      /* @__PURE__ */ import_react12.default.createElement("div", { className: "export-image-progress-bar", style: { width: "40%" } }, /* @__PURE__ */ import_react12.default.createElement(
         "div",
         {
           className: "export-image-progress-bar-inner",
           style: {
-            width: `${selectFiles.length ? 100 * (finished / selectFiles.length) : 0}%`
+            width: `${selectFiles.length > 0 ? 100 * (finished / selectFiles.length) : 0}%`
           }
         }
       )),
-      /* @__PURE__ */ import_react13.default.createElement("button", { disabled: selectFiles.length === 0, onClick: exportAll }, L_default.exportAll())
+      /* @__PURE__ */ import_react12.default.createElement("button", { disabled: selectFiles.length === 0, onClick: exportAll }, L_default.exportAll())
     )
   ));
 };
@@ -42298,13 +42307,15 @@ async function exportFolder_default(app, settings, folder) {
   modal.open();
   const root2 = (0, import_client5.createRoot)(modal.contentEl);
   root2.render(
-    /* @__PURE__ */ import_react14.default.createElement(
+    /* @__PURE__ */ import_react13.default.createElement(
       ModalContent_default2,
       {
         settings,
         app,
         folder,
-        close: () => modal.close()
+        close: () => {
+          modal.close();
+        }
       }
     )
   );
@@ -42315,10 +42326,11 @@ async function exportFolder_default(app, settings, folder) {
 
 // src/ExportImagePlugin.ts
 var ExportImagePlugin = class extends import_obsidian10.Plugin {
+  settings;
   async epxortFile(file) {
     const frontmatter = getMetadata(file, this.app);
     const markdown = await this.app.vault.cachedRead(file);
-    exportImage_default(this.app, this.settings, markdown, file, frontmatter);
+    await exportImage_default(this.app, this.settings, markdown, file, frontmatter);
   }
   async onload() {
     await this.loadSettings();
@@ -42333,7 +42345,7 @@ var ExportImagePlugin = class extends import_obsidian10.Plugin {
         } else if (file instanceof import_obsidian10.TFolder) {
           menu.addItem((item) => {
             item.setTitle(L_default.exportFolder()).setIcon("image-down").onClick(async () => {
-              exportFolder_default(this.app, this.settings, file);
+              await exportFolder_default(this.app, this.settings, file);
             });
           });
         }
@@ -42341,17 +42353,15 @@ var ExportImagePlugin = class extends import_obsidian10.Plugin {
     );
     this.registerEvent(
       this.app.workspace.on("editor-menu", (menu, editor) => {
-        const file = (
-          // @ts-ignore
-          editor.editorComponent.file || this.app.workspace.getActiveFile()
-        );
+        const file = editor.editorComponent.file ?? this.app.workspace.getActiveFile();
         const frontmatter = getMetadata(file, this.app);
-        if (!file)
+        if (!file) {
           return;
+        }
         if (editor.somethingSelected()) {
           menu.addItem((item) => {
             item.setTitle(L_default.exportSelectionImage()).setIcon("text-select").onClick(
-              () => exportImage_default(
+              async () => exportImage_default(
                 this.app,
                 this.settings,
                 editor.getSelection(),
@@ -42363,7 +42373,7 @@ var ExportImagePlugin = class extends import_obsidian10.Plugin {
         }
         menu.addItem((item) => {
           item.setTitle(L_default.exportImage()).setIcon("image-down").onClick(
-            () => exportImage_default(
+            async () => exportImage_default(
               this.app,
               this.settings,
               editor.getValue(),
@@ -42387,7 +42397,7 @@ var ExportImagePlugin = class extends import_obsidian10.Plugin {
             }
             const frontmatter = getMetadata(activeFile, this.app);
             const markdown = await this.app.vault.cachedRead(activeFile);
-            exportImage_default(
+            await exportImage_default(
               this.app,
               this.settings,
               markdown,
@@ -42411,15 +42421,17 @@ var ExportImagePlugin = class extends import_obsidian10.Plugin {
   }
 };
 var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
+  plugin;
+  render;
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
   }
   async update() {
-    this.plugin.saveSettings();
+    await this.plugin.saveSettings();
     this.render(this.plugin.settings);
   }
-  display() {
+  async display() {
     const { containerEl } = this;
     containerEl.empty();
     containerEl.createEl("h3", { text: L_default.setting.title() });
@@ -42433,7 +42445,7 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
     new import_obsidian10.Setting(containerEl).setName(L_default.setting.imageWidth.label()).setDesc(L_default.setting.imageWidth.description()).addText((text) => {
       text.inputEl.type = "number";
       text.setValue(String(this.plugin.settings.width)).setPlaceholder("640").onChange(async (value) => {
-        this.plugin.settings.width = value ? parseInt(value) : void 0;
+        this.plugin.settings.width = value ? Number.parseInt(value, 10) : void 0;
         await this.update();
       });
     });
@@ -42457,8 +42469,9 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
     });
     new import_obsidian10.Setting(containerEl).setName(L_default.setting.format.title()).setDesc(L_default.setting.format.description()).addDropdown((dropdown) => {
       dropdown.addOptions({
+        png0: L_default.setting.format.png0(),
+        png1: L_default.setting.format.png1(),
         jpg: L_default.setting.format.jpg(),
-        png: L_default.setting.format.png(),
         pdf: L_default.setting.format.pdf()
       }).setValue(this.plugin.settings.format).onChange(async (value) => {
         this.plugin.settings.format = value;
@@ -42466,41 +42479,42 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
       });
     });
     new import_obsidian10.Setting(containerEl).setHeading().setName(L_default.setting.userInfo.title());
-    let userInfoEl, avatarEl;
-    function setAvatar(src) {
-      if (src) {
-        avatarEl.style.backgroundImage = `url(${src})`;
-        avatarEl.style.backgroundSize = "cover";
+    let userInfoElement;
+    let avatarElement;
+    function setAvatar(source) {
+      if (source) {
+        avatarElement.style.backgroundImage = `url(${source})`;
+        avatarElement.style.backgroundSize = "cover";
       } else {
-        avatarEl.style.backgroundImage = "";
+        avatarElement.style.backgroundImage = "";
       }
     }
     new import_obsidian10.Setting(containerEl).setName(L_default.setting.userInfo.show()).addToggle((toggle) => {
       toggle.setValue(this.plugin.settings.authorInfo.show).onChange(async (value) => {
         this.plugin.settings.authorInfo.show = value;
-        userInfoEl.style.display = value ? "block" : "none";
+        userInfoElement.style.display = value ? "block" : "none";
         await this.update();
       });
     });
-    userInfoEl = containerEl.createDiv({
+    userInfoElement = containerEl.createDiv({
       attr: {
         style: `display: ${this.plugin.settings.authorInfo.show ? "block" : "none"};border-top:1px solid var(--background-modifier-border);padding-top:0.75em`
       }
     });
-    new import_obsidian10.Setting(userInfoEl).setName(L_default.setting.userInfo.name()).addText((text) => {
-      text.setValue(this.plugin.settings.authorInfo.name || "").onChange(async (value) => {
+    new import_obsidian10.Setting(userInfoElement).setName(L_default.setting.userInfo.name()).addText((text) => {
+      text.setValue(this.plugin.settings.authorInfo.name ?? "").onChange(async (value) => {
         this.plugin.settings.authorInfo.name = value;
-        this.plugin.saveSettings();
+        await this.plugin.saveSettings();
       });
     });
-    new import_obsidian10.Setting(userInfoEl).setName(L_default.setting.userInfo.remark()).addText((text) => {
-      text.setValue(this.plugin.settings.authorInfo.remark || "").onChange(async (value) => {
+    new import_obsidian10.Setting(userInfoElement).setName(L_default.setting.userInfo.remark()).addText((text) => {
+      text.setValue(this.plugin.settings.authorInfo.remark ?? "").onChange(async (value) => {
         this.plugin.settings.authorInfo.remark = value;
-        this.plugin.saveSettings();
+        await this.plugin.saveSettings();
       });
     });
-    new import_obsidian10.Setting(userInfoEl).setName(L_default.setting.userInfo.avatar.title()).setDesc(L_default.setting.userInfo.avatar.description()).addButton((button) => {
-      avatarEl = createDiv({
+    new import_obsidian10.Setting(userInfoElement).setName(L_default.setting.userInfo.avatar.title()).setDesc(L_default.setting.userInfo.avatar.description()).addButton((button) => {
+      avatarElement = createDiv({
         attr: {
           style: "width: 32px;height: 32px;border-radius: 50%;border:1px solid var(--background-modifier-border)"
         }
@@ -42513,23 +42527,25 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
           style: "display: none;"
         }
       });
-      input.onchange = async () => {
+      input.addEventListener("change", async () => {
         const file = input.files?.[0];
         if (file) {
           this.plugin.settings.authorInfo.avatar = await fileToBase64(file);
           setAvatar(this.plugin.settings.authorInfo.avatar);
-          this.plugin.saveSettings();
+          await this.plugin.saveSettings();
         }
-      };
-      button.buttonEl.appendChild(input);
-      button.buttonEl.parentElement?.prepend(avatarEl);
-      button.setButtonText(L_default.setting.watermark.image.src.upload()).onClick(() => input.click());
+      });
+      button.buttonEl.append(input);
+      button.buttonEl.parentElement?.prepend(avatarElement);
+      button.setButtonText(L_default.setting.watermark.image.src.upload()).onClick(() => {
+        input.click();
+      });
     }).addButton((button) => {
       button.setButtonText(L_default.setting.watermark.image.src.select());
       button.onClick(async () => {
-        const modal = new ImageSelectModal(this.plugin.app, (img) => {
+        const modal = new ImageSelectModal(this.plugin.app, async (img) => {
           this.plugin.settings.authorInfo.avatar = img;
-          this.plugin.saveSettings();
+          await this.plugin.saveSettings();
           setAvatar(img);
           modal.close();
         });
@@ -42537,45 +42553,48 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
       });
     });
     new import_obsidian10.Setting(containerEl).setHeading().setName(L_default.setting.watermark.title());
-    let watermarkEl, textWatermarkEl, imageWatermarkEl, previewEl;
+    let watermarkElement;
+    let textWatermarkElement;
+    let imageWatermarkElement;
+    let previewElement;
     new import_obsidian10.Setting(containerEl).setName(L_default.setting.watermark.enable.label()).setDesc(L_default.setting.watermark.enable.description()).addToggle((toggle) => {
       toggle.setValue(this.plugin.settings.watermark.enable).onChange(async (value) => {
         this.plugin.settings.watermark.enable = value;
-        watermarkEl.style.display = value ? "block" : "none";
-        previewEl.style.display = value ? "block" : "none";
+        watermarkElement.style.display = value ? "block" : "none";
+        previewElement.style.display = value ? "block" : "none";
         await this.update();
       });
     });
-    watermarkEl = containerEl.createDiv({
+    watermarkElement = containerEl.createDiv({
       attr: {
         style: `display: ${this.plugin.settings.watermark.enable ? "block" : "none"};border-top:1px solid var(--background-modifier-border);padding-top:0.75em`
       }
     });
-    new import_obsidian10.Setting(watermarkEl).setName(L_default.setting.watermark.type.label()).setDesc(L_default.setting.watermark.type.description()).addDropdown((dropdown) => {
+    new import_obsidian10.Setting(watermarkElement).setName(L_default.setting.watermark.type.label()).setDesc(L_default.setting.watermark.type.description()).addDropdown((dropdown) => {
       dropdown.addOption("text", L_default.setting.watermark.type.text()).addOption("image", L_default.setting.watermark.type.image()).setValue(this.plugin.settings.watermark.type ?? "text").onChange(async (value) => {
         this.plugin.settings.watermark.type = value;
         if (value === "text") {
-          textWatermarkEl.style.display = "block";
-          imageWatermarkEl.style.display = "none";
+          textWatermarkElement.style.display = "block";
+          imageWatermarkElement.style.display = "none";
         } else {
-          textWatermarkEl.style.display = "none";
-          imageWatermarkEl.style.display = "block";
+          textWatermarkElement.style.display = "none";
+          imageWatermarkElement.style.display = "block";
         }
         await this.update();
       });
     });
-    textWatermarkEl = watermarkEl.createDiv({
+    textWatermarkElement = watermarkElement.createDiv({
       attr: {
         style: `display: ${this.plugin.settings.watermark.type === "text" ? "block" : "none"};border-top:1px solid var(--background-modifier-border);padding-top:0.75em`
       }
     });
-    new import_obsidian10.Setting(textWatermarkEl).setName(L_default.setting.watermark.text.content()).addText((text) => {
+    new import_obsidian10.Setting(textWatermarkElement).setName(L_default.setting.watermark.text.content()).addText((text) => {
       text.setValue(this.plugin.settings.watermark.text.content ?? "").onChange(async (value) => {
         this.plugin.settings.watermark.text.content = value;
         await this.update();
       });
     });
-    new import_obsidian10.Setting(textWatermarkEl).setName(L_default.setting.watermark.text.color()).addColorPicker((picker) => {
+    new import_obsidian10.Setting(textWatermarkElement).setName(L_default.setting.watermark.text.color()).addColorPicker((picker) => {
       picker.setValue(this.plugin.settings.watermark.text.color ?? "#cccccc").onChange(async (value) => {
         this.plugin.settings.watermark.text.color = value;
         await this.update();
@@ -42586,20 +42605,20 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
         await this.update();
       });
     });
-    new import_obsidian10.Setting(textWatermarkEl).setName(L_default.setting.watermark.text.fontSize()).addText((text) => {
+    new import_obsidian10.Setting(textWatermarkElement).setName(L_default.setting.watermark.text.fontSize()).addText((text) => {
       text.inputEl.type = "number";
       text.setValue(`${this.plugin.settings.watermark.text.fontSize ?? "16"}`).setPlaceholder("16").onChange(async (value) => {
-        this.plugin.settings.watermark.text.fontSize = value ? parseInt(value) : void 0;
+        this.plugin.settings.watermark.text.fontSize = value ? Number.parseInt(value, 10) : void 0;
         await this.update();
       });
     });
-    imageWatermarkEl = watermarkEl.createDiv({
+    imageWatermarkElement = watermarkElement.createDiv({
       attr: {
         style: `display: ${this.plugin.settings.watermark.type === "image" ? "block" : "none"};border-top:1px solid var(--background-modifier-border);padding-top:0.75em`
       }
     });
-    const setImage = async (src) => {
-      const { width, height } = await getSizeOfImage(src);
+    const setImage = async (source) => {
+      const { width, height } = await getSizeOfImage(source);
       this.plugin.settings.watermark.width = width;
       this.plugin.settings.watermark.height = height;
       containerEl.querySelector(
@@ -42610,7 +42629,7 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
       ).value = `${height}`;
       await this.update();
     };
-    new import_obsidian10.Setting(imageWatermarkEl).setName(L_default.setting.watermark.image.src.label()).addButton((button) => {
+    new import_obsidian10.Setting(imageWatermarkElement).setName(L_default.setting.watermark.image.src.label()).addButton((button) => {
       const input = createEl("input", {
         attr: {
           type: "file",
@@ -42619,99 +42638,98 @@ var ImageSettingTab = class extends import_obsidian10.PluginSettingTab {
           style: "display: none;"
         }
       });
-      input.onchange = async () => {
+      input.addEventListener("change", async () => {
         const file = input.files?.[0];
         if (file) {
           this.plugin.settings.watermark.image.src = await fileToBase64(file);
-          setImage(fileToUrl(file));
+          await setImage(fileToUrl(file));
         }
-      };
-      button.buttonEl.appendChild(input);
-      button.setButtonText(L_default.setting.watermark.image.src.upload()).onClick(() => input.click());
+      });
+      button.buttonEl.append(input);
+      button.setButtonText(L_default.setting.watermark.image.src.upload()).onClick(() => {
+        input.click();
+      });
     }).addButton((button) => {
       button.setButtonText(L_default.setting.watermark.image.src.select());
       button.onClick(async () => {
-        const modal = new ImageSelectModal(this.plugin.app, (img) => {
+        const modal = new ImageSelectModal(this.plugin.app, async (img) => {
           this.plugin.settings.watermark.image.src = img;
-          setImage(img);
-          this.plugin.saveSettings();
+          await setImage(img);
+          await this.plugin.saveSettings();
           modal.close();
         });
         modal.open();
       });
     }).addExtraButton((button) => {
-      button.setIcon("transh-2").setTooltip(L_default.setting.userInfo.removeAvatar()).onClick(() => {
+      button.setIcon("transh-2").setTooltip(L_default.setting.userInfo.removeAvatar()).onClick(async () => {
         this.plugin.settings.watermark.image.src = "";
-        setImage("");
-        this.plugin.saveSettings();
+        await setImage("");
+        await this.plugin.saveSettings();
       });
     });
-    new import_obsidian10.Setting(userInfoEl).setName(L_default.setting.userInfo.position()).addDropdown((dropdown) => {
-      dropdown.setValue(this.plugin.settings.authorInfo.position ?? "bottom").addOptions({ top: "Top", bottom: "Bottom" }).onChange((value) => {
+    new import_obsidian10.Setting(userInfoElement).setName(L_default.setting.userInfo.position()).addDropdown((dropdown) => {
+      dropdown.setValue(this.plugin.settings.authorInfo.position ?? "bottom").addOptions({ top: "Top", bottom: "Bottom" }).onChange(async (value) => {
         this.plugin.settings.authorInfo.position = value;
-        this.plugin.saveSettings();
+        await this.plugin.saveSettings();
       });
     });
-    new import_obsidian10.Setting(userInfoEl).setName(L_default.setting.userInfo.align()).addDropdown((dropdown) => {
-      dropdown.setValue(this.plugin.settings.authorInfo.align ?? "right").addOptions({ left: "Left", center: "Center", right: "Right" }).onChange((value) => {
+    new import_obsidian10.Setting(userInfoElement).setName(L_default.setting.userInfo.align()).addDropdown((dropdown) => {
+      dropdown.setValue(this.plugin.settings.authorInfo.align ?? "right").addOptions({ left: "Left", center: "Center", right: "Right" }).onChange(async (value) => {
         this.plugin.settings.authorInfo.align = value;
-        this.plugin.saveSettings();
+        await this.plugin.saveSettings();
       });
     });
-    new import_obsidian10.Setting(watermarkEl).setName(L_default.setting.watermark.opacity()).addText((text) => {
+    new import_obsidian10.Setting(watermarkElement).setName(L_default.setting.watermark.opacity()).addText((text) => {
       text.inputEl.type = "number";
       text.setPlaceholder("0.2").setValue(`${this.plugin.settings.watermark.opacity ?? 0.2}`).onChange(async (value) => {
         this.plugin.settings.watermark.opacity = value ? Number(value) : void 0;
         await this.update();
       });
     });
-    new import_obsidian10.Setting(watermarkEl).setName(L_default.setting.watermark.rotate()).addText((text) => {
+    new import_obsidian10.Setting(watermarkElement).setName(L_default.setting.watermark.rotate()).addText((text) => {
       text.inputEl.type = "number";
       text.setPlaceholder("-30").setValue(`${this.plugin.settings.watermark.rotate ?? -30}`).onChange(async (value) => {
         this.plugin.settings.watermark.rotate = value ? Number(value) : void 0;
         await this.update();
       });
     });
-    new import_obsidian10.Setting(watermarkEl).setName(L_default.setting.watermark.width()).addText((text) => {
+    new import_obsidian10.Setting(watermarkElement).setName(L_default.setting.watermark.width()).addText((text) => {
       text.inputEl.type = "number";
       text.inputEl.addClass("watermark-width-setting");
-      text.setPlaceholder("120").setValue(`${this.plugin.settings.watermark.width ?? 120}`).onChange((value) => {
+      text.setPlaceholder("120").setValue(`${this.plugin.settings.watermark.width ?? 120}`).onChange(async (value) => {
         this.plugin.settings.watermark.width = value ? Number(value) : void 0;
-        this.update();
+        await this.update();
       });
     });
-    new import_obsidian10.Setting(watermarkEl).setName(L_default.setting.watermark.height()).addText((text) => {
+    new import_obsidian10.Setting(watermarkElement).setName(L_default.setting.watermark.height()).addText((text) => {
       text.inputEl.type = "number";
       text.inputEl.addClass("watermark-height-setting");
-      text.setPlaceholder("64").setValue(`${this.plugin.settings.watermark.height ?? 64}`).onChange((value) => {
+      text.setPlaceholder("64").setValue(`${this.plugin.settings.watermark.height ?? 64}`).onChange(async (value) => {
         this.plugin.settings.watermark.height = value ? Number(value) : void 0;
-        this.update();
+        await this.update();
       });
     });
-    new import_obsidian10.Setting(watermarkEl).setName(L_default.setting.watermark.x()).addText((text) => {
+    new import_obsidian10.Setting(watermarkElement).setName(L_default.setting.watermark.x()).addText((text) => {
       text.inputEl.type = "number";
-      text.setPlaceholder("100").setValue(`${this.plugin.settings.watermark.x ?? 100}`).onChange((value) => {
+      text.setPlaceholder("100").setValue(`${this.plugin.settings.watermark.x ?? 100}`).onChange(async (value) => {
         this.plugin.settings.watermark.x = value ? Number(value) : void 0;
-        this.update();
+        await this.update();
       });
     });
-    new import_obsidian10.Setting(watermarkEl).setName(L_default.setting.watermark.y()).addText((text) => {
+    new import_obsidian10.Setting(watermarkElement).setName(L_default.setting.watermark.y()).addText((text) => {
       text.inputEl.type = "number";
-      text.setPlaceholder("100").setValue(`${this.plugin.settings.watermark.y ?? 100}`).onChange((value) => {
+      text.setPlaceholder("100").setValue(`${this.plugin.settings.watermark.y ?? 100}`).onChange(async (value) => {
         this.plugin.settings.watermark.y = value ? Number(value) : void 0;
-        this.update();
+        await this.update();
       });
     });
-    previewEl = containerEl.createDiv({
+    previewElement = containerEl.createDiv({
       attr: {
         style: `display: ${this.plugin.settings.watermark.enable ? "block" : "none"};border-top:1px solid var(--background-modifier-border);padding-top:0.75em`
       }
     });
-    new import_obsidian10.Setting(previewEl).setHeading().setName(L_default.setting.preview());
-    this.render = renderPreview(previewEl.createDiv(), this.app);
+    new import_obsidian10.Setting(previewElement).setHeading().setName(L_default.setting.preview());
+    this.render = await renderPreview(previewElement.createDiv(), this.app);
     this.render(this.plugin.settings);
   }
 };
-
-// main.ts
-var main_default = ExportImagePlugin;

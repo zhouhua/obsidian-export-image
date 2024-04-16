@@ -35,6 +35,15 @@ type RootTranslation = {
 	 */
 	copy: string
 	/**
+	 * F​a​i​l​e​d​ ​t​o​ ​c​o​p​y
+	 */
+	copyFail: string
+	/**
+	 * U​n​a​b​l​e​ ​t​o​ ​d​i​r​e​c​t​l​y​ ​c​o​p​y​ ​{​f​o​r​m​a​t​}​ ​f​o​r​m​a​t
+	 * @param {unknown} format
+	 */
+	notAllowCopy: RequiredParams<'format'>
+	/**
 	 * S​a​v​e​ ​I​m​a​g​e
 	 */
 	save: string
@@ -43,6 +52,10 @@ type RootTranslation = {
 	 * @param {string} filePath
 	 */
 	saveSuccess: RequiredParams<'filePath'>
+	/**
+	 * F​a​i​l​e​d​ ​t​o​ ​s​a​v​e​ ​t​h​e​ ​i​m​a​g​e
+	 */
+	saveFail: string
 	/**
 	 * S​a​v​e​ ​t​o​ ​V​a​u​l​t
 	 */
@@ -146,17 +159,21 @@ type RootTranslation = {
 			 */
 			title: string
 			/**
-			 * T​h​e​ ​d​e​f​a​u​l​t​ ​J​P​G​ ​f​o​r​m​a​t​ ​f​o​r​ ​i​m​a​g​e​s​ ​s​h​o​u​l​d​ ​s​u​f​f​i​c​e​ ​f​o​r​ ​m​o​s​t​ ​n​e​e​d​s​.​ ​H​o​w​e​v​e​r​,​ ​f​o​r​ ​c​u​s​t​o​m​i​z​a​t​i​o​n​:​ ​1​.​ ​S​u​p​p​o​r​t​ ​P​N​G​ ​f​o​r​m​a​t​ ​f​o​r​ ​i​m​a​g​e​s​ ​w​i​t​h​ ​t​r​a​n​s​p​a​r​e​n​t​ ​b​a​c​k​g​r​o​u​n​d​s​.​ ​2​.​ ​O​f​f​e​r​ ​t​h​e​ ​a​b​i​l​i​t​y​ ​t​o​ ​e​x​p​o​r​t​ ​a​s​ ​a​ ​s​i​n​g​l​e​-​p​a​g​e​ ​P​D​F​ ​w​i​t​h​ ​a​ ​n​o​n​-​s​t​a​n​d​a​r​d​ ​p​a​p​e​r​ ​s​i​z​e​,​ ​p​l​e​a​s​e​ ​e​n​s​u​r​e​ ​i​t​ ​i​s​ ​u​s​e​d​ ​c​o​r​r​e​c​t​l​y​.
+			 * D​e​f​a​u​l​t​ ​P​N​G​ ​f​o​r​m​a​t​ ​i​m​a​g​e​s​ ​s​h​o​u​l​d​ ​s​a​t​i​s​f​y​ ​t​h​e​ ​m​a​j​o​r​i​t​y​ ​o​f​ ​n​e​e​d​s​,​ ​b​u​t​ ​t​o​ ​b​e​t​t​e​r​ ​s​u​p​p​o​r​t​ ​u​s​e​r​ ​s​c​e​n​a​r​i​o​s​:​ ​1​.​ ​S​u​p​p​o​r​t​ ​f​o​r​ ​e​x​p​o​r​t​i​n​g​ ​i​m​a​g​e​s​ ​w​i​t​h​ ​b​o​t​h​ ​n​o​r​m​a​l​ ​a​n​d​ ​t​r​a​n​s​p​a​r​e​n​t​ ​b​a​c​k​g​r​o​u​n​d​s​;​ ​2​.​ ​S​u​p​p​o​r​t​ ​f​o​r​ ​e​x​p​o​r​t​i​n​g​ ​J​P​G​ ​i​m​a​g​e​s​ ​t​o​ ​a​c​h​i​e​v​e​ ​s​m​a​l​l​e​r​ ​f​i​l​e​ ​s​i​z​e​s​,​ ​t​h​o​u​g​h​ ​i​t​ ​m​a​y​ ​n​o​t​ ​b​e​ ​p​o​s​s​i​b​l​e​ ​t​o​ ​c​o​p​y​ ​d​i​r​e​c​t​l​y​ ​t​o​ ​t​h​e​ ​c​l​i​p​b​o​a​r​d​;​ ​3​.​ ​S​u​p​p​o​r​t​ ​f​o​r​ ​e​x​p​o​r​t​i​n​g​ ​t​o​ ​s​i​n​g​l​e​-​p​a​g​e​ ​P​D​F​ ​f​o​r​m​a​t​,​ ​w​h​i​c​h​ ​d​i​f​f​e​r​s​ ​f​r​o​m​ ​t​h​e​ ​u​s​u​a​l​ ​P​D​F​ ​p​a​p​e​r​ ​f​o​r​m​a​t​s​,​ ​p​l​e​a​s​e​ ​b​e​ ​c​a​r​e​f​u​l​ ​n​o​t​ ​t​o​ ​m​i​s​u​s​e​.
 			 */
 			description: string
 			/**
-			 * .​j​p​g​ ​-​ ​d​e​f​a​u​l​t
+			 * .​p​n​g​ ​-​ ​d​e​f​a​u​l​t
 			 */
-			jpg: string
+			png0: string
 			/**
 			 * .​p​n​g​ ​-​ ​t​r​a​n​s​p​a​r​e​n​t​ ​b​a​c​k​g​r​o​u​n​d​ ​i​m​a​g​e
 			 */
-			png: string
+			png1: string
+			/**
+			 * .​j​p​g​ ​-​ ​j​p​g​ ​f​o​r​m​a​t​ ​i​m​a​g​e
+			 */
+			jpg: string
 			/**
 			 * .​p​d​f​ ​-​ ​s​i​n​g​l​e​ ​p​a​g​e​ ​p​d​f
 			 */
@@ -345,6 +362,14 @@ export type TranslationFunctions = {
 	 */
 	copy: () => LocalizedString
 	/**
+	 * Failed to copy
+	 */
+	copyFail: () => LocalizedString
+	/**
+	 * Unable to directly copy {format} format
+	 */
+	notAllowCopy: (arg: { format: unknown }) => LocalizedString
+	/**
 	 * Save Image
 	 */
 	save: () => LocalizedString
@@ -352,6 +377,10 @@ export type TranslationFunctions = {
 	 * Export and save the image as {filePath}.
 	 */
 	saveSuccess: (arg: { filePath: string }) => LocalizedString
+	/**
+	 * Failed to save the image
+	 */
+	saveFail: () => LocalizedString
 	/**
 	 * Save to Vault
 	 */
@@ -455,17 +484,21 @@ export type TranslationFunctions = {
 			 */
 			title: () => LocalizedString
 			/**
-			 * The default JPG format for images should suffice for most needs. However, for customization: 1. Support PNG format for images with transparent backgrounds. 2. Offer the ability to export as a single-page PDF with a non-standard paper size, please ensure it is used correctly.
+			 * Default PNG format images should satisfy the majority of needs, but to better support user scenarios: 1. Support for exporting images with both normal and transparent backgrounds; 2. Support for exporting JPG images to achieve smaller file sizes, though it may not be possible to copy directly to the clipboard; 3. Support for exporting to single-page PDF format, which differs from the usual PDF paper formats, please be careful not to misuse.
 			 */
 			description: () => LocalizedString
 			/**
-			 * .jpg - default
+			 * .png - default
 			 */
-			jpg: () => LocalizedString
+			png0: () => LocalizedString
 			/**
 			 * .png - transparent background image
 			 */
-			png: () => LocalizedString
+			png1: () => LocalizedString
+			/**
+			 * .jpg - jpg format image
+			 */
+			jpg: () => LocalizedString
 			/**
 			 * .pdf - single page pdf
 			 */

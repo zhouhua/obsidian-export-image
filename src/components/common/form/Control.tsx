@@ -1,32 +1,34 @@
-import React, { FC, useEffect, useRef } from "react";
-import get from "lodash/get";
-import set from "lodash/set";
-import { fileToBase64 } from "../../../utils";
-import L from "../../../L";
-import ImageSelectModal from "../imageSelectModal";
-import { App } from "obsidian";
+import React, {type FC, useRef} from 'react';
+import get from 'lodash/get';
+import set from 'lodash/set';
+import {type App} from 'obsidian';
+import {fileToBase64} from '../../../utils';
+import L from '../../../L';
+import ImageSelectModal from '../imageSelectModal';
 
 const Control: FC<{
   fieldSchema: FieldSchema<ISettings>;
   setting: ISettings;
   update: (settings: ISettings) => void;
   app: App;
-}> = ({ fieldSchema, setting, update, app }) => {
-  const value = get(setting, fieldSchema.path);
-  const inputRef = useRef<HTMLInputElement>(null);
+}> = ({fieldSchema, setting, update, app}) => {
+  const value: ValueType = get(setting, fieldSchema.path) as ValueType;
+  const inputReference = useRef<HTMLInputElement>(null);
   const onChange = (value: any) => {
-    const newSetting = { ...setting };
+    const newSetting = {...setting};
     set(newSetting, fieldSchema.path, value);
     update(newSetting);
   };
+
   const upload = async () => {
-    const file = inputRef.current?.files?.[0];
+    const file = inputReference.current?.files?.[0];
     if (file) {
       onChange(await fileToBase64(file));
     }
   };
+
   const select = () => {
-    const modal = new ImageSelectModal(app, (img) => {
+    const modal = new ImageSelectModal(app, img => {
       onChange(img);
       modal.close();
     });
@@ -34,44 +36,54 @@ const Control: FC<{
   };
 
   switch (fieldSchema.type) {
-    case "number": {
+    case 'number': {
       return (
         <input
-          type="number"
+          type='number'
           value={value}
-          onChange={(e) =>
-            onChange(e.target.value ? Number(e.target.value) : undefined)
+          onChange={e => {
+            onChange(e.target.value ? Number(e.target.value) : undefined);
+          }
           }
         />
       );
     }
-    case "string": {
+
+    case 'string': {
       return (
         <input
-          type="text"
+          type='text'
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => {
+            onChange(e.target.value);
+          }}
         />
       );
     }
-    case "boolean": {
+
+    case 'boolean': {
       return (
         <div
-          className={`checkbox-container${value ? " is-enabled" : ""}`}
-          onClick={() => onChange(!get(setting, fieldSchema.path))}
+          className={`checkbox-container${value ? ' is-enabled' : ''}`}
+          onClick={() => {
+            onChange(!get(setting, fieldSchema.path));
+          }}
         >
-          <input type="checkbox" checked={value} />
+          <input type='checkbox' checked={value as unknown as boolean} />
         </div>
       );
     }
-    case "select": {
+
+    case 'select': {
       return (
         <select
           value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="dropdown"
+          onChange={e => {
+            onChange(e.target.value);
+          }}
+          className='dropdown'
         >
-          {fieldSchema.options?.map((option) => (
+          {fieldSchema.options?.map(option => (
             <option key={option.value} value={option.value}>
               {option.text}
             </option>
@@ -79,22 +91,23 @@ const Control: FC<{
         </select>
       );
     }
-    case "file": {
+
+    case 'file': {
       return (
         <>
           <div
-            className="user-info-avatar"
+            className='user-info-avatar'
             style={{
-              backgroundImage: value ? `url(${value})` : "none",
-              display: value ? "block" : "none",
+              backgroundImage: value ? `url(${value})` : 'none',
+              display: value ? 'block' : 'none',
             }}
           ></div>
-          <button onClick={() => inputRef.current?.click()}>
+          <button onClick={() => inputReference.current?.click()}>
             {L.setting.watermark.image.src.upload()}
             <input
-              style={{ display: "none" }}
-              type="file"
-              ref={inputRef}
+              style={{display: 'none'}}
+              type='file'
+              ref={inputReference}
               onChange={upload}
             />
           </button>
@@ -104,8 +117,6 @@ const Control: FC<{
         </>
       );
     }
-    default:
-      return null;
   }
 };
 

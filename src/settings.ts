@@ -1,25 +1,27 @@
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const DEFAULT_SETTINGS: ISettings = {
   width: 640,
   showFilename: true,
-  "2x": true,
-  format: "jpg",
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  '2x': true,
+  format: 'png0',
   showMetadata: false,
   recursive: false,
   authorInfo: {
     show: false,
-    align: "right",
-    position: "bottom",
+    align: 'right',
+    position: 'bottom',
   },
   watermark: {
     enable: false,
-    type: "text",
+    type: 'text',
     text: {
-      content: "",
+      content: '',
       fontSize: 28,
-      color: "#cccccc",
+      color: '#cccccc',
     },
     image: {
-      src: "",
+      src: '',
     },
     opacity: 0.2,
     rotate: 30,

@@ -7,7 +7,9 @@
     "dev": "node esbuild.config.mjs",
     "build": "tsc -noEmit -skipLibCheck && cross-env NODE_ENV=production node esbuild.config.mjs production",
     "version": "node version-bump.mjs && git add manifest.json versions.json",
-    "typesafe-i18n": "typesafe-i18n"
+    "typesafe-i18n": "typesafe-i18n",
+    "lint": "xo",
+    "lint-fix": "xo --fix"
   },
   "keywords": [],
   "author": "",
@@ -16,10 +18,10 @@
     "@types/dom-to-image": "^2.6.7",
     "@types/file-saver": "^2.0.7",
     "@types/lodash": "^4.17.0",
-    "@types/node": "^20.12.6",
+    "@types/node": "^20.12.7",
     "@types/obsidian-typings": "npm:obsidian-typings@^1.0.6",
     "@typescript-eslint/eslint-plugin": "7.6.0",
-    "@typescript-eslint/parser": "7.6.0",
+    "@typescript-eslint/parser": "7.7.0",
     "builtin-modules": "3.3.0",
     "cross-env": "^7.0.3",
     "esbuild": "0.20.2",
@@ -32,12 +34,13 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "obsidian": "latest",
     "tslib": "2.6.2",
-    "typescript": "5.4.4"
+    "typescript": "5.4.5",
+    "xo": "^0.58.0"
   },
   "dependencies": {
     "@pansy/react-watermark": "^3.1.14",
-    "@types/react": "^18.2.75",
-    "@types/react-dom": "^18.2.24",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
     "dom-to-image-more": "^3.3.0",
     "file-saver": "^2.0.5",
     "jspdf": "^2.5.1",
