@@ -173,6 +173,7 @@
           svg.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
           return new XMLSerializer().serializeToString(svg);
         })
+        .then(html => html.replace(/background-image:/g, '-webkit-background-clip: text; background-image:'))
         .then(util.escapeXhtml)
         .then(xhtml => {
           const foreignObjectSizing

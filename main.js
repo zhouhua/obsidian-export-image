@@ -28752,7 +28752,7 @@ var require_dom_to_image_more = __commonJS({
           return Promise.resolve(node3).then((svg) => {
             svg.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
             return new XMLSerializer().serializeToString(svg);
-          }).then(util.escapeXhtml).then((xhtml) => {
+          }).then((html) => html.replace(/background-image:/g, "-webkit-background-clip: text; background-image:")).then(util.escapeXhtml).then((xhtml) => {
             const foreignObjectSizing = (util.isDimensionMissing(width) ? ' width="100%"' : ` width="${width}"`) + (util.isDimensionMissing(height) ? ' height="100%"' : ` height="${height}"`);
             const svgSizing = (util.isDimensionMissing(width) ? "" : ` width="${width}"`) + (util.isDimensionMissing(height) ? "" : ` height="${height}"`);
             return `<svg xmlns="http://www.w3.org/2000/svg"${svgSizing}><foreignObject${foreignObjectSizing}>${xhtml}</foreignObject></svg>`;
@@ -28931,6 +28931,7 @@ var require_dom_to_image_more = __commonJS({
                   }
                 }
               }
+              console.log(sourceElement, targetElement.outerHTML, sourceComputedStyles.getPropertyValue("-webkit-background-clip"), targetElement.style.webkitBackgroundClip);
             }
           }
           function clonePseudoElements() {
@@ -29484,7 +29485,7 @@ var require_dom_to_image_more = __commonJS({
         }
       }
       function setStyleProperty(targetStyle, name, value, priority) {
-        const needs_prefixing = ["background-clip"].includes(name);
+        const needs_prefixing = ["background-clip", "text-fill-color"].includes(name);
         if (priority) {
           targetStyle.setProperty(name, value, priority);
           if (needs_prefixing) {
@@ -29500,15 +29501,36 @@ var require_dom_to_image_more = __commonJS({
       function copyUserComputedStyleFast(options, sourceElement, sourceComputedStyles, parentComputedStyles, targetElement) {
         const defaultStyle = domtoimage2.impl.options.copyDefaultStyles ? getDefaultStyle(options, sourceElement) : {};
         const targetStyle = targetElement.style;
-        for (const name of util.asArray(sourceComputedStyles)) {
+        const styleKeys = util.asArray(sourceComputedStyles);
+        for (const name of styleKeys) {
           const sourceValue = sourceComputedStyles.getPropertyValue(name);
           const defaultValue = defaultStyle[name];
-          const parentValue = parentComputedStyles ? parentComputedStyles.getPropertyValue(name) : void 0;
-          if (sourceValue !== defaultValue || parentComputedStyles && sourceValue !== parentValue) {
+          const parentValue2 = parentComputedStyles ? parentComputedStyles.getPropertyValue(name) : void 0;
+          if (sourceValue !== defaultValue || parentComputedStyles && sourceValue !== parentValue2) {
             const priority = sourceComputedStyles.getPropertyPriority(name);
             setStyleProperty(targetStyle, name, sourceValue, priority);
           }
         }
+        for (const key of Object.keys(sourceComputedStyles)) {
+          if (/^\d*$/.test(key)) {
+            continue;
+          }
+          const value = sourceComputedStyles[key];
+          if (!value || typeof value !== "string") {
+            continue;
+          }
+          const computedKey = key.replace(/([A-Z][a-z]*)/g, (_3, letter) => `-${letter.toLowerCase()}`).replace(/^webkit/, "-webkit");
+          if (styleKeys.indexOf(computedKey) >= 0) {
+            continue;
+          }
+          const sourceValue = sourceComputedStyles.getPropertyValue(computedKey);
+          const defaultValue = defaultStyle[computedKey];
+          if (sourceValue !== defaultValue || parentComputedStyles && sourceValue !== parentValue) {
+            const priority = sourceComputedStyles.getPropertyPriority(computedKey);
+            setStyleProperty(targetStyle, key, value, priority);
+          }
+        }
+        console.log(targetElement.innerHTML, targetStyle);
       }
       let removeDefaultStylesTimeoutId = null;
       let tagNameDefaultStyles = {};
@@ -44106,7 +44128,8 @@ var ModalContent = ({ markdownEl, settings, app, frontmatter, title, metadataMap
         // @ts-ignore
         app.isMobile
       );
-    } catch {
+    } catch (error) {
+      console.log(error);
       new import_obsidian6.Notice(L_default.saveFail());
     }
     setProcessing(false);
@@ -44468,7 +44491,7 @@ var ModalContent_default2 = ModalContent2;
 async function exportFolder_default(app, settings, folder) {
   const modal = new import_obsidian9.Modal(app);
   modal.setTitle(L_default.exportFolder());
-  modal.modalEl.style.width = "640px";
+  modal.modalEl.style.width = "800px";
   modal.open();
   const root2 = (0, import_client5.createRoot)(modal.contentEl);
   root2.render(
