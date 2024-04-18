@@ -235,7 +235,7 @@ class ImageSettingTab extends PluginSettingTab {
             png0: L.setting.format.png0(),
             png1: L.setting.format.png1(),
             jpg: L.setting.format.jpg(),
-            webp: 'webp',
+            webp: '.webp',
             pdf: L.setting.format.pdf(),
           }, formatAvailable))
           .setValue(this.plugin.settings.format)

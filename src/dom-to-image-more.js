@@ -431,8 +431,8 @@
         function copyStyle(sourceElement, targetElement) {
           const sourceComputedStyles = getComputedStyle(sourceElement);
           if (sourceComputedStyles.cssText) {
-            targetElement.style.cssText = sourceComputedStyles.cssText;
-            copyFont(sourceComputedStyles, targetElement.style); // here we re-assign the font props.
+            // targetElement.style.cssText = sourceComputedStyles.cssText;
+            // copyFont(sourceComputedStyles, targetElement.style); // here we re-assign the font props.
           } else {
             copyUserComputedStyleFast(
               options,
@@ -1214,9 +1214,10 @@
     for (const name of util.asArray(sourceComputedStyles)) {
       const sourceValue = sourceComputedStyles.getPropertyValue(name);
       const defaultValue = defaultStyle[name];
-      const parentValue = parentComputedStyles
-        ? parentComputedStyles.getPropertyValue(name)
-        : undefined;
+      // const parentValue = parentComputedStyles
+      //   ? parentComputedStyles.getPropertyValue(name)
+      //   : undefined;
+      const parentValue = undefined;
 
       // If the style does not match the default, or it does not match the parent's, set it. We don't know which
       // styles are inherited from the parent and which aren't, so we have to always check both.

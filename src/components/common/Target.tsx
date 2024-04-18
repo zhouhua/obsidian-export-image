@@ -54,7 +54,7 @@ HTMLDivElement,
 
   return (
     <div
-      className={`export-image-root ${(frontmatter?.cssclasses as string[] || []).join(
+      className={`export-image-root markdown-reading-view ${(frontmatter?.cssclasses as string[] || []).join(
         ' ',
       )}`}
       ref={ref}
