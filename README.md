@@ -6,15 +6,15 @@ This Obsidian plugin can easily help you export any article as an image.
 
 ## Features
 
-- :memo: Export any article as an image, with the option to save it as a local image file or copy it to the clipboard.
-- :closed_lock_with_key: Support adding watermarks, both text and image watermarks, to protect your copyrights.
-- :technologist: Support adding author information (avatar, name, etc.) for easier sharing and dissemination.
-- :iphone: Support outputting images at twice the resolution for clearer display on high PPI devices like smartphones.
-- :straight_ruler: Support adjusting the image width to cater to different scenarios, such as exporting images suitable for viewing on mobile devices or ensuring readability when embedding images in articles.
-- :gear: Offer flexible configuration options with a convenient WYSIWYG (What You See Is What You Get) interface.
-- :page_facing_up: Support exporting selected content as an image.
-- :open_file_folder: Support for batch exporting all notes in a folder as images.
-- :capital_abcd: Support displaying obsidian [metadata](https://help.obsidian.md/Editing+and+formatting/Properties).
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Camera.png" alt="Camera" width="25" height="25" /> Export any article as an image, with the option to save it as a local image file or copy it to the clipboard.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Locked%20with%20Pen.png" alt="Locked with Pen" width="25" height="25" /> Support adding watermarks, both text and image watermarks, to protect your copyrights.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Identification%20Card.png" alt="Identification Card" width="25" height="25" /> Support adding author information (avatar, name, etc.) for easier sharing and dissemination.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Mobile%20Phone.png" alt="Mobile Phone" width="25" height="25" /> Support outputting images at twice the resolution for clearer display on high PPI devices like smartphones.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Straight%20Ruler.png" alt="Straight Ruler" width="25" height="25" /> Support adjusting the image width to cater to different scenarios, such as exporting images suitable for viewing on mobile devices or ensuring readability when embedding images in articles.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Level%20Slider.png" alt="Level Slider" width="25" height="25" /> Offer flexible configuration options with a convenient WYSIWYG (What You See Is What You Get) interface.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bookmark%20Tabs.png" alt="Bookmark Tabs" width="25" height="25" /> Support exporting selected content as an image.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Card%20Index%20Dividers.png" alt="Card Index Dividers" width="25" height="25" /> Support for batch exporting all notes in a folder as images.
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Receipt.png" alt="Receipt" width="25" height="25" /> Support displaying obsidian [metadata](https://help.obsidian.md/Editing+and+formatting/Properties).
 
 ## Usage
 
