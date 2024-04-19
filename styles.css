@@ -16,13 +16,6 @@ If your plugin does not need CSS, delete this file.
   padding-top: 0;
 }
 
-.epxort-image-root,
-.export-image-root *,
-.export-image-root *::before,
-.export-image-root *::after {
-  overflow: hidden;
-}
-
 .export-image-root .markdown-preview-view:has(.obsidian-banner-wrapper) {
   padding-top: calc(var(--banner-height) + var(--size-4-6));
 }
