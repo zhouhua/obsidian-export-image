@@ -493,11 +493,20 @@
             }
 
             function formatCssProperties() {
-              const styleText = util
-                .asArray(style)
+              const styleText = fixPseudoStyle(util.asArray(style))
                 .map(formatProperty)
                 .join('; ');
               return `${styleText};`;
+
+              function fixPseudoStyle(properties) {
+                for(let name of ['counter-increment', 'counter-reset', 'counter-set']) {
+                  if (properties.indexOf(name) < 0 && style.getPropertyValue(name) !== '') {
+                    properties.push(name);
+                    console.log(name);
+                  }
+                }
+                return properties;
+              }
 
               function formatProperty(name) {
                 const propertyValue = style.getPropertyValue(name);
@@ -1211,7 +1220,7 @@
       : {};
     const targetStyle = targetElement.style;
 
-    for (const name of util.asArray(sourceComputedStyles)) {
+    for (const name of fixStyle(util.asArray(sourceComputedStyles))) {
       const sourceValue = sourceComputedStyles.getPropertyValue(name);
       const defaultValue = defaultStyle[name];
       const parentValue = parentComputedStyles
@@ -1228,6 +1237,15 @@
         const priority = sourceComputedStyles.getPropertyPriority(name);
         setStyleProperty(targetStyle, name, sourceValue, priority);
       }
+    }
+
+    function fixStyle(properties) {
+      for(let name of ['counter-reset', 'counter-increment', 'counter-set']) {
+        if (properties.indexOf(name) < 0 && sourceComputedStyles.getPropertyValue(name) !== '') {
+          properties.push(name);
+        }
+      }
+      return properties;
     }
   }
 
