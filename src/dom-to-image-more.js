@@ -59,6 +59,10 @@
     || (typeof window === 'undefined' ? undefined : window.atob)
     || globalThis.atob;
 
+  function isUndefined(value) {
+    return value === '' || value === 'none';
+  }
+
   /**
      * @param {Node} node - The DOM Node object to render
      * @param {Object} options - Rendering options
@@ -173,7 +177,6 @@
           svg.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
           return new XMLSerializer().serializeToString(svg);
         })
-        .then(html => html.replace(/background-image:/g, '-webkit-background-clip: text; background-image:'))
         .then(util.escapeXhtml)
         .then(xhtml => {
           const foreignObjectSizing
@@ -454,6 +457,18 @@
                 }
               }
             }
+
+            const propertyName = '-webkit-background-clip';
+            const propertyValue = sourceComputedStyles.getPropertyValue(propertyName);
+            if(propertyValue !== 'border-box') {
+              const styleElement = document.createElement('style');
+              const className = util.uid();
+              const currentClass = targetElement.getAttribute('class') || '';
+              targetElement.setAttribute('class', `${currentClass} ${className}`);
+              styleElement.append(document.createTextNode(`.${className}{${propertyName}: ${propertyValue};}`));
+              targetElement.prepend(styleElement);
+              
+            }
           }
         }
       }
@@ -500,7 +515,7 @@
 
               function fixPseudoStyle(properties) {
                 for(let name of ['counter-increment', 'counter-reset', 'counter-set']) {
-                  if (properties.indexOf(name) < 0 && style.getPropertyValue(name) !== '') {
+                  if (properties.indexOf(name) < 0 && !isUndefined(style.getPropertyValue(name))) {
                     properties.push(name);
                     console.log(name);
                   }
@@ -1241,7 +1256,8 @@
 
     function fixStyle(properties) {
       for(let name of ['counter-reset', 'counter-increment', 'counter-set']) {
-        if (properties.indexOf(name) < 0 && sourceComputedStyles.getPropertyValue(name) !== '') {
+        if (properties.indexOf(name) < 0 && !isUndefined(sourceComputedStyles.getPropertyValue(name))) {
+          console.log(name, sourceComputedStyles.getPropertyValue(name));
           properties.push(name);
         }
       }
