@@ -20,6 +20,10 @@ If your plugin does not need CSS, delete this file.
   padding-top: calc(var(--banner-height) + var(--size-4-6));
 }
 
+.export-image-root.markdown-reading-view {
+  container-type: normal !important;
+}
+
 .export-image-preview-main {
   display: flex;
   margin: 20px 0;
