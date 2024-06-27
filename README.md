@@ -51,7 +51,7 @@ Search `Export Image` in community plugins.
 
 ## My Other Obsidian Plugins
 
-- [Markdown Media Card](https://github.com/zhouhua/obsidian-markdown-media-card])
+- [Markdown Media Card](https://github.com/zhouhua/obsidian-markdown-media-card)
 - [vConsole](https://github.com/zhouhua/obsidian-vconsole)
 - [POWER MODE](https://github.com/zhouhua/obsidian-power-mode)
 - [Another Sticky Headings](https://github.com/zhouhua/obsidian-sticky-headings)
