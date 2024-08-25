@@ -5,7 +5,7 @@ export function preprocessMarkdown(
   frontmatter: FrontMatterCache | undefined,
 ) {
   if (frontmatter?.["excalidraw-plugin"]) {
-    return markdown.replace(/\s*excalidraw-plugin:.+[\n\r]*/, "");
+    return markdown.replace(/[ ]*excalidraw-plugin:.+[\n\r]*/, "");
   }
   return markdown;
 }
