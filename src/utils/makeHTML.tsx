@@ -8,9 +8,9 @@ import {
   type TFile,
 } from 'obsidian';
 import React from 'react';
-import {type Root, createRoot} from 'react-dom/client';
+import { type Root, createRoot } from 'react-dom/client';
 import Target from 'src/components/common/Target';
-import {delay, getMetadata} from '.';
+import { delay, getMetadata } from '.';
 
 let root: Root | undefined;
 
@@ -35,12 +35,12 @@ export default async function makeHTML(
     element.createDiv(),
     file.path,
     app.workspace.getActiveViewOfType(MarkdownView)
-      || app.workspace.activeLeaf?.view
-      || new MarkdownRenderChild(element),
+    || app.workspace.activeLeaf?.view
+    || new MarkdownRenderChild(element),
   );
 
   /* @ts-ignore */
-  const metadataMap: Record<string, {type: MetadataType}> = app.metadataCache.getAllPropertyInfos();
+  const metadataMap: Record<string, { type: MetadataType }> = app.metadataCache.getAllPropertyInfos();
 
   const frontmatter = getMetadata(file, app);
 
