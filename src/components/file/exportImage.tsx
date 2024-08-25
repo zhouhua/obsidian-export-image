@@ -10,9 +10,10 @@ import {
   Modal,
   type TFile,
 } from 'obsidian';
-import {createRoot} from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import L from '../../L';
 import ModalContent from './ModalContent';
+import { preprocessMarkdown } from 'src/utils/preprocessMarkdown';
 
 export default async function (
   app: App,
@@ -24,12 +25,12 @@ export default async function (
   const el = document.createElement('div');
   await MarkdownRenderer.render(
     app,
-    markdown,
+    preprocessMarkdown(markdown, frontmatter),
     el.createDiv(),
     file.path,
     app.workspace.getActiveViewOfType(MarkdownView)
-      || app.workspace.activeLeaf?.view
-      || new MarkdownRenderChild(el),
+    || app.workspace.activeLeaf?.view
+    || new MarkdownRenderChild(el),
   );
   const modal = new Modal(app);
   modal.setTitle(L.imageExportPreview());
@@ -38,7 +39,7 @@ export default async function (
   modal.open();
   const root = createRoot(modal.contentEl);
   /* @ts-ignore */
-  const metadataMap: Record<string, {type: MetadataType}> = app.metadataCache.getAllPropertyInfos();
+  const metadataMap: Record<string, { type: MetadataType }> = app.metadataCache.getAllPropertyInfos();
   root.render(
     <ModalContent
       markdownEl={el}
