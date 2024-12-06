@@ -460,14 +460,14 @@
 
             const propertyName = '-webkit-background-clip';
             const propertyValue = sourceComputedStyles.getPropertyValue(propertyName);
-            if(propertyValue !== 'border-box') {
+            if (propertyValue !== 'border-box') {
               const styleElement = document.createElement('style');
               const className = util.uid();
               const currentClass = targetElement.getAttribute('class') || '';
               targetElement.setAttribute('class', `${currentClass} ${className}`);
               styleElement.append(document.createTextNode(`.${className}{${propertyName}: ${propertyValue};}`));
               targetElement.prepend(styleElement);
-              
+
             }
           }
         }
@@ -514,7 +514,7 @@
               return `${styleText};`;
 
               function fixPseudoStyle(properties) {
-                for(let name of ['counter-increment', 'counter-reset', 'counter-set']) {
+                for (let name of ['counter-increment', 'counter-reset', 'counter-set']) {
                   if (properties.indexOf(name) < 0 && !isUndefined(style.getPropertyValue(name))) {
                     properties.push(name);
                     console.log(name);
@@ -798,7 +798,7 @@
           url += (/\?/.test(url) ? '&' : '?') + Date.now();
         }
 
-        if (domtoimage.impl.options.requestUrl && url.startsWith('http')) {
+        if (domtoimage.impl.options.requestUrl && url.startsWith('http') && !url.startsWith('http://localhost/')) {
           cacheEntry.promise = domtoimage.impl.options
             .requestUrl({
               url,
@@ -1255,7 +1255,7 @@
     }
 
     function fixStyle(properties) {
-      for(let name of ['counter-reset', 'counter-increment', 'counter-set']) {
+      for (let name of ['counter-reset', 'counter-increment', 'counter-set']) {
         if (properties.indexOf(name) < 0 && !isUndefined(sourceComputedStyles.getPropertyValue(name))) {
           console.log(name, sourceComputedStyles.getPropertyValue(name));
           properties.push(name);

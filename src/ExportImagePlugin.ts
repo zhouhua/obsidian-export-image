@@ -6,9 +6,11 @@ import {
   TFile,
   Notice,
   TFolder,
+  parseLinktext,
+  getLinkpath,
 } from 'obsidian';
 import pick from 'lodash/pick';
-import {renderPreview} from './settingPreview';
+import { renderPreview } from './settingPreview';
 import exportImage from './components/file/exportImage';
 import L from './L';
 import {
@@ -19,7 +21,7 @@ import {
   isMarkdownFile,
 } from './utils';
 import ImageSelectModal from './components/common/imageSelectModal';
-import {DEFAULT_SETTINGS, formatAvailable} from './settings';
+import { DEFAULT_SETTINGS, formatAvailable } from './settings';
 import exportFolder from './components/folder/exportFolder';
 
 export default class ExportImagePlugin extends Plugin {
@@ -61,7 +63,7 @@ export default class ExportImagePlugin extends Plugin {
     this.registerEvent(
       this.app.workspace.on('editor-menu', (menu, editor) => {
         const file: TFile
-        // @ts-ignore: Obsidian ts defined incomplete.
+          // @ts-ignore: Obsidian ts defined incomplete.
           = editor.editorComponent.file as (TFile | undefined) ?? this.app.workspace.getActiveFile()!;
         const frontmatter = getMetadata(file, this.app);
         if (!file) {
@@ -145,7 +147,7 @@ export default class ExportImagePlugin extends Plugin {
   }
 
   async loadSettings() {
-    this.settings = {...DEFAULT_SETTINGS, ...(await this.loadData() as ISettings)};
+    this.settings = { ...DEFAULT_SETTINGS, ...(await this.loadData() as ISettings) };
   }
 
   async saveSettings() {
@@ -168,11 +170,11 @@ class ImageSettingTab extends PluginSettingTab {
   }
 
   async display(): Promise<void> {
-    const {containerEl} = this;
+    const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl('h3', {text: L.setting.title()});
-    containerEl.createEl('p', {text: 'Github: '}).createEl('a', {
+    containerEl.createEl('h3', { text: L.setting.title() });
+    containerEl.createEl('p', { text: 'Github: ' }).createEl('a', {
       text: 'zhouhua/obsidian-export-image',
       attr: {
         href: 'https://github.com/zhouhua/obsidian-export-image',
@@ -269,9 +271,8 @@ class ImageSettingTab extends PluginSettingTab {
       });
     userInfoElement = containerEl.createDiv({
       attr: {
-        style: `display: ${
-          this.plugin.settings.authorInfo.show ? 'block' : 'none'
-        };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
+        style: `display: ${this.plugin.settings.authorInfo.show ? 'block' : 'none'
+          };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
       },
     });
     new Setting(userInfoElement)
@@ -363,9 +364,8 @@ class ImageSettingTab extends PluginSettingTab {
       });
     watermarkElement = containerEl.createDiv({
       attr: {
-        style: `display: ${
-          this.plugin.settings.watermark.enable ? 'block' : 'none'
-        };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
+        style: `display: ${this.plugin.settings.watermark.enable ? 'block' : 'none'
+          };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
       },
     });
     new Setting(watermarkElement)
@@ -391,9 +391,8 @@ class ImageSettingTab extends PluginSettingTab {
       });
     textWatermarkElement = watermarkElement.createDiv({
       attr: {
-        style: `display: ${
-          this.plugin.settings.watermark.type === 'text' ? 'block' : 'none'
-        };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
+        style: `display: ${this.plugin.settings.watermark.type === 'text' ? 'block' : 'none'
+          };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
       },
     });
     new Setting(textWatermarkElement)
@@ -443,13 +442,12 @@ class ImageSettingTab extends PluginSettingTab {
       });
     imageWatermarkElement = watermarkElement.createDiv({
       attr: {
-        style: `display: ${
-          this.plugin.settings.watermark.type === 'image' ? 'block' : 'none'
-        };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
+        style: `display: ${this.plugin.settings.watermark.type === 'image' ? 'block' : 'none'
+          };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
       },
     });
     const setImage = async (source: string) => {
-      const {width, height} = await getSizeOfImage(source);
+      const { width, height } = await getSizeOfImage(source);
       this.plugin.settings.watermark.width = width;
       this.plugin.settings.watermark.height = height;
       containerEl.querySelector<HTMLInputElement>(
@@ -515,7 +513,7 @@ class ImageSettingTab extends PluginSettingTab {
       .addDropdown(dropdown => {
         dropdown
           .setValue(this.plugin.settings.authorInfo.position ?? 'bottom')
-          .addOptions({top: 'Top', bottom: 'Bottom'})
+          .addOptions({ top: 'Top', bottom: 'Bottom' })
           .onChange(async (value: 'top' | 'bottom') => {
             this.plugin.settings.authorInfo.position = value;
             await this.plugin.saveSettings();
@@ -527,7 +525,7 @@ class ImageSettingTab extends PluginSettingTab {
       .addDropdown(dropdown => {
         dropdown
           .setValue(this.plugin.settings.authorInfo.align ?? 'right')
-          .addOptions({left: 'Left', center: 'Center', right: 'Right'})
+          .addOptions({ left: 'Left', center: 'Center', right: 'Right' })
           .onChange(async (value: 'left' | 'center' | 'right') => {
             this.plugin.settings.authorInfo.align = value;
             await this.plugin.saveSettings();
@@ -624,9 +622,8 @@ class ImageSettingTab extends PluginSettingTab {
 
     previewElement = containerEl.createDiv({
       attr: {
-        style: `display: ${
-          this.plugin.settings.watermark.enable ? 'block' : 'none'
-        };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
+        style: `display: ${this.plugin.settings.watermark.enable ? 'block' : 'none'
+          };border-top:1px solid var(--background-modifier-border);padding-top:0.75em`,
       },
     });
     new Setting(previewElement).setHeading().setName(L.setting.preview());
