@@ -105,6 +105,7 @@ If your plugin does not need CSS, delete this file.
 .export-image-root .user-info-remark {
   opacity: 0.5;
   font-size: 12px;
+  white-space: nowrap;
 }
 
 .export-image-preview-actions {
