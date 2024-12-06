@@ -1,8 +1,8 @@
-import React, {type FC, useRef} from 'react';
+import React, { type FC, useEffect, useRef } from 'react';
 import get from 'lodash/get';
 import set from 'lodash/set';
-import {type App} from 'obsidian';
-import {fileToBase64} from '../../../utils';
+import { setIcon, type App } from 'obsidian';
+import { fileToBase64 } from '../../../utils';
 import L from '../../../L';
 import ImageSelectModal from '../imageSelectModal';
 
@@ -11,19 +11,27 @@ const Control: FC<{
   setting: ISettings;
   update: (settings: ISettings) => void;
   app: App;
-}> = ({fieldSchema, setting, update, app}) => {
+}> = ({ fieldSchema, setting, update, app }) => {
   const value: ValueType = get(setting, fieldSchema.path) as ValueType;
   const inputReference = useRef<HTMLInputElement>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
   const onChange = (value: any) => {
-    const newSetting = {...setting};
+    const newSetting = { ...setting };
     set(newSetting, fieldSchema.path, value);
     update(newSetting);
   };
+
+  useEffect(() => {
+    if (iconRef.current) {
+      setIcon(iconRef.current, 'x');
+    }
+  }, [iconRef.current]);
 
   const upload = async () => {
     const file = inputReference.current?.files?.[0];
     if (file) {
       onChange(await fileToBase64(file));
+      inputReference.current!.value = '';
     }
   };
 
@@ -100,12 +108,33 @@ const Control: FC<{
             style={{
               backgroundImage: value ? `url(${value})` : 'none',
               display: value ? 'block' : 'none',
+              position: 'relative',
             }}
-          ></div>
+          >
+            <div
+              ref={iconRef}
+              onClick={() => (onChange(undefined))}
+              style={{
+                position: 'absolute',
+                top: '-10px',
+                right: '-10px',
+                width: '20px',
+                height: '20px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'black',
+                borderRadius: '50%',
+                cursor: 'pointer',
+                ['--icon-size' as string]: '12px',
+                ['--icon-color' as string]: 'var(--color-red)',
+              } as React.CSSProperties}
+            ></div>
+          </div>
           <button onClick={() => inputReference.current?.click()}>
             {L.setting.watermark.image.src.upload()}
             <input
-              style={{display: 'none'}}
+              style={{ display: 'none' }}
               type='file'
               ref={inputReference}
               onChange={upload}
