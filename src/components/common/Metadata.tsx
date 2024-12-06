@@ -1,6 +1,6 @@
-import React, {type FC, type JSX} from 'react';
+import React, { type FC, type JSX } from 'react';
 
-type PropType = {name: string} & (
+type PropType = { name: string } & (
   | {
     type: 'text' | 'date' | 'datetime';
     value: string | undefined;
@@ -155,11 +155,27 @@ const iconMap: Record<MetadataType, JSX.Element> = {
       <path d='M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11' />
     </svg>
   ),
-  aliases: <></>,
+  aliases: (
+    <svg
+      className='svg-icon'
+      xmlns='http://www.w3.org/2000/svg'
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      stroke-width='2'
+      stroke-linecap='round'
+      stroke-linejoin='round'
+    >
+      <polyline points='15 17 20 12 15 7' />
+      <path d='M4 18v-2a4 4 0 0 1 4-4h12' />
+    </svg>
+  ),
 };
 
-const Metadata: FC<PropType> = ({type, name, value}) => {
-  if (['aliases', 'cssclasses'].contains(name)) {
+const Metadata: FC<PropType> = ({ type, name, value }) => {
+  if (['cssclasses'].contains(name)) {
     return null;
   }
 
@@ -228,11 +244,12 @@ const Metadata: FC<PropType> = ({type, name, value}) => {
     }
 
     case 'multitext':
-    case 'tags': {
+    case 'tags':
+    case 'aliases': {
       valueElement = (
         <div className='multi-select-container'>
           {value?.map(str => (
-            <div className='multi-select-pill' style={{border: 'none'}}>
+            <div className='multi-select-pill' style={{ border: 'none' }}>
               <div className='multi-select-pill-content'>
                 <span>{str}</span>
               </div>
@@ -243,7 +260,7 @@ const Metadata: FC<PropType> = ({type, name, value}) => {
       break;
     }
 
-    case 'aliases': {
+    default: {
       return null;
     }
   }
@@ -253,7 +270,7 @@ const Metadata: FC<PropType> = ({type, name, value}) => {
       className='metadata-property'
       data-property-type={type}
       data-property-key={name}
-      style={{border: 0}}
+      style={{ border: 0 }}
     >
       <div className='metadata-property-key'>
         <span className='metadata-property-icon'>{iconSvg}</span>

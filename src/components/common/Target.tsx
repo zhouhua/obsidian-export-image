@@ -1,9 +1,10 @@
-import {type App, type FrontMatterCache} from 'obsidian';
+import { type App, type FrontMatterCache } from 'obsidian';
 import React, {
   forwardRef, useEffect, useRef, useState,
 } from 'react';
-import {type WatermarkProps, Watermark} from '@pansy/react-watermark';
+import { type WatermarkProps, Watermark } from '@pansy/react-watermark';
 import Metadata from './Metadata';
+import { lowerCase } from 'lodash';
 
 const alignMap = {
   left: 'flex-start',
@@ -12,16 +13,16 @@ const alignMap = {
 };
 
 const Target = forwardRef<
-HTMLDivElement,
-{
-  frontmatter: FrontMatterCache | undefined;
-  setting: ISettings;
-  title: string;
-  metadataMap: Record<string, {type: MetadataType}>;
-  markdownEl: Node;
-  app: App;
-}
->(({frontmatter, setting, title, metadataMap, markdownEl}, ref) => {
+  HTMLDivElement,
+  {
+    frontmatter: FrontMatterCache | undefined;
+    setting: ISettings;
+    title: string;
+    metadataMap: Record<string, { type: MetadataType }>;
+    markdownEl: Node;
+    app: App;
+  }
+>(({ frontmatter, setting, title, metadataMap, markdownEl }, ref) => {
   const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
   const contentRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -84,59 +85,59 @@ HTMLDivElement,
           {setting.showMetadata
             && frontmatter
             && Object.keys(frontmatter).length > 0 && (
-            <div className='metadata-container' style={{display: 'block'}}>
-              <div className='metadata-content'>
-                {Object.keys(frontmatter).map(name => (
-                  <Metadata
-                    name={name}
-                    key={name}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    value={frontmatter[name]}
-                    type={metadataMap[name]?.type || 'text'}
-                  ></Metadata>
-                ))}
+              <div className='metadata-container' style={{ display: 'block' }}>
+                <div className='metadata-content'>
+                  {Object.keys(frontmatter).map(name => (
+                    <Metadata
+                      name={name}
+                      key={name}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                      value={frontmatter[name]}
+                      type={metadataMap[lowerCase(name)]?.type || 'text'}
+                    ></Metadata>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
           <div ref={contentRef}></div>
         </div>
       </Watermark>
       {setting.authorInfo.show
         && (setting.authorInfo.avatar || setting.authorInfo.name) && (
-        <div
-          className='user-info-container'
-          style={{
-            [setting.authorInfo.position === 'top'
-              ? 'borderBottom'
-              : 'borderTop']: '1px solid var(--background-modifier-border)',
+          <div
+            className='user-info-container'
+            style={{
+              [setting.authorInfo.position === 'top'
+                ? 'borderBottom'
+                : 'borderTop']: '1px solid var(--background-modifier-border)',
 
-            justifyContent: alignMap[setting.authorInfo.align || 'right'],
-            background:
+              justifyContent: alignMap[setting.authorInfo.align || 'right'],
+              background:
                 setting.format === 'png1'
                   ? 'unset'
                   : 'var(--background-primary)',
-          }}
-        >
-          {setting.authorInfo.avatar && (
-            <div
-              className='user-info-avatar'
-              style={{
-                backgroundImage: `url(${setting.authorInfo.avatar})`,
-              }}
-            ></div>
-          )}
-          {setting.authorInfo.name && (
-            <div>
-              <div className='user-info-name'>{setting.authorInfo.name}</div>
-              {setting.authorInfo.remark && (
-                <div className='user-info-remark'>
-                  {setting.authorInfo.remark}
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+            }}
+          >
+            {setting.authorInfo.avatar && (
+              <div
+                className='user-info-avatar'
+                style={{
+                  backgroundImage: `url(${setting.authorInfo.avatar})`,
+                }}
+              ></div>
+            )}
+            {setting.authorInfo.name && (
+              <div>
+                <div className='user-info-name'>{setting.authorInfo.name}</div>
+                {setting.authorInfo.remark && (
+                  <div className='user-info-remark'>
+                    {setting.authorInfo.remark}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
     </div>
   );
 });
