@@ -246,9 +246,10 @@ const Metadata: FC<PropType> = ({ type, name, value }) => {
     case 'multitext':
     case 'tags':
     case 'aliases': {
+      const valueArray = Array.isArray(value) ? value : [value];
       valueElement = (
         <div className='multi-select-container'>
-          {value?.map(str => (
+          {valueArray.map(str => (
             <div className='multi-select-pill' style={{ border: 'none' }}>
               <div className='multi-select-pill-content'>
                 <span>{str}</span>

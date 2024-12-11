@@ -5,6 +5,7 @@ import React, {
 import { type WatermarkProps, Watermark } from '@pansy/react-watermark';
 import Metadata from './Metadata';
 import { lowerCase } from 'lodash';
+import clsx from 'clsx';
 
 const alignMap = {
   left: 'flex-start',
@@ -55,9 +56,7 @@ const Target = forwardRef<
 
   return (
     <div
-      className={`export-image-root markdown-reading-view ${(frontmatter?.cssclasses as string[] || []).join(
-        ' ',
-      )}`}
+      className={clsx('export-image-root markdown-reading-view', frontmatter?.cssclasses || frontmatter?.cssclass)}
       ref={ref}
       style={{
         display: 'flex',

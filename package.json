@@ -41,6 +41,7 @@
     "@pansy/react-watermark": "^3.1.14",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
+    "clsx": "^2.1.1",
     "dom-to-image-more": "^3.3.0",
     "file-saver": "^2.0.5",
     "jspdf": "^2.5.1",
