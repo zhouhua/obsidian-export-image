@@ -31,9 +31,10 @@ export function fileToUrl(file: File) {
 
 export async function getSizeOfImage(
   url: string,
-): Promise<{width: number; height: number}> {
+): Promise<{ width: number; height: number }> {
   return new Promise((resolve, reject) => {
     const image = new Image();
+    image.crossOrigin = 'anonymous';
     image.addEventListener('load', () => {
       resolve({
         width: Math.round(image.width / 2),
