@@ -6,6 +6,7 @@ import { type WatermarkProps, Watermark } from '@pansy/react-watermark';
 import Metadata from './Metadata';
 import { lowerCase } from 'lodash';
 import clsx from 'clsx';
+import { getRemoteImageUrl } from 'src/utils/capture';
 
 const alignMap = {
   left: 'flex-start',
@@ -30,28 +31,30 @@ const Target = forwardRef<
     contentRef.current?.append(markdownEl);
   }, []);
   useEffect(() => {
-    const props: WatermarkProps = {
-      monitor: false,
-      mode: 'interval',
-      visible: setting.watermark.enable,
-      rotate: setting.watermark.rotate ?? -30,
-      opacity: setting.watermark.opacity ?? 0.2,
-      height: setting.watermark.height ?? 64,
-      width: setting.watermark.width ?? 120,
-      gapX: setting.watermark.x ?? 100,
-      gapY: setting.watermark.y ?? 100,
-    };
+    (async () => {
+      const props: WatermarkProps = {
+        monitor: false,
+        mode: 'interval',
+        visible: setting.watermark.enable,
+        rotate: setting.watermark.rotate ?? -30,
+        opacity: setting.watermark.opacity ?? 0.2,
+        height: setting.watermark.height ?? 64,
+        width: setting.watermark.width ?? 120,
+        gapX: setting.watermark.x ?? 100,
+        gapY: setting.watermark.y ?? 100,
+      };
 
-    if (setting.watermark.type === 'text') {
-      props.text = setting.watermark.text.content;
-      props.fontSize = setting.watermark.text.fontSize || 16;
-      props.fontColor = setting.watermark.text.color || '#cccccc';
-      props.image = undefined;
-    } else {
-      props.image = setting.watermark.image.src;
-    }
+      if (setting.watermark.type === 'text') {
+        props.text = setting.watermark.text.content;
+        props.fontSize = setting.watermark.text.fontSize || 16;
+        props.fontColor = setting.watermark.text.color || '#cccccc';
+        props.image = undefined;
+      } else {
+        props.image = await getRemoteImageUrl(setting.watermark.image.src);
+      }
 
-    setWatermarkProps(props);
+      setWatermarkProps(props);
+    })();
   }, [setting]);
 
   return (

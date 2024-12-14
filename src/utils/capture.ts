@@ -181,3 +181,21 @@ export async function saveMultipleFiles(
     }
   }
 }
+
+export async function getRemoteImageUrl(url?: string) {
+  if (!url || !url.startsWith('http')) {
+    return url;
+  }
+  try {
+    const response = await requestUrl({
+      url,
+      method: 'GET',
+    });
+    const blob = new Blob([response.arrayBuffer], {type: response.headers['content-type'] || 'application/octet-stream'});
+    const res = URL.createObjectURL(blob);
+    return res;
+  } catch (error) {
+    console.error('Failed to load image:', error);
+    return url;
+  }
+}

@@ -6,6 +6,7 @@ import { requestUrl, setIcon, type App } from 'obsidian';
 import { fileToBase64 } from '../../../utils';
 import L from '../../../L';
 import ImageSelectModal from '../imageSelectModal';
+import { getRemoteImageUrl } from 'src/utils/capture';
 
 const Control: FC<{
   fieldSchema: FieldSchema<ISettings>;
@@ -38,19 +39,9 @@ const Control: FC<{
 
   useEffect(() => {
     const processImage = async () => {
-      if (fieldSchema.type === 'file' && typeof value === 'string' && value.startsWith('http')) {
-        try {
-          const response = await requestUrl({
-            url: value,
-            method: 'GET',
-          });
-          const blob = new Blob([response.arrayBuffer], { type: 'image/png' });
-          const url = URL.createObjectURL(blob);
-          setProcessedImageUrl(url);
-        } catch (error) {
-          console.error('Failed to load image:', error);
-          setProcessedImageUrl(value); // 加载失败时使用原始URL
-        }
+      if (fieldSchema.type === 'file' && typeof value === 'string') {
+        const url = await getRemoteImageUrl(value);
+        setProcessedImageUrl(url);
       } else {
         setProcessedImageUrl(value);
       }
@@ -142,10 +133,10 @@ const Control: FC<{
                 display: value ? 'block' : 'none',
               }}
             >
-              {value && (
+              {processedImageUrl && (
                 <img
                   src={processedImageUrl}
-                  alt="User avatar"
+                  alt="avatar"
                   style={{
                     width: '100%',
                     height: '100%',
