@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const cs = {
   command: 'Exportovat jako obrázek',
@@ -111,6 +111,9 @@ const cs = {
     cancel: 'Zrušit',
     empty: 'Nenalezeny žádné obrázky',
   },
+  confirm: 'Potvrdit',
+  cancel: 'Zrušit',
+  imageUrl: 'Zadejte URL',
 } satisfies BaseTranslation;
 
 export default cs;

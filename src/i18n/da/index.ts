@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const da = {
   // TODO: Indsæt dine oversættelser her
@@ -112,6 +112,9 @@ const da = {
     cancel: 'Annuller',
     empty: 'Ingen billeder fundet',
   },
+  confirm: 'Bekræft',
+  cancel: 'Annuller',
+  imageUrl: 'Indtast URL',
 } satisfies BaseTranslation;
 
 export default da;

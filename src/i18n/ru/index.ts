@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const ru = {
   command: 'Экспортировать как изображение',
@@ -111,6 +111,9 @@ const ru = {
     cancel: 'Отмена',
     empty: 'Изображения не найдены',
   },
+  confirm: 'Подтвердить',
+  cancel: 'Отмена',
+  imageUrl: 'URL изображения',
 } satisfies BaseTranslation;
 
 export default ru;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const id = {
   command: 'Ekspor sebagai gambar',
@@ -111,6 +111,9 @@ const id = {
     cancel: 'Batal',
     empty: 'Tidak ada gambar yang ditemukan',
   },
+  confirm: 'Konfirmasi',
+  cancel: 'Batal',
+  imageUrl: 'Masukkan URL gambar',
 } satisfies BaseTranslation;
 
 export default id;

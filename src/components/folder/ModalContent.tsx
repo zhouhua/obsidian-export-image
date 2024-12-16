@@ -5,11 +5,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {type App, TFile, TFolder} from 'obsidian';
+import { type App, TFile, TFolder } from 'obsidian';
 import L from 'src/L';
-import {delay, isMarkdownFile} from 'src/utils';
-import {saveMultipleFiles} from 'src/utils/capture';
-import {formatAvailable} from 'src/settings';
+import { delay, isMarkdownFile } from 'src/utils';
+import { saveMultipleFiles } from 'src/utils/capture';
+import { formatAvailable } from 'src/settings';
 import FormItems from '../common/form/FormItems';
 
 const ModalContent: FC<{
@@ -17,7 +17,7 @@ const ModalContent: FC<{
   app: App;
   folder: TFolder;
   close: () => void;
-}> = ({settings, app, folder, close}) => {
+}> = ({ settings, app, folder, close }) => {
   const [formData, setFormData] = useState<ISettings>(settings);
   const [fileList, setFileList] = useState<TFile[]>([]);
   const [selectFiles, setSelectFiles] = useState<TFile[]>([]);
@@ -86,12 +86,12 @@ const ModalContent: FC<{
       path: 'format',
       type: 'select',
       options: [
-        {value: 'png0', text: 'png(normal)'},
-        {value: 'png1', text: 'png(no background)'},
-        {value: 'jpg', text: 'jpg'},
-        {value: 'webp', text: 'webp'},
-        {value: 'pdf', text: 'pdf'},
-      ].filter(({value}) => formatAvailable.contains(value as FileFormat)),
+        { value: 'png0', text: 'png(normal)' },
+        { value: 'png1', text: 'png(no background)' },
+        { value: 'jpg', text: 'jpg' },
+        { value: 'webp', text: 'webp' },
+        { value: 'pdf', text: 'pdf' },
+      ].filter(({ value }) => formatAvailable.contains(value as FileFormat)),
     },
   ];
   useEffect(() => {
@@ -157,7 +157,7 @@ const ModalContent: FC<{
           </div>
           <div
             className='export-image-preview-right'
-            style={{maxHeight: 320, overflowY: 'auto'}}
+            style={{ maxHeight: 320, overflowY: 'auto' }}
           >
             {fileList.length > 0 ? (
               <div>
@@ -201,15 +201,14 @@ const ModalContent: FC<{
         </div>
         <div
           className='export-image-preview-actions'
-          style={{justifyContent: 'space-around'}}
+          style={{ justifyContent: 'space-around' }}
         >
-          <div className='export-image-progress-bar' style={{width: '40%'}}>
+          <div className='export-image-progress-bar' style={{ width: '40%' }}>
             <div
               className='export-image-progress-bar-inner'
               style={{
-                width: `${
-                  selectFiles.length > 0 ? 100 * (finished / selectFiles.length) : 0
-                }%`,
+                width: `${selectFiles.length > 0 ? 100 * (finished / selectFiles.length) : 0
+                  }%`,
               }}
             ></div>
           </div>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const ro = {
   // TODO: Introduceți traducerile dvs. aici
@@ -112,6 +112,9 @@ const ro = {
     cancel: 'Anulează',
     empty: 'Nicio imagine găsită',
   },
+  confirm: 'Confirmați',
+  cancel: 'Anulează',
+  imageUrl: 'URL imagine',
 } satisfies BaseTranslation;
 
 export default ro;

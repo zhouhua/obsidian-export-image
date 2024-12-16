@@ -2,7 +2,7 @@ import get from 'lodash/get';
 import React, {
   type FC,
 } from 'react';
-import {type App} from 'obsidian';
+import { type App } from 'obsidian';
 import Control from './Control';
 
 function isShow(field: FieldSchema<ISettings>, settings: ISettings) {
@@ -22,7 +22,7 @@ const FormItems: FC<{
   settings: ISettings;
   update: (data: ISettings) => void;
   app: App;
-}> = ({formSchema, settings, update, app}) => (
+}> = ({ formSchema, settings, update, app }) => (
   <>
     {formSchema.map(
       fieldSchema =>
@@ -30,7 +30,7 @@ const FormItems: FC<{
           <div
             className='setting-item'
             key={fieldSchema.path}
-            style={{padding: '10px 0'}}
+            style={{ padding: '10px 0' }}
           >
             <div className='setting-item-info'>
               <div className='setting-item-name'>{fieldSchema.label}</div>
@@ -48,6 +48,7 @@ const FormItems: FC<{
                 app={app}
               ></Control>
             </div>
+
           </div>
         ),
     )}

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const ms = {
   command: 'Eksport sebagai imej',
@@ -111,6 +111,9 @@ const ms = {
     cancel: 'Batal',
     empty: 'Tiada imej ditemui',
   },
+  confirm: 'Konfirmasi',
+  cancel: 'Batal',
+  imageUrl: 'URL gambar',
 } satisfies BaseTranslation;
 
 export default ms;

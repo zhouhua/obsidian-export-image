@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const de = {
   // TODO: Ihre Übersetzungen hier eingeben
@@ -112,6 +112,9 @@ const de = {
     cancel: 'Abbrechen',
     empty: 'Kein Bild gefunden',
   },
+  confirm: 'Bestätigen',
+  cancel: 'Abbrechen',
+  imageUrl: 'URL eingeben',
 } satisfies BaseTranslation;
 
 export default de;

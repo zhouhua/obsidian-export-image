@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const nl = {
   // TODO: Voeg hier je vertalingen toe
@@ -112,6 +112,9 @@ const nl = {
     cancel: 'Annuleren',
     empty: 'Geen afbeeldingen gevonden',
   },
+  confirm: 'Bevestigen',
+  cancel: 'Annuleren',
+  imageUrl: 'URL van de afbeelding',
 } satisfies BaseTranslation;
 
 export default nl;

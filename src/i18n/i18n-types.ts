@@ -354,6 +354,18 @@ type RootTranslation = {
 		 */
 		empty: string
 	}
+	/**
+	 * C​o​n​f​i​r​m
+	 */
+	confirm: string
+	/**
+	 * C​a​n​c​e​l
+	 */
+	cancel: string
+	/**
+	 * E​n​t​e​r​ ​U​R​L
+	 */
+	imageUrl: string
 }
 
 export type TranslationFunctions = {
@@ -679,6 +691,18 @@ export type TranslationFunctions = {
 		 */
 		empty: () => LocalizedString
 	}
+	/**
+	 * Confirm
+	 */
+	confirm: () => LocalizedString
+	/**
+	 * Cancel
+	 */
+	cancel: () => LocalizedString
+	/**
+	 * Enter URL
+	 */
+	imageUrl: () => LocalizedString
 }
 
 export type Formatters = {}

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const ja = {
   command: '画像としてエクスポート',
@@ -111,6 +111,9 @@ const ja = {
     cancel: 'キャンセル',
     empty: '画像が見つかりません',
   },
+  confirm: '確認',
+  cancel: 'キャンセル',
+  imageUrl: '画像URL',
 } satisfies BaseTranslation;
 
 export default ja;

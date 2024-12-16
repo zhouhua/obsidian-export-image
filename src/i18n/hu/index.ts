@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const hu = {
   command: 'Exportálás képként',
@@ -111,6 +111,9 @@ const hu = {
     cancel: 'Mégse',
     empty: 'Nem található kép',
   },
+  confirm: 'Megfelelő',
+  cancel: 'Mégse',
+  imageUrl: 'Kép URL',
 } satisfies BaseTranslation;
 
 export default hu;

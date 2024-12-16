@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {Translation} from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const zh = {
   command: 'Export as an image（导出为图片）',
@@ -108,6 +108,9 @@ const zh = {
     cancel: '取消',
     empty: '没有找到图片',
   },
+  confirm: '确认',
+  cancel: '取消',
+  imageUrl: '输入 URL',
 } satisfies Translation;
 
 export default zh;

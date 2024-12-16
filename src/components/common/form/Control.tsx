@@ -2,7 +2,7 @@ import React, { type FC, useEffect, useRef, useCallback, useState } from 'react'
 import get from 'lodash/get';
 import set from 'lodash/set';
 import debounce from 'lodash/debounce';
-import { requestUrl, setIcon, type App } from 'obsidian';
+import { requestUrl, setIcon, type App, Modal } from 'obsidian';
 import { fileToBase64 } from '../../../utils';
 import L from '../../../L';
 import ImageSelectModal from '../imageSelectModal';
@@ -176,16 +176,59 @@ const Control: FC<{
             <button onClick={select}>
               {L.setting.watermark.image.src.select()}
             </button>
+            <button onClick={() => {
+              const currentValue = value || '';
+              const modal = new Modal(app);
+              modal.titleEl.setText(L.imageUrl());
+
+              const inputContainer = modal.contentEl.createDiv({
+                attr: {
+                  style: 'margin: 1em 0;'
+                }
+              });
+              const input = inputContainer.createEl('input', {
+                attr: {
+                  type: 'text',
+                  placeholder: '请输入图片URL',
+                  style: 'width: 100%'
+                }
+              });
+
+              input.onkeydown = (e) => {
+                if (e.key === 'Enter') {
+                  onChange(input.value);
+                  modal.close();
+                } else if (e.key === 'Escape') {
+                  modal.close();
+                }
+              };
+
+              const buttonDiv = modal.contentEl.createDiv({
+                cls: 'modal-button-container',
+                attr: {
+                  style: 'display: flex; justify-content: flex-end; gap: 8px; margin-top: 1em;'
+                }
+              });
+
+              const confirmButton = buttonDiv.createEl('button', {
+                text: L.confirm(),
+                cls: 'mod-cta'
+              });
+              confirmButton.onclick = () => {
+                onChange(input.value);
+                modal.close();
+              };
+
+              buttonDiv.createEl('button', { text: L.cancel() }).onclick = () => {
+                modal.close();
+              };
+
+              modal.open();
+              setTimeout(() => input.focus(), 0);
+            }}>
+              {L.imageUrl()}
+            </button>
           </div>
-          <input
-            type='text'
-            value={value || ''}
-            onChange={e => debouncedOnChange(e.target.value)}
-            placeholder="请输入图片URL"
-            style={{
-              width: '100%',
-            }}
-          />
         </div>
       );
     }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type {BaseTranslation} from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const ko = {
   // TODO: 여기에 번역을 삽입하세요
@@ -112,6 +112,9 @@ const ko = {
     cancel: '취소',
     empty: '이미지를 찾을 수 없음',
   },
+  confirm: '확인',
+  cancel: '취소',
+  imageUrl: '이미지 URL',
 } satisfies BaseTranslation;
 
 export default ko;
