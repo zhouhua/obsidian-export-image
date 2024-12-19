@@ -5,6 +5,8 @@ import {
   TFile,
   Notice,
   TFolder,
+  Editor,
+  MarkdownView,
 } from 'obsidian';
 import exportImage from './components/file/exportImage';
 import L from './L';
@@ -122,8 +124,33 @@ export default class ExportImagePlugin extends Plugin {
             );
           })();
         }
-
         // This command will only show up in Command Palette when the check function returns true
+        return true;
+      },
+    });
+
+    this.addCommand({
+      id: 'export-image-selection',
+      name: L.exportSelectionImage(),
+      editorCheckCallback: (checking: boolean, editor: Editor, view: MarkdownView) => {
+        const file = view.file;
+        if (!file || !['md', 'markdown'].includes(file.extension)) {
+          return false;
+        }
+        const frontmatter = getMetadata(file, this.app);
+        const selection = editor.getSelection();
+        if (!selection) {
+          return false;
+        }
+        if (!checking) {
+          exportImage(
+            this.app,
+            this.settings,
+            selection,
+            file,
+            frontmatter,
+          );
+        }
         return true;
       },
     });
