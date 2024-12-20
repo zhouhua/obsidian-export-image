@@ -195,6 +195,16 @@ type RootTranslation = {
 			 */
 			pdf: string
 		}
+		quickExportSelection: {
+			/**
+			 * Q​u​i​c​k​ ​e​x​p​o​r​t​ ​s​e​l​e​c​t​i​o​n
+			 */
+			label: string
+			/**
+			 * W​h​e​t​h​e​r​ ​t​o​ ​s​k​i​p​ ​t​h​e​ ​c​o​n​f​i​g​u​r​a​t​i​o​n​ ​p​r​o​c​e​s​s​ ​w​h​e​n​ ​e​x​p​o​r​t​i​n​g​ ​s​e​l​e​c​t​e​d​ ​c​o​n​t​e​n​t​,​ ​d​i​r​e​c​t​l​y​ ​c​o​p​y​i​n​g​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​ ​t​o​ ​t​h​e​ ​c​l​i​p​b​o​a​r​d​.
+			 */
+			description: string
+		}
 		userInfo: {
 			/**
 			 * A​u​t​h​o​r​ ​i​n​f​o
@@ -531,6 +541,16 @@ export type TranslationFunctions = {
 			 * .pdf - single page pdf
 			 */
 			pdf: () => LocalizedString
+		}
+		quickExportSelection: {
+			/**
+			 * Quick export selection
+			 */
+			label: () => LocalizedString
+			/**
+			 * Whether to skip the configuration process when exporting selected content, directly copying the exported image to the clipboard.
+			 */
+			description: () => LocalizedString
 		}
 		userInfo: {
 			/**

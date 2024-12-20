@@ -6,7 +6,7 @@ import {
 } from 'obsidian';
 import type { SettingItem } from './formConfig';
 import L from './L';
-import { fileToBase64 } from './utils';
+import { delay, fileToBase64 } from './utils';
 import ImageSelectModal from './components/common/imageSelectModal';
 import { renderPreview } from './settingPreview';
 import type ExportImagePlugin from './ExportImagePlugin';
@@ -16,12 +16,10 @@ export class SettingRenderer {
   private plugin: ExportImagePlugin;
   private containerEl: HTMLElement;
   private settingItems: SettingItem[];
-
-  constructor(app: App, plugin: ExportImagePlugin, containerEl: HTMLElement, settingItems: SettingItem[]) {
+  constructor(app: App, plugin: ExportImagePlugin, containerEl: HTMLElement) {
     this.app = app;
     this.plugin = plugin;
     this.containerEl = containerEl;
-    this.settingItems = settingItems;
   }
 
   private getSettingValue(path: string): any {
@@ -42,12 +40,14 @@ export class SettingRenderer {
 
     target[lastKey] = value;
     await this.plugin.saveSettings();
-    await this.render();
+    await this.render(undefined);
   }
 
-  async render(): Promise<void> {
+  async render(settingItems: SettingItem[] | undefined): Promise<void> {
+    if (settingItems && settingItems.length > 0) {
+      this.settingItems = settingItems;
+    }
     this.containerEl.empty();
-
     this.containerEl.createEl('h3', { text: L.setting.title() });
     this.containerEl.createEl('p', { text: 'Github: ' }).createEl('a', {
       text: 'zhouhua/obsidian-export-image',

@@ -56,6 +56,10 @@ const hu = {
       jpg: '.jpg - JPG formátumú kép',
       pdf: '.pdf - egyoldalas PDF',
     },
+    quickExportSelection: {
+      label: 'Gyors exportálás kiválasztásra',
+      description: 'Ha engedélyezve van, a konfigurációs folyamat figyelmen kívül lesz hagyva, amikor kiválasztott jegyzetek exportálásra kerülnek, és az exportált kép közvetlenül a vágólapra másolódik.',
+    },
     userInfo: {
       title: 'Szerzői információ',
       show: 'Szerzői információ megjelenítése',

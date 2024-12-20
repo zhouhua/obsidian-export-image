@@ -56,6 +56,10 @@ const no = {
       jpg: '.jpg - JPG-formatbilde',
       pdf: '.pdf - enkeltside PDF',
     },
+    quickExportSelection: {
+      label: 'Eksportere valgt',
+      description: 'Hvis aktiv, springes konfigurasjonsprosessen over, når du eksporterer valgte noter, og eksporteret bilde kopieres direkte til utklippstavlen.',
+    },
     userInfo: {
       title: 'Forfatterinformasjon',
       show: 'Vis forfatterinformasjon',

@@ -56,6 +56,10 @@ const pl = {
       jpg: '.jpg - obraz w formacie jpg',
       pdf: '.pdf - jednostronicowy PDF',
     },
+    quickExportSelection: {
+      label: 'Eksportuj szybki',
+      description: 'Jeśli jest włączony, pominięty zostanie proces konfiguracji podczas eksportowania wybranych notatek, a eksportowane obrazy zostaną bezpośrednio skopiowane do schowka.',
+    },
     userInfo: {
       title: 'Informacje o autorze',
       show: 'Pokaż informacje o autorze',

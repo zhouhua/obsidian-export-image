@@ -54,6 +54,10 @@ const zh = {
       jpg: 'jpg - 导出 jpg 图片',
       pdf: 'pdf - 导出单页 pdf',
     },
+    quickExportSelection: {
+      label: '快速导出选中内容',
+      description: '导出选中内容时是否要跳过配置过程，直接把导出的图片复制到剪切板。',
+    },
     userInfo: {
       title: '作者信息',
       show: '显示作者信息',

@@ -69,6 +69,10 @@ const ja = {
       align: '配置',
       removeAvatar: 'アバターを削除',
     },
+    quickExportSelection: {
+      label: '選択した内容を迅速にエクスポート',
+      description: '選択した内容をエクスポートする際に設定プロセスをスキップし、エクスポートされた画像を直接クリップボードにコピーします。',
+    },
     watermark: {
       title: 'ウォーターマーク',
       enable: {

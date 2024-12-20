@@ -56,6 +56,10 @@ const es = {
       jpg: '.jpg - imagen en formato jpg',
       pdf: '.pdf - PDF de una sola página',
     },
+    quickExportSelection: {
+      label: 'Exportar selección rápido',
+      description: 'Si está activado, se omite el proceso de configuración al exportar notas seleccionadas, y el archivo exportado se copia directamente al portapapeles.',
+    },
     userInfo: {
       title: 'Información del autor',
       show: 'Mostrar información del autor',

@@ -6,7 +6,7 @@ import JsPdf from 'jspdf';
 import domtoimage from '../dom-to-image-more';
 import L from '../L';
 import makeHTML from './makeHTML';
-import {fileToBase64, delay, getMime} from '.';
+import { fileToBase64, delay, getMime } from '.';
 
 async function getBlob(el: HTMLElement, higtResolution: boolean, type: string): Promise<Blob> {
   return domtoimage.toBlob(el, {
@@ -62,7 +62,7 @@ export async function save(
           filename,
         );
         await app.vault.createBinary(filePath, await blob.arrayBuffer());
-        new Notice(L.saveSuccess({filePath}));
+        new Notice(L.saveSuccess({ filePath }));
       } else {
         saveAs(blob, filename);
       }
@@ -77,7 +77,7 @@ export async function save(
           filename,
         );
         await app.vault.createBinary(filePath, pdf.output('arraybuffer'));
-        new Notice(L.saveSuccess({filePath}));
+        new Notice(L.saveSuccess({ filePath }));
       } else {
         pdf.save(filename);
       }
@@ -120,7 +120,7 @@ export async function saveMultipleFiles(
   folderName: string,
   containner: HTMLDivElement,
 ) {
-  const {format, '2x': higtResolution} = settings;
+  const { format, '2x': higtResolution } = settings;
   let finished = 0;
   if (format === 'pdf') {
     let pdf: JsPdf | undefined;
@@ -191,7 +191,7 @@ export async function getRemoteImageUrl(url?: string) {
       url,
       method: 'GET',
     });
-    const blob = new Blob([response.arrayBuffer], {type: response.headers['content-type'] || 'application/octet-stream'});
+    const blob = new Blob([response.arrayBuffer], { type: response.headers['content-type'] || 'application/octet-stream' });
     const res = URL.createObjectURL(blob);
     return res;
   } catch (error) {

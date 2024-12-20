@@ -22,7 +22,7 @@ export default class ExportImagePlugin extends Plugin {
   async epxortFile(file: TFile) {
     const frontmatter = getMetadata(file, this.app);
     const markdown = await this.app.vault.cachedRead(file);
-    await exportImage(this.app, this.settings, markdown, file, frontmatter);
+    await exportImage(this.app, this.settings, markdown, file, frontmatter, 'file');
   }
 
   async onload() {
@@ -74,6 +74,7 @@ export default class ExportImagePlugin extends Plugin {
                   editor.getSelection(),
                   file,
                   frontmatter,
+                  'selection',
                 ),
               );
           });
@@ -90,6 +91,7 @@ export default class ExportImagePlugin extends Plugin {
                 editor.getValue(),
                 file,
                 frontmatter,
+                'file',
               ),
             );
         });
@@ -121,6 +123,7 @@ export default class ExportImagePlugin extends Plugin {
               markdown,
               activeFile,
               frontmatter,
+              'file',
             );
           })();
         }
@@ -149,6 +152,7 @@ export default class ExportImagePlugin extends Plugin {
             selection,
             file,
             frontmatter,
+            'selection',
           );
         }
         return true;
@@ -179,10 +183,10 @@ class ImageSettingTab extends PluginSettingTab {
   constructor(app: App, plugin: ExportImagePlugin) {
     super(app, plugin);
     this.plugin = plugin;
-    this.settingRenderer = new SettingRenderer(app, plugin, this.containerEl, createSettingConfig(app));
+    this.settingRenderer = new SettingRenderer(app, plugin, this.containerEl);
   }
 
   async display(): Promise<void> {
-    await this.settingRenderer.render();
+    await this.settingRenderer.render(await createSettingConfig(this.app));
   }
 }

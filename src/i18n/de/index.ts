@@ -57,6 +57,10 @@ const de = {
       jpg: '.jpg - jpg-Format Bild',
       pdf: '.pdf - Einzelseiten-PDF',
     },
+    quickExportSelection: {
+      label: 'Schnellauswahl exportieren',
+      description: 'Wenn aktiviert, wird der Konfigurationsprozess übersprungen, wenn Sie ausgewählte Notizen exportieren, und das exportierte Bild wird direkt in die Zwischenablage kopiert.',
+    },
     userInfo: {
       title: 'Autoreninfo',
       show: 'Autoreninfo anzeigen',

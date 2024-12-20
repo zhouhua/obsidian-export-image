@@ -57,6 +57,10 @@ const nl = {
       jpg: '.jpg - JPG-formaat afbeelding',
       pdf: '.pdf - enkele pagina PDF',
     },
+    quickExportSelection: {
+      label: 'Selectie snel exporteren',
+      description: 'Als ingeschakeld, wordt de configuratieproces overgeslagen bij het exporteren van geselecteerde notities, en het geëxporteerde beeld wordt direct naar het klembord gekopieerd.',
+    },
     userInfo: {
       title: 'Auteursinformatie',
       show: 'Auteursinformatie weergeven',

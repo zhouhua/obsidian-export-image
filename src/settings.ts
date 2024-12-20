@@ -1,4 +1,4 @@
-import {isCreatable} from './imageFormatTester';
+import { isCreatable } from './imageFormatTester';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DEFAULT_SETTINGS: ISettings = {
@@ -9,6 +9,7 @@ export const DEFAULT_SETTINGS: ISettings = {
   format: 'png0',
   showMetadata: false,
   recursive: false,
+  quickExportSelection: false,
   authorInfo: {
     show: false,
     align: 'right',

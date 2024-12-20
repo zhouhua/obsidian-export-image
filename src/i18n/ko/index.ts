@@ -57,6 +57,10 @@ const ko = {
       jpg: '.jpg - jpg 형식 이미지',
       pdf: '.pdf - 단일 페이지 PDF',
     },
+    quickExportSelection: {
+      label: '선택 내용 빠르게 내보내기',
+      description: '선택 내용을 내보낼 때 설정 프로세스를 건너뛰고 내보낸 이미지를 직접 클립보드에 복사합니다.',
+    },
     userInfo: {
       title: '작성자 정보',
       show: '작성자 정보 표시',

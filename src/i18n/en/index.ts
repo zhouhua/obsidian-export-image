@@ -57,6 +57,10 @@ const en = {
       jpg: '.jpg - jpg format image',
       pdf: '.pdf - single page pdf',
     },
+    quickExportSelection: {
+      label: 'Quick export selection',
+      description: 'Whether to skip the configuration process when exporting selected content, directly copying the exported image to the clipboard.',
+    },
     userInfo: {
       title: 'Author info',
       show: 'Show author info',

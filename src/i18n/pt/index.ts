@@ -57,6 +57,10 @@ const pt = {
       jpg: '.jpg - imagem em formato jpg',
       pdf: '.pdf - PDF de uma única página',
     },
+    quickExportSelection: {
+      label: 'Exportar seleção rápida',
+      description: 'Se ativado, o processo de configuração será ignorado ao exportar notas selecionadas, e a imagem exportada será copiada diretamente para a área de transferência.',
+    },
     userInfo: {
       title: 'Informação do Autor',
       show: 'Mostrar informação do autor',

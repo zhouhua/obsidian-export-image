@@ -57,6 +57,10 @@ const ro = {
       jpg: '.jpg - imagine în format jpg',
       pdf: '.pdf - PDF de o singură pagină',
     },
+    quickExportSelection: {
+      label: 'Exportă selecție rapidă',
+      description: 'Dacă este activat, se va omite procesul de configurare atunci când se exportă notele selectate, iar imaginea exportată se va copia direct în clipboard.',
+    },
     userInfo: {
       title: 'Informații autor',
       show: 'Arată informațiile autorului',

@@ -57,6 +57,10 @@ const da = {
       jpg: '.jpg - JPG format billede',
       pdf: '.pdf - enkeltside PDF',
     },
+    quickExportSelection: {
+      label: 'Hurtig eksport valgt',
+      description: 'Hvis aktiveret, springes konfigurationsprocessen over, når du eksporterer valgte noter, og eksporteret billede kopieres direkte til udklipsholderen.',
+    },
     userInfo: {
       title: 'Forfatterinfo',
       show: 'Vis forfatterinfo',

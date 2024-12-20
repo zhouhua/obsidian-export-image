@@ -8,6 +8,7 @@ declare type ISettings = {
   format: FileFormat;
   showMetadata: boolean;
   recursive: boolean;
+  quickExportSelection: boolean;
   authorInfo: {
     show: boolean;
     name?: string;
@@ -36,7 +37,7 @@ declare type ISettings = {
   };
 };
 
-type ConditionType<T> = {flag: any; path: string} | ((data: T) => boolean);
+type ConditionType<T> = { flag: any; path: string } | ((data: T) => boolean);
 
 type ValueType = 'number' | 'string' | 'boolean' | 'file';
 
@@ -51,7 +52,7 @@ type SelectFieldSchema<T> = {
   label: string;
   path: string;
   type: 'select';
-  options: Array<{text: string; value: string}>;
+  options: Array<{ text: string; value: string }>;
   when?: ConditionType<T>;
   desc?: string;
 };

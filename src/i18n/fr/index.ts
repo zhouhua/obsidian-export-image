@@ -57,6 +57,10 @@ const fr = {
       jpg: '.jpg - image au format jpg',
       pdf: '.pdf - PDF d\'une seule page',
     },
+    quickExportSelection: {
+      label: 'Exporter la sélection rapidement',
+      description: 'Si activé, le processus de configuration est ignoré lors de l\'exportation de notes sélectionnées, et l\'image exportée est directement copiée dans le presse-papiers.',
+    },
     userInfo: {
       title: 'Info auteur',
       show: 'Afficher les infos de l\'auteur',

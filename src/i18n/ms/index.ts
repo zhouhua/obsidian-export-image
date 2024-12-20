@@ -56,6 +56,10 @@ const ms = {
       jpg: '.jpg - imej format jpg',
       pdf: '.pdf - PDF satu halaman',
     },
+    quickExportSelection: {
+      label: 'Eksport cepat',
+      description: 'Jika diaktifkan, proses konfigurasi akan diabaikan saat mengekspor catatan yang dipilih, dan gambar yang diekspor akan langsung disalin ke clipboard.',
+    },
     userInfo: {
       title: 'Info Penulis',
       show: 'Papar Info Penulis',

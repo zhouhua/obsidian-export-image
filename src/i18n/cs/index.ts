@@ -56,6 +56,10 @@ const cs = {
       jpg: '.jpg - obrázek ve formátu jpg',
       pdf: '.pdf - jednostránkový PDF',
     },
+    quickExportSelection: {
+      label: 'Rychlý export výběru',
+      description: 'Pokud je povoleno, při exportu výběru se přeskočí konfigurační proces a exportovaný obrázek se přímo zkopíruje do schránky.',
+    },
     userInfo: {
       title: 'Informace o autorovi',
       show: 'Zobrazit informace o autorovi',
