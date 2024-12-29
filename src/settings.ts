@@ -36,7 +36,7 @@ export const DEFAULT_SETTINGS: ISettings = {
   split: {
     enable: false,
     height: 1000,
-    overlap: 40,
+    overlap: 80,
   },
 };
 

@@ -282,7 +282,7 @@ const ModalContent: FC<{
             app={app}
           />
           {formData.split.enable && <div className='info-text'>
-            图片总高度为 {rootHeight}px，分割高度为 {formData.split.height}px，因此将生成 {pages} 张图片
+            {L.splitInfo({ rootHeight, splitHeight: formData.split.height, pages })}
           </div>}
           <div className='info-text'>{L.moreSetting()}</div>
         </div>
