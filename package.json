@@ -1,6 +1,6 @@
 {
   "name": "obsidian-export-image",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "description": "This Obsidian plugin can easily help you export any article as an image.",
   "main": "main.js",
   "scripts": {
