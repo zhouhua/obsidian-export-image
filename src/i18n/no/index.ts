@@ -34,6 +34,22 @@ const no = {
       description:
         'Angi bredden på det eksporterte bildet i piksler. Standarden er 640px.',
     },
+    split: {
+      title: 'Bilde deling',
+      enable: {
+        label: 'Aktiver deling',
+        description: 'Aktiver deling av lange bilder i flere sider for bedre visning og deling.',
+      },
+      height: {
+        label: 'Høyde på side',
+        description: 'Sett høyden på hver side delt i piksler. Standard er 1000px.',
+      },
+      overlap: {
+        label: 'Overlapping',
+        description: 'Sett overlapp mellom sider for å unngå brutt innhold. Standard er 40px.',
+      },
+    },
+
     filename: {
       label: 'Inkluder filnavn som tittel',
       description:
@@ -118,6 +134,7 @@ const no = {
   confirm: 'Bekreft',
   cancel: 'Avbryt',
   imageUrl: 'Bilde-URL',
+  splitInfo: 'Total bildehøyde er {rootHeight}px, og delingshøyde er {splitHeight}px, så det vil bli generert {pages} bilder',
 } satisfies BaseTranslation;
 
 export default no;

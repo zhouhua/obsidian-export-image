@@ -35,6 +35,21 @@ const nl = {
       description:
         'Stel de breedte van de geëxporteerde afbeelding in pixels in. De standaard is 640px.',
     },
+    split: {
+      title: 'Afbeelding delen',
+      enable: {
+        label: 'Aktiveren',
+        description: 'Activeert de deling van lange afbeeldingen in meerdere pagina\'s voor betere weergave en deling.',
+      },
+      height: {
+        label: 'Hoogte van de pagina',
+        description: 'Stel de hoogte van elke pagina in pixels in. De standaard is 1000px.',
+      },
+      overlap: {
+        label: 'Overlapping',
+        description: 'Sett overlapp mellom sider for å unngå brutt innhold. Standard er 40px.',
+      },
+    },
     filename: {
       label: 'Bestandsnaam als titel opnemen',
       description:
@@ -119,6 +134,7 @@ const nl = {
   confirm: 'Bevestigen',
   cancel: 'Annuleren',
   imageUrl: 'URL van de afbeelding',
+  splitInfo: 'De totale hoogte van de afbeelding is {rootHeight}px, en de hoogte van de splitsing is {splitHeight}px, dus er zullen {pages} afbeeldingen worden gemaakt',
 } satisfies BaseTranslation;
 
 export default nl;

@@ -34,6 +34,21 @@ const cs = {
       description:
         'Nastavte šířku exportovaného obrázku v pixelech. Výchozí je 640px.',
     },
+    split: {
+      title: 'Rozdělit obrázek',
+      enable: {
+        label: 'Povolit rozdělení',
+        description: 'Povolí rozdělení dlouhých obrázků na více stránek pro lepší zobrazení a sdílení.',
+      },
+      height: {
+        label: 'Výška stránky',
+        description: 'Nastaví výšku každé rozdělené stránky v pixelech. Výchozí je 1000px.',
+      },
+      overlap: {
+        label: 'Překrytí',
+        description: 'Nastaví překrytí mezi stránkami, aby se zabránilo náhlému přerušení obsahu. Výchozí je 40px.',
+      },
+    },
     filename: {
       label: 'Zahrnout název souboru jako titulek',
       description:
@@ -118,6 +133,7 @@ const cs = {
   confirm: 'Potvrdit',
   cancel: 'Zrušit',
   imageUrl: 'Zadejte URL',
+  splitInfo: 'Celková výška obrázku je {rootHeight}px, a výška dělení je {splitHeight}px, takže se vygeneruje {pages} obrázků',
 } satisfies BaseTranslation;
 
 export default cs;

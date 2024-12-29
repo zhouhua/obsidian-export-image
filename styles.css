@@ -80,10 +80,11 @@ If your plugin does not need CSS, delete this file.
     );
 }
 
-.export-image-root .info-text {
+.export-image-preview-root .info-text {
   line-height: 20px;
   opacity: 0.6;
   font-size: 12px;
+  margin-top: 16px;
 }
 .export-image-root .user-info-container {
   display: flex;
@@ -93,7 +94,7 @@ If your plugin does not need CSS, delete this file.
 .user-info-avatar {
   width: 36px;
   height: 36px;
-  borderradius: 50%;
+  border-radius: 50%;
   border: 1px solid var(--background-modifier-border);
   background-size: cover;
   margin: 0 20px;

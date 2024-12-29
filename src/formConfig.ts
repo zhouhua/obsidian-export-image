@@ -30,9 +30,31 @@ export const createSettingConfig = async (app: App): Promise<SettingItem[]> => {
       placeholder: '640',
     },
     {
+      id: 'split.enable',
+      label: L.setting.split.enable.label(),
+      description: L.setting.split.enable.description(),
+      type: 'toggle',
+    },
+    {
+      id: 'split.height',
+      label: L.setting.split.height.label(),
+      description: L.setting.split.height.description(),
+      type: 'number',
+      placeholder: '1000',
+      show: (settings) => settings.split.enable,
+    },
+    {
+      id: 'split.overlap',
+      label: L.setting.split.overlap.label(),
+      description: L.setting.split.overlap.description(),
+      type: 'number',
+      placeholder: '40',
+      show: (settings) => settings.split.enable,
+    },
+    {
       id: 'showFilename',
       label: L.setting.filename.label(),
-      description: L.setting.filename.desscription(),
+      description: L.setting.filename.description(),
       type: 'toggle',
     },
     {

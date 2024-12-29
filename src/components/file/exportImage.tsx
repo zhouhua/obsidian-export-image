@@ -8,6 +8,7 @@ import {
   MarkdownRenderer,
   MarkdownView,
   Modal,
+  Notice,
   type TFile,
 } from 'obsidian';
 import { createRoot } from 'react-dom/client';
@@ -48,7 +49,7 @@ export default async function (
     root.render(
       <Target
         markdownEl={el}
-        setting={{ ...settings, showMetadata: false, showFilename: false }}
+        setting={{ ...settings, showMetadata: false, showFilename: false, split: { enable: false, overlap: 0, height: 0 } }}
         frontmatter={{}}
         title={file.basename}
         metadataMap={{}}

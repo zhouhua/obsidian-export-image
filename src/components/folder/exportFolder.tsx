@@ -1,6 +1,6 @@
 import React from 'react';
-import {type App, Modal, type TFolder} from 'obsidian';
-import {createRoot} from 'react-dom/client';
+import { type App, Modal, type TFolder } from 'obsidian';
+import { createRoot } from 'react-dom/client';
 import L from '../../L';
 import ModalContent from './ModalContent';
 

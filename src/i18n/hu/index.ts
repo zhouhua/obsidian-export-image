@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { split } from 'lodash';
 import type { BaseTranslation } from '../i18n-types';
 
 const hu = {
@@ -33,6 +34,21 @@ const hu = {
       label: 'Alapértelmezett exportált képszelesség',
       description:
         'Állítsd be az exportált kép szélességét pixelben. Az alapértelmezett érték 640px.',
+    },
+    split: {
+      title: 'Kép felosztás',
+      enable: {
+        label: 'Kép felosztás engedélyezése',
+        description: 'Hosszú képek felosztásának engedélyezése több oldalra a jobb megtekintés és megosztás érdekében.',
+      },
+      height: {
+        label: 'Felosztott kép magassága',
+        description: 'Állítsd be az egyes felosztott képek magasságát pixelben. Az alapértelmezett érték 1000px.',
+      },
+      overlap: {
+        label: 'Felosztott képek átfedése',
+        description: 'Állítsd be a szomszédos felosztott képek átfedését pixelben, hogy elkerüld a tartalom levágását. Az alapértelmezett érték 40px.',
+      },
     },
     filename: {
       label: 'Fájlnév hozzáadása címként',
@@ -118,6 +134,7 @@ const hu = {
   confirm: 'Megfelelő',
   cancel: 'Mégse',
   imageUrl: 'Kép URL',
+  splitInfo: 'A kép teljes magassága {rootHeight}px, és a felosztás magassága {splitHeight}px, így {pages} kép lesz generálva.',
 } satisfies BaseTranslation;
 
 export default hu;

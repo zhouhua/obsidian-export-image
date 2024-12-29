@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { split } from 'lodash';
 import type { BaseTranslation } from '../i18n-types';
 
 const da = {
@@ -34,6 +35,21 @@ const da = {
       label: 'Standard eksportbilledbredde',
       description:
         'Indstil bredden af det eksporterede billede i pixels. Standarden er 640px.',
+    },
+    split: {
+      title: 'Del billede',
+      enable: {
+        label: 'Aktivér deling',
+        description: 'Aktiverer deling af lange billeder i flere sider for bedre visning og deling.',
+      },
+      height: {
+        label: 'Sidehøjde',
+        description: 'Indstiller højden af hver delt side i pixels. Standard er 1000px.',
+      },
+      overlap: {
+        label: 'Overlap',
+        description: 'Indstiller overlappet mellem sider for at undgå brat afbrydelse af indhold. Standard er 40px.',
+      },
     },
     filename: {
       label: 'Inkluder filnavn som titel',
@@ -119,6 +135,7 @@ const da = {
   confirm: 'Bekræft',
   cancel: 'Annuller',
   imageUrl: 'Indtast URL',
+  splitInfo: 'Den totale højde af billedet er {rootHeight}px, og delingshøjden er {splitHeight}px, så der vil blive genereret {pages} billeder',
 } satisfies BaseTranslation;
 
 export default da;

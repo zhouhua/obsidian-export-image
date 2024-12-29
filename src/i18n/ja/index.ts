@@ -34,6 +34,21 @@ const ja = {
       description:
         'ピクセル単位でエクスポートされる画像の幅を設定します。デフォルトは640pxです。',
     },
+    split: {
+      title: '画像分割',
+      enable: {
+        label: '画像分割を有効にする',
+        description: '長い画像を複数のページに分割して、より見やすく共有しやすくします。',
+      },
+      height: {
+        label: 'ページの高さ',
+        description: '各分割ページの高さをピクセル単位で設定します。デフォルトは1000pxです。',
+      },
+      overlap: {
+        label: '重複パディング',
+        description: 'コンテンツが急に切れないように、ページ間の重複パディングを設定します。デフォルトは40pxです。',
+      },
+    },
     filename: {
       label: 'ファイル名をタイトルとして含む',
       description:
@@ -118,6 +133,7 @@ const ja = {
   confirm: '確認',
   cancel: 'キャンセル',
   imageUrl: '画像URL',
+  splitInfo: '画像の総高さは{rootHeight}pxで、分割高さは{splitHeight}pxです。そのため、{pages}枚の画像が生成されます。',
 } satisfies BaseTranslation;
 
 export default ja;

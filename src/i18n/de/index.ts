@@ -35,6 +35,21 @@ const de = {
       description:
         'Setzen Sie die Breite des exportierten Bildes in Pixel. Standardmäßig ist 640px.',
     },
+    split: {
+      title: 'Bild aufteilen',
+      enable: {
+        label: 'Bildaufteilung aktivieren',
+        description: 'Aktiviert die Aufteilung langer Bilder in mehrere Seiten für bessere Ansicht und einfacheres Teilen.',
+      },
+      height: {
+        label: 'Seitenhöhe',
+        description: 'Legt die Höhe jeder geteilten Seite in Pixeln fest. Standard ist 1000px.',
+      },
+      overlap: {
+        label: 'Überlappungsabstand',
+        description: 'Legt den Überlappungsabstand zwischen den Seiten fest, um abrupte Inhaltsabschnitte zu vermeiden. Standard ist 40px.',
+      },
+    },
     filename: {
       label: 'Dateinamen als Titel einbeziehen',
       description:
@@ -119,6 +134,7 @@ const de = {
   confirm: 'Bestätigen',
   cancel: 'Abbrechen',
   imageUrl: 'URL eingeben',
+  splitInfo: 'Die Gesamthöhe des Bildes beträgt {rootHeight}px, und die Höhe der Aufteilung beträgt {splitHeight}px, sodass {pages} Bilder generiert werden.',
 } satisfies BaseTranslation;
 
 export default de;

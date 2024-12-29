@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { split } from 'lodash';
 import type { BaseTranslation } from '../i18n-types';
 
 const ko = {
@@ -34,6 +35,21 @@ const ko = {
       label: '내보낼 이미지의 기본 너비',
       description:
         '픽셀 단위로 내보낼 이미지의 너비를 설정하십시오. 기본값은 640px입니다.',
+    },
+    split: {
+      title: '이미지 분할',
+      enable: {
+        label: '분할 활성화',
+        description: '긴 이미지를 여러 페이지로 분할하여 더 나은 보기와 공유를 가능하게 합니다.',
+      },
+      height: {
+        label: '페이지 높이',
+        description: '각 분할된 페이지의 높이를 픽셀 단위로 설정합니다. 기본값은 1000px입니다.',
+      },
+      overlap: {
+        label: '중첩 여백',
+        description: '페이지 간의 중첩 여백을 설정하여 내용이 갑자기 끊기는 것을 방지합니다. 기본값은 40px입니다.',
+      },
     },
     filename: {
       label: '파일 이름을 제목으로 포함',
@@ -119,6 +135,7 @@ const ko = {
   confirm: '확인',
   cancel: '취소',
   imageUrl: '이미지 URL',
+  splitInfo: '이미지 총 높이는 {rootHeight}px이고, 분할 높이는 {splitHeight}px이므로, {pages}개의 이미지가 생성됩니다.',
 } satisfies BaseTranslation;
 
 export default ko;

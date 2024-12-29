@@ -34,6 +34,21 @@ const id = {
       description:
         'Atur lebar gambar yang diekspor dalam piksel. Default adalah 640px.',
     },
+    split: {
+      title: 'Ekspor Gambar',
+      enable: {
+        label: 'Aktifkan deling',
+        description: 'Aktifkan deling gambar panjang ke beberapa halaman untuk paparan dan penggunaan yang lebih baik.',
+      },
+      height: {
+        label: 'Tinggi halaman',
+        description: 'Setel tinggi setiap halaman yang dibahagikan dalam piksel. Default adalah 1000px.',
+      },
+      overlap: {
+        label: 'Overlapping',
+        description: 'Setel overlapping antara halaman untuk menghindari konten yang terputus secara tiba-tiba. Default adalah 40px.',
+      },
+    },
     filename: {
       label: 'Termasuk nama file sebagai judul',
       description:
@@ -118,6 +133,7 @@ const id = {
   confirm: 'Konfirmasi',
   cancel: 'Batal',
   imageUrl: 'Masukkan URL gambar',
+  splitInfo: 'Tinggi gambar keseluruhan adalah {rootHeight}px, dan tinggi pemotongan adalah {splitHeight}px, jadi akan dihasilkan {pages} gambar',
 } satisfies BaseTranslation;
 
 export default id;

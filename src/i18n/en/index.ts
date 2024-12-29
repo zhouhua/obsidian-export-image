@@ -35,9 +35,24 @@ const en = {
       description:
         'Set the width of the exported image in pixel. The default is 640px.',
     },
+    split: {
+      title: 'Split Image',
+      enable: {
+        label: 'Enable split',
+        description: 'Enable split image to multiple pages for better viewing and sharing.',
+      },
+      height: {
+        label: 'Split image height',
+        description: 'Set the height of each split image in pixels. The default is 1000px.',
+      },
+      overlap: {
+        label: 'Split image overlap',
+        description: 'Set the overlap between adjacent split images to prevent content from being cut off. The default is 40px.',
+      },
+    },
     filename: {
       label: 'Include file name as title',
-      desscription:
+      description:
         'Set whether to include the file name as the title. When Obsidian displays the document, it will display the file name as an h1 title. Sometimes this is not what you want, and you will get duplicate titles.',
     },
     '2x': {
@@ -119,6 +134,7 @@ const en = {
   confirm: 'Confirm',
   cancel: 'Cancel',
   imageUrl: 'Enter URL',
+  splitInfo: 'The total height of the image is {rootHeight}px, and the split height is {splitHeight}px, so {pages} images will be generated',
 } satisfies BaseTranslation;
 
 export default en;

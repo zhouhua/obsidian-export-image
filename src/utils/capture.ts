@@ -1,8 +1,9 @@
 import {
-  Notice, requestUrl, type App, type TFile,
+  Notice, Platform, requestUrl, type App, type TFile,
 } from 'obsidian';
 import saveAs from 'file-saver';
 import JsPdf from 'jspdf';
+import JSZip from 'jszip';
 import domtoimage from '../dom-to-image-more';
 import L from '../L';
 import makeHTML from './makeHTML';
@@ -36,6 +37,12 @@ async function makePdf(blob: Blob, el: HTMLElement) {
     el.clientHeight / 96,
   );
   return pdf;
+}
+
+async function saveToVault(app: App, blob: Blob, filename: string) {
+  const filePath = await app.fileManager.getAvailablePathForAttachment(filename);
+  await app.vault.createBinary(filePath, await blob.arrayBuffer());
+  return filePath;
 }
 
 export async function save(
@@ -156,28 +163,43 @@ export async function saveMultipleFiles(
     }
 
     const fileName = `${folderName.replaceAll(/\s+/g, '_')}.pdf`;
-    // @ts-ignore
-    if (app.isMobile) {
-      const filePath = await app.fileManager.getAvailablePathForAttachment(
-        fileName,
-      );
-      await app.vault.createBinary(filePath, pdf.output('arraybuffer'));
+    if (Platform.isMobile) {
+      const filePath = await saveToVault(app, new Blob([pdf.output('arraybuffer')]), fileName);
+      new Notice(L.saveSuccess({ filePath }));
     } else {
       pdf?.save(fileName);
     }
   } else {
+    const ext = format.replace(/\d$/, '');
+    const zip = new JSZip();
+    const blobs: { blob: Blob; filename: string }[] = [];
+
     for (const file of files) {
       const el = await makeHTML(file, settings, app, containner);
-      await save(
-        app,
+      const blob = await getBlob(
         el as HTMLElement,
-        file.basename,
         higtResolution,
-        format,
-        true,
+        getMime(format),
       );
+      const filename = `${file.basename.replaceAll(/\s+/g, '_')}.${ext}`;
+      blobs.push({ blob, filename });
       finished++;
       onProgress(finished);
+    }
+
+    if (Platform.isMobile) {
+      // 在移动端直接保存到 vault
+      for (const { blob, filename } of blobs) {
+        const filePath = await saveToVault(app, blob, filename);
+        new Notice(L.saveSuccess({ filePath }));
+      }
+    } else {
+      // 在桌面端创建 zip
+      for (const { blob, filename } of blobs) {
+        zip.file(filename, blob);
+      }
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      saveAs(zipBlob, `${folderName.replaceAll(/\s+/g, '_')}.zip`);
     }
   }
 }
@@ -197,5 +219,119 @@ export async function getRemoteImageUrl(url?: string) {
   } catch (error) {
     console.error('Failed to load image:', error);
     return url;
+  }
+}
+
+export async function saveAll(
+  target: { element: HTMLElement; contentElement: HTMLElement; setClip: (startY: number, height: number) => void; resetClip: () => void },
+  format: FileFormat,
+  higtResolution: boolean,
+  splitHeight: number,
+  splitOverlap: number,
+  app: App,
+  title: string,
+  hiddenRef: HTMLDivElement,
+) {
+  try {
+    // 计算需要分割的页数
+    const totalHeight = target.contentElement.clientHeight;
+    const firstPageHeight = splitHeight;
+    const remainingHeight = totalHeight - firstPageHeight;
+    const additionalPages = Math.max(0, Math.ceil(remainingHeight / (splitHeight - splitOverlap)));
+    const totalPages = 1 + additionalPages;
+
+    if (format === 'pdf') {
+      // PDF 格式：创建多页 PDF
+      let pdf: JsPdf | undefined;
+      
+      for (let i = 0; i < totalPages; i++) {
+        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (splitHeight - splitOverlap);
+        let currentHeight: number;
+        
+        if (i === totalPages - 1) {
+          // 最后一页：使用实际剩余高度
+          currentHeight = totalHeight - startY;
+        } else {
+          // 其他页：使用设定的分割高度
+          currentHeight = i === 0 ? firstPageHeight : splitHeight;
+        }
+        
+        // 设置裁剪区域
+        target.setClip(startY, currentHeight);
+        await delay(50); // 等待渲染
+
+        const blob = await getBlob(
+          target.element,
+          higtResolution,
+          'image/jpeg'
+        );
+        const dataUrl = await fileToBase64(blob);
+
+        if (!pdf) {
+          pdf = new JsPdf({
+            unit: 'in',
+            format: [target.element.clientWidth / 96, currentHeight / 96],
+            orientation: target.element.clientWidth > currentHeight ? 'l' : 'p',
+            compress: true,
+          });
+        } else {
+          pdf.addPage([target.element.clientWidth / 96, currentHeight / 96], target.element.clientWidth > currentHeight ? 'l' : 'p');
+        }
+
+        pdf.addImage(dataUrl, 'JPEG', 0, 0, target.element.clientWidth / 96, currentHeight / 96);
+      }
+
+      const filename = `${title.replaceAll(/\s+/g, '_')}.pdf`;
+      if (Platform.isMobile) {
+        const filePath = await saveToVault(app, new Blob([pdf!.output('arraybuffer')]), filename);
+        new Notice(L.saveSuccess({ filePath }));
+      } else {
+        pdf?.save(filename);
+      }
+    } else {
+      // 其他图片格式：分别保存每个部分
+      const ext = format.replace(/\d$/, '');
+      const zip = new JSZip();
+      const blobs: { blob: Blob; filename: string }[] = [];
+      
+      for (let i = 0; i < totalPages; i++) {
+        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (splitHeight - splitOverlap);
+        let currentHeight: number;
+        
+        if (i === totalPages - 1) {
+          // 最后一页：使用实际剩余高度
+          currentHeight = totalHeight - startY;
+        } else {
+          // 其他页：使用设定的分割高度
+          currentHeight = i === 0 ? firstPageHeight : splitHeight;
+        }
+        
+        // 设置裁剪区域
+        target.setClip(startY, currentHeight);
+        await delay(50); // 等待渲染
+
+        const blob = await getBlob(target.element, higtResolution, getMime(format));
+        const filename = `${title.replaceAll(/\s+/g, '_')}_${i + 1}.${ext}`;
+        blobs.push({ blob, filename });
+      }
+
+      if (Platform.isMobile) {
+        // 在移动端直接保存到 vault
+        for (const { blob, filename } of blobs) {
+          const filePath = await saveToVault(app, blob, filename);
+          new Notice(L.saveSuccess({ filePath }));
+        }
+      } else {
+        // 在桌面端创建 zip
+        for (const { blob, filename } of blobs) {
+          zip.file(filename, blob);
+        }
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        saveAs(zipBlob, `${title.replaceAll(/\s+/g, '_')}.zip`);
+      }
+    }
+  } finally {
+    // 确保无论成功还是失败都恢复原始状态
+    target.resetClip();
   }
 }

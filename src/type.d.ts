@@ -35,6 +35,11 @@ declare type ISettings = {
     width?: number;
     height?: number;
   };
+  split: {
+    enable: boolean;
+    overlap: number;
+    height: number;
+  };
 };
 
 type ConditionType<T> = { flag: any; path: string } | ((data: T) => boolean);

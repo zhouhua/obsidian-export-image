@@ -34,6 +34,21 @@ const es = {
       description:
         'Establece el ancho de la imagen exportada en píxeles. El predeterminado es 640px.',
     },
+    split: {
+      title: 'Dividir imagen',
+      enable: {
+        label: 'Activar división',
+        description: 'Activa la división de imágenes largas en múltiples páginas para una mejor visualización y fácil compartición.',
+      },
+      height: {
+        label: 'Altura de la página',
+        description: 'Establece la altura de cada página dividida en píxeles. El predeterminado es 1000px.',
+      },
+      overlap: {
+        label: 'Sobreposición',
+        description: 'Establece la sobreposición entre páginas para evitar interrupciones abruptas en el contenido. El predeterminado es 40px.',
+      },
+    },
     filename: {
       label: 'Incluir nombre de archivo como título',
       description:
@@ -118,6 +133,7 @@ const es = {
   confirm: 'Confirmar',
   cancel: 'Cancelar',
   imageUrl: 'URL de la imagen',
+  splitInfo: 'La altura total de la imagen es de {rootHeight}px, y la altura de división es de {splitHeight}px, por lo que se generarán {pages} imágenes',
 } satisfies BaseTranslation;
 
 export default es;

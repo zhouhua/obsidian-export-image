@@ -34,6 +34,21 @@ const ms = {
       description:
         'Tetapkan lebar imej yang dieksport dalam piksel. Lalai adalah 640px.',
     },
+    split: {
+      title: 'Eksport Imej',
+      enable: {
+        label: 'Aktifkan deling',
+        description: 'Aktifkan deling imej panjang ke beberapa halaman untuk paparan dan penggunaan yang lebih baik.',
+      },
+      height: {
+        label: 'Tinggi Halaman',
+        description: 'Tetapkan tinggi setiap halaman yang dibahagikan dalam piksel. Lalai adalah 1000px.',
+      },
+      overlap: {
+        label: 'Overlapping',
+        description: 'Sett overlapp mellom sider for å unngå brutt innhold. Standard er 40px.',
+      },
+    },
     filename: {
       label: 'Termasuk Nama Fail Sebagai Tajuk',
       description:
@@ -118,6 +133,7 @@ const ms = {
   confirm: 'Konfirmasi',
   cancel: 'Batal',
   imageUrl: 'URL gambar',
+  splitInfo: 'Tinggi gambar keseluruhan adalah {rootHeight}px, dan tinggi pemotongan adalah {splitHeight}px, jadi akan dihasilkan {pages} gambar',
 } satisfies BaseTranslation;
 
 export default ms;

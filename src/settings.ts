@@ -33,6 +33,11 @@ export const DEFAULT_SETTINGS: ISettings = {
     x: 100,
     y: 100,
   },
+  split: {
+    enable: false,
+    height: 1000,
+    overlap: 40,
+  },
 };
 
 const formatList: FileFormat[] = ['png0', 'png1', 'jpg', 'webp', 'pdf'];

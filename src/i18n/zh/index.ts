@@ -32,9 +32,24 @@ const zh = {
       label: '导出图片的默认宽度',
       description: '设置导出图片的宽度，默认值为 640px。',
     },
+    split: {
+      title: '图片拆分',
+      enable: {
+        label: '启用图片拆分',
+        description: '启用长图片拆分为多页以便更好地查看和分享。',
+      },
+      height: {
+        label: '拆分图片高度',
+        description: '设置每个拆分图片的高度（像素）。默认为 1000px。',
+      },
+      overlap: {
+        label: '拆分图片重叠',
+        description: '设置相邻两个拆分图片的重叠（像素），防止内容被截断。默认为 40px。',
+      },
+    },
     filename: {
       label: '是否包含文件名作为标题',
-      desscription:
+      description:
         '设置是否包含文件名作为标题。Obsidian 展示文档时，会把文件名作为 h1 标题，有时候并不符合预期，产生标题重复的情况。',
     },
     '2x': {
@@ -115,6 +130,7 @@ const zh = {
   confirm: '确认',
   cancel: '取消',
   imageUrl: '输入 URL',
+  splitInfo: '图片总高度为 {rootHeight}px，分割高度为 {splitHeight}px，因此将生成 {pages} 张图片',
 } satisfies Translation;
 
 export default zh;

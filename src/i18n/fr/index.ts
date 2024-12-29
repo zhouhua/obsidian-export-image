@@ -35,6 +35,21 @@ const fr = {
       description:
         'Définissez la largeur de l\'image exportée en pixels. La valeur par défaut est 640px.',
     },
+    split: {
+      title: 'Fractionner l\'image',
+      enable: {
+        label: 'Activer le fractionnement',
+        description: 'Active le fractionnement des images longues en plusieurs pages pour une meilleure visualisation et un partage plus facile.',
+      },
+      height: {
+        label: 'Hauteur de page',
+        description: 'Définit la hauteur de chaque page fractionnée en pixels. La valeur par défaut est 1000px.',
+      },
+      overlap: {
+        label: 'Chevauchement',
+        description: 'Définit le chevauchement entre les pages pour éviter les coupures brusques de contenu. La valeur par défaut est 40px.',
+      },
+    },
     filename: {
       label: 'Inclure le nom du fichier comme titre',
       description:
@@ -119,6 +134,7 @@ const fr = {
   confirm: 'Confirmer',
   cancel: 'Annuler',
   imageUrl: 'URL de l\'image',
+  splitInfo: 'La hauteur totale de l\'image est de {rootHeight}px, et la hauteur de division est de {splitHeight}px, donc {pages} images seront générées.',
 } satisfies BaseTranslation;
 
 export default fr;

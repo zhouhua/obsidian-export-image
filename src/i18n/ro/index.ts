@@ -35,6 +35,24 @@ const ro = {
       description:
         'Setează lățimea imaginii exportate în pixeli. Implicit este 640px.',
     },
+    split: {
+      title: 'Divizare imagine',
+      enable: {
+        label: 'Activează divizarea',
+        description:
+          'Activează divizarea imaginilor lungi în mai multe pagini pentru o vizualizare și schimbare mai ușoară.',
+      },
+      height: {
+        label: 'Înălțimea paginii',
+        description:
+          'Setează înălțimea fiecărei pagini divizate în pixeli. Implicit este 1000px.',
+      },
+      overlap: {
+        label: 'Suprapunere',
+        description:
+          'Setează suprapunerea dintre pagini pentru a evita un rupt brusc de conținut. Implicit este 40px.',
+      },
+    },
     filename: {
       label: 'Include numele de fișier ca titlu',
       description:
@@ -119,6 +137,7 @@ const ro = {
   confirm: 'Confirmați',
   cancel: 'Anulează',
   imageUrl: 'URL imagine',
+  splitInfo: 'Înălțimea totală a imaginii este {rootHeight}px, iar înălțimea de divizare este {splitHeight}px, deci vor fi create {pages} imagini',
 } satisfies BaseTranslation;
 
 export default ro;

@@ -34,6 +34,21 @@ const pl = {
       description:
         'Ustaw szerokość eksportowanego obrazu w pikselach. Domyślnie jest 640px.',
     },
+    split: {
+      title: 'Podział obrazu',
+      enable: {
+        label: 'Włącz podział',
+        description: 'Włącza podział długich obrazów na wiele stron dla lepszego przeglądu i wymiany.',
+      },
+      height: {
+        label: 'Wysokość strony',
+        description: 'Ustawia wysokość każdej strony podzielonej w pikselach. Domyślnie jest 1000px.',
+      },
+      overlap: {
+        label: 'Przekrywanie',
+        description: 'Ustawia przekrywanie między stronami, aby uniknąć nagłego przerwania treści. Domyślnie jest 40px.',
+      },
+    },
     filename: {
       label: 'Dołącz nazwę pliku jako tytuł',
       description:
@@ -118,6 +133,7 @@ const pl = {
   confirm: 'Potwierdź',
   cancel: 'Anuluj',
   imageUrl: 'URL obrazu',
+  splitInfo: 'Wysokość całego obrazu to {rootHeight}px, a wysokość podziału to {splitHeight}px, więc zostanie wygenerowanych {pages} obrazów',
 } satisfies BaseTranslation;
 
 export default pl;

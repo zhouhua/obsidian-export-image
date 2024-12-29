@@ -8,13 +8,13 @@ import {
   Editor,
   MarkdownView,
 } from 'obsidian';
-import exportImage from './components/file/exportImage';
 import L from './L';
 import { isMarkdownFile, getMetadata } from './utils';
 import { DEFAULT_SETTINGS } from './settings';
 import exportFolder from './components/folder/exportFolder';
 import { createSettingConfig } from './formConfig';
 import { SettingRenderer } from './SettingRenderer';
+import exportImage from './components/file/exportImage';
 
 export default class ExportImagePlugin extends Plugin {
   settings: ISettings;

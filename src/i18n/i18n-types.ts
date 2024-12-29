@@ -143,6 +143,42 @@ type RootTranslation = {
 			 */
 			description: string
 		}
+		split: {
+			/**
+			 * S​p​l​i​t​ ​I​m​a​g​e
+			 */
+			title: string
+			enable: {
+				/**
+				 * E​n​a​b​l​e​ ​s​p​l​i​t
+				 */
+				label: string
+				/**
+				 * E​n​a​b​l​e​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​t​o​ ​m​u​l​t​i​p​l​e​ ​p​a​g​e​s​ ​f​o​r​ ​b​e​t​t​e​r​ ​v​i​e​w​i​n​g​ ​a​n​d​ ​s​h​a​r​i​n​g​.
+				 */
+				description: string
+			}
+			height: {
+				/**
+				 * S​p​l​i​t​ ​i​m​a​g​e​ ​h​e​i​g​h​t
+				 */
+				label: string
+				/**
+				 * S​e​t​ ​t​h​e​ ​h​e​i​g​h​t​ ​o​f​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​s​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​1​0​0​0​p​x​.
+				 */
+				description: string
+			}
+			overlap: {
+				/**
+				 * S​p​l​i​t​ ​i​m​a​g​e​ ​o​v​e​r​l​a​p
+				 */
+				label: string
+				/**
+				 * S​e​t​ ​t​h​e​ ​o​v​e​r​l​a​p​ ​b​e​t​w​e​e​n​ ​a​d​j​a​c​e​n​t​ ​s​p​l​i​t​ ​i​m​a​g​e​s​ ​t​o​ ​p​r​e​v​e​n​t​ ​c​o​n​t​e​n​t​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​u​t​ ​o​f​f​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​4​0​p​x​.
+				 */
+				description: string
+			}
+		}
 		filename: {
 			/**
 			 * I​n​c​l​u​d​e​ ​f​i​l​e​ ​n​a​m​e​ ​a​s​ ​t​i​t​l​e
@@ -151,7 +187,7 @@ type RootTranslation = {
 			/**
 			 * S​e​t​ ​w​h​e​t​h​e​r​ ​t​o​ ​i​n​c​l​u​d​e​ ​t​h​e​ ​f​i​l​e​ ​n​a​m​e​ ​a​s​ ​t​h​e​ ​t​i​t​l​e​.​ ​W​h​e​n​ ​O​b​s​i​d​i​a​n​ ​d​i​s​p​l​a​y​s​ ​t​h​e​ ​d​o​c​u​m​e​n​t​,​ ​i​t​ ​w​i​l​l​ ​d​i​s​p​l​a​y​ ​t​h​e​ ​f​i​l​e​ ​n​a​m​e​ ​a​s​ ​a​n​ ​h​1​ ​t​i​t​l​e​.​ ​S​o​m​e​t​i​m​e​s​ ​t​h​i​s​ ​i​s​ ​n​o​t​ ​w​h​a​t​ ​y​o​u​ ​w​a​n​t​,​ ​a​n​d​ ​y​o​u​ ​w​i​l​l​ ​g​e​t​ ​d​u​p​l​i​c​a​t​e​ ​t​i​t​l​e​s​.
 			 */
-			desscription: string
+			description: string
 		}
 		'2x': {
 			/**
@@ -376,6 +412,13 @@ type RootTranslation = {
 	 * E​n​t​e​r​ ​U​R​L
 	 */
 	imageUrl: string
+	/**
+	 * T​h​e​ ​t​o​t​a​l​ ​h​e​i​g​h​t​ ​o​f​ ​t​h​e​ ​i​m​a​g​e​ ​i​s​ ​{​r​o​o​t​H​e​i​g​h​t​}​p​x​,​ ​a​n​d​ ​t​h​e​ ​s​p​l​i​t​ ​h​e​i​g​h​t​ ​i​s​ ​{​s​p​l​i​t​H​e​i​g​h​t​}​p​x​,​ ​s​o​ ​{​p​a​g​e​s​}​ ​i​m​a​g​e​s​ ​w​i​l​l​ ​b​e​ ​g​e​n​e​r​a​t​e​d
+	 * @param {unknown} pages
+	 * @param {unknown} rootHeight
+	 * @param {unknown} splitHeight
+	 */
+	splitInfo: RequiredParams<'pages' | 'rootHeight' | 'splitHeight'>
 }
 
 export type TranslationFunctions = {
@@ -490,6 +533,42 @@ export type TranslationFunctions = {
 			 */
 			description: () => LocalizedString
 		}
+		split: {
+			/**
+			 * Split Image
+			 */
+			title: () => LocalizedString
+			enable: {
+				/**
+				 * Enable split
+				 */
+				label: () => LocalizedString
+				/**
+				 * Enable split image to multiple pages for better viewing and sharing.
+				 */
+				description: () => LocalizedString
+			}
+			height: {
+				/**
+				 * Split image height
+				 */
+				label: () => LocalizedString
+				/**
+				 * Set the height of each split image in pixels. The default is 1000px.
+				 */
+				description: () => LocalizedString
+			}
+			overlap: {
+				/**
+				 * Split image overlap
+				 */
+				label: () => LocalizedString
+				/**
+				 * Set the overlap between adjacent split images to prevent content from being cut off. The default is 40px.
+				 */
+				description: () => LocalizedString
+			}
+		}
 		filename: {
 			/**
 			 * Include file name as title
@@ -498,7 +577,7 @@ export type TranslationFunctions = {
 			/**
 			 * Set whether to include the file name as the title. When Obsidian displays the document, it will display the file name as an h1 title. Sometimes this is not what you want, and you will get duplicate titles.
 			 */
-			desscription: () => LocalizedString
+			description: () => LocalizedString
 		}
 		'2x': {
 			/**
@@ -723,6 +802,10 @@ export type TranslationFunctions = {
 	 * Enter URL
 	 */
 	imageUrl: () => LocalizedString
+	/**
+	 * The total height of the image is {rootHeight}px, and the split height is {splitHeight}px, so {pages} images will be generated
+	 */
+	splitInfo: (arg: { pages: unknown, rootHeight: unknown, splitHeight: unknown }) => LocalizedString
 }
 
 export type Formatters = {}

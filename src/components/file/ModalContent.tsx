@@ -1,12 +1,12 @@
-import {type App, type FrontMatterCache, Notice} from 'obsidian';
+import { type App, type FrontMatterCache, Notice, Platform } from 'obsidian';
 import React, {
   useState, useRef, type FC, useEffect, useCallback,
 } from 'react';
-import {TransformWrapper, TransformComponent} from 'react-zoom-pan-pinch';
-import {isCopiable} from 'src/imageFormatTester';
-import {copy, save} from '../../utils/capture';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
+import { isCopiable } from 'src/imageFormatTester';
+import { copy, save, saveAll } from '../../utils/capture';
 import L from '../../L';
-import Target from '../common/Target';
+import Target, { type TargetRef } from '../common/Target';
 import FormItems from '../common/form/FormItems';
 
 const formSchema: FormSchema<ISettings> = [
@@ -21,6 +21,23 @@ const formSchema: FormSchema<ISettings> = [
     type: 'number',
   },
   {
+    path: 'split.enable',
+    label: L.setting.split.enable.label(),
+    type: 'boolean',
+  },
+  {
+    path: 'split.height',
+    label: L.setting.split.height.label(),
+    type: 'number',
+    when: { flag: true, path: 'split.enable' },
+  },
+  {
+    path: 'split.overlap',
+    label: L.setting.split.overlap.label(),
+    type: 'number',
+    when: { flag: true, path: 'split.enable' },
+  },
+  {
     label: L.setting.userInfo.show(),
     path: 'authorInfo.show',
     type: 'boolean',
@@ -29,41 +46,41 @@ const formSchema: FormSchema<ISettings> = [
     label: L.setting.userInfo.name(),
     path: 'authorInfo.name',
     type: 'string',
-    when: {flag: true, path: 'authorInfo.show'},
+    when: { flag: true, path: 'authorInfo.show' },
   },
   {
     label: L.setting.userInfo.remark(),
     path: 'authorInfo.remark',
     type: 'string',
-    when: {flag: true, path: 'authorInfo.show'},
+    when: { flag: true, path: 'authorInfo.show' },
   },
   {
     label: L.setting.userInfo.avatar.title(),
     desc: L.setting.userInfo.avatar.description(),
     path: 'authorInfo.avatar',
     type: 'file',
-    when: {flag: true, path: 'authorInfo.show'},
+    when: { flag: true, path: 'authorInfo.show' },
   },
   {
     label: L.setting.userInfo.align(),
     path: 'authorInfo.align',
     type: 'select',
     options: [
-      {text: 'Left', value: 'left'},
-      {text: 'Center', value: 'center'},
-      {text: 'Right', value: 'right'},
+      { text: 'Left', value: 'left' },
+      { text: 'Center', value: 'center' },
+      { text: 'Right', value: 'right' },
     ],
-    when: {flag: true, path: 'authorInfo.show'},
+    when: { flag: true, path: 'authorInfo.show' },
   },
   {
     label: L.setting.userInfo.position(),
     path: 'authorInfo.position',
     type: 'select',
     options: [
-      {text: 'Top', value: 'top'},
-      {text: 'Bottom', value: 'bottom'},
+      { text: 'Top', value: 'top' },
+      { text: 'Bottom', value: 'bottom' },
     ],
-    when: {flag: true, path: 'authorInfo.show'},
+    when: { flag: true, path: 'authorInfo.show' },
   },
   {
     label: L.setting.watermark.enable.label(),
@@ -75,10 +92,10 @@ const formSchema: FormSchema<ISettings> = [
     path: 'watermark.type',
     type: 'select',
     options: [
-      {text: L.setting.watermark.type.text(), value: 'text'},
-      {text: L.setting.watermark.type.image(), value: 'image'},
+      { text: L.setting.watermark.type.text(), value: 'text' },
+      { text: L.setting.watermark.type.image(), value: 'image' },
     ],
-    when: {flag: true, path: 'watermark.enable'},
+    when: { flag: true, path: 'watermark.enable' },
   },
   {
     label: L.setting.watermark.text.content(),
@@ -98,25 +115,25 @@ const formSchema: FormSchema<ISettings> = [
     label: L.setting.watermark.opacity(),
     path: 'watermark.opacity',
     type: 'number',
-    when: {flag: true, path: 'watermark.enable'},
+    when: { flag: true, path: 'watermark.enable' },
   },
   {
     label: L.setting.watermark.rotate(),
     path: 'watermark.rotate',
     type: 'number',
-    when: {flag: true, path: 'watermark.enable'},
+    when: { flag: true, path: 'watermark.enable' },
   },
   {
     label: L.setting.watermark.width(),
     path: 'watermark.width',
     type: 'number',
-    when: {flag: true, path: 'watermark.enable'},
+    when: { flag: true, path: 'watermark.enable' },
   },
   {
     label: L.setting.watermark.height(),
     path: 'watermark.height',
     type: 'number',
-    when: {flag: true, path: 'watermark.enable'},
+    when: { flag: true, path: 'watermark.enable' },
   },
 ];
 
@@ -126,18 +143,63 @@ const ModalContent: FC<{
   frontmatter: FrontMatterCache | undefined;
   title: string;
   app: App;
-  metadataMap: Record<string, {type: MetadataType}>;
-}> = ({markdownEl, settings, app, frontmatter, title, metadataMap}) => {
+  metadataMap: Record<string, { type: MetadataType }>;
+}> = ({ markdownEl, settings, app, frontmatter, title, metadataMap }) => {
   const [formData, setFormData] = useState<ISettings>(settings);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const previewOutRef = useRef<HTMLDivElement>(null);
   const mainHeight = Math.min(764, (window.innerHeight * 0.85) - 225);
-  const root = useRef<HTMLDivElement>(null);
+  const root = useRef<TargetRef>(null);
   useEffect(() => {
     setFormData(settings);
   }, [settings]);
   const [processing, setProcessing] = useState(false);
   const [allowCopy, setAllowCopy] = useState(true);
+  const [rootHeight, setRootHeight] = useState(0);
+  const [pages, setPages] = useState(1);
+  const [scale, setScale] = useState(1);
+
+  const calculateScale = useCallback(() => {
+    if (!root.current?.element || !previewOutRef.current) return 1;
+    const contentHeight = root.current.element.clientHeight;
+    const contentWidth = root.current.element.clientWidth;
+    const previewWidth = previewOutRef.current.clientWidth;
+
+    return Math.min(
+      1,
+      mainHeight / (contentHeight || 100),
+      previewWidth / ((contentWidth || 0) + 2),
+    ) / 2;
+  }, [mainHeight]);
+
+  useEffect(() => {
+    if (!root.current?.element || !previewOutRef.current) return;
+    setScale(calculateScale());
+  }, [calculateScale, root.current?.element, previewOutRef.current, rootHeight]);
+
+  useEffect(() => {
+    if (!root.current?.element) return;
+
+    const observer = new ResizeObserver(() => {
+      if (root.current?.element) {
+        setRootHeight(root.current.element.clientHeight);
+      }
+    });
+    observer.observe(root.current.element);
+    return () => {
+      observer.disconnect();
+    };
+  }, [root.current?.element]);
+  useEffect(() => {
+    if (formData.split.enable) {
+      const firstPage = formData.split.height;
+      const remainingHeight = rootHeight - firstPage;
+      const additionalPages = Math.max(0, Math.ceil(remainingHeight / (formData.split.height - formData.split.overlap)));
+      setPages(1 + additionalPages);
+    } else {
+      setPages(1);
+    }
+  }, [rootHeight, formData.split.enable, formData.split.height, formData.split.overlap]);
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     isCopiable(formData.format).then(result => {
@@ -150,22 +212,21 @@ const ModalContent: FC<{
       new Notice(L.invalidWidth());
       return;
     }
+    if (!root.current) return;
 
     setProcessing(true);
     try {
       await save(
         app,
-        root.current!,
+        root.current.element,
         title,
         formData['2x'],
         formData.format,
-        // @ts-ignore
-        app.isMobile as boolean,
+        Platform.isMobile,
       );
     } catch {
       new Notice(L.saveFail());
     }
-
     setProcessing(false);
   }, [root, formData['2x'], formData.format, title, formData.width]);
   const handleCopy = useCallback(async () => {
@@ -173,16 +234,42 @@ const ModalContent: FC<{
       new Notice(L.invalidWidth());
       return;
     }
+    if (!root.current) return;
 
     setProcessing(true);
     try {
-      await copy(root.current!, formData['2x'], formData.format);
+      await copy(root.current.element, formData['2x'], formData.format);
     } catch {
       new Notice(L.copyFail());
     }
 
     setProcessing(false);
   }, [root, formData['2x'], formData.format, title, formData.width]);
+
+  const handleSaveAll = useCallback(async () => {
+    if ((formData.width || 640) <= 20) {
+      new Notice(L.invalidWidth());
+      return;
+    }
+    if (!root.current) return;
+
+    setProcessing(true);
+    try {
+      await saveAll(
+        root.current,
+        formData.format,
+        formData['2x'],
+        formData.split.height,
+        formData.split.overlap,
+        app,
+        title,
+        previewOutRef.current!,
+      );
+    } catch {
+      new Notice(L.copyFail());
+    }
+    setProcessing(false);
+  }, [root, formData.format, formData['2x'], formData.split, app, title, previewOutRef]);
 
   return (
     <div className='export-image-preview-root'>
@@ -194,6 +281,9 @@ const ModalContent: FC<{
             settings={formData}
             app={app}
           />
+          {formData.split.enable && <div className='info-text'>
+            图片总高度为 {rootHeight}px，分割高度为 {formData.split.height}px，因此将生成 {pages} 张图片
+          </div>}
           <div className='info-text'>{L.moreSetting()}</div>
         </div>
         <div className='export-image-preview-right'>
@@ -206,23 +296,19 @@ const ModalContent: FC<{
             }}
           >
             <TransformWrapper
-              minScale={
-                Math.min(
-                  1,
-                  mainHeight / (root.current?.clientHeight || 100),
-                  (previewOutRef.current?.clientWidth || 400)
-                    / ((root.current?.clientWidth || 0) + 2),
-                ) / 2
-              }
+              minScale={calculateScale()}
               maxScale={4}
-              pinch={{step: 20}}
-              doubleClick={{mode: 'reset'}}
+              pinch={{ step: 20 }}
+              doubleClick={{ mode: 'reset' }}
               centerZoomedOut={false}
               onPanning={() => {
                 setIsGrabbing(true);
               }}
               onPanningStop={() => {
                 setIsGrabbing(false);
+              }}
+              onTransformed={(e) => {
+                setScale(e.state.scale);
               }}
             >
               <TransformComponent
@@ -245,6 +331,7 @@ const ModalContent: FC<{
                   metadataMap={metadataMap}
                   app={app}
                   title={title}
+                  scale={scale}
                 ></Target>
               </TransformComponent>
             </TransformWrapper>
@@ -253,15 +340,17 @@ const ModalContent: FC<{
         </div>
       </div>
       <div className='export-image-preview-actions'>
-        <div>
-          <button onClick={handleCopy} disabled={processing || !allowCopy}>
-            {L.copy()}
-          </button>
-          {allowCopy || <p>{L.notAllowCopy({format: formData.format.replace(/\d$/, '').toUpperCase()})}</p>}
-        </div>
-        <button onClick={handleSave} disabled={processing}>
-          {/* @ts-ignore */}
-          {app.isMobile ? L.saveVault() : L.save()}
+        {pages === 1 && (
+          <div>
+            <button onClick={handleCopy} disabled={processing || !allowCopy}>
+              {L.copy()}
+            </button>
+            {allowCopy || <p>{L.notAllowCopy({ format: formData.format.replace(/\d$/, '').toUpperCase() })}</p>}
+          </div>
+        )}
+
+        <button onClick={() => pages === 1 ? handleSave() : handleSaveAll()} disabled={processing}>
+          {Platform.isMobile ? L.saveVault() : L.save()}
         </button>
       </div>
     </div>
