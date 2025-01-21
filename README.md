@@ -1,3 +1,9 @@
+<center>
+
+![obsidian-export-image](https://socialify.git.ci/zhouhua/obsidian-export-image/image?custom_description=Easily+convert+your+article+to+image&description=1&font=KoHo&language=1&logo=https%3A%2F%2Fobsidian.md%2Fimages%2Fobsidian-logo-gradient.svg&name=1&owner=1&pattern=Charlie+Brown&stargazers=1&theme=Auto)
+
+</center>
+
 # Obsidian Export Image Plugin
 
 ![GitHub Release](https://img.shields.io/github/v/release/zhouhua/obsidian-export-image?include_prereleases&style=flat) ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/zhouhua/obsidian-export-image/total?style=flat)
@@ -48,7 +54,6 @@ Search `Export Image` in community plugins.
 ## Custom Styles
 
 To help experienced users write their own CSS styles, here is the combined DOM structure of the exported image.
-
 
 ```html
 <!-- Export Image Root -->
