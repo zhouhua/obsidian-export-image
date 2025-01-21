@@ -93,7 +93,9 @@ To help experienced users write their own CSS styles, here is the combined DOM s
 </div>
 ```
 
+## Star History
 
+[![Star History Chart](https://api.star-history.com/svg?repos=zhouhua/obsidian-export-image&type=Date)](https://star-history.com/#zhouhua/obsidian-export-image&Date)
 
 ## Special Thanks
 
