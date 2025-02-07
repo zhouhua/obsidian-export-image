@@ -31,8 +31,9 @@ const Target = forwardRef<
     markdownEl: Node;
     app: App;
     scale?: number;
+    isProcessing: boolean;
   }
->(({ frontmatter, setting, title, metadataMap, markdownEl, scale = 1 }, ref) => {
+>(({ frontmatter, setting, title, metadataMap, markdownEl, scale = 1, isProcessing }, ref) => {
   const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
   const contentRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -52,13 +53,18 @@ const Target = forwardRef<
 
   const splitLines = useMemo(() => {
     if (!setting.split.enable || !rootHeight) return [];
+    // 计算最小分割高度：重叠高度 + 50px
+    const minSplitHeight = setting.split.overlap + 50;
+    // 使用设置的高度和最小高度中的较大值
+    const effectiveHeight = Math.max(setting.split.height, minSplitHeight);
+
     const lines: number[] = [];
-    const firstPageHeight = setting.split.height;
+    const firstPageHeight = effectiveHeight;
     let currentY = firstPageHeight;
 
     while (currentY < rootHeight) {
       lines.push(currentY);
-      currentY += setting.split.height - setting.split.overlap;
+      currentY += effectiveHeight - setting.split.overlap;
     }
     return lines;
   }, [setting.split.enable, setting.split.height, setting.split.overlap, rootHeight]);
@@ -139,15 +145,6 @@ const Target = forwardRef<
           position: 'relative',
         }}
       >
-        {splitLines.map((y, index) => (
-          <div
-            key={index}
-            style={{
-              ...splitLineStyle,
-              top: y,
-            }}
-          />
-        ))}
         <Watermark {...watermarkProps}>
           <div
             className='markdown-preview-view markdown-rendered export-image-preview-container'
@@ -216,7 +213,18 @@ const Target = forwardRef<
                 </div>
               )}
             </div>
-          )}
+          )
+        }
+        {!isProcessing && splitLines.map((y, index) => (
+          <div
+            key={index}
+            style={{
+              ...splitLineStyle,
+              top: y,
+              zIndex: 10,
+            }}
+          />
+        ))}
       </div>
     </div>
   );

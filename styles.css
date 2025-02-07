@@ -24,6 +24,10 @@ If your plugin does not need CSS, delete this file.
   container-type: normal !important;
 }
 
+.export-image-root pre {
+  overflow: hidden;
+}
+
 .export-image-preview-main {
   display: flex;
   margin: 20px 0;

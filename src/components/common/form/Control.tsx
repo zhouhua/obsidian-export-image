@@ -157,6 +157,7 @@ const Control: FC<{
                   alignItems: 'center',
                   justifyContent: 'center',
                   backgroundColor: 'black',
+                  color: 'white',
                   borderRadius: '50%',
                   cursor: 'pointer',
                   ['--icon-size' as string]: '12px',

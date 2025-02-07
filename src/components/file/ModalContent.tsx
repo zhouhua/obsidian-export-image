@@ -178,18 +178,22 @@ const ModalContent: FC<{
   }, [calculateScale, root.current?.element, previewOutRef.current, rootHeight]);
 
   useEffect(() => {
-    if (!root.current?.element) return;
+    if (!root.current?.element || processing) {
+      return;
+    }
 
     const observer = new ResizeObserver(() => {
       if (root.current?.element) {
-        setRootHeight(root.current.element.clientHeight);
+        if (!processing) {
+          setRootHeight(root.current.element.clientHeight);
+        }
       }
     });
     observer.observe(root.current.element);
     return () => {
       observer.disconnect();
     };
-  }, [root.current?.element]);
+  }, [root.current?.element, processing]);
   useEffect(() => {
     if (formData.split.enable) {
       const firstPage = formData.split.height;
@@ -218,7 +222,7 @@ const ModalContent: FC<{
     try {
       await save(
         app,
-        root.current.element,
+        root.current.contentElement,
         title,
         formData['2x'],
         formData.format,
@@ -238,7 +242,7 @@ const ModalContent: FC<{
 
     setProcessing(true);
     try {
-      await copy(root.current.element, formData['2x'], formData.format);
+      await copy(root.current.contentElement, formData['2x'], formData.format);
     } catch {
       new Notice(L.copyFail());
     }
@@ -332,6 +336,7 @@ const ModalContent: FC<{
                   app={app}
                   title={title}
                   scale={scale}
+                  isProcessing={processing}
                 ></Target>
               </TransformComponent>
             </TransformWrapper>

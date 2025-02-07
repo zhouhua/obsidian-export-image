@@ -45,7 +45,7 @@ const result = await esbuild
     treeShaking: true,
     outfile: 'main.js',
     metafile: true,
-    // minify: true,
+    minify: true,
   })
   // eslint-disable-next-line unicorn/no-process-exit
   .catch(() => process.exit(1));

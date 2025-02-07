@@ -53,6 +53,7 @@ export default async function makeHTML(
       markdownEl={element}
       app={app}
       metadataMap={metadataMap}
+      isProcessing
     />,
   );
   await delay(100);

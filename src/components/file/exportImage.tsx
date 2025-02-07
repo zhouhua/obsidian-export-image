@@ -48,6 +48,7 @@ export default async function (
     const root = createRoot(div);
     root.render(
       <Target
+        isProcessing={true}
         markdownEl={el}
         setting={{ ...settings, showMetadata: false, showFilename: false, split: { enable: false, overlap: 0, height: 0 } }}
         frontmatter={{}}

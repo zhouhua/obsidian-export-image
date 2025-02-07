@@ -235,30 +235,34 @@ export async function saveAll(
   try {
     // 计算需要分割的页数
     const totalHeight = target.contentElement.clientHeight;
-    const firstPageHeight = splitHeight;
+    // 计算最小分割高度：重叠高度 + 50px
+    const minSplitHeight = splitOverlap + 50;
+    // 使用设置的高度和最小高度中的较大值
+    const effectiveHeight = Math.max(splitHeight, minSplitHeight);
+    const firstPageHeight = effectiveHeight;
     const remainingHeight = totalHeight - firstPageHeight;
-    const additionalPages = Math.max(0, Math.ceil(remainingHeight / (splitHeight - splitOverlap)));
+    const additionalPages = Math.max(0, Math.ceil(remainingHeight / (effectiveHeight - splitOverlap)));
     const totalPages = 1 + additionalPages;
 
     if (format === 'pdf') {
       // PDF 格式：创建多页 PDF
       let pdf: JsPdf | undefined;
-      
+
       for (let i = 0; i < totalPages; i++) {
-        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (splitHeight - splitOverlap);
+        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (effectiveHeight - splitOverlap);
         let currentHeight: number;
-        
+
         if (i === totalPages - 1) {
           // 最后一页：使用实际剩余高度
           currentHeight = totalHeight - startY;
         } else {
           // 其他页：使用设定的分割高度
-          currentHeight = i === 0 ? firstPageHeight : splitHeight;
+          currentHeight = i === 0 ? firstPageHeight : effectiveHeight;
         }
-        
+
         // 设置裁剪区域
         target.setClip(startY, currentHeight);
-        await delay(50); // 等待渲染
+        await delay(20); // 等待渲染
 
         const blob = await getBlob(
           target.element,
@@ -293,22 +297,22 @@ export async function saveAll(
       const ext = format.replace(/\d$/, '');
       const zip = new JSZip();
       const blobs: { blob: Blob; filename: string }[] = [];
-      
+
       for (let i = 0; i < totalPages; i++) {
-        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (splitHeight - splitOverlap);
+        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (effectiveHeight - splitOverlap);
         let currentHeight: number;
-        
+
         if (i === totalPages - 1) {
           // 最后一页：使用实际剩余高度
           currentHeight = totalHeight - startY;
         } else {
           // 其他页：使用设定的分割高度
-          currentHeight = i === 0 ? firstPageHeight : splitHeight;
+          currentHeight = i === 0 ? firstPageHeight : effectiveHeight;
         }
-        
+
         // 设置裁剪区域
         target.setClip(startY, currentHeight);
-        await delay(50); // 等待渲染
+        await delay(20); // 等待渲染
 
         const blob = await getBlob(target.element, higtResolution, getMime(format));
         const filename = `${title.replaceAll(/\s+/g, '_')}_${i + 1}.${ext}`;
