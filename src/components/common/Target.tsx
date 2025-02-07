@@ -75,7 +75,7 @@ const Target = forwardRef<
     right: 0,
     height: `${2 / scale}px`,
     borderTop: `${2 / scale}px dashed var(--interactive-accent)`,
-    opacity: 0.6,
+    opacity: 0.7,
     pointerEvents: 'none',
   } as const), [scale]);
 

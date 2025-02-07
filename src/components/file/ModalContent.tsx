@@ -173,11 +173,6 @@ const ModalContent: FC<{
   }, [mainHeight]);
 
   useEffect(() => {
-    if (!root.current?.element || !previewOutRef.current) return;
-    setScale(calculateScale());
-  }, [calculateScale, root.current?.element, previewOutRef.current, rootHeight]);
-
-  useEffect(() => {
     if (!root.current?.element || processing) {
       return;
     }
@@ -314,6 +309,7 @@ const ModalContent: FC<{
               onTransformed={(e) => {
                 setScale(e.state.scale);
               }}
+              initialScale={1}
             >
               <TransformComponent
                 wrapperStyle={{
