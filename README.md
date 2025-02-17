@@ -21,7 +21,7 @@ This Obsidian plugin can easily help you export any article as an image.
 - <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bookmark%20Tabs.png" alt="Bookmark Tabs" width="25" height="25" /> Support exporting selected content as an image.
 - <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Card%20Index%20Dividers.png" alt="Card Index Dividers" width="25" height="25" /> Support for batch exporting all notes in a folder as images.
 - <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Receipt.png" alt="Receipt" width="25" height="25" /> Support displaying obsidian [metadata](https://help.obsidian.md/Editing+and+formatting/Properties).
-
+- <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Receipt.png" alt="Receipt" width="25" height="25" /> Support split long articles into multiple images.
 
 ## Usage
 
@@ -93,7 +93,15 @@ To help experienced users write their own CSS styles, here is the combined DOM s
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=zhouhua/obsidian-export-image&type=Date)](https://star-history.com/#zhouhua/obsidian-export-image&Date)
+## Star History
+
+<a href="https://star-history.com/#zhouhua/obsidian-export-image&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=zhouhua/obsidian-export-image&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=zhouhua/obsidian-export-image&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=zhouhua/obsidian-export-image&type=Date" />
+ </picture>
+</a>
 
 ## Special Thanks
 
