@@ -172,6 +172,7 @@ export class SettingRenderer {
                 cursor: pointer;
                 --icon-size: 12px;
                 --icon-color: var(--color-red);
+                color: white;
               `,
             },
           });

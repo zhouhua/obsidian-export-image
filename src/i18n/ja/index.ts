@@ -36,9 +36,13 @@ const ja = {
     },
     split: {
       title: '画像分割',
-      enable: {
-        label: '画像分割を有効にする',
-        description: '長い画像を複数のページに分割して、より見やすく共有しやすくします。',
+      mode: {
+        label: '分割モード',
+        description: '画像を分割する方法を選択します。固定高さは各分割ページが固定の高さを持ち、テキストが分割点で切断される可能性があります。水平線分割はドキュメント内の水平線に沿って画像を分割します。段落分割は段落に沿って画像を分割して、段落が2つの画像に分割されるのを防ぎ、分割高さに最も近い高さにします。',
+        none: '分割なし',
+        fixed: '固定高さ',
+        hr: '水平線分割',
+        auto: '段落分割',
       },
       height: {
         label: 'ページの高さ',
@@ -134,6 +138,7 @@ const ja = {
   cancel: 'キャンセル',
   imageUrl: '画像URL',
   splitInfo: '画像の総高さは{rootHeight}pxで、分割高さは{splitHeight}pxです。そのため、{pages}枚の画像が生成されます。',
+  splitInfoHr: '画像の総高さは{rootHeight}pxで、分割高さは{splitHeight}pxです。そのため、{pages}枚の画像が生成されます。',
 } satisfies BaseTranslation;
 
 export default ja;

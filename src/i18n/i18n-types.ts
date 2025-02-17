@@ -148,15 +148,31 @@ type RootTranslation = {
 			 * S​p​l​i​t​ ​I​m​a​g​e
 			 */
 			title: string
-			enable: {
+			mode: {
 				/**
-				 * E​n​a​b​l​e​ ​s​p​l​i​t
+				 * S​p​l​i​t​ ​m​o​d​e
 				 */
 				label: string
 				/**
-				 * E​n​a​b​l​e​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​t​o​ ​m​u​l​t​i​p​l​e​ ​p​a​g​e​s​ ​f​o​r​ ​b​e​t​t​e​r​ ​v​i​e​w​i​n​g​ ​a​n​d​ ​s​h​a​r​i​n​g​.
+				 * C​h​o​o​s​e​ ​w​h​e​t​h​e​r​ ​t​o​ ​s​p​l​i​t​ ​t​h​e​ ​i​m​a​g​e​,​ ​a​n​d​ ​h​o​w​ ​t​o​ ​s​p​l​i​t​.​ ​F​i​x​e​d​ ​h​e​i​g​h​t​ ​m​e​a​n​s​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​h​a​s​ ​a​ ​f​i​x​e​d​ ​h​e​i​g​h​t​,​ ​w​h​i​c​h​ ​m​a​y​ ​c​u​t​ ​o​f​f​ ​t​e​x​t​ ​a​t​ ​t​h​e​ ​s​p​l​i​t​ ​p​o​i​n​t​.​ ​S​p​l​i​t​ ​b​y​ ​h​o​r​i​z​o​n​t​a​l​ ​r​u​l​e​ ​m​e​a​n​s​ ​s​p​l​i​t​ ​t​h​e​ ​i​m​a​g​e​ ​b​y​ ​t​h​e​ ​h​o​r​i​z​o​n​t​a​l​ ​r​u​l​e​ ​i​n​ ​t​h​e​ ​d​o​c​u​m​e​n​t​.​ ​A​u​t​o​ ​s​p​l​i​t​ ​b​y​ ​p​a​r​a​g​r​a​p​h​ ​m​e​a​n​s​ ​s​p​l​i​t​ ​t​h​e​ ​i​m​a​g​e​ ​b​y​ ​t​h​e​ ​p​a​r​a​g​r​a​p​h​,​ ​e​n​s​u​r​i​n​g​ ​t​h​a​t​ ​a​ ​p​a​r​a​g​r​a​p​h​ ​i​s​ ​n​o​t​ ​s​p​l​i​t​ ​i​n​t​o​ ​t​w​o​ ​i​m​a​g​e​s​,​ ​a​n​d​ ​t​h​e​ ​h​e​i​g​h​t​ ​i​s​ ​a​s​ ​c​l​o​s​e​ ​a​s​ ​p​o​s​s​i​b​l​e​ ​t​o​ ​t​h​e​ ​s​p​l​i​t​ ​h​e​i​g​h​t​.
 				 */
 				description: string
+				/**
+				 * N​o​ ​s​p​l​i​t
+				 */
+				none: string
+				/**
+				 * F​i​x​e​d​ ​h​e​i​g​h​t
+				 */
+				fixed: string
+				/**
+				 * S​p​l​i​t​ ​b​y​ ​h​o​r​i​z​o​n​t​a​l​ ​r​u​l​e
+				 */
+				hr: string
+				/**
+				 * A​u​t​o​ ​s​p​l​i​t​ ​b​y​ ​p​a​r​a​g​r​a​p​h
+				 */
+				auto: string
 			}
 			height: {
 				/**
@@ -419,6 +435,12 @@ type RootTranslation = {
 	 * @param {unknown} splitHeight
 	 */
 	splitInfo: RequiredParams<'pages' | 'rootHeight' | 'splitHeight'>
+	/**
+	 * T​h​e​ ​t​o​t​a​l​ ​h​e​i​g​h​t​ ​o​f​ ​t​h​e​ ​i​m​a​g​e​ ​i​s​ ​{​r​o​o​t​H​e​i​g​h​t​}​p​x​,​ ​a​n​d​ ​t​h​e​ ​i​m​a​g​e​ ​w​i​l​l​ ​b​e​ ​s​p​l​i​t​ ​b​y​ ​t​h​e​ ​h​o​r​i​z​o​n​t​a​l​ ​r​u​l​e​,​ ​s​o​ ​{​p​a​g​e​s​}​ ​i​m​a​g​e​s​ ​w​i​l​l​ ​b​e​ ​g​e​n​e​r​a​t​e​d
+	 * @param {unknown} pages
+	 * @param {unknown} rootHeight
+	 */
+	splitInfoHr: RequiredParams<'pages' | 'rootHeight'>
 }
 
 export type TranslationFunctions = {
@@ -538,15 +560,31 @@ export type TranslationFunctions = {
 			 * Split Image
 			 */
 			title: () => LocalizedString
-			enable: {
+			mode: {
 				/**
-				 * Enable split
+				 * Split mode
 				 */
 				label: () => LocalizedString
 				/**
-				 * Enable split image to multiple pages for better viewing and sharing.
+				 * Choose whether to split the image, and how to split. Fixed height means each split image has a fixed height, which may cut off text at the split point. Split by horizontal rule means split the image by the horizontal rule in the document. Auto split by paragraph means split the image by the paragraph, ensuring that a paragraph is not split into two images, and the height is as close as possible to the split height.
 				 */
 				description: () => LocalizedString
+				/**
+				 * No split
+				 */
+				none: () => LocalizedString
+				/**
+				 * Fixed height
+				 */
+				fixed: () => LocalizedString
+				/**
+				 * Split by horizontal rule
+				 */
+				hr: () => LocalizedString
+				/**
+				 * Auto split by paragraph
+				 */
+				auto: () => LocalizedString
 			}
 			height: {
 				/**
@@ -806,6 +844,10 @@ export type TranslationFunctions = {
 	 * The total height of the image is {rootHeight}px, and the split height is {splitHeight}px, so {pages} images will be generated
 	 */
 	splitInfo: (arg: { pages: unknown, rootHeight: unknown, splitHeight: unknown }) => LocalizedString
+	/**
+	 * The total height of the image is {rootHeight}px, and the image will be split by the horizontal rule, so {pages} images will be generated
+	 */
+	splitInfoHr: (arg: { pages: unknown, rootHeight: unknown }) => LocalizedString
 }
 
 export type Formatters = {}

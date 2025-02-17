@@ -8,6 +8,7 @@ import domtoimage from '../dom-to-image-more';
 import L from '../L';
 import makeHTML from './makeHTML';
 import { fileToBase64, delay, getMime } from '.';
+import { calculateSplitPositions, getElementMeasures } from './split';
 
 async function getBlob(el: HTMLElement, higtResolution: boolean, type: string): Promise<Blob> {
   return domtoimage.toBlob(el, {
@@ -127,80 +128,42 @@ export async function saveMultipleFiles(
   folderName: string,
   containner: HTMLDivElement,
 ) {
-  const { format, '2x': higtResolution } = settings;
   let finished = 0;
-  if (format === 'pdf') {
-    let pdf: JsPdf | undefined;
-    for (const file of files) {
-      const el = await makeHTML(file, settings, app, containner);
-      await delay(20);
-      const width = el.clientWidth;
-      const height = el.clientHeight;
-      const blob = await getBlob(
-        el as HTMLElement,
-        higtResolution,
-        'image/jpeg',
-      );
-      const dataUrl = await fileToBase64(blob);
-      if (pdf) {
-        pdf.addPage([width / 96, height / 96], width > height ? 'l' : 'p');
-      } else {
-        pdf = new JsPdf({
-          unit: 'in',
-          format: [width / 96, height / 96],
-          orientation: width > height ? 'l' : 'p',
-          compress: true,
-        });
-      }
+  const { format, '2x': higtResolution, split } = settings;
+  const blobs: { blob: Blob; filename: string }[] = [];
 
-      pdf.addImage(dataUrl, 'JPEG', 0, 0, width / 96, height / 96);
-      finished++;
-      onProgress(finished);
-    }
+  for (const file of files) {
+    const el = await makeHTML(file, settings, app, containner) as HTMLElement;
+    await delay(20);
 
-    if (!pdf) {
-      return;
-    }
+    const target = {
+      element: el,
+      contentElement: el,
+      setClip: (startY: number, height: number) => {
+        el.style.height = `${height}px`;
+        el.style.overflow = 'hidden';
+        el.style.transform = `translateY(-${startY}px)`;
+      },
+      resetClip: () => {
+        el.style.height = '';
+        el.style.overflow = '';
+        el.style.transform = '';
+      },
+    };
 
-    const fileName = `${folderName.replaceAll(/\s+/g, '_')}.pdf`;
-    if (Platform.isMobile) {
-      const filePath = await saveToVault(app, new Blob([pdf.output('arraybuffer')]), fileName);
-      new Notice(L.saveSuccess({ filePath }));
-    } else {
-      pdf?.save(fileName);
-    }
-  } else {
-    const ext = format.replace(/\d$/, '');
-    const zip = new JSZip();
-    const blobs: { blob: Blob; filename: string }[] = [];
+    await saveAll(
+      target,
+      format,
+      higtResolution,
+      split.height,
+      split.overlap,
+      split.mode,
+      app,
+      file.basename,
+    );
 
-    for (const file of files) {
-      const el = await makeHTML(file, settings, app, containner);
-      const blob = await getBlob(
-        el as HTMLElement,
-        higtResolution,
-        getMime(format),
-      );
-      const filename = `${file.basename.replaceAll(/\s+/g, '_')}.${ext}`;
-      blobs.push({ blob, filename });
-      finished++;
-      onProgress(finished);
-    }
-
-    if (Platform.isMobile) {
-      // 在移动端直接保存到 vault
-      for (const { blob, filename } of blobs) {
-        const filePath = await saveToVault(app, blob, filename);
-        new Notice(L.saveSuccess({ filePath }));
-      }
-    } else {
-      // 在桌面端创建 zip
-      for (const { blob, filename } of blobs) {
-        zip.file(filename, blob);
-      }
-      const zipBlob = await zip.generateAsync({ type: 'blob' });
-      saveAs(zipBlob, `${folderName.replaceAll(/\s+/g, '_')}.zip`);
-    }
+    finished++;
+    onProgress(finished);
   }
 }
 
@@ -228,40 +191,29 @@ export async function saveAll(
   higtResolution: boolean,
   splitHeight: number,
   splitOverlap: number,
+  splitMode: SplitMode,
   app: App,
   title: string,
-  hiddenRef: HTMLDivElement,
 ) {
   try {
-    // 计算需要分割的页数
+    // 计算需要分割的页数和位置
     const totalHeight = target.contentElement.clientHeight;
-    // 计算最小分割高度：重叠高度 + 50px
-    const minSplitHeight = splitOverlap + 50;
-    // 使用设置的高度和最小高度中的较大值
-    const effectiveHeight = Math.max(splitHeight, minSplitHeight);
-    const firstPageHeight = effectiveHeight;
-    const remainingHeight = totalHeight - firstPageHeight;
-    const additionalPages = Math.max(0, Math.ceil(remainingHeight / (effectiveHeight - splitOverlap)));
-    const totalPages = 1 + additionalPages;
+    const elements = getElementMeasures(target.contentElement, splitMode);
+
+    const splitPositions = calculateSplitPositions({
+      mode: splitMode,
+      height: splitHeight,
+      overlap: splitOverlap,
+      totalHeight,
+    }, elements);
 
     if (format === 'pdf') {
       // PDF 格式：创建多页 PDF
       let pdf: JsPdf | undefined;
 
-      for (let i = 0; i < totalPages; i++) {
-        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (effectiveHeight - splitOverlap);
-        let currentHeight: number;
-
-        if (i === totalPages - 1) {
-          // 最后一页：使用实际剩余高度
-          currentHeight = totalHeight - startY;
-        } else {
-          // 其他页：使用设定的分割高度
-          currentHeight = i === 0 ? firstPageHeight : effectiveHeight;
-        }
-
+      for (const { startY, height } of splitPositions) {
         // 设置裁剪区域
-        target.setClip(startY, currentHeight);
+        target.setClip(startY, height);
         await delay(20); // 等待渲染
 
         const blob = await getBlob(
@@ -274,15 +226,15 @@ export async function saveAll(
         if (!pdf) {
           pdf = new JsPdf({
             unit: 'in',
-            format: [target.element.clientWidth / 96, currentHeight / 96],
-            orientation: target.element.clientWidth > currentHeight ? 'l' : 'p',
+            format: [target.element.clientWidth / 96, height / 96],
+            orientation: target.element.clientWidth > height ? 'l' : 'p',
             compress: true,
           });
         } else {
-          pdf.addPage([target.element.clientWidth / 96, currentHeight / 96], target.element.clientWidth > currentHeight ? 'l' : 'p');
+          pdf.addPage([target.element.clientWidth / 96, height / 96], target.element.clientWidth > height ? 'l' : 'p');
         }
 
-        pdf.addImage(dataUrl, 'JPEG', 0, 0, target.element.clientWidth / 96, currentHeight / 96);
+        pdf.addImage(dataUrl, 'JPEG', 0, 0, target.element.clientWidth / 96, height / 96);
       }
 
       const filename = `${title.replaceAll(/\s+/g, '_')}.pdf`;
@@ -298,20 +250,10 @@ export async function saveAll(
       const zip = new JSZip();
       const blobs: { blob: Blob; filename: string }[] = [];
 
-      for (let i = 0; i < totalPages; i++) {
-        const startY = i === 0 ? 0 : firstPageHeight + (i - 1) * (effectiveHeight - splitOverlap);
-        let currentHeight: number;
-
-        if (i === totalPages - 1) {
-          // 最后一页：使用实际剩余高度
-          currentHeight = totalHeight - startY;
-        } else {
-          // 其他页：使用设定的分割高度
-          currentHeight = i === 0 ? firstPageHeight : effectiveHeight;
-        }
-
+      for (let i = 0; i < splitPositions.length; i++) {
+        const { startY, height } = splitPositions[i];
         // 设置裁剪区域
-        target.setClip(startY, currentHeight);
+        target.setClip(startY, height);
         await delay(20); // 等待渲染
 
         const blob = await getBlob(target.element, higtResolution, getMime(format));

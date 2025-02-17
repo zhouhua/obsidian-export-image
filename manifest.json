@@ -6,5 +6,6 @@
 	"description": "Easily convert your article to image.",
 	"author": "Zhou Hua",
 	"authorUrl": "",
-	"isDesktopOnly": false
+	"isDesktopOnly": false,
+	"sponsor": "https://ko-fi.com/zhouhua"
 }

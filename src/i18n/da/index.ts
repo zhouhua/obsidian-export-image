@@ -38,9 +38,13 @@ const da = {
     },
     split: {
       title: 'Del billede',
-      enable: {
-        label: 'Aktivér deling',
-        description: 'Aktiverer deling af lange billeder i flere sider for bedre visning og deling.',
+      mode: {
+        label: 'Delingsmetode',
+        description: 'Vælg, hvordan du vil dele billedet, og hvordan du vil dele det. Fast højde betyder, at hver delt side har en fast højde, hvilket kan skære teksten af i delingsstederne. Del efter vandret linje betyder, at billedet deles efter vandrette linjer i dokumentet. Del efter afsnit betyder, at billedet deles efter afsnit, hvilket sikrer, at et afsnit ikke deles i to billeder, og højden er så tæt som muligt til delingshøjden.',
+        none: 'Ingen deling',
+        fixed: 'Fast højde',
+        hr: 'Vandret linje',
+        auto: 'Afsnit',
       },
       height: {
         label: 'Sidehøjde',
@@ -136,6 +140,7 @@ const da = {
   cancel: 'Annuller',
   imageUrl: 'Indtast URL',
   splitInfo: 'Den totale højde af billedet er {rootHeight}px, og delingshøjden er {splitHeight}px, så der vil blive genereret {pages} billeder',
+  splitInfoHr: 'Den totale højde af billedet er {rootHeight}px, og delingshøjden er {splitHeight}px, så der vil blive genereret {pages} billeder',
 } satisfies BaseTranslation;
 
 export default da;

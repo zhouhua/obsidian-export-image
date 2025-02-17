@@ -37,10 +37,13 @@ const ro = {
     },
     split: {
       title: 'Divizare imagine',
-      enable: {
-        label: 'Activează divizarea',
-        description:
-          'Activează divizarea imaginilor lungi în mai multe pagini pentru o vizualizare și schimbare mai ușoară.',
+      mode: {
+        label: 'Modul de divizare',
+        description: 'Alegeți modul de divizare a imaginii, în funcție de nevoile dumneavoastră.',
+        none: 'Niciun mod',
+        fixed: 'Mod fix',
+        hr: 'Modul de divizare pe linie orizontală',
+        auto: 'Modul de divizare pe paragraf',
       },
       height: {
         label: 'Înălțimea paginii',
@@ -138,6 +141,7 @@ const ro = {
   cancel: 'Anulează',
   imageUrl: 'URL imagine',
   splitInfo: 'Înălțimea totală a imaginii este {rootHeight}px, iar înălțimea de divizare este {splitHeight}px, deci vor fi create {pages} imagini',
+  splitInfoHr: 'Înălțimea totală a imaginii este {rootHeight}px, iar înălțimea de divizare este {splitHeight}px, deci vor fi create {pages} imagini',
 } satisfies BaseTranslation;
 
 export default ro;

@@ -37,9 +37,13 @@ const fr = {
     },
     split: {
       title: 'Fractionner l\'image',
-      enable: {
-        label: 'Activer le fractionnement',
-        description: 'Active le fractionnement des images longues en plusieurs pages pour une meilleure visualisation et un partage plus facile.',
+      mode: {
+        label: 'Méthode de fractionnement',
+        description: 'Choisissez comment fractionner l\'image et comment la fractionner. La hauteur fixe signifie que chaque page fractionnée a une hauteur fixe, ce qui peut couper le texte aux points de fractionnement. Le fractionnement par ligne horizontale signifie que l\'image est fractionnée par les lignes horizontales dans le document. Le fractionnement par paragraphe signifie que l\'image est fractionnée par les paragraphes, ce qui garantit que un paragraphe ne soit pas fractionné en deux images et que la hauteur soit la plus proche possible de la hauteur de fractionnement.',
+        none: 'Aucun fractionnement',
+        fixed: 'Hauteur fixe',
+        hr: 'Ligne horizontale',
+        auto: 'Paragraphe',
       },
       height: {
         label: 'Hauteur de page',
@@ -135,6 +139,7 @@ const fr = {
   cancel: 'Annuler',
   imageUrl: 'URL de l\'image',
   splitInfo: 'La hauteur totale de l\'image est de {rootHeight}px, et la hauteur de division est de {splitHeight}px, donc {pages} images seront générées.',
+  splitInfoHr: 'La hauteur totale de l\'image est de {rootHeight}px, et la hauteur de division est de {splitHeight}px, donc {pages} images seront générées.',
 } satisfies BaseTranslation;
 
 export default fr;

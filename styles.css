@@ -242,3 +242,8 @@ If your plugin does not need CSS, delete this file.
   width: auto;
   height: auto;
 }
+
+.export-image-split-hr hr {
+  opacity: 0;
+  height: 0;
+}

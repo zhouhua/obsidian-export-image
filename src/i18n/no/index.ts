@@ -36,9 +36,13 @@ const no = {
     },
     split: {
       title: 'Bilde deling',
-      enable: {
-        label: 'Aktiver deling',
-        description: 'Aktiver deling av lange bilder i flere sider for bedre visning og deling.',
+      mode: {
+        label: 'Delingsmodus',
+        description: 'Velg hvordan du vil dele bildet, og hvordan du vil dele det. Fast høyde betyr at hver delt side har en fast høyde, som kan kutte teksten på delingsstederne. Vannrett linje betyr at bildet deles langs vannrette linjer i dokumentet. Paragraf betyr at bildet deles langs paragrafene, som sikrer at et avsnitt ikke deles i to bilder og høyden er så nær som mulig til delingshøyden.',
+        none: 'Ingen deling',
+        fixed: 'Fast høyde',
+        hr: 'Vannrett linje',
+        auto: 'Paragraf',
       },
       height: {
         label: 'Høyde på side',
@@ -135,6 +139,7 @@ const no = {
   cancel: 'Avbryt',
   imageUrl: 'Bilde-URL',
   splitInfo: 'Total bildehøyde er {rootHeight}px, og delingshøyde er {splitHeight}px, så det vil bli generert {pages} bilder',
+  splitInfoHr: 'Total bildehøyde er {rootHeight}px, og delingshøyde er {splitHeight}px, så det vil bli generert {pages} bilder',
 } satisfies BaseTranslation;
 
 export default no;

@@ -36,9 +36,13 @@ const ms = {
     },
     split: {
       title: 'Eksport Imej',
-      enable: {
-        label: 'Aktifkan deling',
-        description: 'Aktifkan deling imej panjang ke beberapa halaman untuk paparan dan penggunaan yang lebih baik.',
+      mode: {
+        label: 'Mode Pembahagian',
+        description: 'Pilih cara untuk membahagikan gambar, dan cara untuk membahagikan gambar. Tinggi tetap berarti setiap halaman yang dibahagikan memiliki tinggi yang tetap, yang mungkin memotong teks pada titik pembahagian. Pembahagian garis mendatar berarti gambar dibahagikan sepanjang garis mendatar dalam dokumen. Pembahagian paragraf berarti gambar dibahagikan sepanjang paragraf untuk menghindari pembahagian paragraf menjadi dua gambar dan mempertahankan tinggi yang paling dekat dengan tinggi pembahagian.',
+        none: 'Tiada Pembahagian',
+        fixed: 'Tinggi Tetap',
+        hr: 'Pembahagian Garis Mendatar',
+        auto: 'Pembahagian Paragraf',
       },
       height: {
         label: 'Tinggi Halaman',
@@ -134,6 +138,7 @@ const ms = {
   cancel: 'Batal',
   imageUrl: 'URL gambar',
   splitInfo: 'Tinggi gambar keseluruhan adalah {rootHeight}px, dan tinggi pemotongan adalah {splitHeight}px, jadi akan dihasilkan {pages} gambar',
+  splitInfoHr: 'Tinggi gambar keseluruhan adalah {rootHeight}px, dan tinggi pemotongan adalah {splitHeight}px, jadi akan dihasilkan {pages} gambar',
 } satisfies BaseTranslation;
 
 export default ms;

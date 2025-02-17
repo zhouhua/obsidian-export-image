@@ -37,9 +37,13 @@ const en = {
     },
     split: {
       title: 'Split Image',
-      enable: {
-        label: 'Enable split',
-        description: 'Enable split image to multiple pages for better viewing and sharing.',
+      mode: {
+        label: 'Split mode',
+        description: 'Choose whether to split the image, and how to split. Fixed height means each split image has a fixed height, which may cut off text at the split point. Split by horizontal rule means split the image by the horizontal rule in the document. Auto split by paragraph means split the image by the paragraph, ensuring that a paragraph is not split into two images, and the height is as close as possible to the split height.',
+        none: 'No split',
+        fixed: 'Fixed height',
+        hr: 'Split by horizontal rule',
+        auto: 'Auto split by paragraph',
       },
       height: {
         label: 'Split image height',
@@ -135,6 +139,7 @@ const en = {
   cancel: 'Cancel',
   imageUrl: 'Enter URL',
   splitInfo: 'The total height of the image is {rootHeight}px, and the split height is {splitHeight}px, so {pages} images will be generated',
+  splitInfoHr: 'The total height of the image is {rootHeight}px, and the image will be split by the horizontal rule, so {pages} images will be generated',
 } satisfies BaseTranslation;
 
 export default en;

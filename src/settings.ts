@@ -34,9 +34,9 @@ export const DEFAULT_SETTINGS: ISettings = {
     y: 100,
   },
   split: {
-    enable: false,
     height: 1000,
     overlap: 80,
+    mode: 'none' as SplitMode,
   },
 };
 

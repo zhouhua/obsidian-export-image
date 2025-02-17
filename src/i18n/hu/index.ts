@@ -37,9 +37,13 @@ const hu = {
     },
     split: {
       title: 'Kép felosztás',
-      enable: {
-        label: 'Kép felosztás engedélyezése',
-        description: 'Hosszú képek felosztásának engedélyezése több oldalra a jobb megtekintés és megosztás érdekében.',
+      mode: {
+        label: 'Felosztás módja',
+        description: 'Válaszd ki, hogyan szeretnéd felosztani a képet, és hogyan szeretnéd felosztani. A rögzített magasság azt jelenti, hogy a felosztott képek mindegyike egy rögzített magassággal rendelkezik, amely lehet, hogy levágja a szöveget a felosztási pontokban. A vízszintes szabvány azt jelenti, hogy a kép a dokumentum vízszintes szabványai szerint oszlik meg. Az automatikus felosztás azt jelenti, hogy a kép a bekezdések szerint oszlik meg, hogy elkerüld a bekezdés levágását, és a magasság a lehető legközelebb legyen a felosztási magassághoz.',
+        none: 'Nincs felosztás',
+        fixed: 'Rögzített magasság',
+        hr: 'Vízszintes szabvány',
+        auto: 'Automatikus felosztás',
       },
       height: {
         label: 'Felosztott kép magassága',
@@ -135,6 +139,7 @@ const hu = {
   cancel: 'Mégse',
   imageUrl: 'Kép URL',
   splitInfo: 'A kép teljes magassága {rootHeight}px, és a felosztás magassága {splitHeight}px, így {pages} kép lesz generálva.',
+  splitInfoHr: 'A kép teljes magassága {rootHeight}px, és a felosztás magassága {splitHeight}px, így {pages} kép lesz generálva.',
 } satisfies BaseTranslation;
 
 export default hu;

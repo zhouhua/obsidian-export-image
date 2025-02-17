@@ -36,9 +36,9 @@ declare type ISettings = {
     height?: number;
   };
   split: {
-    enable: boolean;
-    overlap: number;
     height: number;
+    overlap: number;
+    mode: SplitMode;
   };
 };
 
@@ -73,3 +73,5 @@ declare type MetadataType =
   | 'number'
   | 'tags'
   | 'aliases';
+
+declare type SplitMode = 'none' | 'fixed' | 'hr' | 'auto';

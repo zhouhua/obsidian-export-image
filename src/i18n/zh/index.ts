@@ -34,9 +34,13 @@ const zh = {
     },
     split: {
       title: '图片拆分',
-      enable: {
-        label: '启用图片拆分',
-        description: '启用长图片拆分为多页以便更好地查看和分享。',
+      mode: {
+        label: '拆分模式',
+        description: '选择是否拆分图片，以及如何拆分。固定高度表示每个拆分图片的高度固定，可能在拆分处截断文字，按分隔线拆分表示按文档中的 hr 元素拆分，按段落自动拆分表示拆分时确保一个段落不会拆分到两张图片中，且尽可能接近拆分高度。',
+        none: '不拆分',
+        fixed: '固定高度',
+        hr: '按分隔线拆分',
+        auto: '按段落自动拆分',
       },
       height: {
         label: '拆分图片高度',
@@ -131,6 +135,7 @@ const zh = {
   cancel: '取消',
   imageUrl: '输入 URL',
   splitInfo: '图片总高度为 {rootHeight}px，分割高度为 {splitHeight}px，因此将生成 {pages} 张图片',
+  splitInfoHr: '图片总高度为 {rootHeight}px，将根据分隔线拆分为 {pages} 张图片',
 } satisfies Translation;
 
 export default zh;

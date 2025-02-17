@@ -7,6 +7,7 @@ import Metadata from './Metadata';
 import { lowerCase } from 'lodash';
 import clsx from 'clsx';
 import { getRemoteImageUrl } from 'src/utils/capture';
+import { calculateSplitLines, getElementMeasures } from 'src/utils/split';
 
 const alignMap = {
   left: 'flex-start',
@@ -32,8 +33,9 @@ const Target = forwardRef<
     app: App;
     scale?: number;
     isProcessing: boolean;
+    onSplitChange?: (positions: number[]) => void;
   }
->(({ frontmatter, setting, title, metadataMap, markdownEl, scale = 1, isProcessing }, ref) => {
+>(({ frontmatter, setting, title, metadataMap, markdownEl, scale = 1, isProcessing, onSplitChange }, ref) => {
   const [watermarkProps, setWatermarkProps] = useState<WatermarkProps>({});
   const contentRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -52,22 +54,24 @@ const Target = forwardRef<
   }, []);
 
   const splitLines = useMemo(() => {
-    if (!setting.split.enable || !rootHeight) return [];
-    // 计算最小分割高度：重叠高度 + 50px
-    const minSplitHeight = setting.split.overlap + 50;
-    // 使用设置的高度和最小高度中的较大值
-    const effectiveHeight = Math.max(setting.split.height, minSplitHeight);
+    if (!rootHeight || setting.split.mode === 'none') return [];
 
-    const lines: number[] = [];
-    const firstPageHeight = effectiveHeight;
-    let currentY = firstPageHeight;
-
-    while (currentY < rootHeight) {
-      lines.push(currentY);
-      currentY += effectiveHeight - setting.split.overlap;
+    let elements;
+    if (rootRef.current) {
+      elements = getElementMeasures(rootRef.current, setting.split.mode);
     }
+
+    const lines = calculateSplitLines({
+      mode: setting.split.mode,
+      height: setting.split.height,
+      overlap: setting.split.overlap,
+      totalHeight: rootHeight,
+    }, elements);
+
+    // 通知父组件分页变化
+    onSplitChange?.(lines);
     return lines;
-  }, [setting.split.enable, setting.split.height, setting.split.overlap, rootHeight]);
+  }, [setting.split.height, setting.split.overlap, setting.split.mode, rootHeight, onSplitChange]);
 
   const splitLineStyle = useMemo(() => ({
     position: 'absolute',
@@ -80,9 +84,19 @@ const Target = forwardRef<
   } as const), [scale]);
 
   useEffect(() => {
-    if (!contentRef.current) return;
+    if (!contentRef.current) {
+      return;
+    }
     contentRef.current.innerHTML = '';
-    contentRef.current.append(markdownEl.cloneNode(true));
+    Array.from(markdownEl.childNodes).forEach(child => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        if (child.textContent) {
+          contentRef.current?.append(child.textContent);
+        }
+      } else {
+        contentRef.current?.append(child.cloneNode(true));
+      }
+    });
   }, [markdownEl]);
 
   useImperativeHandle(ref, () => ({
@@ -175,7 +189,7 @@ const Target = forwardRef<
                   </div>
                 </div>
               )}
-            <div ref={contentRef}></div>
+            <div ref={contentRef} className={`export-image-split-${setting.split.mode} export-image-markdown`}></div>
           </div>
         </Watermark>
         {setting.authorInfo.show
@@ -231,3 +245,4 @@ const Target = forwardRef<
 });
 
 export default Target;
+

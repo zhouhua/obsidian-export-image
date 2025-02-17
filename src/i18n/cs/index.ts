@@ -36,9 +36,13 @@ const cs = {
     },
     split: {
       title: 'Rozdělit obrázek',
-      enable: {
-        label: 'Povolit rozdělení',
-        description: 'Povolí rozdělení dlouhých obrázků na více stránek pro lepší zobrazení a sdílení.',
+      mode: {
+        label: 'Režim rozdělení',
+        description: 'Vyberte, zda rozdělit obrázek, a jak rozdělit. Pevná výška znamená, že každá rozdělená stránka má pevnou výšku, což může text přerušit v místě rozdělení. Rozdělit podle vodorovné čáry znamená rozdělit obrázek podle vodorovné čáry v dokumentu. Rozdělit podle odstavce znamená rozdělit obrázek podle odstavce, aby se zabránilo rozdělení odstavce do dvou obrázků a výška byla co nejbližší rozdělení výšky.',
+        none: 'Žádné rozdělení',
+        fixed: 'Pevná výška',
+        hr: 'Vodorovná čára',
+        auto: 'Odstavec',
       },
       height: {
         label: 'Výška stránky',
@@ -134,6 +138,7 @@ const cs = {
   cancel: 'Zrušit',
   imageUrl: 'Zadejte URL',
   splitInfo: 'Celková výška obrázku je {rootHeight}px, a výška dělení je {splitHeight}px, takže se vygeneruje {pages} obrázků',
+  splitInfoHr: 'Celková výška obrázku je {rootHeight}px, a výška dělení je {splitHeight}px, takže se vygeneruje {pages} obrázků',
 } satisfies BaseTranslation;
 
 export default cs;

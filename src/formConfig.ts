@@ -30,10 +30,16 @@ export const createSettingConfig = async (app: App): Promise<SettingItem[]> => {
       placeholder: '640',
     },
     {
-      id: 'split.enable',
-      label: L.setting.split.enable.label(),
-      description: L.setting.split.enable.description(),
-      type: 'toggle',
+      id: 'split.mode',
+      label: L.setting.split.mode.label(),
+      description: L.setting.split.mode.description(),
+      type: 'dropdown',
+      options: [
+        { value: 'none', text: L.setting.split.mode.none() },
+        { value: 'fixed', text: L.setting.split.mode.fixed() },
+        { value: 'hr', text: L.setting.split.mode.hr() },
+        { value: 'auto', text: L.setting.split.mode.auto() },
+      ],
     },
     {
       id: 'split.height',
@@ -41,7 +47,7 @@ export const createSettingConfig = async (app: App): Promise<SettingItem[]> => {
       description: L.setting.split.height.description(),
       type: 'number',
       placeholder: '1000',
-      show: (settings) => settings.split.enable,
+      show: (settings) => settings.split.mode !== 'none' && settings.split.mode !== 'hr',
     },
     {
       id: 'split.overlap',
@@ -49,7 +55,7 @@ export const createSettingConfig = async (app: App): Promise<SettingItem[]> => {
       description: L.setting.split.overlap.description(),
       type: 'number',
       placeholder: '40',
-      show: (settings) => settings.split.enable,
+      show: (settings) => settings.split.mode === 'fixed',
     },
     {
       id: 'showFilename',

@@ -517,7 +517,6 @@
                 for (let name of ['counter-increment', 'counter-reset', 'counter-set']) {
                   if (properties.indexOf(name) < 0 && !isUndefined(style.getPropertyValue(name))) {
                     properties.push(name);
-                    console.log(name);
                   }
                 }
                 return properties;
@@ -1257,7 +1256,6 @@
     function fixStyle(properties) {
       for (let name of ['counter-reset', 'counter-increment', 'counter-set']) {
         if (properties.indexOf(name) < 0 && !isUndefined(sourceComputedStyles.getPropertyValue(name))) {
-          console.log(name, sourceComputedStyles.getPropertyValue(name));
           properties.push(name);
         }
       }

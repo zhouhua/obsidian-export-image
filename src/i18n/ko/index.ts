@@ -38,9 +38,13 @@ const ko = {
     },
     split: {
       title: '이미지 분할',
-      enable: {
-        label: '분할 활성화',
-        description: '긴 이미지를 여러 페이지로 분할하여 더 나은 보기와 공유를 가능하게 합니다.',
+      mode: {
+        label: '분할 모드',
+        description: '이미지를 분할하는 방법을 선택합니다. 고정 높이는 각 분할된 페이지가 고정된 높이를 가지며, 텍스트가 분할 지점에서 잘릴 수 있습니다. 수평 라인 분할은 문서 내의 수평 라인에 따라 이미지를 분할합니다. 문단 분할은 문단에 따라 이미지를 분할하여 문단이 두 개의 이미지로 분할되지 않도록 하고 분할 높이에 가장 가까운 높이를 유지합니다.',
+        none: '분할 없음',
+        fixed: '고정 높이',
+        hr: '수평 라인',
+        auto: '문단',
       },
       height: {
         label: '페이지 높이',
@@ -136,6 +140,7 @@ const ko = {
   cancel: '취소',
   imageUrl: '이미지 URL',
   splitInfo: '이미지 총 높이는 {rootHeight}px이고, 분할 높이는 {splitHeight}px이므로, {pages}개의 이미지가 생성됩니다.',
+  splitInfoHr: '이미지 총 높이는 {rootHeight}px이고, 분할 높이는 {splitHeight}px이므로, {pages}개의 이미지가 생성됩니다.',
 } satisfies BaseTranslation;
 
 export default ko;

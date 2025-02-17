@@ -36,9 +36,13 @@ const id = {
     },
     split: {
       title: 'Ekspor Gambar',
-      enable: {
-        label: 'Aktifkan deling',
-        description: 'Aktifkan deling gambar panjang ke beberapa halaman untuk paparan dan penggunaan yang lebih baik.',
+      mode: {
+        label: 'Mode ekspor gambar',
+        description: 'Pilih mode ekspor gambar, apakah akan memotong gambar menjadi beberapa halaman atau tidak. Mode tetap tinggi berarti setiap halaman yang dibahagikan memiliki tinggi yang tetap, yang mungkin memotong teks di titik pemotongan. Mode vodoravna linija berarti memotong gambar menurut garis horizontal dalam dokumen. Mode paragraf berarti memotong gambar menurut paragraf, memastikan bahwa satu paragraf tidak dibagi menjadi dua gambar dan tinggi yang paling dekat dengan tinggi pemotongan.',
+        none: 'Tidak memotong',
+        fixed: 'Tetap tinggi',
+        hr: 'Vodoravna linija',
+        auto: 'Paragraf',
       },
       height: {
         label: 'Tinggi halaman',
@@ -134,6 +138,7 @@ const id = {
   cancel: 'Batal',
   imageUrl: 'Masukkan URL gambar',
   splitInfo: 'Tinggi gambar keseluruhan adalah {rootHeight}px, dan tinggi pemotongan adalah {splitHeight}px, jadi akan dihasilkan {pages} gambar',
+  splitInfoHr: 'Tinggi gambar keseluruhan adalah {rootHeight}px, dan tinggi pemotongan adalah {splitHeight}px, jadi akan dihasilkan {pages} gambar',
 } satisfies BaseTranslation;
 
 export default id;

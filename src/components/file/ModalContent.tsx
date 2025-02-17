@@ -21,21 +21,30 @@ const formSchema: FormSchema<ISettings> = [
     type: 'number',
   },
   {
-    path: 'split.enable',
-    label: L.setting.split.enable.label(),
-    type: 'boolean',
+    path: 'split.mode',
+    label: L.setting.split.mode.label(),
+    desc: L.setting.split.mode.description(),
+    type: 'select',
+    options: [
+      { text: L.setting.split.mode.none(), value: 'none' },
+      { text: L.setting.split.mode.fixed(), value: 'fixed' },
+      { text: L.setting.split.mode.hr(), value: 'hr' },
+      { text: L.setting.split.mode.auto(), value: 'auto' },
+    ],
   },
   {
     path: 'split.height',
+    desc: L.setting.split.height.description(),
     label: L.setting.split.height.label(),
     type: 'number',
-    when: { flag: true, path: 'split.enable' },
+    when: (settings) => settings.split.mode !== 'none' && settings.split.mode !== 'hr',
   },
   {
     path: 'split.overlap',
+    desc: L.setting.split.overlap.description(),
     label: L.setting.split.overlap.label(),
     type: 'number',
-    when: { flag: true, path: 'split.enable' },
+    when: (settings) => settings.split.mode === 'fixed',
   },
   {
     label: L.setting.userInfo.show(),
@@ -189,16 +198,17 @@ const ModalContent: FC<{
       observer.disconnect();
     };
   }, [root.current?.element, processing]);
+
+  const handleSplitChange = useCallback((positions: number[]) => {
+    setPages(positions.length + 1);
+  }, []);
+
   useEffect(() => {
-    if (formData.split.enable) {
-      const firstPage = formData.split.height;
-      const remainingHeight = rootHeight - firstPage;
-      const additionalPages = Math.max(0, Math.ceil(remainingHeight / (formData.split.height - formData.split.overlap)));
-      setPages(1 + additionalPages);
-    } else {
+    if (formData.split.mode === 'none') {
       setPages(1);
     }
-  }, [rootHeight, formData.split.enable, formData.split.height, formData.split.overlap]);
+  }, [formData.split.mode]);
+
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     isCopiable(formData.format).then(result => {
@@ -260,15 +270,15 @@ const ModalContent: FC<{
         formData['2x'],
         formData.split.height,
         formData.split.overlap,
+        formData.split.mode,
         app,
         title,
-        previewOutRef.current!,
       );
     } catch {
       new Notice(L.copyFail());
     }
     setProcessing(false);
-  }, [root, formData.format, formData['2x'], formData.split, app, title, previewOutRef]);
+  }, [root, formData.format, formData['2x'], formData.split, app, title]);
 
   return (
     <div className='export-image-preview-root'>
@@ -280,8 +290,11 @@ const ModalContent: FC<{
             settings={formData}
             app={app}
           />
-          {formData.split.enable && <div className='info-text'>
+          {formData.split.mode !== 'none' && formData.split.mode !== 'hr' && <div className='info-text'>
             {L.splitInfo({ rootHeight, splitHeight: formData.split.height, pages })}
+          </div>}
+          {formData.split.mode === 'hr' && <div className='info-text'>
+            {L.splitInfoHr({ rootHeight, pages })}
           </div>}
           <div className='info-text'>{L.moreSetting()}</div>
         </div>
@@ -333,6 +346,7 @@ const ModalContent: FC<{
                   title={title}
                   scale={scale}
                   isProcessing={processing}
+                  onSplitChange={handleSplitChange}
                 ></Target>
               </TransformComponent>
             </TransformWrapper>

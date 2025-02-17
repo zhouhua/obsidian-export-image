@@ -37,9 +37,13 @@ const pt = {
     },
     split: {
       title: 'Dividir imagem',
-      enable: {
-        label: 'Ativar divisão',
-        description: 'Ativa a divisão de imagens longas em várias páginas para melhor visualização e compartilhamento.',
+      mode: {
+        label: 'Modo de divisão',
+        description: 'Escolha como dividir a imagem, e como dividir a imagem. A altura fixa significa que cada página dividida tem uma altura fixa, que pode cortar o texto nos pontos de divisão. A divisão por linha horizontal significa dividir a imagem pelas linhas horizontais no documento. A divisão por parágrafo significa dividir a imagem pelos parágrafos, garantindo que um parágrafo não seja dividido em duas imagens e a altura seja a mais próxima possível da altura de divisão.',
+        none: 'Não dividir',
+        fixed: 'Altura fixa',
+        hr: 'Linha horizontal',
+        auto: 'Parágrafo',
       },
       height: {
         label: 'Altura da página',
@@ -135,6 +139,7 @@ const pt = {
   cancel: 'Cancelar',
   imageUrl: 'URL da imagem',
   splitInfo: 'A altura total da imagem é {rootHeight}px, e a altura de divisão é {splitHeight}px, portanto, serão geradas {pages} imagens',
+  splitInfoHr: 'A altura total da imagem é {rootHeight}px, e a altura de divisão é {splitHeight}px, portanto, serão geradas {pages} imagens',
 } satisfies BaseTranslation;
 
 export default pt;

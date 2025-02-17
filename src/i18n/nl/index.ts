@@ -37,9 +37,13 @@ const nl = {
     },
     split: {
       title: 'Afbeelding delen',
-      enable: {
-        label: 'Aktiveren',
-        description: 'Activeert de deling van lange afbeeldingen in meerdere pagina\'s voor betere weergave en deling.',
+      mode: {
+        label: 'Delingsmodus',
+        description: 'Kies hoe je de afbeelding wilt delen, en hoe je de afbeelding wilt delen. De hoge standaard betekent dat elke gedeelde pagina een vaste hoogte heeft, wat mogelijk tekst kan afsnijden op de splitsingspunten. De horizontale regel betekent dat de afbeelding wordt gedeeld volgens de horizontale regels in het document. De paragraaf betekent dat de afbeelding wordt gedeeld volgens de paragrafen, wat ervoor zorgt dat een paragraaf niet wordt gedeeld in twee afbeeldingen en de hoogte zo dicht mogelijk bij de splitsingshoogte is.',
+        none: 'Geen deling',
+        fixed: 'Vaste hoogte',
+        hr: 'Horizontale regel',
+        auto: 'Paragraaf',
       },
       height: {
         label: 'Hoogte van de pagina',
@@ -135,6 +139,7 @@ const nl = {
   cancel: 'Annuleren',
   imageUrl: 'URL van de afbeelding',
   splitInfo: 'De totale hoogte van de afbeelding is {rootHeight}px, en de hoogte van de splitsing is {splitHeight}px, dus er zullen {pages} afbeeldingen worden gemaakt',
+  splitInfoHr: 'De totale hoogte van de afbeelding is {rootHeight}px, en de hoogte van de splitsing is {splitHeight}px, dus er zullen {pages} afbeeldingen worden gemaakt',
 } satisfies BaseTranslation;
 
 export default nl;

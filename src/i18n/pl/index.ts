@@ -36,9 +36,13 @@ const pl = {
     },
     split: {
       title: 'Podział obrazu',
-      enable: {
-        label: 'Włącz podział',
-        description: 'Włącza podział długich obrazów na wiele stron dla lepszego przeglądu i wymiany.',
+      mode: {
+        label: 'Tryb podziału',
+        description: 'Wybierz sposób podziału obrazu, w tym wysokość strony, przekrywanie między stronami i tryb podziału.',
+        none: 'Brak podziału',
+        fixed: 'Stała wysokość',
+        hr: 'Pozioma linia',
+        auto: 'Paragraf',
       },
       height: {
         label: 'Wysokość strony',
@@ -134,6 +138,7 @@ const pl = {
   cancel: 'Anuluj',
   imageUrl: 'URL obrazu',
   splitInfo: 'Wysokość całego obrazu to {rootHeight}px, a wysokość podziału to {splitHeight}px, więc zostanie wygenerowanych {pages} obrazów',
+  splitInfoHr: 'Wysokość całego obrazu to {rootHeight}px, a wysokość podziału to {splitHeight}px, więc zostanie wygenerowanych {pages} obrazów',
 } satisfies BaseTranslation;
 
 export default pl;

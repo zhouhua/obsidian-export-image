@@ -37,9 +37,13 @@ const de = {
     },
     split: {
       title: 'Bild aufteilen',
-      enable: {
-        label: 'Bildaufteilung aktivieren',
-        description: 'Aktiviert die Aufteilung langer Bilder in mehrere Seiten für bessere Ansicht und einfacheres Teilen.',
+      mode: {
+        label: 'Aufteilungsmodus',
+        description: 'Wählen Sie, wie Sie das Bild aufteilen möchten, und wie Sie es aufteilen möchten. Die feste Höhe bedeutet, dass jede geteilte Seite eine feste Höhe hat, die möglicherweise den Text an den Aufteilungspunkten abschneidet. Die horizontale Linie bedeutet, dass das Bild nach horizontalen Linien im Dokument aufgeteilt wird. Der Absatz bedeutet, dass das Bild nach Absätzen aufgeteilt wird, um zu vermeiden, dass ein Absatz in zwei Bildern aufgeteilt wird und die Höhe so nahe wie möglich zur Aufteilungshöhe ist.',
+        none: 'Keine Aufteilung',
+        fixed: 'Festgelegte Höhe',
+        hr: 'Horizontale Linie',
+        auto: 'Absatz',
       },
       height: {
         label: 'Seitenhöhe',
@@ -135,6 +139,7 @@ const de = {
   cancel: 'Abbrechen',
   imageUrl: 'URL eingeben',
   splitInfo: 'Die Gesamthöhe des Bildes beträgt {rootHeight}px, und die Höhe der Aufteilung beträgt {splitHeight}px, sodass {pages} Bilder generiert werden.',
+  splitInfoHr: 'Die Gesamthöhe des Bildes beträgt {rootHeight}px, und die Höhe der Aufteilung beträgt {splitHeight}px, sodass {pages} Bilder generiert werden.',
 } satisfies BaseTranslation;
 
 export default de;

@@ -50,7 +50,7 @@ export default async function (
       <Target
         isProcessing={true}
         markdownEl={el}
-        setting={{ ...settings, showMetadata: false, showFilename: false, split: { enable: false, overlap: 0, height: 0 } }}
+        setting={{ ...settings, showMetadata: false, showFilename: false, split: { overlap: 0, height: 0, mode: 'none' } }}
         frontmatter={{}}
         title={file.basename}
         metadataMap={{}}
