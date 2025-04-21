@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { BaseTranslation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const it = {
   command: 'Esporta come immagine',
@@ -27,11 +27,113 @@ const it = {
   exportAll: 'Esporta note selezionate',
   noMarkdownFile: 'Nessun file markdown nella directory corrente',
   selectAll: 'Seleziona tutto',
+  setting: {
+    title: 'Esporta immagine',
+    imageWidth: {
+      label: 'Larghezza predefinita dell\'immagine esportata',
+      description: 'Imposta la larghezza dell\'immagine esportata, il valore predefinito è 640px.',
+    },
+    split: {
+      title: 'Divisione immagine',
+      mode: {
+        label: 'Modalità di divisione',
+        description: 'Scegli se dividere l\'immagine e come dividerla. L\'altezza fissa significa che l\'altezza di ogni immagine divisa è fissa, potrebbe tagliare il testo nel punto di divisione. La divisione per linea orizzontale significa dividere in base agli elementi hr nel documento. La divisione automatica per paragrafo significa che un paragrafo non verrà diviso in due immagini e si avvicinerà il più possibile all\'altezza di divisione.',
+        none: 'Non dividere',
+        fixed: 'Altezza fissa',
+        hr: 'Dividi per linea orizzontale',
+        auto: 'Dividi automaticamente per paragrafo',
+      },
+      height: {
+        label: 'Altezza immagine divisa',
+        description: 'Imposta l\'altezza di ogni immagine divisa (in pixel). Il valore predefinito è 1000px.',
+      },
+      overlap: {
+        label: 'Sovrapposizione immagini divise',
+        description: 'Imposta la sovrapposizione (in pixel) tra due immagini divise adiacenti per evitare che il contenuto venga tagliato. Il valore predefinito è 40px.',
+      },
+    },
+    filename: {
+      label: 'Includi nome file come titolo',
+      description: 'Imposta se includere il nome del file come titolo. Quando Obsidian mostra un documento, usa il nome del file come titolo h1, il che a volte non è desiderato e può causare duplicazione del titolo.',
+    },
+    resolutionMode: {
+      label: 'Immagine in modalità risoluzione',
+      description: 'Imposta la modalità risoluzione, utilizzando immagini con risoluzione 1x, 2x, 3x, 4x. Quando abilitato, le immagini appariranno più nitide, con una migliore esperienza su schermi ad alto PPI come gli smartphone. Lo svantaggio è che la dimensione del file dell\'immagine aumenterà.',
+    },
+    metadata: {
+      label: 'Mostra metadata',
+    },
+    format: {
+      title: 'Formato file di output',
+      description: 'Il formato png predefinito dovrebbe soddisfare la maggior parte delle esigenze, ma per supportare meglio gli scenari utente: 1. Supporta l\'esportazione di immagini con sfondo normale e trasparente; 2. Supporta l\'esportazione di immagini jpg per ottenere dimensioni di file più piccole, ma potrebbe non essere possibile copiare direttamente negli appunti; 3. Supporta l\'esportazione in pdf a pagina singola, che è diverso dal formato carta pdf usuale, si prega di non utilizzarlo erroneamente.',
+      png0: 'png - predefinito',
+      png1: 'png - esporta immagine con sfondo trasparente',
+      jpg: 'jpg - esporta immagine jpg',
+      pdf: 'pdf - esporta pdf a pagina singola',
+    },
+    quickExportSelection: {
+      label: 'Esportazione rapida della selezione',
+      description: 'Se saltare il processo di configurazione durante l\'esportazione della selezione e copiare direttamente l\'immagine esportata negli appunti.',
+    },
+    userInfo: {
+      title: 'Informazioni autore',
+      show: 'Mostra informazioni autore',
+      avatar: {
+        title: 'Avatar',
+        description: 'Si consiglia di utilizzare un\'immagine quadrata',
+      },
+      name: 'Nome autore',
+      position: 'Posizione di visualizzazione',
+      remark: 'Testo aggiuntivo',
+      align: 'Allineamento',
+      removeAvatar: 'Rimuovi avatar',
+    },
+    watermark: {
+      title: 'Filigrana',
+      enable: {
+        label: 'Abilita filigrana',
+        description: 'Abilita la filigrana, supporta filigrana di testo e immagine.',
+      },
+      type: {
+        label: 'Tipo di filigrana',
+        description: 'Imposta il tipo di filigrana, testo o immagine.',
+        text: 'Testo',
+        image: 'Immagine',
+      },
+      text: {
+        content: 'Contenuto testo filigrana',
+        fontSize: 'Dimensione carattere filigrana',
+        color: 'Colore testo filigrana',
+      },
+      image: {
+        src: {
+          label: 'URL immagine',
+          upload: 'Carica immagine',
+          select: 'Seleziona dal repository corrente',
+        },
+      },
+      opacity: 'Opacità filigrana (0 completamente trasparente, 1 opaco)',
+      rotate: 'Angolo di rotazione filigrana (in gradi)',
+      width: 'Larghezza filigrana',
+      height: 'Altezza filigrana',
+      x: 'Spaziatura orizzontale filigrana',
+      y: 'Spaziatura verticale filigrana',
+    },
+    preview: 'Anteprima effetto filigrana',
+    reset: 'Ripristina predefiniti',
+    recursive: 'Includi note nelle sottodirectory',
+  },
+  imageSelect: {
+    search: 'Cerca',
+    select: 'Seleziona',
+    cancel: 'Annulla',
+    empty: 'Nessuna immagine trovata',
+  },
   confirm: 'Conferma',
   cancel: 'Annulla',
   imageUrl: 'Inserisci URL',
   splitInfo: 'L\'altezza totale dell\'immagine è {rootHeight}px, e l\'altezza di divisione è {splitHeight}px, quindi verranno generate {pages} immagini',
   splitInfoHr: 'L\'altezza totale dell\'immagine è {rootHeight}px, e l\'immagine verrà divisa dalla linea orizzontale, quindi verranno generate {pages} immagini',
-} satisfies BaseTranslation;
+} satisfies Translation;
 
 export default it; 

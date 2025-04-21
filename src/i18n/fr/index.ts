@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { BaseTranslation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const fr = {
   // TODO: Insérez vos traductions ici
@@ -11,7 +11,7 @@ const fr = {
   copyFail: 'Échec de la copie',
   notAllowCopy: 'Impossible de copier directement le format {format}',
   save: 'Enregistrer l\'image',
-  saveSuccess: 'L\'image a été exportée et enregistrée sous {filePath: string}.',
+  saveSuccess: 'L\'image a été exportée et enregistrée sous {filePath}.',
   saveFail: 'Échec de l\'enregistrement de l\'image',
   saveVault: 'Enregistrer dans le coffre',
   includingFilename: 'Incluant le nom du fichier comme titre',
@@ -60,10 +60,9 @@ const fr = {
       description:
         'Définissez si le nom du fichier doit être inclus comme titre. Lorsqu\'Obsidian affiche le document, il affiche le nom du fichier comme un titre h1. Parfois, ce n\'est pas ce que vous souhaitez, et vous obtiendrez des titres en double.',
     },
-    '2x': {
-      label: 'Activer l\'image de plus haute résolution',
-      description:
-        'Définissez si l\'image de plus haute résolution doit être activée. Les images de plus haute résolution apparaîtront plus nettes et offriront une meilleure expérience sur les écrans à haute PPI, tels que ceux des smartphones. Cependant, l\'inconvénient est que la taille du fichier des images est plus grande.',
+    resolutionMode: {
+      label: 'Image en mode résolution',
+      description: 'Définissez le mode résolution, en utilisant des images avec une résolution 1x, 2x, 3x, 4x. Lorsqu\'il est activé, les images apparaîtront plus nettes, avec une meilleure expérience sur les écrans à haute PPI comme les smartphones. L\'inconvénient est que la taille du fichier de l\'image augmentera.',
     },
     metadata: {
       label: 'Afficher les métadonnées',
@@ -72,10 +71,10 @@ const fr = {
       title: 'Format de fichier de sortie',
       description:
         'Les images au format PNG par défaut devraient satisfaire la majorité des besoins, mais pour mieux soutenir les scénarios utilisateurs : 1. Support pour l\'exportation d\'images avec des arrière-plans normaux et transparents ; 2. Support pour l\'exportation d\'images JPG pour obtenir des tailles de fichier plus petites, bien qu\'il ne soit peut-être pas possible de copier directement dans le presse-papiers ; 3. Support pour l\'exportation au format PDF d\'une seule page, ce qui diffère des formats de papier PDF habituels, veillez à ne pas faire d\'erreur.',
-      png0: '.png - par défaut',
-      png1: '.png - image avec fond transparent',
-      jpg: '.jpg - image au format jpg',
-      pdf: '.pdf - PDF d\'une seule page',
+      png0: 'png - par défaut',
+      png1: 'png - exporter l\'image avec fond transparent',
+      jpg: 'jpg - exporter l\'image jpg',
+      pdf: 'pdf - exporter le PDF d\'une seule page',
     },
     quickExportSelection: {
       label: 'Exporter la sélection rapidement',
@@ -89,9 +88,9 @@ const fr = {
         description: 'L\'utilisation d\'images carrées est recommandée',
       },
       name: 'Nom de l\'auteur',
-      position: 'Où afficher',
+      position: 'Position d\'affichage',
       remark: 'Texte supplémentaire',
-      align: 'Aligner',
+      align: 'Alignement',
       removeAvatar: 'Supprimer l\'avatar',
     },
     watermark: {
@@ -108,7 +107,7 @@ const fr = {
         image: 'Image',
       },
       text: {
-        content: 'Contenu du texte',
+        content: 'Contenu du texte du filigrane',
         fontSize: 'Taille de la police du filigrane',
         color: 'Couleur du texte du filigrane',
       },
@@ -116,7 +115,7 @@ const fr = {
         src: {
           label: 'URL de l\'image',
           upload: 'Télécharger l\'image',
-          select: 'Sélectionner depuis le coffre',
+          select: 'Sélectionner depuis le coffre actuel',
         },
       },
       opacity: 'Opacité du filigrane (0 est transparent, 1 n\'est pas transparent)',
@@ -126,7 +125,7 @@ const fr = {
       x: 'Espacement horizontal du filigrane',
       y: 'Espacement vertical du filigrane',
     },
-    preview: 'Aperçu du filigrane',
+    preview: 'Aperçu de l\'effet du filigrane',
     reset: 'Réinitialiser par défaut',
     recursive: 'Inclure les notes des sous-répertoires',
   },
@@ -141,6 +140,6 @@ const fr = {
   imageUrl: 'URL de l\'image',
   splitInfo: 'La hauteur totale de l\'image est de {rootHeight}px, et la hauteur de division est de {splitHeight}px, donc {pages} images seront générées.',
   splitInfoHr: 'La hauteur totale de l\'image est de {rootHeight}px, et la hauteur de division est de {splitHeight}px, donc {pages} images seront générées.',
-} satisfies BaseTranslation;
+} satisfies Translation;
 
 export default fr;

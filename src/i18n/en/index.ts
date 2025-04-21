@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { BaseTranslation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const en = {
   // TODO: your translations go here
@@ -11,7 +11,7 @@ const en = {
   copyFail: 'Failed to copy',
   notAllowCopy: 'Unable to directly copy {format} format',
   save: 'Save Image',
-  saveSuccess: 'Export and save the image as {filePath: string}.',
+  saveSuccess: 'Export and save the image as {filePath}.',
   saveFail: 'Failed to save the image',
   saveVault: 'Save to Vault',
   includingFilename: 'Including File Name As Title',
@@ -60,10 +60,9 @@ const en = {
       description:
         'Set whether to include the file name as the title. When Obsidian displays the document, it will display the file name as an h1 title. Sometimes this is not what you want, and you will get duplicate titles.',
     },
-    '2x': {
-      label: 'Enable 2x resolution image',
-      description:
-        'Set whether to enable 2x resolution image. Images with 2x resolution will appear sharper and provide a better experience on high PPI screens, such as those on smartphones. However, the downside is that the file size of the images is larger.',
+    resolutionMode: {
+      label: 'Resolution mode image',
+      description: 'Set resolution mode, using 1x, 2x, 3x, 4x resolution images. When enabled, images will appear sharper, with a better experience on high PPI screens like smartphones. The downside is that the image file size will increase.',
     },
     metadata: {
       label: 'Show metadata',
@@ -72,10 +71,10 @@ const en = {
       title: 'Output file format',
       description:
         'Default PNG format images should satisfy the majority of needs, but to better support user scenarios: 1. Support for exporting images with both normal and transparent backgrounds; 2. Support for exporting JPG images to achieve smaller file sizes, though it may not be possible to copy directly to the clipboard; 3. Support for exporting to single-page PDF format, which differs from the usual PDF paper formats, please be careful not to misuse.',
-      png0: '.png - default',
-      png1: '.png - transparent background image',
-      jpg: '.jpg - jpg format image',
-      pdf: '.pdf - single page pdf',
+      png0: 'png - default',
+      png1: 'png - export transparent background image',
+      jpg: 'jpg - export jpg image',
+      pdf: 'pdf - export single page pdf',
     },
     quickExportSelection: {
       label: 'Quick export selection',
@@ -89,9 +88,9 @@ const en = {
         description: 'Recommend using square pictures',
       },
       name: 'Author name',
-      position: 'Where to display',
+      position: 'Display position',
       remark: 'Extra text',
-      align: 'Align',
+      align: 'Alignment',
       removeAvatar: 'Remove avatar',
     },
     watermark: {
@@ -99,7 +98,7 @@ const en = {
       enable: {
         label: 'Enable watermark',
         description:
-          'Enable watermark, supportting text watermark and image watermark.',
+          'Enable watermark, supporting text watermark and image watermark.',
       },
       type: {
         label: 'Watermark type',
@@ -108,7 +107,7 @@ const en = {
         image: 'Image',
       },
       text: {
-        content: 'Text content',
+        content: 'Watermark text content',
         fontSize: 'Watermark font size',
         color: 'Watermark text color',
       },
@@ -116,7 +115,7 @@ const en = {
         src: {
           label: 'Image url',
           upload: 'Upload image',
-          select: 'Select from vault',
+          select: 'Select from current vault',
         },
       },
       opacity: 'Watermark opacity (0 is transparent, 1 is not transparent)',
@@ -126,7 +125,7 @@ const en = {
       x: 'Watermark horizontal gap',
       y: 'Watermark vertical gap',
     },
-    preview: 'Watermark preview',
+    preview: 'Watermark effect preview',
     reset: 'Reset to default',
     recursive: 'Include notes from subdirectories',
   },
@@ -141,6 +140,6 @@ const en = {
   imageUrl: 'Enter URL',
   splitInfo: 'The total height of the image is {rootHeight}px, and the split height is {splitHeight}px, so {pages} images will be generated',
   splitInfoHr: 'The total height of the image is {rootHeight}px, and the image will be split by the horizontal rule, so {pages} images will be generated',
-} satisfies BaseTranslation;
+} satisfies Translation;
 
 export default en;
