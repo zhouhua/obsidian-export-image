@@ -19,6 +19,7 @@ const en = {
   exportImage: 'Export to image',
   exportSelectionImage: 'Export selection to image',
   exportFolder: 'Export all notes to image',
+  loading: 'Loading document content...',
   invalidWidth: 'Please set width with a reasonable number.',
   resolutionMode: 'Use resolution image',
   moreSetting:

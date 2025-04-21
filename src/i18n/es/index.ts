@@ -18,7 +18,8 @@ const es = {
   exportImage: 'Exportar a imagen',
   exportSelectionImage: 'Exportar selección a imagen',
   exportFolder: 'Exportar todas las notas a imagen',
-  invalidWidth: 'Por favor, establece un ancho en un número razonable.',
+  loading: 'Cargando contenido del documento...',
+  invalidWidth: 'Por favor, establezca un ancho razonable.',
   resolutionMode: 'Usar imagen de mayor resolución',
   moreSetting:
     'Puedes encontrar configuraciones más detalladas en los ajustes del plugin `Exportar como imagen`.',

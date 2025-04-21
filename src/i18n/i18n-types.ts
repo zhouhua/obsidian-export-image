@@ -97,6 +97,10 @@ type RootTranslation = {
 	 */
 	exportFolder: string
 	/**
+	 * L​o​a​d​i​n​g​ ​d​o​c​u​m​e​n​t​ ​c​o​n​t​e​n​t​.​.​.
+	 */
+	loading: string
+	/**
 	 * P​l​e​a​s​e​ ​s​e​t​ ​w​i​d​t​h​ ​w​i​t​h​ ​a​ ​r​e​a​s​o​n​a​b​l​e​ ​n​u​m​b​e​r​.
 	 */
 	invalidWidth: string
@@ -508,6 +512,10 @@ export type TranslationFunctions = {
 	 * Export all notes to image
 	 */
 	exportFolder: () => LocalizedString
+	/**
+	 * Loading document content...
+	 */
+	loading: () => LocalizedString
 	/**
 	 * Please set width with a reasonable number.
 	 */

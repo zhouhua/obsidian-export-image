@@ -247,3 +247,34 @@ If your plugin does not need CSS, delete this file.
   opacity: 0;
   height: 0;
 }
+
+/* 加载动画样式 */
+.export-image-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.export-image-loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--background-secondary);
+  border-top: 5px solid var(--interactive-accent);
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  margin-bottom: 20px;
+}
+
+.export-image-loading-text {
+  font-size: 16px;
+  color: var(--text-normal);
+  text-align: center;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

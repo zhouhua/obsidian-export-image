@@ -165,7 +165,8 @@ const ModalContent: FC<{
   title: string;
   app: App;
   metadataMap: Record<string, { type: MetadataType }>;
-}> = ({ markdownEl, settings, app, frontmatter, title, metadataMap }) => {
+  isLoading?: boolean;
+}> = ({ markdownEl, settings, app, frontmatter, title, metadataMap, isLoading = false }) => {
   const [formData, setFormData] = useState<ISettings>(settings);
   const [isGrabbing, setIsGrabbing] = useState(false);
   const previewOutRef = useRef<HTMLDivElement>(null);
@@ -319,49 +320,56 @@ const ModalContent: FC<{
               cursor: isGrabbing ? 'grabbing' : 'grab',
             }}
           >
-            <TransformWrapper
-              minScale={calculateScale()}
-              maxScale={4}
-              pinch={{ step: 20 }}
-              doubleClick={{ mode: 'reset' }}
-              centerZoomedOut={false}
-              onPanning={() => {
-                setIsGrabbing(true);
-              }}
-              onPanningStop={() => {
-                setIsGrabbing(false);
-              }}
-              onTransformed={(e) => {
-                setScale(e.state.scale);
-              }}
-              initialScale={1}
-            >
-              <TransformComponent
-                wrapperStyle={{
-                  width: '100%',
-                  height: mainHeight,
+            {isLoading ? (
+              <div className="export-image-loading">
+                <div className="export-image-loading-spinner"></div>
+                <div className="export-image-loading-text">{L.loading()}</div>
+              </div>
+            ) : (
+              <TransformWrapper
+                minScale={calculateScale()}
+                maxScale={4}
+                pinch={{ step: 20 }}
+                doubleClick={{ mode: 'reset' }}
+                centerZoomedOut={false}
+                onPanning={() => {
+                  setIsGrabbing(true);
                 }}
-                contentStyle={{
-                  border: '1px var(--divider-color) solid',
-                  borderRadius: '8px',
-                  overflow: 'hidden',
-                  boxShadow: '0 0 10px 10px rgba(0,0,0,0.15)',
+                onPanningStop={() => {
+                  setIsGrabbing(false);
                 }}
+                onTransformed={(e) => {
+                  setScale(e.state.scale);
+                }}
+                initialScale={1}
               >
-                <Target
-                  ref={root}
-                  frontmatter={frontmatter}
-                  markdownEl={markdownEl}
-                  setting={formData}
-                  metadataMap={metadataMap}
-                  app={app}
-                  title={title}
-                  scale={scale}
-                  isProcessing={processing}
-                  onSplitChange={handleSplitChange}
-                ></Target>
-              </TransformComponent>
-            </TransformWrapper>
+                <TransformComponent
+                  wrapperStyle={{
+                    width: '100%',
+                    height: mainHeight,
+                  }}
+                  contentStyle={{
+                    border: '1px var(--divider-color) solid',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: '0 0 10px 10px rgba(0,0,0,0.15)',
+                  }}
+                >
+                  <Target
+                    ref={root}
+                    frontmatter={frontmatter}
+                    markdownEl={markdownEl}
+                    setting={formData}
+                    metadataMap={metadataMap}
+                    app={app}
+                    title={title}
+                    scale={scale}
+                    isProcessing={processing}
+                    onSplitChange={handleSplitChange}
+                  ></Target>
+                </TransformComponent>
+              </TransformWrapper>
+            )}
           </div>
           <div className='info-text'>{L.guide()}</div>
         </div>
@@ -369,14 +377,14 @@ const ModalContent: FC<{
       <div className='export-image-preview-actions'>
         {pages === 1 && (
           <div>
-            <button onClick={handleCopy} disabled={processing || !allowCopy}>
+            <button onClick={handleCopy} disabled={processing || !allowCopy || isLoading}>
               {L.copy()}
             </button>
             {allowCopy || <p>{L.notAllowCopy({ format: formData.format.replace(/\d$/, '').toUpperCase() })}</p>}
           </div>
         )}
 
-        <button onClick={() => pages === 1 ? handleSave() : handleSaveAll()} disabled={processing}>
+        <button onClick={() => pages === 1 ? handleSave() : handleSaveAll()} disabled={processing || isLoading}>
           {Platform.isMobile ? L.saveVault() : L.save()}
         </button>
       </div>

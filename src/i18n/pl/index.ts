@@ -16,9 +16,10 @@ const pl = {
   includingFilename: 'Włącznie z nazwą pliku jako tytułem',
   imageWidth: 'Szerokość obrazu',
   exportImage: 'Eksportuj do obrazu',
-  exportSelectionImage: 'Eksportuj wybór do obrazu',
+  exportSelectionImage: 'Eksportuj zaznaczenie do obrazu',
   exportFolder: 'Eksportuj wszystkie notatki do obrazu',
-  invalidWidth: 'Proszę ustawić szerokość na rozsądną liczbę.',
+  loading: 'Ładowanie zawartości dokumentu...',
+  invalidWidth: 'Proszę ustawić rozsądną szerokość.',
   resolutionMode: 'Użyj obrazu o wyższej rozdzielczości',
   moreSetting:
     'Więcej szczegółowych ustawień można znaleźć w ustawieniach wtyczki "Eksport obrazu".',

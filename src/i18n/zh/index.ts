@@ -18,6 +18,7 @@ const zh = {
   exportImage: '导出为图片',
   exportFolder: '导出所有笔记为图片',
   exportSelectionImage: '导出选中内容为图片',
+  loading: '正在加载文档内容...',
   invalidWidth: '请设置合理的宽度。',
   resolutionMode: '输出高分辨率的图片',
   moreSetting: '更详细的配置请进入 Export Image 插件的设置界面。',

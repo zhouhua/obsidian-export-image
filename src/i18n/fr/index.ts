@@ -19,7 +19,8 @@ const fr = {
   exportImage: 'Exporter en image',
   exportSelectionImage: 'Exporter la sélection en image',
   exportFolder: 'Exporter toutes les notes en image',
-  invalidWidth: 'Veuillez définir une largeur avec un nombre raisonnable.',
+  loading: 'Chargement du contenu du document...',
+  invalidWidth: 'Veuillez définir une largeur raisonnable.',
   resolutionMode: 'Utiliser une image de plus haute résolution',
   moreSetting:
     'Des paramètres plus détaillés peuvent être trouvés dans les réglages du plugin `Exporter en image`.',

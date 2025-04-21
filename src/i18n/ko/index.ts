@@ -20,7 +20,8 @@ const ko = {
   exportImage: '이미지로 내보내기',
   exportSelectionImage: '선택 영역을 이미지로 내보내기',
   exportFolder: '모든 노트를 이미지로 내보내기',
-  invalidWidth: '적절한 숫자로 너비를 설정해 주세요.',
+  loading: '문서 내용을 로딩 중...',
+  invalidWidth: '적절한 너비를 설정해주세요.',
   resolutionMode: '고해상도 이미지 사용',
   moreSetting:
     '`이미지로 내보내기` 플러그인 설정에서 더 자세한 설정을 찾을 수 있습니다.',
