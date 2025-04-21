@@ -59,7 +59,7 @@ export default async function (
     );
     await delay(20);
     try {
-      await copy(div.querySelector('.export-image-root')!, settings['2x'], settings.format);
+      await copy(div.querySelector('.export-image-root')!, settings.resolutionMode, settings.format);
     } catch (e) {
       console.error(e);
       new Notice(L.copyFail());

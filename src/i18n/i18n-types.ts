@@ -101,9 +101,9 @@ type RootTranslation = {
 	 */
 	invalidWidth: string
 	/**
-	 * E​n​a​b​l​e​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e
+	 * 分辨率模式
 	 */
-	'2x': string
+	resolutionMode: string
 	/**
 	 * M​o​r​e​ ​d​e​t​a​i​l​e​d​ ​s​e​t​t​i​n​g​s​ ​c​a​n​ ​b​e​ ​f​o​u​n​d​ ​i​n​ ​t​h​e​ ​`​E​x​p​o​r​t​ ​I​m​a​g​e​`​ ​p​l​u​g​i​n​ ​s​e​t​t​i​n​g​s​.
 	 */
@@ -205,7 +205,7 @@ type RootTranslation = {
 			 */
 			description: string
 		}
-		'2x': {
+		resolutionMode: {
 			/**
 			 * E​n​a​b​l​e​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e
 			 */
@@ -515,7 +515,7 @@ export type TranslationFunctions = {
 	/**
 	 * Enable 2x resolution image
 	 */
-	'2x': () => LocalizedString
+	resolutionMode: () => LocalizedString
 	/**
 	 * More detailed settings can be found in the `Export Image` plugin settings.
 	 */
@@ -617,7 +617,7 @@ export type TranslationFunctions = {
 			 */
 			description: () => LocalizedString
 		}
-		'2x': {
+		resolutionMode: {
 			/**
 			 * Enable 2x resolution image
 			 */

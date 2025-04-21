@@ -20,7 +20,7 @@ const de = {
   exportSelectionImage: 'Auswahl als Bild exportieren',
   exportFolder: 'Alle Notizen als Bilder exportieren',
   invalidWidth: 'Bitte geben Sie eine vernünftige Nummer für die Breite an.',
-  '2x': 'Bild mit 2x Auflösung aktivieren',
+  resolutionMode: 'Bild mit höherer Auflösung verwenden',
   moreSetting:
     'Detailliertere Einstellungen finden Sie in den `Bild exportieren` Plugin-Einstellungen.',
   guide: 'Ziehen zum Bewegen, scrollen oder kneifen zum Zoomen, Doppelklick zum Zurücksetzen.',
@@ -60,9 +60,9 @@ const de = {
         'Stellen Sie ein, ob der Dateiname als Titel einbezogen werden soll. Wenn Obsidian das Dokument anzeigt, wird der Dateiname als h1 Titel angezeigt. Manchmal ist das nicht erwünscht, und Sie erhalten doppelte Titel.',
     },
     '2x': {
-      label: 'Bild mit 2x Auflösung aktivieren',
+      label: 'Bild mit höherer Auflösung aktivieren',
       description:
-        'Stellen Sie ein, ob Bilder mit 2x Auflösung aktiviert werden sollen. Bilder mit 2x Auflösung erscheinen schärfer und bieten eine bessere Erfahrung auf Bildschirmen mit hoher PPI, wie z.B. auf Smartphones. Der Nachteil ist jedoch, dass die Dateigröße der Bilder größer ist.',
+        'Stellen Sie ein, ob Bilder mit höherer Auflösung aktiviert werden sollen. Bilder mit höherer Auflösung erscheinen schärfer und bieten eine bessere Erfahrung auf Bildschirmen mit hoher PPI, wie z.B. auf Smartphones. Der Nachteil ist jedoch, dass die Dateigröße der Bilder größer ist.',
     },
     metadata: {
       label: 'Metadaten anzeigen',

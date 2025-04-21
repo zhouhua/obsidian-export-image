@@ -229,7 +229,7 @@ const ModalContent: FC<{
         app,
         root.current.contentElement,
         title,
-        formData['2x'],
+        formData.resolutionMode,
         formData.format,
         Platform.isMobile,
       );
@@ -237,7 +237,7 @@ const ModalContent: FC<{
       new Notice(L.saveFail());
     }
     setProcessing(false);
-  }, [root, formData['2x'], formData.format, title, formData.width]);
+  }, [root, formData.resolutionMode, formData.format, title, formData.width]);
   const handleCopy = useCallback(async () => {
     if ((formData.width || 640) <= 20) {
       new Notice(L.invalidWidth());
@@ -247,13 +247,13 @@ const ModalContent: FC<{
 
     setProcessing(true);
     try {
-      await copy(root.current.contentElement, formData['2x'], formData.format);
+      await copy(root.current.contentElement, formData.resolutionMode, formData.format);
     } catch {
       new Notice(L.copyFail());
     }
 
     setProcessing(false);
-  }, [root, formData['2x'], formData.format, title, formData.width]);
+  }, [root, formData.resolutionMode, formData.format, title, formData.width]);
 
   const handleSaveAll = useCallback(async () => {
     if ((formData.width || 640) <= 20) {
@@ -267,7 +267,7 @@ const ModalContent: FC<{
       await saveAll(
         root.current,
         formData.format,
-        formData['2x'],
+        formData.resolutionMode,
         formData.split.height,
         formData.split.overlap,
         formData.split.mode,
@@ -278,7 +278,7 @@ const ModalContent: FC<{
       new Notice(L.copyFail());
     }
     setProcessing(false);
-  }, [root, formData.format, formData['2x'], formData.split, app, title]);
+  }, [root, formData.format, formData.resolutionMode, formData.split, app, title]);
 
   return (
     <div className='export-image-preview-root'>

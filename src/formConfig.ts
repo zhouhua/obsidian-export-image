@@ -69,10 +69,16 @@ export const createSettingConfig = async (app: App): Promise<SettingItem[]> => {
       type: 'toggle',
     },
     {
-      id: '2x',
-      label: L.setting['2x'].label(),
-      description: L.setting['2x'].description(),
-      type: 'toggle',
+      id: 'resolutionMode',
+      label: L.setting.resolutionMode.label(),
+      description: L.setting.resolutionMode.description(),
+      type: 'dropdown',
+      options: [
+        { value: '1x', text: '1x' },
+        { value: '2x', text: '2x' },
+        { value: '3x', text: '3x' },
+        { value: '4x', text: '4x' },
+      ],
     },
     {
       id: 'format',

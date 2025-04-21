@@ -20,7 +20,7 @@ const hu = {
   exportSelectionImage: 'Kijelölés exportálása képként',
   exportFolder: 'Az összes jegyzet exportálása képként',
   invalidWidth: 'Kérlek, adj meg egy ésszerű szélességi értéket.',
-  '2x': '2x felbontású kép engedélyezése',
+  resolutionMode: 'Felbontás módja',
   moreSetting:
     'További részletes beállítások a `Képként exportálás` bővítmény beállításaiban találhatóak.',
   guide: 'Húzással mozgatható, görgetéssel vagy csipetmozdulattal zoomolható, dupla kattintással visszaállítható.',

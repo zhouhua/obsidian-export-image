@@ -19,7 +19,7 @@ const id = {
   exportSelectionImage: 'Ekspor seleksi ke gambar',
   exportFolder: 'Ekspor semua catatan ke gambar',
   invalidWidth: 'Please set width with a reasonable number.', // Opsional: "Silakan atur lebar dengan angka yang wajar."
-  '2x': 'Aktifkan gambar resolusi 2x',
+  resolutionMode: 'Gunakan gambar resolusi tinggi',
   moreSetting:
     'Pengaturan lebih rinci dapat ditemukan di pengaturan plugin `Ekspor Gambar`.',
   guide: 'Seret untuk Bergerak, gulir atau cubit untuk memperbesar/memperkecil, klik dua kali untuk mereset.',

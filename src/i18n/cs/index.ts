@@ -19,7 +19,7 @@ const cs = {
   exportSelectionImage: 'Exportovat výběr do obrázku',
   exportFolder: 'Exportovat všechny poznámky do obrázku',
   invalidWidth: 'Prosím, nastavte šířku na rozumné číslo.',
-  '2x': 'Povolit obrázek s dvojnásobným rozlišením',
+  resolutionMode: 'Povolit obrázek s dvojnásobným rozlišením',
   moreSetting:
     'Podrobnější nastavení naleznete v nastavení pluginu `Exportovat obrázek`.',
   guide: 'Tažením přesuňte, posouváním nebo špetkou zvětšte/zmenšte, dvojím kliknutím resetujte.',

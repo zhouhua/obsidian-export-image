@@ -20,7 +20,7 @@ const fr = {
   exportSelectionImage: 'Exporter la sélection en image',
   exportFolder: 'Exporter toutes les notes en image',
   invalidWidth: 'Veuillez définir une largeur avec un nombre raisonnable.',
-  '2x': 'Activer l\'image en résolution 2x',
+  resolutionMode: 'Utiliser une image de plus haute résolution',
   moreSetting:
     'Des paramètres plus détaillés peuvent être trouvés dans les réglages du plugin `Exporter en image`.',
   guide: 'Faites glisser pour déplacer, faites défiler ou pincez pour zoomer, double-cliquez pour réinitialiser.',
@@ -60,9 +60,9 @@ const fr = {
         'Définissez si le nom du fichier doit être inclus comme titre. Lorsqu\'Obsidian affiche le document, il affiche le nom du fichier comme un titre h1. Parfois, ce n\'est pas ce que vous souhaitez, et vous obtiendrez des titres en double.',
     },
     '2x': {
-      label: 'Activer l\'image en résolution 2x',
+      label: 'Activer l\'image de plus haute résolution',
       description:
-        'Définissez si l\'image en résolution 2x doit être activée. Les images en résolution 2x apparaîtront plus nettes et offriront une meilleure expérience sur les écrans à haute PPI, tels que ceux des smartphones. Cependant, l\'inconvénient est que la taille du fichier des images est plus grande.',
+        'Définissez si l\'image de plus haute résolution doit être activée. Les images de plus haute résolution apparaîtront plus nettes et offriront une meilleure expérience sur les écrans à haute PPI, tels que ceux des smartphones. Cependant, l\'inconvénient est que la taille du fichier des images est plus grande.',
     },
     metadata: {
       label: 'Afficher les métadonnées',

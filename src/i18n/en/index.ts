@@ -20,7 +20,7 @@ const en = {
   exportSelectionImage: 'Export selection to image',
   exportFolder: 'Export all notes to image',
   invalidWidth: 'Please set width with a reasonable number.',
-  '2x': 'Enable 2x resolution image',
+  resolutionMode: 'Use resolution image',
   moreSetting:
     'More detailed settings can be found in the `Export Image` plugin settings.',
   guide: 'Drag to Move, scroll or pinch to zoom in/out, double click to reset.',

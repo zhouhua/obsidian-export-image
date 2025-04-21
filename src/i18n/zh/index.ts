@@ -19,7 +19,7 @@ const zh = {
   exportFolder: '导出所有笔记为图片',
   exportSelectionImage: '导出选中内容为图片',
   invalidWidth: '请设置合理的宽度。',
-  '2x': '输出 2 倍分辨率的图',
+  resolutionMode: '输出高分辨率的图片',
   moreSetting: '更详细的配置请进入 Export Image 插件的设置界面。',
   guide: '拖动可移动，滚轮或双指滑动可放大/缩小，双击可重置。',
   copyNotAllowed: 'pdf 格式不支持复制',
@@ -56,10 +56,10 @@ const zh = {
       description:
         '设置是否包含文件名作为标题。Obsidian 展示文档时，会把文件名作为 h1 标题，有时候并不符合预期，产生标题重复的情况。',
     },
-    '2x': {
-      label: '启用 2x 分辨率图片',
+    resolutionMode: {
+      label: '分辨率模式图片',
       description:
-        '设置是否启用 2x 分辨率图片。启用后，图片会显示得更清晰，在高 PPI 屏幕上体验更好，如智能手机。但缺点是图片文件大小会变大。',
+        '设置分辨模式，使用 1x、2x、3x、4x 分辨率图片。启用后，图片会显示得更清晰，在高 PPI 屏幕上体验更好，如智能手机。但缺点是图片文件大小会变大。',
     },
     metadata: {
       label: '显示 metadata',
