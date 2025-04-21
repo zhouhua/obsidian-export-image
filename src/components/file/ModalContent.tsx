@@ -33,6 +33,18 @@ const formSchema: FormSchema<ISettings> = [
     ],
   },
   {
+    path: 'resolutionMode',
+    label: L.setting.resolutionMode.label(),
+    desc: L.setting.resolutionMode.description(),
+    type: 'select',
+    options: [
+      { text: "1x", value: '1x' },
+      { text: "2x", value: '2x' },
+      { text: "3x", value: '3x' },
+      { text: "4x", value: '4x' },
+    ],
+  },
+  {
     path: 'split.height',
     desc: L.setting.split.height.description(),
     label: L.setting.split.height.label(),
