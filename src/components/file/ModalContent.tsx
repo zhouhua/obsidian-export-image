@@ -165,21 +165,50 @@ const ModalContent: FC<{
   title: string;
   app: App;
   metadataMap: Record<string, { type: MetadataType }>;
-  isLoading?: boolean;
-}> = ({ markdownEl, settings, app, frontmatter, title, metadataMap, isLoading = false }) => {
+}> = ({ markdownEl, settings, app, frontmatter, title, metadataMap }) => {
   const [formData, setFormData] = useState<ISettings>(settings);
   const [isGrabbing, setIsGrabbing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const previewOutRef = useRef<HTMLDivElement>(null);
   const mainHeight = Math.min(764, (window.innerHeight * 0.85) - 225);
   const root = useRef<TargetRef>(null);
+
   useEffect(() => {
     setFormData(settings);
   }, [settings]);
+
+  useEffect(() => {
+    // 当markdownEl准备好时，更新loading状态
+    if (markdownEl && markdownEl instanceof HTMLElement && markdownEl.innerHTML && markdownEl.innerHTML.length > 0) {
+      // 给一个小延迟确保内容完全加载
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 100);
+    }
+    
+    // 监听内容加载完成事件
+    const handleContentLoaded = () => {
+      setIsLoading(false);
+    };
+    
+    window.document.addEventListener("export-image-content-loaded", handleContentLoaded);
+    
+    return () => {
+      window.document.removeEventListener("export-image-content-loaded", handleContentLoaded);
+    };
+  }, [markdownEl]);
+
   const [processing, setProcessing] = useState(false);
   const [allowCopy, setAllowCopy] = useState(true);
   const [rootHeight, setRootHeight] = useState(0);
   const [pages, setPages] = useState(1);
   const [scale, setScale] = useState(1);
+
+  // 添加日志检查函数
+  useEffect(() => {
+    console.log("ModalContent rendered, loading state:", isLoading);
+    console.log("markdownEl content:", markdownEl instanceof HTMLElement ? markdownEl.innerHTML.substring(0, 100) + "..." : "Not HTML Element");
+  }, [isLoading, markdownEl]);
 
   const calculateScale = useCallback(() => {
     if (!root.current?.element || !previewOutRef.current) return 1;
