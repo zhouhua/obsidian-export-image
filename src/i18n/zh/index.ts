@@ -33,6 +33,14 @@ const zh = {
       label: '导出图片的默认宽度',
       description: '设置导出图片的宽度，默认值为 640px。',
     },
+    padding: {
+      title: '图片边框',
+      description: '设置导出图片的内边距，所有边的默认值为6px。',
+      top: '上边距',
+      right: '右边距',
+      bottom: '下边距',
+      left: '左边距',
+    },
     split: {
       title: '图片拆分',
       mode: {

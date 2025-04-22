@@ -36,6 +36,14 @@ const de = {
       description:
         'Setzen Sie die Breite des exportierten Bildes in Pixel. Standardmäßig ist 640px.',
     },
+    padding: {
+      title: 'Bildrand',
+      description: 'Stellen Sie den Innenabstand für das exportierte Bild ein. Der Standardwert beträgt 6px für alle Seiten.',
+      top: 'Oberer Abstand',
+      right: 'Rechter Abstand',
+      bottom: 'Unterer Abstand',
+      left: 'Linker Abstand',
+    },
     split: {
       title: 'Bild aufteilen',
       mode: {

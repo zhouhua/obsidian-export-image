@@ -9,6 +9,12 @@ declare type ISettings = {
   showMetadata: boolean;
   recursive: boolean;
   quickExportSelection: boolean;
+  padding: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
   authorInfo: {
     show: boolean;
     name?: string;

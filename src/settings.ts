@@ -10,6 +10,12 @@ export const DEFAULT_SETTINGS: ISettings = {
   showMetadata: false,
   recursive: false,
   quickExportSelection: false,
+  padding: {
+    top: 6,
+    right: 6,
+    bottom: 6,
+    left: 6,
+  },
   authorInfo: {
     show: false,
     align: 'right',

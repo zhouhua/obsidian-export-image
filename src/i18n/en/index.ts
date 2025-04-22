@@ -36,6 +36,14 @@ const en = {
       description:
         'Set the width of the exported image in pixel. The default is 640px.',
     },
+    padding: {
+      title: 'Image Padding',
+      description: 'Set padding for the exported image. The default is 6px for all sides.',
+      top: 'Top padding',
+      right: 'Right padding',
+      bottom: 'Bottom padding',
+      left: 'Left padding',
+    },
     split: {
       title: 'Split Image',
       mode: {

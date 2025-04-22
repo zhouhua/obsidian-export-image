@@ -165,6 +165,7 @@ const Target = forwardRef<
             style={{
               width: `${setting.width}px`,
               transition: 'width 0.25s',
+              padding: `${setting.padding.top}px ${setting.padding.right}px ${setting.padding.bottom}px ${setting.padding.left}px`,
             }}
           >
             {setting.showFilename && (

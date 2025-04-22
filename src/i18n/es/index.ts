@@ -33,6 +33,14 @@ const es = {
       label: 'Ancho de imagen exportada por defecto',
       description: 'Establece el ancho de la imagen exportada en píxeles. El predeterminado es 640px.',
     },
+    padding: {
+      title: 'Margen de imagen',
+      description: 'Establece el relleno para la imagen exportada. El valor predeterminado es 6px para todos los lados.',
+      top: 'Relleno superior',
+      right: 'Relleno derecho',
+      bottom: 'Relleno inferior',
+      left: 'Relleno izquierdo',
+    },
     split: {
       title: 'Dividir imagen',
       mode: {

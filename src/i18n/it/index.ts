@@ -29,6 +29,14 @@ const it = {
   selectAll: 'Seleziona tutto',
   setting: {
     title: 'Esporta immagine',
+    padding: {
+      title: 'Margine immagine',
+      description: 'Imposta il padding per l\'immagine esportata. Il valore predefinito è 6px per tutti i lati.',
+      top: 'Padding superiore',
+      right: 'Padding destro',
+      bottom: 'Padding inferiore',
+      left: 'Padding sinistro',
+    },
     imageWidth: {
       label: 'Larghezza predefinita dell\'immagine esportata',
       description: 'Imposta la larghezza dell\'immagine esportata, il valore predefinito è 640px.',

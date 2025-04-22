@@ -36,6 +36,14 @@ const fr = {
       description:
         'Définissez la largeur de l\'image exportée en pixels. La valeur par défaut est 640px.',
     },
+    padding: {
+      title: 'Marge d\'image',
+      description: 'Définissez le rembourrage pour l\'image exportée. La valeur par défaut est de 6px pour tous les côtés.',
+      top: 'Rembourrage supérieur',
+      right: 'Rembourrage droit',
+      bottom: 'Rembourrage inférieur',
+      left: 'Rembourrage gauche',
+    },
     split: {
       title: 'Fractionner l\'image',
       mode: {

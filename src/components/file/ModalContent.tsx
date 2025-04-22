@@ -21,6 +21,27 @@ const formSchema: FormSchema<ISettings> = [
     type: 'number',
   },
   {
+    path: 'padding.top',
+    label: L.setting.padding.top(),
+    desc: L.setting.padding.description(),
+    type: 'number',
+  },
+  {
+    path: 'padding.right',
+    label: L.setting.padding.right(),
+    type: 'number',
+  },
+  {
+    path: 'padding.bottom',
+    label: L.setting.padding.bottom(),
+    type: 'number',
+  },
+  {
+    path: 'padding.left',
+    label: L.setting.padding.left(),
+    type: 'number',
+  },
+  {
     path: 'split.mode',
     label: L.setting.split.mode.label(),
     desc: L.setting.split.mode.description(),

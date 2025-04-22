@@ -143,9 +143,35 @@ type RootTranslation = {
 			 */
 			label: string
 			/**
-			 * S​e​t​ ​t​h​e​ ​w​i​d​t​h​ ​o​f​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​6​4​0​p​x​.
+			 * S​e​t​ ​t​h​e​ ​w​i​d​t​h​ ​o​f​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 6​4​0​p​x​.
 			 */
 			description: string
+		}
+		padding: {
+			/**
+			 * I​m​a​g​e​ ​P​a​d​d​i​n​g
+			 */
+			title: string
+			/**
+			 * S​e​t​ ​p​a​d​d​i​n​g​ ​f​o​r​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 6​p​x​ ​f​o​r​ ​a​l​l​ ​s​i​d​e​s​.
+			 */
+			description: string
+			/**
+			 * T​o​p​ ​p​a​d​d​i​n​g
+			 */
+			top: string
+			/**
+			 * R​i​g​h​t​ ​p​a​d​d​i​n​g
+			 */
+			right: string
+			/**
+			 * B​o​t​t​o​m​ ​p​a​d​d​i​n​g
+			 */
+			bottom: string
+			/**
+			 * L​e​f​t​ ​p​a​d​d​i​n​g
+			 */
+			left: string
 		}
 		split: {
 			/**
@@ -184,7 +210,7 @@ type RootTranslation = {
 				 */
 				label: string
 				/**
-				 * S​e​t​ ​t​h​e​ ​h​e​i​g​h​t​ ​o​f​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​s​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​1​0​0​0​p​x​.
+				 * S​e​t​ ​t​h​e​ ​h​e​i​g​h​t​ ​o​f​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​s​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 1​0​0​0​p​x​.
 				 */
 				description: string
 			}
@@ -194,7 +220,7 @@ type RootTranslation = {
 				 */
 				label: string
 				/**
-				 * S​e​t​ ​t​h​e​ ​o​v​e​r​l​a​p​ ​b​e​t​w​e​e​n​ ​a​d​j​a​c​e​n​t​ ​s​p​l​i​t​ ​i​m​a​g​e​s​ ​t​o​ ​p​r​e​v​e​n​t​ ​c​o​n​t​e​n​t​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​u​t​ ​o​f​f​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​4​0​p​x​.
+				 * S​e​t​ ​t​h​e​ ​o​v​e​r​l​a​p​ ​b​e​t​w​e​e​n​ ​a​d​j​a​c​e​n​t​ ​s​p​l​i​t​ ​i​m​a​g​e​s​ ​t​o​ ​p​r​e​v​e​n​t​ ​c​o​n​t​e​n​t​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​u​t​ ​o​f​f​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 4​0​p​x​.
 				 */
 				description: string
 			}
@@ -562,6 +588,32 @@ export type TranslationFunctions = {
 			 * Set the width of the exported image in pixel. The default is 640px.
 			 */
 			description: () => LocalizedString
+		}
+		padding: {
+			/**
+			 * Image Padding
+			 */
+			title: () => LocalizedString
+			/**
+			 * Set padding for the exported image. The default is 6px for all sides.
+			 */
+			description: () => LocalizedString
+			/**
+			 * Top padding
+			 */
+			top: () => LocalizedString
+			/**
+			 * Right padding
+			 */
+			right: () => LocalizedString
+			/**
+			 * Bottom padding
+			 */
+			bottom: () => LocalizedString
+			/**
+			 * Left padding
+			 */
+			left: () => LocalizedString
 		}
 		split: {
 			/**
