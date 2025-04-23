@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { BaseTranslation } from '../i18n-types';
+import type { Translation } from '../i18n-types';
 
 const de = {
   // TODO: Ihre Übersetzungen hier eingeben
@@ -11,16 +11,17 @@ const de = {
   copyFail: 'Kopieren fehlgeschlagen',
   notAllowCopy: 'Direktes Kopieren des {format} Formats nicht möglich',
   save: 'Bild speichern',
-  saveSuccess: 'Das Bild wurde erfolgreich als {filePath: string} gespeichert.',
+  saveSuccess: 'Das Bild wurde erfolgreich als {filePath} gespeichert.',
   saveFail: 'Das Bild konnte nicht gespeichert werden',
   saveVault: 'Im Tresor speichern',
   includingFilename: 'Mit Dateinamen als Titel einschließen',
   imageWidth: 'Bildbreite',
-  exportImage: 'Zu Bild exportieren',
+  exportImage: 'Als Bild exportieren',
   exportSelectionImage: 'Auswahl als Bild exportieren',
-  exportFolder: 'Alle Notizen als Bilder exportieren',
-  invalidWidth: 'Bitte geben Sie eine vernünftige Nummer für die Breite an.',
-  '2x': 'Bild mit 2x Auflösung aktivieren',
+  exportFolder: 'Alle Notizen als Bild exportieren',
+  loading: 'Dokumentinhalt wird geladen...',
+  invalidWidth: 'Bitte setzen Sie eine vernünftige Breite.',
+  resolutionMode: 'Bild mit höherer Auflösung verwenden',
   moreSetting:
     'Detailliertere Einstellungen finden Sie in den `Bild exportieren` Plugin-Einstellungen.',
   guide: 'Ziehen zum Bewegen, scrollen oder kneifen zum Zoomen, Doppelklick zum Zurücksetzen.',
@@ -34,6 +35,14 @@ const de = {
       label: 'Standardmäßige exportierte Bildbreite',
       description:
         'Setzen Sie die Breite des exportierten Bildes in Pixel. Standardmäßig ist 640px.',
+    },
+    padding: {
+      title: 'Bildrand',
+      description: 'Stellen Sie den Innenabstand für das exportierte Bild ein. Der Standardwert beträgt 6px für alle Seiten.',
+      top: 'Oberer Abstand',
+      right: 'Rechter Abstand',
+      bottom: 'Unterer Abstand',
+      left: 'Linker Abstand',
     },
     split: {
       title: 'Bild aufteilen',
@@ -59,10 +68,9 @@ const de = {
       description:
         'Stellen Sie ein, ob der Dateiname als Titel einbezogen werden soll. Wenn Obsidian das Dokument anzeigt, wird der Dateiname als h1 Titel angezeigt. Manchmal ist das nicht erwünscht, und Sie erhalten doppelte Titel.',
     },
-    '2x': {
-      label: 'Bild mit 2x Auflösung aktivieren',
-      description:
-        'Stellen Sie ein, ob Bilder mit 2x Auflösung aktiviert werden sollen. Bilder mit 2x Auflösung erscheinen schärfer und bieten eine bessere Erfahrung auf Bildschirmen mit hoher PPI, wie z.B. auf Smartphones. Der Nachteil ist jedoch, dass die Dateigröße der Bilder größer ist.',
+    resolutionMode: {
+      label: 'Bild in Auflösungsmodus',
+      description: 'Setzen Sie den Auflösungsmodus, verwenden Sie Bilder mit 1x, 2x, 3x, 4x Auflösung. Wenn aktiviert, erscheinen Bilder schärfer, mit einer besseren Erfahrung auf hochauflösenden Bildschirmen wie Smartphones. Der Nachteil ist, dass die Bilddateigröße zunimmt.',
     },
     metadata: {
       label: 'Metadaten anzeigen',
@@ -71,10 +79,10 @@ const de = {
       title: 'Ausgabeformat der Datei',
       description:
         'Standardmäßige PNG-Formatbilder sollten die Mehrheit der Bedürfnisse erfüllen, aber um Benutzerszenarien besser zu unterstützen: 1. Unterstützung für den Export von Bildern mit normalem und transparentem Hintergrund; 2. Unterstützung für den Export von JPG-Bildern zur Erreichung kleinerer Dateigrößen, obwohl es möglicherweise nicht möglich ist, direkt in die Zwischenablage zu kopieren; 3. Unterstützung für den Export in das Einzelseiten-PDF-Format, das sich von den üblichen PDF-Papierformaten unterscheidet, bitte Vorsicht, um keine Verwechslung zu verursachen.',
-      png0: '.png - Standard',
-      png1: '.png - Bild mit transparentem Hintergrund',
-      jpg: '.jpg - jpg-Format Bild',
-      pdf: '.pdf - Einzelseiten-PDF',
+      png0: 'png - Standard',
+      png1: 'png - Bild mit transparentem Hintergrund exportieren',
+      jpg: 'jpg - jpg-Bild exportieren',
+      pdf: 'pdf - Einzelseiten-PDF exportieren',
     },
     quickExportSelection: {
       label: 'Schnellauswahl exportieren',
@@ -90,7 +98,7 @@ const de = {
       name: 'Autorenname',
       position: 'Anzeigeposition',
       remark: 'Zusätzlicher Text',
-      align: 'Ausrichten',
+      align: 'Ausrichtung',
       removeAvatar: 'Avatar entfernen',
     },
     watermark: {
@@ -107,7 +115,7 @@ const de = {
         image: 'Bild',
       },
       text: {
-        content: 'Textinhalt',
+        content: 'Wasserzeichentextinhalt',
         fontSize: 'Schriftgröße des Wasserzeichens',
         color: 'Wasserzeichentextfarbe',
       },
@@ -115,7 +123,7 @@ const de = {
         src: {
           label: 'Bild-URL',
           upload: 'Bild hochladen',
-          select: 'Aus Tresor wählen',
+          select: 'Aus aktuellem Tresor wählen',
         },
       },
       opacity: 'Wasserzeichen-Durchsichtigkeit (0 ist transparent, 1 ist nicht transparent)',
@@ -125,7 +133,7 @@ const de = {
       x: 'Horizontaler Abstand des Wasserzeichens',
       y: 'Vertikaler Abstand des Wasserzeichens',
     },
-    preview: 'Wasserzeichen-Vorschau',
+    preview: 'Wasserzeichen-Effektvorschau',
     reset: 'Auf Standard zurücksetzen',
     recursive: 'Notizen aus Unterordnern einbeziehen',
   },
@@ -140,6 +148,6 @@ const de = {
   imageUrl: 'URL eingeben',
   splitInfo: 'Die Gesamthöhe des Bildes beträgt {rootHeight}px, und die Höhe der Aufteilung beträgt {splitHeight}px, sodass {pages} Bilder generiert werden.',
   splitInfoHr: 'Die Gesamthöhe des Bildes beträgt {rootHeight}px, und die Höhe der Aufteilung beträgt {splitHeight}px, sodass {pages} Bilder generiert werden.',
-} satisfies BaseTranslation;
+} satisfies Translation;
 
 export default de;

@@ -4,11 +4,17 @@ declare type FileFormat = 'png0' | 'png1' | 'jpg' | 'pdf' | 'webp';
 declare type ISettings = {
   width?: number;
   showFilename: boolean;
-  '2x': boolean;
+  resolutionMode: ResolutionMode;
   format: FileFormat;
   showMetadata: boolean;
   recursive: boolean;
   quickExportSelection: boolean;
+  padding: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
   authorInfo: {
     show: boolean;
     name?: string;
@@ -75,3 +81,5 @@ declare type MetadataType =
   | 'aliases';
 
 declare type SplitMode = 'none' | 'fixed' | 'hr' | 'auto';
+
+declare type ResolutionMode = '1x' | '2x' | '3x' | '4x';

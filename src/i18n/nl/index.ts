@@ -16,11 +16,12 @@ const nl = {
   saveVault: 'Opslaan in kluis',
   includingFilename: 'Inclusief bestandsnaam als titel',
   imageWidth: 'Afbeelding breedte',
-  exportImage: 'Exporteren als afbeelding',
-  exportSelectionImage: 'Selectie exporteren als afbeelding',
-  exportFolder: 'Alle notities exporteren als afbeelding',
-  invalidWidth: 'Stel de breedte in met een redelijk nummer.',
-  '2x': 'Activeer afbeelding met 2x resolutie',
+  exportImage: 'Exporteren naar afbeelding',
+  exportSelectionImage: 'Selectie exporteren naar afbeelding',
+  exportFolder: 'Alle notities exporteren naar afbeelding',
+  loading: 'Documentinhoud laden...',
+  invalidWidth: 'Stel een redelijke breedte in.',
+  resolutionMode: 'Gebruik afbeelding met hogere resolutie',
   moreSetting:
     'Meer gedetailleerde instellingen zijn te vinden in de `Exporteer afbeelding` plugin-instellingen.',
   guide: 'Sleep om te bewegen, scroll of knijp om in/uit te zoomen, dubbelklik om te resetten.',
@@ -60,9 +61,9 @@ const nl = {
         'Stel in of de bestandsnaam moet worden opgenomen als titel. Wanneer Obsidian het document weergeeft, wordt de bestandsnaam weergegeven als een h1 titel. Soms is dit niet wat je wilt, en krijg je dubbele titels.',
     },
     '2x': {
-      label: 'Activeer afbeelding met 2x resolutie',
+      label: 'Activeer afbeelding met hogere resolutie',
       description:
-        'Stel in of de afbeelding met 2x resolutie moet worden ingeschakeld. Afbeeldingen met 2x resolutie zien er scherper uit en bieden een betere ervaring op schermen met hoge PPI, zoals die van smartphones. Het nadeel is echter dat de bestandsgrootte van de afbeeldingen groter is.',
+        'Stel in of de afbeelding met hogere resolutie moet worden ingeschakeld. Afbeeldingen met hogere resolutie zien er scherper uit en bieden een betere ervaring op schermen met hoge PPI, zoals die van smartphones. Het nadeel is echter dat de bestandsgrootte van de afbeeldingen groter is.',
     },
     metadata: {
       label: 'Metadata weergeven',
