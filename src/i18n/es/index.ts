@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { Translation } from '../i18n-types';
+import type { BaseTranslation } from '../i18n-types';
 
 const es = {
   command: 'Exportar como imagen',
@@ -10,7 +10,7 @@ const es = {
   copyFail: 'Fallo al copiar',
   notAllowCopy: 'No se permite copiar directamente el formato {format}',
   save: 'Guardar imagen',
-  saveSuccess: 'Imagen exportada y guardada como {filePath}.',
+  saveSuccess: 'Imagen exportada y guardada como {filePath: string}.',
   saveFail: 'Fallo al guardar la imagen',
   saveVault: 'Guardar en la bóveda',
   includingFilename: 'Incluir nombre de archivo como título',
@@ -18,10 +18,10 @@ const es = {
   exportImage: 'Exportar a imagen',
   exportSelectionImage: 'Exportar selección a imagen',
   exportFolder: 'Exportar todas las notas a imagen',
-  loading: 'Cargando contenido del documento...',
-  invalidWidth: 'Por favor, establezca un ancho razonable.',
-  resolutionMode: 'Usar imagen de mayor resolución',
-  moreSetting: 'Puedes encontrar configuraciones más detalladas en los ajustes del plugin `Exportar como imagen`.',
+  invalidWidth: 'Por favor, establece un ancho en un número razonable.',
+  '2x': 'Activar imagen con resolución 2x',
+  moreSetting:
+    'Puedes encontrar configuraciones más detalladas en los ajustes del plugin `Exportar como imagen`.',
   guide: 'Arrastra para mover, desplaza o pellizca para acercar/alejar, doble clic para restablecer.',
   copyNotAllowed: 'El formato pdf no es compatible para copiar',
   exportAll: 'Exportar notas seleccionadas',
@@ -31,15 +31,8 @@ const es = {
     title: 'Exportar como imagen',
     imageWidth: {
       label: 'Ancho de imagen exportada por defecto',
-      description: 'Establece el ancho de la imagen exportada en píxeles. El predeterminado es 640px.',
-    },
-    padding: {
-      title: 'Margen de imagen',
-      description: 'Establece el relleno para la imagen exportada. El valor predeterminado es 6px para todos los lados.',
-      top: 'Relleno superior',
-      right: 'Relleno derecho',
-      bottom: 'Relleno inferior',
-      left: 'Relleno izquierdo',
+      description:
+        'Establece el ancho de la imagen exportada en píxeles. El predeterminado es 640px.',
     },
     split: {
       title: 'Dividir imagen',
@@ -62,22 +55,25 @@ const es = {
     },
     filename: {
       label: 'Incluir nombre de archivo como título',
-      description: 'Establece si incluir el nombre del archivo como título. Cuando Obsidian muestra el documento, muestra el nombre del archivo como un título h1. A veces esto no es lo que quieres y terminarás con títulos duplicados.',
+      description:
+        'Establece si incluir el nombre del archivo como título. Cuando Obsidian muestra el documento, muestra el nombre del archivo como un título h1. A veces esto no es lo que quieres y terminarás con títulos duplicados.',
     },
-    resolutionMode: {
-      label: 'Imagen en modo resolución',
-      description: 'Establece el modo de resolución, usando imágenes con resolución 1x, 2x, 3x, 4x. Cuando está activado, las imágenes aparecerán más nítidas, con una mejor experiencia en pantallas de alta PPI como smartphones. El inconveniente es que el tamaño del archivo de la imagen aumentará.',
+    '2x': {
+      label: 'Activar imagen con resolución 2x',
+      description:
+        'Establece si activar la imagen con resolución 2x. Las imágenes con resolución 2x aparecerán más nítidas y proporcionarán una mejor experiencia en pantallas de alta PPI, como las de los smartphones. Sin embargo, el lado negativo es que el tamaño del archivo de las imágenes es mayor.',
     },
     metadata: {
       label: 'Mostrar metadatos',
     },
     format: {
       title: 'Formato del archivo de salida',
-      description: 'Las imágenes en formato PNG por defecto deberían satisfacer la mayoría de necesidades, pero para soportar mejor los escenarios de uso: 1. Soporte para exportar imágenes con fondos normales y transparentes; 2. Soporte para exportar imágenes en formato JPG para lograr tamaños de archivo más pequeños, aunque puede que no sea posible copiar directamente al portapapeles; 3. Soporte para exportar al formato de PDF de una sola página, que difiere de los formatos de papel PDF habituales, por favor, ten cuidado de no usarlo incorrectamente.',
-      png0: 'png - por defecto',
-      png1: 'png - exportar imagen con fondo transparente',
-      jpg: 'jpg - exportar imagen jpg',
-      pdf: 'pdf - exportar PDF de una sola página',
+      description:
+        'Las imágenes en formato PNG por defecto deberían satisfacer la mayoría de necesidades, pero para soportar mejor los escenarios de uso: 1. Soporte para exportar imágenes con fondos normales y transparentes; 2. Soporte para exportar imágenes en formato JPG para lograr tamaños de archivo más pequeños, aunque puede que no sea posible copiar directamente al portapapeles; 3. Soporte para exportar al formato de PDF de una sola página, que difiere de los formatos de papel PDF habituales, por favor, ten cuidado de no usarlo incorrectamente.',
+      png0: '.png - por defecto',
+      png1: '.png - imagen con fondo transparente',
+      jpg: '.jpg - imagen en formato jpg',
+      pdf: '.pdf - PDF de una sola página',
     },
     quickExportSelection: {
       label: 'Exportar selección rápido',
@@ -91,16 +87,17 @@ const es = {
         description: 'Se recomienda usar imágenes cuadradas',
       },
       name: 'Nombre del autor',
-      position: 'Posición de visualización',
+      position: 'Dónde mostrar',
       remark: 'Texto extra',
-      align: 'Alineación',
+      align: 'Alinear',
       removeAvatar: 'Eliminar avatar',
     },
     watermark: {
       title: 'Marca de agua',
       enable: {
         label: 'Activar marca de agua',
-        description: 'Activar la marca de agua, admite marcas de agua de texto e imagen.',
+        description:
+          'Activar la marca de agua, admite marcas de agua de texto e imagen.',
       },
       type: {
         label: 'Tipo de marca de agua',
@@ -109,7 +106,7 @@ const es = {
         image: 'Imagen',
       },
       text: {
-        content: 'Contenido del texto de la marca de agua',
+        content: 'Contenido del texto',
         fontSize: 'Tamaño de fuente de la marca de agua',
         color: 'Color del texto de la marca de agua',
       },
@@ -117,7 +114,7 @@ const es = {
         src: {
           label: 'URL de la imagen',
           upload: 'Subir imagen',
-          select: 'Seleccionar de la bóveda actual',
+          select: 'Seleccionar de la bóveda',
         },
       },
       opacity: 'Opacidad de la marca de agua (0 es transparente, 1 es opaco)',
@@ -127,7 +124,7 @@ const es = {
       x: 'Distancia horizontal de la marca de agua',
       y: 'Distancia vertical de la marca de agua',
     },
-    preview: 'Vista previa del efecto de la marca de agua',
+    preview: 'Vista previa de la marca de agua',
     reset: 'Restablecer a los valores por defecto',
     recursive: 'Incluir notas de subdirectorios',
   },
@@ -142,6 +139,6 @@ const es = {
   imageUrl: 'URL de la imagen',
   splitInfo: 'La altura total de la imagen es de {rootHeight}px, y la altura de división es de {splitHeight}px, por lo que se generarán {pages} imágenes',
   splitInfoHr: 'La altura total de la imagen es de {rootHeight}px, y la altura de división es de {splitHeight}px, por lo que se generarán {pages} imágenes',
-} satisfies Translation;
+} satisfies BaseTranslation;
 
 export default es;

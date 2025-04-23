@@ -19,7 +19,7 @@ const no = {
   exportSelectionImage: 'Eksporter utvalg til bilde',
   exportFolder: 'Eksporter alle notater til bilde',
   invalidWidth: 'Vennligst sett bredden til et rimelig tall.',
-  resolutionMode: 'Bruk bilde med høyere oppløsning',
+  '2x': 'Aktiver bilde med 2x oppløsning',
   moreSetting:
     'Mer detaljerte innstillinger finnes i `Eksporter bilde` plugin-innstillinger.',
   guide: 'Dra for å flytte, rull eller knip for å zoome inn/ut, dobbeltklikk for å tilbakestille.',
@@ -60,9 +60,9 @@ const no = {
         'Angi om filnavnet skal inkluderes som tittel. Når Obsidian viser dokumentet, vises filnavnet som en h1 tittel. Noen ganger er dette ikke ønsket, og du vil få dupliserte titler.',
     },
     '2x': {
-      label: 'Aktiver bilde med høyere oppløsning',
+      label: 'Aktiver bilde med 2x oppløsning',
       description:
-        'Angi om bildet med høyere oppløsning skal aktiveres. Bilder med høyere oppløsning vil se skarpere ut og gi en bedre opplevelse på høy PPI-skjermer, som de på smarttelefoner. Ulempen er imidlertid at filstørrelsen på bildene er større.',
+        'Angi om bildet med 2x oppløsning skal aktiveres. Bilder med 2x oppløsning vil se skarpere ut og gi en bedre opplevelse på høy PPI-skjermer, som de på smarttelefoner. Ulempen er imidlertid at filstørrelsen på bildene er større.',
     },
     metadata: {
       label: 'Vis metadata',

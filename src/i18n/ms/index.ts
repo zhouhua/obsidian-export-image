@@ -19,7 +19,7 @@ const ms = {
   exportSelectionImage: 'Eksport pilihan sebagai imej',
   exportFolder: 'Eksport semua nota sebagai imej',
   invalidWidth: 'Sila tetapkan lebar dengan angka yang munasabah.',
-  resolutionMode: 'Gunakan imej resolusi tinggi',
+  '2x': 'Aktifkan imej resolusi 2x',
   moreSetting:
     'Seting lebih terperinci boleh didapati dalam tetapan plugin `Eksport Imej`.',
   guide: 'Seret untuk Bergerak, gulir atau cubit untuk zoom masuk/keluar, klik dua kali untuk menetapkan semula.',

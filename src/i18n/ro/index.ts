@@ -20,7 +20,7 @@ const ro = {
   exportSelectionImage: 'Exportă selecția ca imagine',
   exportFolder: 'Exportă toate notele ca imagine',
   invalidWidth: 'Vă rugăm să setați lățimea la un număr rezonabil.',
-  resolutionMode: 'Folosește imagine cu rezoluție mai mare',
+  '2x': 'Activează imaginea cu rezoluție 2x',
   moreSetting:
     'Setări mai detaliate pot fi găsite în setările pluginului `Exportă imagine`.',
   guide: 'Trageți pentru a muta, derulați sau ciupiți pentru zoom, faceți dublu clic pentru a reseta.',
@@ -62,9 +62,9 @@ const ro = {
         'Setează dacă numele fișierului trebuie inclus ca titlu. Când Obsidian afișează documentul, afișează numele fișierului ca un titlu h1. Uneori acest lucru nu este dorit și veți obține titluri duplicate.',
     },
     '2x': {
-      label: 'Activează imaginea cu rezoluție mai mare',
+      label: 'Activează imaginea cu rezoluție 2x',
       description:
-        'Setează dacă imaginea cu rezoluție mai mare trebuie activată. Imaginile cu rezoluție mai mare vor apărea mai clare și oferă o experiență mai bună pe ecranele cu PPI ridicat, cum ar fi cele de pe smartphone-uri. Cu toate acestea, dezavantajul este că mărimea fișierului de imagine este mai mare.',
+        'Setează dacă imaginea cu rezoluție 2x trebuie activată. Imaginile cu rezoluție 2x vor apărea mai clare și oferă o experiență mai bună pe ecranele cu PPI ridicat, cum ar fi cele de pe smartphone-uri. Cu toate acestea, dezavantajul este că mărimea fișierului de imagine este mai mare.',
     },
     metadata: {
       label: 'Afișează metadatele',

@@ -22,7 +22,7 @@
     "@typescript-eslint/parser": "8.18.1",
     "builtin-modules": "4.0.0",
     "cross-env": "^7.0.3",
-    "esbuild": "^0.25.0",
+    "esbuild": "0.25.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-base": "^15.0.0",

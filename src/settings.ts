@@ -5,17 +5,11 @@ export const DEFAULT_SETTINGS: ISettings = {
   width: 640,
   showFilename: true,
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  resolutionMode: '3x' as ResolutionMode,
+  '2x': true,
   format: 'png0',
   showMetadata: false,
   recursive: false,
   quickExportSelection: false,
-  padding: {
-    top: 6,
-    right: 6,
-    bottom: 6,
-    left: 6,
-  },
   authorInfo: {
     show: false,
     align: 'right',

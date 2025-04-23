@@ -10,13 +10,12 @@ import makeHTML from './makeHTML';
 import { fileToBase64, delay, getMime } from '.';
 import { calculateSplitPositions, getElementMeasures } from './split';
 
-async function getBlob(el: HTMLElement, resolutionMode: ResolutionMode, type: string): Promise<Blob> {
-  const scale = resolutionMode === '2x' ? 2 : resolutionMode === '3x' ? 3 : resolutionMode === '4x' ? 4 : 1;
+async function getBlob(el: HTMLElement, higtResolution: boolean, type: string): Promise<Blob> {
   return domtoimage.toBlob(el, {
     width: el.clientWidth,
     height: el.clientHeight,
     quality: 0.85,
-    scale: scale,
+    scale: higtResolution ? 2 : 1,
     requestUrl,
     type,
   }) as Promise<Blob>;
@@ -51,13 +50,13 @@ export async function save(
   app: App,
   el: HTMLElement,
   title: string,
-  resolutionMode: ResolutionMode,
+  higtResolution: boolean,
   format: FileFormat,
   isMobile: boolean,
 ) {
   const blob: Blob = await getBlob(
     el,
-    resolutionMode,
+    higtResolution,
     getMime(format),
   );
   const filename = `${title.replaceAll(/\s+/g, '_')}.${format.replace(/\d$/, '')}`;
@@ -98,7 +97,7 @@ export async function save(
 
 export async function copy(
   el: HTMLElement,
-  resolutionMode: ResolutionMode,
+  higtResolution: boolean,
   format: FileFormat,
 ) {
   if (format === 'pdf') {
@@ -108,7 +107,7 @@ export async function copy(
 
   const blob = await getBlob(
     el,
-    resolutionMode,
+    higtResolution,
     getMime(format),
   );
   const data: ClipboardItem[] = [];
@@ -130,7 +129,7 @@ export async function saveMultipleFiles(
   containner: HTMLDivElement,
 ) {
   let finished = 0;
-  const { format, resolutionMode, split } = settings;
+  const { format, '2x': higtResolution, split } = settings;
   const blobs: { blob: Blob; filename: string }[] = [];
 
   for (const file of files) {
@@ -155,7 +154,7 @@ export async function saveMultipleFiles(
     await saveAll(
       target,
       format,
-      resolutionMode,
+      higtResolution,
       split.height,
       split.overlap,
       split.mode,
@@ -189,7 +188,7 @@ export async function getRemoteImageUrl(url?: string) {
 export async function saveAll(
   target: { element: HTMLElement; contentElement: HTMLElement; setClip: (startY: number, height: number) => void; resetClip: () => void },
   format: FileFormat,
-  resolutionMode: ResolutionMode,
+  higtResolution: boolean,
   splitHeight: number,
   splitOverlap: number,
   splitMode: SplitMode,
@@ -219,7 +218,7 @@ export async function saveAll(
 
         const blob = await getBlob(
           target.element,
-          resolutionMode,
+          higtResolution,
           'image/jpeg'
         );
         const dataUrl = await fileToBase64(blob);
@@ -257,7 +256,7 @@ export async function saveAll(
         target.setClip(startY, height);
         await delay(20); // 等待渲染
 
-        const blob = await getBlob(target.element, resolutionMode, getMime(format));
+        const blob = await getBlob(target.element, higtResolution, getMime(format));
         const filename = `${title.replaceAll(/\s+/g, '_')}_${i + 1}.${ext}`;
         blobs.push({ blob, filename });
       }

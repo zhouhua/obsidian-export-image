@@ -18,9 +18,8 @@ const zh = {
   exportImage: '导出为图片',
   exportFolder: '导出所有笔记为图片',
   exportSelectionImage: '导出选中内容为图片',
-  loading: '正在加载文档内容...',
   invalidWidth: '请设置合理的宽度。',
-  resolutionMode: '输出高分辨率的图片',
+  '2x': '输出 2 倍分辨率的图',
   moreSetting: '更详细的配置请进入 Export Image 插件的设置界面。',
   guide: '拖动可移动，滚轮或双指滑动可放大/缩小，双击可重置。',
   copyNotAllowed: 'pdf 格式不支持复制',
@@ -32,14 +31,6 @@ const zh = {
     imageWidth: {
       label: '导出图片的默认宽度',
       description: '设置导出图片的宽度，默认值为 640px。',
-    },
-    padding: {
-      title: '图片边框',
-      description: '设置导出图片的内边距，所有边的默认值为6px。',
-      top: '上边距',
-      right: '右边距',
-      bottom: '下边距',
-      left: '左边距',
     },
     split: {
       title: '图片拆分',
@@ -65,10 +56,10 @@ const zh = {
       description:
         '设置是否包含文件名作为标题。Obsidian 展示文档时，会把文件名作为 h1 标题，有时候并不符合预期，产生标题重复的情况。',
     },
-    resolutionMode: {
-      label: '分辨率模式图片',
+    '2x': {
+      label: '启用 2x 分辨率图片',
       description:
-        '设置分辨模式，使用 1x、2x、3x、4x 分辨率图片。启用后，图片会显示得更清晰，在高 PPI 屏幕上体验更好，如智能手机。但缺点是图片文件大小会变大。',
+        '设置是否启用 2x 分辨率图片。启用后，图片会显示得更清晰，在高 PPI 屏幕上体验更好，如智能手机。但缺点是图片文件大小会变大。',
     },
     metadata: {
       label: '显示 metadata',

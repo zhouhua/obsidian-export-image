@@ -16,13 +16,12 @@ const pl = {
   includingFilename: 'Włącznie z nazwą pliku jako tytułem',
   imageWidth: 'Szerokość obrazu',
   exportImage: 'Eksportuj do obrazu',
-  exportSelectionImage: 'Eksportuj zaznaczenie do obrazu',
+  exportSelectionImage: 'Eksportuj wybór do obrazu',
   exportFolder: 'Eksportuj wszystkie notatki do obrazu',
-  loading: 'Ładowanie zawartości dokumentu...',
-  invalidWidth: 'Proszę ustawić rozsądną szerokość.',
-  resolutionMode: 'Użyj obrazu o wyższej rozdzielczości',
+  invalidWidth: 'Proszę ustawić szerokość na rozsądną liczbę.',
+  '2x': 'Włącz obraz o rozdzielczości 2x',
   moreSetting:
-    'Więcej szczegółowych ustawień można znaleźć w ustawieniach wtyczki "Eksport obrazu".',
+    'Więcej szczegółowych ustawień można znaleźć w ustawieniach wtyczki „Eksport obrazu”.',
   guide: 'Przeciągnij, aby przesunąć, przewiń lub zaciśnij, aby przybliżyć/oddalić, podwójne kliknięcie, aby zresetować.',
   copyNotAllowed: 'format pdf nie jest obsługiwany do kopiowania',
   exportAll: 'Eksportuj wybrane notatki',
@@ -60,9 +59,9 @@ const pl = {
         'Ustaw, czy nazwa pliku powinna być uwzględniona jako tytuł. Gdy Obsidian wyświetla dokument, wyświetla nazwę pliku jako tytuł h1. Czasami nie jest to pożądane i możesz otrzymać zduplikowane tytuły.',
     },
     '2x': {
-      label: 'Włącz obraz o wyższej rozdzielczości',
+      label: 'Włącz obraz o rozdzielczości 2x',
       description:
-        'Ustaw, czy obraz o wyższej rozdzielczości ma być włączony. Obrazy o wyższej rozdzielczości wyglądają ostrzej i zapewniają lepsze doświadczenie na ekranach o wysokiej PPI, takich jak te w smartfonach. Jednak wadą jest większy rozmiar pliku obrazów.',
+        'Ustaw, czy obraz o rozdzielczości 2x ma być włączony. Obrazy o rozdzielczości 2x wyglądają ostrzej i zapewniają lepsze doświadczenie na ekranach o wysokiej PPI, takich jak te w smartfonach. Jednak wadą jest większy rozmiar pliku obrazów.',
     },
     metadata: {
       label: 'Pokaż metadane',

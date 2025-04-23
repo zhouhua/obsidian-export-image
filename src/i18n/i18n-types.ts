@@ -97,17 +97,13 @@ type RootTranslation = {
 	 */
 	exportFolder: string
 	/**
-	 * L​o​a​d​i​n​g​ ​d​o​c​u​m​e​n​t​ ​c​o​n​t​e​n​t​.​.​.
-	 */
-	loading: string
-	/**
 	 * P​l​e​a​s​e​ ​s​e​t​ ​w​i​d​t​h​ ​w​i​t​h​ ​a​ ​r​e​a​s​o​n​a​b​l​e​ ​n​u​m​b​e​r​.
 	 */
 	invalidWidth: string
 	/**
-	 * 分辨率模式
+	 * E​n​a​b​l​e​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e
 	 */
-	resolutionMode: string
+	'2x': string
 	/**
 	 * M​o​r​e​ ​d​e​t​a​i​l​e​d​ ​s​e​t​t​i​n​g​s​ ​c​a​n​ ​b​e​ ​f​o​u​n​d​ ​i​n​ ​t​h​e​ ​`​E​x​p​o​r​t​ ​I​m​a​g​e​`​ ​p​l​u​g​i​n​ ​s​e​t​t​i​n​g​s​.
 	 */
@@ -143,35 +139,9 @@ type RootTranslation = {
 			 */
 			label: string
 			/**
-			 * S​e​t​ ​t​h​e​ ​w​i​d​t​h​ ​o​f​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 6​4​0​p​x​.
+			 * S​e​t​ ​t​h​e​ ​w​i​d​t​h​ ​o​f​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​6​4​0​p​x​.
 			 */
 			description: string
-		}
-		padding: {
-			/**
-			 * I​m​a​g​e​ ​P​a​d​d​i​n​g
-			 */
-			title: string
-			/**
-			 * S​e​t​ ​p​a​d​d​i​n​g​ ​f​o​r​ ​t​h​e​ ​e​x​p​o​r​t​e​d​ ​i​m​a​g​e​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 6​p​x​ ​f​o​r​ ​a​l​l​ ​s​i​d​e​s​.
-			 */
-			description: string
-			/**
-			 * T​o​p​ ​p​a​d​d​i​n​g
-			 */
-			top: string
-			/**
-			 * R​i​g​h​t​ ​p​a​d​d​i​n​g
-			 */
-			right: string
-			/**
-			 * B​o​t​t​o​m​ ​p​a​d​d​i​n​g
-			 */
-			bottom: string
-			/**
-			 * L​e​f​t​ ​p​a​d​d​i​n​g
-			 */
-			left: string
 		}
 		split: {
 			/**
@@ -210,7 +180,7 @@ type RootTranslation = {
 				 */
 				label: string
 				/**
-				 * S​e​t​ ​t​h​e​ ​h​e​i​g​h​t​ ​o​f​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​s​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 1​0​0​0​p​x​.
+				 * S​e​t​ ​t​h​e​ ​h​e​i​g​h​t​ ​o​f​ ​e​a​c​h​ ​s​p​l​i​t​ ​i​m​a​g​e​ ​i​n​ ​p​i​x​e​l​s​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​1​0​0​0​p​x​.
 				 */
 				description: string
 			}
@@ -220,7 +190,7 @@ type RootTranslation = {
 				 */
 				label: string
 				/**
-				 * S​e​t​ ​t​h​e​ ​o​v​e​r​l​a​p​ ​b​e​t​w​e​e​n​ ​a​d​j​a​c​e​n​t​ ​s​p​l​i​t​ ​i​m​a​g​e​s​ ​t​o​ ​p​r​e​v​e​n​t​ ​c​o​n​t​e​n​t​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​u​t​ ​o​f​f​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ 4​0​p​x​.
+				 * S​e​t​ ​t​h​e​ ​o​v​e​r​l​a​p​ ​b​e​t​w​e​e​n​ ​a​d​j​a​c​e​n​t​ ​s​p​l​i​t​ ​i​m​a​g​e​s​ ​t​o​ ​p​r​e​v​e​n​t​ ​c​o​n​t​e​n​t​ ​f​r​o​m​ ​b​e​i​n​g​ ​c​u​t​ ​o​f​f​.​ ​T​h​e​ ​d​e​f​a​u​l​t​ ​i​s​ ​4​0​p​x​.
 				 */
 				description: string
 			}
@@ -235,7 +205,7 @@ type RootTranslation = {
 			 */
 			description: string
 		}
-		resolutionMode: {
+		'2x': {
 			/**
 			 * E​n​a​b​l​e​ ​2​x​ ​r​e​s​o​l​u​t​i​o​n​ ​i​m​a​g​e
 			 */
@@ -539,17 +509,13 @@ export type TranslationFunctions = {
 	 */
 	exportFolder: () => LocalizedString
 	/**
-	 * Loading document content...
-	 */
-	loading: () => LocalizedString
-	/**
 	 * Please set width with a reasonable number.
 	 */
 	invalidWidth: () => LocalizedString
 	/**
 	 * Enable 2x resolution image
 	 */
-	resolutionMode: () => LocalizedString
+	'2x': () => LocalizedString
 	/**
 	 * More detailed settings can be found in the `Export Image` plugin settings.
 	 */
@@ -588,32 +554,6 @@ export type TranslationFunctions = {
 			 * Set the width of the exported image in pixel. The default is 640px.
 			 */
 			description: () => LocalizedString
-		}
-		padding: {
-			/**
-			 * Image Padding
-			 */
-			title: () => LocalizedString
-			/**
-			 * Set padding for the exported image. The default is 6px for all sides.
-			 */
-			description: () => LocalizedString
-			/**
-			 * Top padding
-			 */
-			top: () => LocalizedString
-			/**
-			 * Right padding
-			 */
-			right: () => LocalizedString
-			/**
-			 * Bottom padding
-			 */
-			bottom: () => LocalizedString
-			/**
-			 * Left padding
-			 */
-			left: () => LocalizedString
 		}
 		split: {
 			/**
@@ -677,7 +617,7 @@ export type TranslationFunctions = {
 			 */
 			description: () => LocalizedString
 		}
-		resolutionMode: {
+		'2x': {
 			/**
 			 * Enable 2x resolution image
 			 */
